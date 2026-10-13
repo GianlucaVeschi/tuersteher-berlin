@@ -163,6 +163,47 @@ body {
 }
 .inside .in-hint { font-size: 2.3cqw; color: #bdb6cc; margin: 0; }
 
+/* ---------- Shop interior ---------- */
+.shop {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 .3cqw, transparent .3cqw 6cqw),
+    linear-gradient(#3a2a33 0 30%, #5b4030 30%);
+  color: var(--ink);
+  font-family: var(--font-pixel);
+  padding: 3cqw;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; gap: 2cqw;
+}
+.shop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 2cqw; }
+.shop-name { margin: 0; font-size: 4.2cqw; color: var(--lamp); text-shadow: .5cqw .5cqw 0 var(--ink); }
+.shop-area { margin: 0; font-size: 1.8cqw; color: #d9cfe0; }
+.shop-body { display: grid; grid-template-columns: 34% minmax(0, 1fr); gap: 2.4cqw; min-height: 0; }
+.shop-preview {
+  background: var(--paper); border: .6cqw solid var(--ink);
+  display: grid; justify-items: center; align-content: start; gap: 1.2cqw; padding: 2cqw 1.6cqw;
+  text-align: center;
+}
+.shop-preview canvas { width: 70%; aspect-ratio: 1; image-rendering: pixelated; background: #e3dccd; border: .4cqw solid var(--ink); }
+.shop-tags { margin: 0; font-size: 1.7cqw; color: #8a2a4a; }
+.shop-fits { margin: 0; font-family: var(--font-term); font-size: 2.6cqw; line-height: 1.05; color: #3a3545; }
+.shop-list {
+  list-style: none; margin: 0; padding: 1.4cqw;
+  background: var(--paper); border: .6cqw solid var(--ink);
+  display: grid; align-content: start; gap: .6cqw; overflow: auto;
+}
+.shop-list li {
+  display: grid; grid-template-columns: 5cqw minmax(0, 1fr); align-items: center; gap: 1.6cqw;
+  padding: .8cqw 1.2cqw; font-size: 2.1cqw; line-height: 1.4; cursor: pointer; border: .3cqw solid transparent;
+}
+.shop-list li.sel { background: var(--ink); color: var(--paper); }
+.shop-list li.worn .nm::after { content: " (on)"; color: var(--magenta); }
+.shop-list .mini { width: 5cqw; height: 5cqw; image-rendering: pixelated; }
+.shop-msg {
+  margin: 0; background: var(--paper); border: .6cqw solid var(--ink);
+  padding: 1.6cqw 2cqw; font-size: 2.1cqw; line-height: 1.6; min-height: 5.6cqw;
+}
+.shop-hint { margin: 0; font-size: 1.6cqw; color: #d9cfe0; text-align: right; }
+
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -236,6 +277,16 @@ body {
 .count { margin: 0; font-family: var(--font-pixel); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .count b { font-size: 26px; color: var(--magenta); }
 .card { display: flex; flex-direction: column; }
+.wearing {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 3px dashed #b9b09c;
+}
+.wearing canvas { width: 40px; height: 40px; image-rendering: pixelated; background: var(--paper-2); border: 2px solid var(--ink); }
+.wearing p { margin: 0; min-width: 0; }
+.wearing span { display: block; font-family: var(--font-pixel); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: #8a2a4a; margin-bottom: 4px; }
+.wearing b { font-family: var(--font-pixel); font-size: 11px; line-height: 1.4; }
+.card li small.dress { color: #a23a3a; }
+.card li small.dress.ok { color: #2f7d4f; }
 .card ol { list-style: none; margin: 0; padding: 4px 0 0; flex: 1; display: flex; flex-direction: column; justify-content: space-around; }
 .card li {
   display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 14px; align-items: center;

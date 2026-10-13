@@ -4,7 +4,28 @@ A tiny Pokémon-style pixel game about getting into Berlin clubs. Walk around a 
 
 Berghain · Tresor · KitKatClub · ://about blank · Kater Blau · Sisyphos · Club der Visionäre
 
-Get every question right and you're in. One wrong answer and it's *Heute nicht.*
+Every bouncer checks your outfit first, then asks questions about the club. Get every question right and you're in. One wrong answer and it's *Heute nicht.*
+
+## Dress codes and shops
+
+| Club | Dress code |
+| --- | --- |
+| Berghain | All black |
+| Tresor | Black |
+| KitKatClub | Fetish (latex, leather) |
+| ://about blank | Anything except the tourist look or a suit |
+| Kater Blau | Colorful or vintage |
+| Sisyphos | Colorful, glitter |
+| Club der Visionäre | Anything except a suit |
+
+Walk into a shop to change clothes (no money yet):
+
+- **Humana**: second-hand basics, vintage, a suit (trap) and your old hoodie
+- **Blackstyle**: latex and leather
+- **Coexist**: 90s windbreaker, black mesh, sailor stripes
+- **SYLD**: glitter and neon
+
+The shop screen shows which clubs each outfit gets you into.
 
 ## Play
 
@@ -38,6 +59,7 @@ Most changes happen in `game.js`:
 
 - **Clubs and questions**: the `CLUBS` array at the top. Each club has `greet`, `reject`, `accept`, `inside`, `sign` lines, `need` (how many questions it asks) and a `pool` of questions. In each question the **first** answer in `a` is the correct one; options get shuffled in game. `fact` is shown after a wrong answer.
 - **Map layout**: the `MAP` section. Roads come from `hroad` / `vroad`, buildings from `building(...)`, and trees from the coordinate list. Club position comes from each club's `x`, `y`, `w`, `h`. The door sits at the bottom centre, the bouncer one tile below it.
+- **Outfits, dress codes, shops**: `OUTFITS`, `DRESS` and `SHOPS` near the top. Each outfit has `tags` (`black`, `latex`, `colorful`, `vintage`, `tourist`, `suit`). A club's `ok` list needs at least one matching tag; its `no` list rejects any match. Shops are placed on the map by their `x`, `y`, `w`, `h`. The door is at the bottom centre; walk into it to enter.
 - **NPCs and signs**: the `ents.push(...)` block under `ENTITIES`.
 - **Intro / ending text**: `INTRO` and `FINALE`.
 

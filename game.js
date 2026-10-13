@@ -136,10 +136,61 @@ CLUBS.forEach(c => {
   c.by = c.y + c.h;
 });
 
+/* ================= OUTFITS & SHOPS ================= */
+const TAG_LABEL = { black: 'ALL BLACK', latex: 'FETISH', colorful: 'COLORFUL', vintage: 'VINTAGE', tourist: 'TOURIST', suit: 'FANCY' };
+const BASE_LOOK = { skin: '#f0c7a0', hair: '#2b1f1a' };
+const OUTFITS = {
+  tourist:     { name: 'Red hoodie & cap',       tags: ['tourist'],             look: { top: '#e04f5f', legs: '#26243a', hat: '#1c1a28' } },
+  thriftblack: { name: 'All-black thrift fit',   tags: ['black'],               look: { top: '#1a1920', legs: '#1a1920' } },
+  seventies:   { name: '70s suede jacket',       tags: ['vintage'],             look: { top: '#a8653a', legs: '#3b4a6b' } },
+  gdr:         { name: 'GDR work jacket',        tags: ['vintage'],             look: { top: '#3d5f94', legs: '#3d5f94', stripes: '#2c4672' } },
+  suit:        { name: "Grandpa's suit",         tags: ['suit'],                look: { top: '#4a4a58', legs: '#4a4a58', tie: '#b8323a' } },
+  latex:       { name: 'Black latex catsuit',    tags: ['latex', 'black'],      look: { top: '#0c0c12', legs: '#0c0c12', shine: '#6a6a88' } },
+  harness:     { name: 'Leather harness',        tags: ['latex', 'black'],      look: { top: '#f0c7a0', legs: '#0c0c12', harness: true } },
+  redlatex:    { name: 'Red latex dress',        tags: ['latex'],               look: { top: '#c4162a', legs: '#c4162a', shine: '#ff7a8a' } },
+  glitter:     { name: 'Glitter bodysuit',       tags: ['colorful'],            look: { top: '#d94bd1', legs: '#7a3fd1', sparkle: '#fff6a8' } },
+  rainbow:     { name: 'Neon mesh & shiny pants', tags: ['colorful'],           look: { top: '#4ea8de', legs: '#c0c0d8', stripes: '#f2c14e' } },
+  nineties:    { name: '90s windbreaker',        tags: ['colorful', 'vintage'], look: { top: '#2bb3a3', legs: '#3a3a8a', stripes: '#f2c14e' } },
+  mesh:        { name: 'Black mesh & cargos',    tags: ['black'],               look: { top: '#2a2a33', legs: '#1a1920', stripes: '#14121c' } },
+  sailor:      { name: 'Sailor stripes',         tags: ['colorful', 'vintage'], look: { top: '#f3eee3', legs: '#2b3f6b', stripes: '#2b4c7a', hat: '#f3eee3' } }
+};
+const lookOf = id => Object.assign({}, BASE_LOOK, OUTFITS[id].look);
+
+// Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
+const DRESS = {
+  berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Türsteher: … Nein.' },
+  tresor:     { ok: ['black'],               hint: 'Dark and functional. Black works.',     no_line: 'Jens: Bit bright for a vault, mate.' },
+  kitkat:     { ok: ['latex'],               hint: 'Fetish: latex, leather or very little.', no_line: "Dee: Darling, you're wearing far too much. And the wrong things." },
+  aboutblank: { no: ['tourist', 'suit'],     hint: 'Anything with personality. No tourist look, nothing fancy.', no_line: "Kim: That outfit doesn't say anything about you. Not tonight." },
+  katerblau:  { ok: ['colorful', 'vintage'], hint: 'Colorful, playful, a bit of costume.',  no_line: 'Olli: Too serious for the boat! Bring some color.' },
+  sisyphos:   { ok: ['colorful'],            hint: 'Bright colors, glitter, festival.',     no_line: "Mo: It's a festival in here, not a funeral. Color, please." },
+  cdv:        { no: ['suit'],                hint: 'Relaxed. Just not too fancy.',          no_line: 'Uwe: Bit fancy for a wooden deck, no?' }
+};
+function dressOK(clubId, outfitId) {
+  const d = DRESS[clubId], tags = OUTFITS[outfitId].tags;
+  if (d.ok && !tags.some(t => d.ok.includes(t))) return false;
+  if (d.no && tags.some(t => d.no.includes(t))) return false;
+  return true;
+}
+
+const SHOPS = [
+  { id: 'humana', name: 'Humana', area: 'Frankfurter Tor', x: 13, y: 7, w: 6, h: 6, v: 0, band: '#e9e4d6', ink: '#2a6a4a', label: 'HUMANA',
+    line: 'Humana: Second-hand, floor after floor of it. Try anything on.', items: ['thriftblack', 'seventies', 'gdr', 'suit', 'tourist'] },
+  { id: 'blackstyle', name: 'Blackstyle', area: 'Prenzlauer Berg', x: 19, y: 7, w: 6, h: 6, v: 1, band: '#0c0c12', ink: '#e8e8f0', label: 'BLACKSTYLE',
+    line: "Blackstyle: Latex made in Berlin since 1992. Fitting room's at the back.", items: ['latex', 'harness', 'redlatex'] },
+  { id: 'coexist', name: 'Coexist', area: 'Friedrichshain', x: 13, y: 33, w: 6, h: 6, v: 1, band: '#2bb3a3', ink: '#14121c', label: 'COEXIST',
+    line: 'Coexist: 90s, 00s, black, neon. Something for every door.', items: ['nineties', 'mesh', 'sailor'] },
+  { id: 'syld', name: 'SYLD', area: 'near Frankfurter Allee', x: 30, y: 33, w: 6, h: 6, v: 2, band: '#d94bd1', ink: '#fff6a8', label: 'SYLD',
+    line: 'SYLD: Glitter, chains, shiny pants. All by Berlin designers.', items: ['glitter', 'rainbow'] }
+];
+SHOPS.forEach(sh => { sh.dx = sh.x + Math.floor(sh.w / 2); sh.doorY = sh.y + sh.h - 1; sh.by = sh.y + sh.h; });
+CLUBS.forEach(c => { c.sign = c.sign.concat('Dress code: ' + DRESS[c.id].hint); });
+
 const INTRO = [
   'Friday, 23:47. Warschauer Straße.',
   'Seven clubs. Seven bouncers. One long weekend.',
   "Walk up to a bouncer and press A. Answer right and you're in.",
+  'Bouncers check your outfit first. Walk into a shop to change clothes.',
   'Stuck? Read the signs by each door. Locals talk too.'
 ];
 const FINALE = [
@@ -191,12 +242,12 @@ vroad(60, 3, MH - 1);
 const buildings = [];
 function building(x, y, w, h, kind, extra) { rect(x, y, w, h, B); buildings.push(Object.assign({ x, y, w, h, kind }, extra || {})); }
 building(2, 2, 5, 11, 'tower');
-building(13, 7, 6, 6, 'altbau', { v: 0 });
-building(19, 7, 6, 6, 'altbau', { v: 1 });
-building(41, 7, 6, 6, 'altbau', { v: 2, spati: true });
+building(41, 7, 6, 6, 'altbau', { v: 2, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });
 building(63, 7, 8, 6, 'station');
-building(13, 33, 6, 6, 'altbau', { v: 1 });
-building(30, 33, 6, 6, 'altbau', { v: 2 });
+SHOPS.forEach(sh => {
+  building(sh.x, sh.y, sh.w, sh.h, 'altbau', { v: sh.v, shop: { label: sh.label, band: sh.band, ink: sh.ink, door: true } });
+  set(sh.dx, sh.doorY, D);
+});
 building(41, 33, 4, 6, 'altbau', { v: 0 });
 // Oberbaumbrücke towers
 building(37, 24, 1, 1, 'obtower');
@@ -245,12 +296,12 @@ ents.push(
   { kind: 'sign', x: 8, y: 12, lines: ['FERNSEHTURM · Alexanderplatz', '368 m tall. You can see it from almost every street in Berlin.'] },
   { kind: 'sign', x: 41, y: 21, lines: ['OBERBAUMBRÜCKE', 'The red brick bridge between Friedrichshain and Kreuzberg.'] },
   { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. ://about blank is just around the corner.'] },
-  { kind: 'npc', x: 44, y: 13, dir: 'down', look: LOOKS.spati, lines: ['Späti: Club-Mate? Two euros.', 'Späti: Tip: bouncers spot tourists fast. Learn about a club before you queue.', 'Späti: And Berghain was a power plant. Everyone asks.'] },
+  { kind: 'npc', x: 44, y: 13, dir: 'down', look: LOOKS.spati, lines: ['Späti: Club-Mate? Two euros.', 'Späti: Tip: bouncers spot tourists fast. Learn about a club before you queue.', 'Späti: Wrong clothes? Humana and Blackstyle are just down the street.', 'Späti: And Berghain was a power plant. Everyone asks.'] },
   { kind: 'npc', x: 26, y: 13, dir: 'right', look: LOOKS.tourist1, lines: ["Tourist: We came as nine from the hostel. He just said 'Heute nicht.'", 'Tourist: Go alone. And keep your phone in your pocket.'] },
   { kind: 'npc', x: 27, y: 13, dir: 'right', look: LOOKS.tourist2, lines: ["Tourist: Is this even Berghain? There's no sign.", "Tourist: …I think that's the point."] },
   { kind: 'npc', x: 28, y: 13, dir: 'right', look: LOOKS.tourist3, lines: ["Local: I'm wearing all black. I rehearsed my answers.", "Local: I'm terrified."] },
   { kind: 'npc', x: 29, y: 13, dir: 'right', look: LOOKS.tourist4, lines: ['Tourist: Two hours in the queue. Worth it, right?'] },
-  { kind: 'npc', x: 16, y: 39, dir: 'down', look: LOOKS.raver, lines: ['Raver: Tresor and KitKat are both on Köpenicker Straße.', 'Raver: Read the signs. Bouncers love people who know the place.'] },
+  { kind: 'npc', x: 19, y: 39, dir: 'down', look: LOOKS.raver, lines: ['Raver: Tresor and KitKat are both on Köpenicker Straße.', 'Raver: Coexist and SYLD sell clubwear right here. Sisyphos wants color, Berghain wants black.', 'Raver: Read the signs. Bouncers love people who know the place.'] },
   { kind: 'npc', x: 14, y: 20, dir: 'down', look: LOOKS.oldraver, lines: ['Old raver: I danced at Bar25 for three days straight in 2009.', 'Old raver: Kater Blau is the same crew. New spot, same spirit.'] },
   { kind: 'npc', x: 70, y: 21, dir: 'left', look: LOOKS.monday, lines: ['Raver: What day is it?', "Raver: I came in on Friday. Sisyphos does that to you."] }
 );
@@ -260,7 +311,7 @@ const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 const OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
 const MOVE = 170;
 const START = { x: 40, y: 16, dir: 'down' };
-const state = { stamps: {}, intro: false, finale: false };
+const state = { stamps: {}, intro: false, finale: false, outfit: 'tourist' };
 const player = { x: START.x, y: START.y, tx: START.x, ty: START.y, dir: START.dir, moving: false, t: 0, n: 0 };
 let busy = true, titleOn = true;
 const held = [];
@@ -269,13 +320,14 @@ function save() {
   try { localStorage.setItem('tuersteher-save', JSON.stringify(snapshot())); } catch (e) { /* storage unavailable */ }
 }
 function snapshot() {
-  return { stamps: state.stamps, intro: state.intro, finale: state.finale, x: player.x, y: player.y, dir: player.dir };
+  return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, x: player.x, y: player.y, dir: player.dir };
 }
 function applySave(s) {
   if (!s) return;
   state.stamps = s.stamps || {};
   state.intro = !!s.intro;
   state.finale = !!s.finale;
+  state.outfit = OUTFITS[s.outfit] ? s.outfit : 'tourist';
   ents.forEach(e => { if (e.kind === 'bouncer' && state.stamps[e.club.id]) e.x = e.club.dx + 1; });
   if (Number.isInteger(s.x) && Number.isInteger(s.y) && !blocked(s.x, s.y) && get(s.x, s.y) !== D) {
     player.x = player.tx = s.x; player.y = player.ty = s.y; player.dir = s.dir || 'down';
@@ -285,9 +337,10 @@ const stampCount = () => CLUBS.filter(c => state.stamps[c.id]).length;
 
 /* ================= COLLISION ================= */
 function clubAtDoor(x, y) { return CLUBS.find(c => c.dx === x && c.doorY === y); }
+function shopAtDoor(x, y) { return SHOPS.find(sh => sh.dx === x && sh.doorY === y); }
 function blocked(x, y) {
   const t = get(x, y);
-  if (t === D) { const c = clubAtDoor(x, y); return !(c && state.stamps[c.id]); }
+  if (t === D) { if (shopAtDoor(x, y)) return false; const c = clubAtDoor(x, y); return !(c && state.stamps[c.id]); }
   if (SOLID.has(t)) return true;
   return ents.some(e => e.x === x && e.y === y);
 }
@@ -430,15 +483,22 @@ function drawAltbau(b) {
   P(X + Wd - 14, Y - 2, 5, 8, INK); P(X + Wd - 13, Y - 1, 3, 6, '#6e4a3a');
   windows(X, Y, b.w, b.h, true);
   const dX = X + Math.floor(b.w / 2) * T;
-  if (b.spati) {
-    const sy = Y + H - T;
+  if (b.shop) {
+    const sh = b.shop, sy = Y + H - T;
     P(X + 2, sy - 1, Wd - 4, T, INK);
     P(X + 3, sy + 3, Wd - 6, 10, '#f2d47a');
-    for (let i = 0; i < 12; i++) P(X + 5 + Math.floor(rnd() * (Wd - 12)), sy + 7 + Math.floor(rnd() * 5), 2, 2, pick(['#e24a4a', '#4ea8de', '#58b368', '#f28c38', '#3a3a3a']));
-    P(X + 2, sy - 5, Wd - 4, 9, '#1f6b4a');
-    m.fillStyle = '#ffe58a'; m.font = '8px "Press Start 2P", monospace'; m.textBaseline = 'top';
-    const tw = m.measureText('SPÄTI').width;
-    m.fillText('SPÄTI', Math.round(X + Wd / 2 - tw / 2), sy - 5);
+    for (let i = 0; i < 12; i++) P(X + 5 + Math.floor(rnd() * (Wd - 12)), sy + 7 + Math.floor(rnd() * 5), 2, 2, pick(['#e24a4a', '#4ea8de', '#58b368', '#f28c38', '#3a3a3a', '#d94bd1']));
+    P(X + 2, sy - 6, Wd - 4, 11, INK);
+    P(X + 3, sy - 5, Wd - 6, 9, sh.band);
+    m.fillStyle = sh.ink; m.font = '8px "Press Start 2P", monospace'; m.textBaseline = 'top';
+    const tw = m.measureText(sh.label).width;
+    m.fillText(sh.label, Math.round(X + Wd / 2 - tw / 2), sy - 5);
+    if (sh.door) {
+      P(dX + 2, sy + 4, 12, 12, INK);
+      P(dX + 3, sy + 5, 10, 11, '#fbecb4');
+      P(dX + 7, sy + 5, 1, 11, INK);
+      P(dX + 9, sy + 10, 1, 2, INK);
+    }
   } else {
     P(dX + 3, Y + H - 14, 10, 13, INK);
     P(dX + 4, Y + H - 13, 8, 12, '#4a2f2a');
@@ -616,6 +676,11 @@ function person(g, X, Y, dir, step, L) {
   const det = [];
   if (d === 'left') det.push([6, 8, 3, 3, shade(L.top, 0.7)], [7, 11, 1, 1, L.skin]);
   else det.push([3 - b, 11, 1, 1, L.skin], [12 + b, 11, 1, 1, L.skin]);
+  if (L.stripes) det.push([4 - b, 8, 8 + 2 * b, 1, L.stripes], [4 - b, 10, 8 + 2 * b, 1, L.stripes]);
+  if (L.shine) det.push([5, 8, 1, 3, L.shine]);
+  if (L.sparkle) det.push([5, 8, 1, 1, L.sparkle], [9, 9, 1, 1, L.sparkle], [7, 10, 1, 1, L.sparkle], [11, 8, 1, 1, L.sparkle]);
+  if (L.harness) { if (d === 'left') det.push([6, 7, 1, 4, INK], [6, 9, 4, 1, INK]); else det.push([5, 7, 1, 4, INK], [10, 7, 1, 4, INK], [5, 9, 6, 1, INK]); }
+  if (L.tie && d === 'down') det.push([7, 7, 2, 1, '#e9e6ef'], [7, 8, 2, 3, L.tie]);
   if (!L.bald) {
     if (d === 'down') det.push([4, 1, 8, 2, L.hair], [4, 3, 1, 2, L.hair], [11, 3, 1, 2, L.hair]);
     else if (d === 'up') det.push([4, 1, 8, 6, L.hair]);
@@ -640,7 +705,6 @@ function person(g, X, Y, dir, step, L) {
   det.forEach(p => { g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
   g.restore();
 }
-const PLAYER_LOOK = { skin: '#f0c7a0', hair: '#2b1f1a', top: '#e04f5f', legs: '#26243a', hat: '#1c1a28' };
 
 /* ================= RENDER ================= */
 const cvs = $('#game');
@@ -706,7 +770,7 @@ function draw(now) {
   list.forEach(({ e }) => {
     if (!e) {
       const step = player.moving ? (player.t < MOVE / 2 ? (player.n % 2) + 1 : 0) : 0;
-      person(ctx, ppx - camX, ppy - camY - 3, player.dir, step, PLAYER_LOOK);
+      person(ctx, ppx - camX, ppy - camY - 3, player.dir, step, lookOf(state.outfit));
       return;
     }
     const X = e.x * T - camX + Math.round(e.ox || 0), Y = e.y * T - camY;
@@ -786,12 +850,88 @@ function showInside(c, fresh) {
   });
 }
 
+/* ================= SHOP ================= */
+const shopEl = $('#shop'), shopList = $('#shopList'), shopMsg = $('#shopMsg'), shopTags = $('#shopTags'), shopFits = $('#shopFits');
+const previewCtx = $('#shopPreview').getContext('2d');
+let shopUI = null;
+function drawMini(g, id) {
+  g.clearRect(0, 0, 16, 16);
+  person(g, 0, 0, 'down', 0, lookOf(id));
+}
+function openShop(sh) {
+  busy = true;
+  shopUI = { shop: sh, sel: 0 };
+  $('#shopName').textContent = sh.name.toUpperCase();
+  $('#shopArea').textContent = sh.area;
+  shopMsg.textContent = sh.line;
+  shopList.innerHTML = '';
+  const entries = sh.items.concat('__leave');
+  entries.forEach((id, i) => {
+    const li = document.createElement('li');
+    if (id === '__leave') {
+      li.innerHTML = '<span class="mini"></span><span class="nm">Leave shop</span>';
+    } else {
+      li.innerHTML = '<canvas class="mini" width="16" height="16"></canvas><span class="nm"></span>';
+      li.querySelector('.nm').textContent = OUTFITS[id].name;
+      drawMini(li.querySelector('canvas').getContext('2d'), id);
+    }
+    li.addEventListener('click', () => { if (!shopUI) return; shopUI.sel = i; renderShop(); shopA(); });
+    shopList.appendChild(li);
+  });
+  shopUI.entries = entries;
+  shopEl.hidden = false;
+  renderShop();
+}
+function renderShop() {
+  const { entries, sel } = shopUI;
+  [...shopList.children].forEach((li, i) => {
+    li.classList.toggle('sel', i === sel);
+    li.classList.toggle('worn', entries[i] === state.outfit);
+  });
+  const id = entries[sel] === '__leave' ? state.outfit : entries[sel];
+  drawMini(previewCtx, id);
+  shopTags.textContent = OUTFITS[id].tags.map(t => TAG_LABEL[t]).join(' · ');
+  const fits = CLUBS.filter(c => dressOK(c.id, id)).map(c => c.name);
+  shopFits.textContent = fits.length ? 'Gets you past: ' + fits.join(', ') : 'No club will take this.';
+}
+function shopMove(dir) {
+  if (!shopUI) return;
+  const n = shopUI.entries.length;
+  if (dir === 'up' || dir === 'left') shopUI.sel = (shopUI.sel - 1 + n) % n;
+  if (dir === 'down' || dir === 'right') shopUI.sel = (shopUI.sel + 1) % n;
+  renderShop();
+}
+function shopA() {
+  if (!shopUI) return;
+  const id = shopUI.entries[shopUI.sel];
+  if (id === '__leave') { leaveShop(); return; }
+  if (state.outfit === id) { shopMsg.textContent = "You're already wearing that."; return; }
+  state.outfit = id;
+  shopMsg.textContent = 'You change in the fitting room: ' + OUTFITS[id].name + '.';
+  renderShop(); renderCard(); save();
+}
+function leaveShop() {
+  const sh = shopUI.shop;
+  shopUI = null; shopEl.hidden = true;
+  player.x = player.tx = sh.dx; player.y = player.ty = sh.by; player.dir = 'down';
+  save();
+  busy = false;
+}
+
 /* ================= SCRIPTS ================= */
 const shuffle = a => { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 
 async function bouncerTalk(e) {
   const c = e.club;
   if (state.stamps[c.id]) { await say(c.again); return; }
+  await say('(The bouncer looks you up and down.)');
+  if (!dressOK(c.id, state.outfit)) {
+    await say(DRESS[c.id].no_line);
+    await say('(Dress code: ' + DRESS[c.id].hint + ')');
+    closeBox();
+    pushBack();
+    return;
+  }
   for (const l of c.greet) await say(l);
   const qs = shuffle(c.pool).slice(0, c.need);
   for (let i = 0; i < qs.length; i++) {
@@ -864,16 +1004,19 @@ async function runIntro() {
 function pressA() {
   if (titleOn) { startGame(); return; }
   if (insideResolve) { insideResolve(); return; }
+  if (shopUI) { shopA(); return; }
   if (ui || typing) { uiA(); return; }
   if (busy || player.moving) return;
   interact();
 }
 function pressB() {
   if (insideResolve) { insideResolve(); return; }
+  if (shopUI) { leaveShop(); return; }
   if (typing) { typing.finish(); return; }
   if (ui && ui.mode === 'say') uiA();
 }
 function pressDir(dir) {
+  if (shopUI) { shopMove(dir); return; }
   if (!held.includes(dir)) held.push(dir);
   if (ui) uiMove(dir);
 }
@@ -883,7 +1026,7 @@ const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', Arr
 window.addEventListener('keydown', ev => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const dir = KEYMAP[ev.code];
-  if (dir) { ev.preventDefault(); if (!ev.repeat) pressDir(dir); else if (ui) uiMove(dir); return; }
+  if (dir) { ev.preventDefault(); if (!ev.repeat) pressDir(dir); else if (shopUI) shopMove(dir); else if (ui) uiMove(dir); return; }
   if (['KeyZ', 'Enter', 'Space'].includes(ev.code)) {
     if (ev.code === 'Space' || ev.code === 'Enter') { if (ev.target && ev.target.tagName === 'BUTTON' && ev.target.id === 'reset') return; ev.preventDefault(); }
     if (!ev.repeat) pressA();
@@ -924,10 +1067,15 @@ function renderCard() {
       <div><b></b><small></small></div>`;
     li.querySelector('b').textContent = c.name;
     li.querySelector('small').textContent = `${c.area} · ${c.need} questions${done ? ' · in' : ''}`;
+    const dc = document.createElement('small'); dc.className = 'dress' + (dressOK(c.id, state.outfit) ? ' ok' : '');
+    dc.textContent = (dressOK(c.id, state.outfit) ? '✓ ' : '✗ ') + DRESS[c.id].hint;
+    li.querySelector('div').appendChild(dc);
     ol.appendChild(li);
   });
   const n = stampCount();
   $('#count').textContent = n;
+  $('#wearing').textContent = OUTFITS[state.outfit].name;
+  drawMini($('#wearingMini').getContext('2d'), state.outfit);
   $('#hud').textContent = `STEMPEL ${n}/${CLUBS.length}`;
 }
 const resetBtn = $('#reset');
@@ -941,7 +1089,8 @@ resetBtn.addEventListener('click', () => {
   }
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
-  state.stamps = {}; state.intro = false; state.finale = false;
+  state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist';
+  if (shopUI) { shopUI = null; shopEl.hidden = true; }
   ents.forEach(e => { if (e.kind === 'bouncer') { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
   player.x = player.tx = START.x; player.y = player.ty = START.y; player.dir = START.dir; player.moving = false;
   if (insideResolve) { inside.hidden = true; insideResolve = null; }
@@ -969,6 +1118,8 @@ function arrive() {
   if (get(player.x, player.y) === D) {
     const c = clubAtDoor(player.x, player.y);
     if (c) { enterDoor(c); return; }
+    const sh = shopAtDoor(player.x, player.y);
+    if (sh) { openShop(sh); return; }
   }
   if (++saveTimer % 8 === 0) save();
 }

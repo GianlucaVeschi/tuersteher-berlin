@@ -30,6 +30,19 @@
           <div class="in-stamp" id="inStamp">+1 STEMPEL</div>
           <p class="in-hint">A · back to the street</p>
         </div>
+        <div class="shop" id="shop" hidden>
+          <div class="shop-head"><p class="shop-name" id="shopName"></p><p class="shop-area" id="shopArea"></p></div>
+          <div class="shop-body">
+            <div class="shop-preview">
+              <canvas id="shopPreview" width="16" height="16"></canvas>
+              <p class="shop-tags" id="shopTags"></p>
+              <p class="shop-fits" id="shopFits"></p>
+            </div>
+            <ul class="shop-list" id="shopList"></ul>
+          </div>
+          <p class="shop-msg" id="shopMsg"></p>
+          <p class="shop-hint">A · change &nbsp; B · leave</p>
+        </div>
         <div class="title" id="title">
           <h1>TÜRSTEHER<span>BERLIN</span></h1>
           <p id="titleSub">Seven clubs. Seven bouncers.<br>One very long weekend.</p>
@@ -63,10 +76,11 @@
       </div>
       <p class="count"><b id="count">0</b>/7</p>
     </header>
+    <div class="wearing"><canvas id="wearingMini" width="16" height="16"></canvas><p><span>Wearing</span><b id="wearing">Red hoodie &amp; cap</b></p></div>
     <ol id="stamps"></ol>
     <footer>
       <p>Walk up to a bouncer and press A. Get every question right and you're in. One wrong answer and it's <i>Heute nicht.</i></p>
-      <p>Signs next to each door and locals on the street drop hints.</p>
+      <p>Bouncers check your outfit first. Walk into Humana, Blackstyle, Coexist or SYLD to change. Signs and locals drop hints.</p>
       <button class="reset" id="reset" type="button">Start over</button>
     </footer>
   </aside>
