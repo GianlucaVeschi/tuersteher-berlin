@@ -319,3 +319,116 @@ body {
   .more, .title .press { animation: none; }
   .beams { animation: none; }
 }
+
+/* Desktop: the card takes the handheld's height and scrolls inside, so the page never scrolls. */
+@media (min-width: 901px) and (min-height: 501px) {
+  .card { height: 0; min-height: 100%; overflow-y: auto; scrollbar-width: thin; }
+}
+
+/* =====================================================================
+   Mobile: full-screen app layout. The handheld becomes the whole screen,
+   the map fills the space between a top bar and thumb-sized controls,
+   and the stamp card slides up as a sheet.
+   ===================================================================== */
+.mbar, .card-close, .touch-hint, .in-hint .tc { display: none; }
+html { -webkit-tap-highlight-color: transparent; }
+.device, .screen { -webkit-touch-callout: none; }
+
+@media (max-width: 700px), (max-height: 500px) {
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body { position: fixed; inset: 0; background: var(--shell); }
+  .wrap { display: block; height: 100%; min-height: 0; padding: 0; max-width: none; }
+
+  .device {
+    height: 100%;
+    display: flex; flex-direction: column;
+    border-radius: 0; box-shadow: none;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  }
+  .mbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 8px 12px;
+  }
+  .mbar-title { font-family: var(--font-pixel); font-size: 11px; color: #2c2a6b; font-style: italic; }
+  .mbar-title b { color: var(--magenta); font-weight: 400; }
+  .mbar-card {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-pixel); font-size: 11px; color: var(--ink);
+    background: var(--paper); border: 2px solid var(--ink); padding: 4px 10px 4px 4px;
+    min-height: 40px; cursor: pointer;
+  }
+  .mbar-card canvas { width: 30px; height: 30px; image-rendering: pixelated; background: var(--paper-2); }
+
+  .bezel { flex: 1; min-height: 0; display: flex; border-radius: 6px; margin: 0 8px; padding: 6px; }
+  .bezel-top, .brand, .keys { display: none; }
+  .screen { flex: 1; min-height: 0; aspect-ratio: auto; width: auto; touch-action: none; }
+  .screen canvas#game { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: auto; height: auto; }
+
+  .hud { font-size: clamp(9px, 2.6cqw, 12px); }
+  .dialog { font-size: clamp(11px, 3.6cqw, 15px); padding: 14px 16px 16px; border-width: 3px; box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 5px #6b6580; }
+  .dialog li { padding: 6px 0 6px 20px; }
+  .dialog li.sel::before { left: 2px; top: 1em; border-left-width: 8px; border-block-width: 5px; }
+  .more { right: 14px; bottom: 10px; border-top-width: 7px; border-inline-width: 5px; }
+  .in-hint .kb { display: none; }
+  .in-hint .tc { display: inline; }
+  .inside .in-text { font-size: clamp(11px, 3.4cqw, 15px); }
+  .inside .in-hint, .inside .in-stamp { font-size: clamp(9px, 2.8cqw, 12px); }
+  .title p { font-size: clamp(9px, 3cqw, 13px); }
+  .title .press { font-size: clamp(11px, 3.6cqw, 15px); }
+  .touch-hint { display: block; position: relative; z-index: 1; }
+
+  .shop { padding: 10px; gap: 8px; }
+  .shop-name { font-size: clamp(14px, 5cqw, 20px); }
+  .shop-area, .shop-hint { font-size: clamp(8px, 2.4cqw, 11px); }
+  .shop-body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: 8px; }
+  .shop-preview { grid-template-columns: 64px minmax(0, 1fr); justify-items: start; align-items: center; text-align: left; padding: 8px; border-width: 3px; column-gap: 10px; row-gap: 4px; }
+  .shop-preview canvas { grid-row: span 2; width: 64px; }
+  .shop-tags { font-size: clamp(8px, 2.6cqw, 11px); }
+  .shop-fits { font-size: clamp(15px, 4.4cqw, 19px); }
+  .shop-list { padding: 6px; border-width: 3px; gap: 2px; }
+  .shop-list li { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; font-size: clamp(10px, 3.2cqw, 13px); padding: 6px 8px; min-height: 44px; }
+  .shop-list .mini { width: 32px; height: 32px; }
+  .shop-msg { font-size: clamp(9px, 3cqw, 12px); padding: 8px 10px; border-width: 3px; min-height: 0; }
+
+  .controls { margin: 0; padding: 14px 22px 16px; }
+  .dpad { grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); }
+  .dpad button { font-size: 14px; }
+  .ab { gap: 16px; }
+  .ab button { width: 64px; height: 64px; }
+  .ab div:first-child { margin-top: 30px; }
+
+  .card {
+    position: fixed; inset: 0; z-index: 20;
+    overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 0;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%); visibility: hidden;
+    transition: transform .28s ease, visibility 0s .28s;
+  }
+  .card.open { transform: none; visibility: visible; transition: transform .28s ease; }
+  .card-close {
+    display: grid; place-items: center; width: 40px; height: 40px; flex: none;
+    background: var(--ink); color: var(--paper); border: 0; font-size: 16px; cursor: pointer; align-self: start;
+  }
+  .card header { align-items: center; }
+}
+
+/* Landscape phones: D-pad left, screen centre, A/B right. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .device {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "bar bar bar" "pad screen ab";
+  }
+  .mbar { grid-area: bar; padding-block: 4px; }
+  .mbar-card { min-height: 34px; }
+  .bezel { grid-area: screen; margin: 0 0 8px; }
+  .controls { display: contents; }
+  .dpad { grid-area: pad; align-self: center; margin: 0 16px; }
+  .ab { grid-area: ab; align-self: center; margin: 0 18px 0 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .card.open { transition: none; }
+}

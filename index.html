@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Türsteher Berlin</title>
+<meta name="theme-color" content="#b8b3aa">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Türsteher">
 <meta name="description" content="Pokémon-style pixel game: walk Berlin at night and talk your way past the bouncers at seven real clubs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +18,10 @@
 <body>
 <main class="wrap">
   <section class="device" aria-label="Game">
+    <header class="mbar">
+      <span class="mbar-title">TÜRSTEHER <b>BERLIN</b></span>
+      <button class="mbar-card" id="cardBtn" type="button" aria-controls="card"><canvas id="mbarMini" width="16" height="16"></canvas><span id="cardBtnCount">0/7</span></button>
+    </header>
     <div class="bezel">
       <div class="bezel-top"><span class="power"><i></i>POWER</span><span class="line"></span><span>NACHT · MATRIX</span></div>
       <div class="screen" id="screen">
@@ -28,7 +37,7 @@
           <p class="in-club" id="inClub"></p>
           <p class="in-text" id="inText"></p>
           <div class="in-stamp" id="inStamp">+1 STEMPEL</div>
-          <p class="in-hint">A · back to the street</p>
+          <p class="in-hint"><span class="kb">A</span><span class="tc">Tap</span> · back to the street</p>
         </div>
         <div class="shop" id="shop" hidden>
           <div class="shop-head"><p class="shop-name" id="shopName"></p><p class="shop-area" id="shopArea"></p></div>
@@ -47,6 +56,7 @@
           <h1>TÜRSTEHER<span>BERLIN</span></h1>
           <p id="titleSub">Seven clubs. Seven bouncers.<br>One very long weekend.</p>
           <p class="press" id="titlePress">PRESS A</p>
+          <p class="touch-hint">Drag on the map to walk · tap to talk</p>
           <div class="skyline"></div>
         </div>
       </div>
@@ -68,13 +78,14 @@
     <p class="keys"><kbd>←↑↓→</kbd>/<kbd>WASD</kbd> walk &nbsp; <kbd>Z</kbd>/<kbd>Enter</kbd> talk &nbsp; <kbd>X</kbd> skip</p>
   </section>
 
-  <aside class="card" aria-label="Stamp card">
+  <aside class="card" id="card" aria-label="Stamp card">
     <header>
       <div>
         <p class="eyebrow">Stempelkarte</p>
         <h2>Get past every door</h2>
       </div>
       <p class="count"><b id="count">0</b>/7</p>
+      <button class="card-close" id="cardClose" type="button" aria-label="Close stamp card">✕</button>
     </header>
     <div class="wearing"><canvas id="wearingMini" width="16" height="16"></canvas><p><span>Wearing</span><b id="wearing">Red hoodie &amp; cap</b></p></div>
     <ol id="stamps"></ol>

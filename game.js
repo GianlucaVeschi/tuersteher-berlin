@@ -200,7 +200,9 @@ const FINALE = [
 ];
 
 /* ================= MAP ================= */
-const T = 16, VW = 384, VH = 256, MW = 72, MH = 46;
+const T = 16, MW = 72, MH = 46;
+// Visible area in game pixels. Desktop uses a fixed 384x256 view; on phones fitCanvas() sizes it to the screen.
+let VW = 384, VH = 256;
 const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12;
 const SOLID = new Set([W, B, TR, C, F, RL]);
 const map = Array.from({ length: MH }, () => Array(MW).fill(G));
@@ -710,6 +712,34 @@ function person(g, X, Y, dir, step, L) {
 const cvs = $('#game');
 const ctx = cvs.getContext('2d');
 ctx.imageSmoothingEnabled = false;
+
+/* ================= SCREEN FIT (mobile) ================= */
+const screenEl = $('#screen');
+const MOBILE = window.matchMedia('(max-width: 700px), (max-height: 500px)');
+function fitCanvas() {
+  let w = 384, h = 256;
+  if (MOBILE.matches) {
+    const r = screenEl.getBoundingClientRect();
+    if (r.width < 32 || r.height < 32) return;
+    // Integer scale keeps pixels crisp; aim for roughly 10-12 tiles across the short side.
+    const s = Math.max(2, Math.round(Math.min(r.width, r.height) / 160));
+    w = Math.min(MW * T, Math.floor(r.width / s));
+    h = Math.min(MH * T, Math.floor(r.height / s));
+    cvs.style.width = (w * s) + 'px';
+    cvs.style.height = (h * s) + 'px';
+  } else {
+    cvs.style.width = ''; cvs.style.height = '';
+  }
+  if (cvs.width !== w || cvs.height !== h) {
+    cvs.width = w; cvs.height = h;
+    ctx.imageSmoothingEnabled = false;
+  }
+  VW = w; VH = h;
+}
+if (window.ResizeObserver) new ResizeObserver(fitCanvas).observe(screenEl);
+window.addEventListener('resize', fitCanvas);
+if (MOBILE.addEventListener) MOBILE.addEventListener('change', fitCanvas);
+fitCanvas();
 const train = { x: -400, wait: 2500 };
 
 function playerPx() {
@@ -967,6 +997,7 @@ async function maybeFinale() {
   }
 }
 function pushBack() {
+  if (navigator.vibrate) { try { navigator.vibrate(60); } catch (e) {} }
   const [dx, dy] = DIRS[OPP[player.dir]];
   const nx = player.x + dx, ny = player.y + dy;
   if (!blocked(nx, ny)) { player.tx = nx; player.ty = ny; player.moving = true; player.t = 0; player.n++; }
@@ -1037,6 +1068,49 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => { const dir = KEYMAP[ev.code]; if (dir) releaseDir(dir); });
 window.addEventListener('blur', () => { held.length = 0; });
 
+/* Touch on the map: drag to walk (like a joystick), tap for A. */
+let touch = null;
+cvs.addEventListener('pointerdown', ev => {
+  if (ev.pointerType === 'mouse') return;
+  ev.preventDefault();
+  touch = { x: ev.clientX, y: ev.clientY, dir: null };
+  try { cvs.setPointerCapture(ev.pointerId); } catch (e) {}
+});
+cvs.addEventListener('pointermove', ev => {
+  if (!touch) return;
+  const dx = ev.clientX - touch.x, dy = ev.clientY - touch.y;
+  if (Math.hypot(dx, dy) < 18) return;
+  const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+  if (dir === touch.dir) return;
+  if (touch.dir) releaseDir(touch.dir);
+  touch.dir = dir;
+  pressDir(dir);
+  // In menus each drag step moves the cursor once: re-anchor so the next swipe counts again.
+  if (ui || shopUI) { touch.x = ev.clientX; touch.y = ev.clientY; releaseDir(dir); touch.dir = null; touch.menu = true; }
+});
+function endTouch() {
+  if (!touch) return;
+  if (touch.dir) releaseDir(touch.dir);
+  else if (!touch.menu) pressA();
+  touch = null;
+}
+cvs.addEventListener('pointerup', endTouch);
+cvs.addEventListener('pointercancel', () => { if (touch && touch.dir) releaseDir(touch.dir); touch = null; });
+cvs.addEventListener('contextmenu', ev => ev.preventDefault());
+// Tapping the text box advances it.
+$('#dialog').addEventListener('click', ev => { if (ev.target.closest('li')) return; if (ui && ui.mode === 'ask' && !typing) return; pressA(); });
+
+/* Stamp card sheet (mobile). */
+const cardEl = $('#card');
+function setCard(open) {
+  cardEl.classList.toggle('open', open);
+  $('#cardBtn').setAttribute('aria-expanded', String(open));
+  if (open) held.length = 0;
+}
+$('#cardBtn').addEventListener('click', () => setCard(!cardEl.classList.contains('open')));
+$('#cardClose').addEventListener('click', () => setCard(false));
+window.addEventListener('keydown', ev => { if (ev.code === 'Escape' && cardEl.classList.contains('open')) setCard(false); }, true);
+
 document.querySelectorAll('.dpad button').forEach(btn => {
   const dir = btn.dataset.dir;
   const down = ev => { ev.preventDefault(); btn.classList.add('on'); pressDir(dir); try { btn.setPointerCapture(ev.pointerId); } catch (e) {} };
@@ -1074,6 +1148,8 @@ function renderCard() {
   });
   const n = stampCount();
   $('#count').textContent = n;
+  $('#cardBtnCount').textContent = `${n}/${CLUBS.length}`;
+  drawMini($('#mbarMini').getContext('2d'), state.outfit);
   $('#wearing').textContent = OUTFITS[state.outfit].name;
   drawMini($('#wearingMini').getContext('2d'), state.outfit);
   $('#hud').textContent = `STEMPEL ${n}/${CLUBS.length}`;

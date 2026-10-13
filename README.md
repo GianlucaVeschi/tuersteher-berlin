@@ -45,6 +45,8 @@ Then open http://localhost:8000.
 | Talk / confirm | Z / Enter / Space | A |
 | Skip text | X / Esc | B |
 
+On phones the page switches to a full-screen layout: drag anywhere on the map to walk (like a joystick), tap the map or the text box to talk, or use the big D-pad and A/B buttons. The stamp card opens from the button in the top bar. Landscape puts the D-pad left and A/B right of the map. The visible map area adapts to the screen with crisp integer pixel scaling. Tip: "Add to Home Screen" runs it full-screen.
+
 Progress (stamps, position) is saved in `localStorage`. "Start over" on the stamp card clears it.
 
 ## Files
