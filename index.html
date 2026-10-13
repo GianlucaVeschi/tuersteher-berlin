@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Türsteher Berlin</title>
+<meta name="description" content="Pokémon-style pixel game: walk Berlin at night and talk your way past the bouncers at seven real clubs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <section class="device" aria-label="Game">
+    <div class="bezel">
+      <div class="bezel-top"><span class="power"><i></i>POWER</span><span class="line"></span><span>NACHT · MATRIX</span></div>
+      <div class="screen" id="screen">
+        <canvas id="game" width="384" height="256" aria-label="Map of Berlin at night"></canvas>
+        <div class="hud" id="hud">STEMPEL 0/7</div>
+        <div class="dialog" id="dialog" hidden aria-live="polite">
+          <p id="dtext"></p>
+          <ul id="dchoices" hidden></ul>
+          <span class="more" id="dmore" hidden></span>
+        </div>
+        <div class="inside" id="inside" hidden>
+          <div class="beams"></div>
+          <p class="in-club" id="inClub"></p>
+          <p class="in-text" id="inText"></p>
+          <div class="in-stamp" id="inStamp">+1 STEMPEL</div>
+          <p class="in-hint">A · back to the street</p>
+        </div>
+        <div class="title" id="title">
+          <h1>TÜRSTEHER<span>BERLIN</span></h1>
+          <p id="titleSub">Seven clubs. Seven bouncers.<br>One very long weekend.</p>
+          <p class="press" id="titlePress">PRESS A</p>
+          <div class="skyline"></div>
+        </div>
+      </div>
+    </div>
+    <div class="brand">Türsteher <span>Berlin</span> · Friday 23:47</div>
+    <div class="controls">
+      <div class="dpad" role="group" aria-label="Direction pad">
+        <button class="u" data-dir="up" aria-label="Up" id="padUp">▲</button>
+        <button class="l" data-dir="left" aria-label="Left" id="padLeft">◀</button>
+        <span class="c"></span>
+        <button class="r" data-dir="right" aria-label="Right" id="padRight">▶</button>
+        <button class="d" data-dir="down" aria-label="Down" id="padDown">▼</button>
+      </div>
+      <div class="ab">
+        <div><button id="btnB" aria-label="B button">B</button>B</div>
+        <div><button id="btnA" aria-label="A button">A</button>A</div>
+      </div>
+    </div>
+    <p class="keys"><kbd>←↑↓→</kbd>/<kbd>WASD</kbd> walk &nbsp; <kbd>Z</kbd>/<kbd>Enter</kbd> talk &nbsp; <kbd>X</kbd> skip</p>
+  </section>
+
+  <aside class="card" aria-label="Stamp card">
+    <header>
+      <div>
+        <p class="eyebrow">Stempelkarte</p>
+        <h2>Get past every door</h2>
+      </div>
+      <p class="count"><b id="count">0</b>/7</p>
+    </header>
+    <ol id="stamps"></ol>
+    <footer>
+      <p>Walk up to a bouncer and press A. Get every question right and you're in. One wrong answer and it's <i>Heute nicht.</i></p>
+      <p>Signs next to each door and locals on the street drop hints.</p>
+      <button class="reset" id="reset" type="button">Start over</button>
+    </footer>
+  </aside>
+</main>
+<script src="game.js"></script>
+</body>
+</html>
