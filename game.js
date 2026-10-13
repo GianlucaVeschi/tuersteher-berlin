@@ -137,10 +137,15 @@ CLUBS.forEach(c => {
 });
 
 /* ================= OUTFITS & SHOPS ================= */
-const TAG_LABEL = { black: 'ALL BLACK', latex: 'FETISH', colorful: 'COLORFUL', vintage: 'VINTAGE', tourist: 'TOURIST', suit: 'FANCY' };
+const TAG_LABEL = { black: 'ALL BLACK', latex: 'FETISH', colorful: 'COLORFUL', vintage: 'VINTAGE', tourist: 'TOURIST', suit: 'FANCY', tech: 'TECH' };
 const BASE_LOOK = { skin: '#f0c7a0', hair: '#2b1f1a' };
 const OUTFITS = {
   tourist:     { name: 'Red hoodie & cap',       tags: ['tourist'],             look: { top: '#e04f5f', legs: '#26243a', hat: '#1c1a28' } },
+  sunhat:      { name: 'Sun hat & souvenir tee', tags: ['tourist'],             look: { top: '#f2c14e', legs: '#4ea8de', hat: '#efe3c0' } },
+  flannel:     { name: 'Flannel & beanie',       tags: ['vintage'],             look: { top: '#8a2f2f', legs: '#2b3f6b', stripes: '#3a1f1f', hat: '#3a5a40' } },
+  knit:        { name: 'Oversized knit & mom jeans', tags: ['vintage'],         look: { top: '#c98a4a', legs: '#5a7aa8' } },
+  techvest:    { name: 'Fleece vest & sneakers', tags: ['tech'],                look: { top: '#2f3b4a', legs: '#4a4a58', shirt: '#cfd8e3' } },
+  painter:     { name: 'Paint-splattered overalls', tags: ['colorful', 'vintage'], look: { top: '#e9e4d6', legs: '#d9d2c0', sparkle: '#d94bd1' } },
   thriftblack: { name: 'All-black thrift fit',   tags: ['black'],               look: { top: '#1a1920', legs: '#1a1920' } },
   seventies:   { name: '70s suede jacket',       tags: ['vintage'],             look: { top: '#a8653a', legs: '#3b4a6b' } },
   gdr:         { name: 'GDR work jacket',        tags: ['vintage'],             look: { top: '#3d5f94', legs: '#3d5f94', stripes: '#2c4672' } },
@@ -154,14 +159,33 @@ const OUTFITS = {
   mesh:        { name: 'Black mesh & cargos',    tags: ['black'],               look: { top: '#2a2a33', legs: '#1a1920', stripes: '#14121c' } },
   sailor:      { name: 'Sailor stripes',         tags: ['colorful', 'vintage'], look: { top: '#f3eee3', legs: '#2b3f6b', stripes: '#2b4c7a', hat: '#f3eee3' } }
 };
-const lookOf = id => Object.assign({}, BASE_LOOK, OUTFITS[id].look);
+
+// Starting characters. `body` is kept when you change clothes; `outfit` is what they start in.
+const CHARACTERS = {
+  man: [
+    { id: 'tourist_m', name: 'The Tourist', desc: 'First night in Berlin. Very excited, very visible.', body: { skin: '#f3c9a8', hair: '#c9a24a' }, outfit: 'tourist' },
+    { id: 'hipster_m', name: 'The Hipster', desc: 'Moved to Neukölln in 2014. Has opinions about coffee.', body: { skin: '#e2b08c', hair: '#5a3a22', beard: '#5a3a22' }, outfit: 'flannel' },
+    { id: 'tech_m', name: 'The Tech Guy', desc: "Works at a scale-up. Says 'synergy' without irony.", body: { skin: '#d9a27c', hair: '#1a1a1a', glasses: '#9fc7e6' }, outfit: 'techvest' },
+    { id: 'local_m', name: 'The Local', desc: 'Born in Friedrichshain. Already dressed in black.', body: { skin: '#8d5a3b', hair: '#111111' }, outfit: 'thriftblack' }
+  ],
+  woman: [
+    { id: 'tourist_f', name: 'The Tourist', desc: 'Interrailing through Europe. Berlin is stop four.', body: { skin: '#f3c9a8', hair: '#d9b25c', long: true }, outfit: 'sunhat' },
+    { id: 'hipster_f', name: 'The Hipster', desc: 'Runs a vintage stall at the Mauerpark flea market on Sundays.', body: { skin: '#f0c7a0', hair: '#b04a2a', glasses: '#9fc7e6' }, outfit: 'knit' },
+    { id: 'tech_f', name: 'The Tech Girl', desc: 'Product manager. Has a roadmap for tonight.', body: { skin: '#c98d6a', hair: '#2a1a14', long: true }, outfit: 'techvest' },
+    { id: 'artist_f', name: 'The Art Student', desc: 'Second year at art school. Paint on everything.', body: { skin: '#e2b08c', hair: '#7a3fd1', long: true }, outfit: 'painter' }
+  ]
+};
+const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman);
+const charById = id => ALL_CHARS.find(c => c.id === id) || null;
+const lookFor = (ch, outfitId) => Object.assign({}, BASE_LOOK, ch ? ch.body : {}, OUTFITS[outfitId || (ch ? ch.outfit : 'tourist')].look);
+const lookOf = id => lookFor(charById(state.char), id);
 
 // Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
 const DRESS = {
   berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Türsteher: … Nein.' },
   tresor:     { ok: ['black'],               hint: 'Dark and functional. Black works.',     no_line: 'Jens: Bit bright for a vault, mate.' },
   kitkat:     { ok: ['latex'],               hint: 'Fetish: latex, leather or very little.', no_line: "Dee: Darling, you're wearing far too much. And the wrong things." },
-  aboutblank: { no: ['tourist', 'suit'],     hint: 'Anything with personality. No tourist look, nothing fancy.', no_line: "Kim: That outfit doesn't say anything about you. Not tonight." },
+  aboutblank: { no: ['tourist', 'suit', 'tech'], hint: 'Anything with personality. No tourist look, no tech vest, nothing fancy.', no_line: "Kim: That outfit doesn't say anything about you. Not tonight." },
   katerblau:  { ok: ['colorful', 'vintage'], hint: 'Colorful, playful, a bit of costume.',  no_line: 'Olli: Too serious for the boat! Bring some color.' },
   sisyphos:   { ok: ['colorful'],            hint: 'Bright colors, glitter, festival.',     no_line: "Mo: It's a festival in here, not a funeral. Color, please." },
   cdv:        { no: ['suit'],                hint: 'Relaxed. Just not too fancy.',          no_line: 'Uwe: Bit fancy for a wooden deck, no?' }
@@ -243,14 +267,15 @@ vroad(60, 3, MH - 1);
 // Buildings
 const buildings = [];
 function building(x, y, w, h, kind, extra) { rect(x, y, w, h, B); buildings.push(Object.assign({ x, y, w, h, kind }, extra || {})); }
-building(2, 2, 5, 11, 'tower');
-building(41, 7, 6, 6, 'altbau', { v: 2, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });
+// Fernsehturm: solid footprint is the plaza block; the tall part is drawn in front of sprites.
+const TOWER = { x: 41, y: 16, w: 6, h: 4, top: 9 };
+building(TOWER.x, TOWER.y, TOWER.w, TOWER.h, 'tower');
 building(63, 7, 8, 6, 'station');
 SHOPS.forEach(sh => {
   building(sh.x, sh.y, sh.w, sh.h, 'altbau', { v: sh.v, shop: { label: sh.label, band: sh.band, ink: sh.ink, door: true } });
   set(sh.dx, sh.doorY, D);
 });
-building(41, 33, 4, 6, 'altbau', { v: 0 });
+building(41, 33, 4, 6, 'altbau', { v: 0, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });
 // Oberbaumbrücke towers
 building(37, 24, 1, 1, 'obtower');
 building(40, 24, 1, 1, 'obtower');
@@ -268,13 +293,13 @@ CLUBS.forEach(c => { rect(c.x, c.y, c.w, c.h, C); set(c.dx, c.doorY, D); });
 const tree = (x, y) => { if (get(x, y) === G) set(x, y, TR); };
 for (let x = 0; x < MW; x++) { tree(x, 0); tree(x, 44); tree(x, 45); }
 for (let y = 0; y < MH; y++) { tree(0, y); tree(MW - 1, y); }
-[[1, 14 - 13], [7, 3], [8, 7], [7, 10], [1, 8], [1, 11], [2, 17], [5, 18], [3, 20], [7, 17], [14, 17], [16, 19],
+[[1, 1], [3, 3], [5, 5], [2, 7], [6, 8], [3, 10], [5, 12], [7, 3], [8, 7], [7, 10], [1, 8], [1, 11], [2, 17], [5, 18], [3, 20], [7, 17], [14, 17], [16, 19],
  [42, 17], [45, 19], [48, 17], [51, 19], [54, 17], [57, 18], [44, 21], [52, 20],
  [56, 7], [57, 8], [58, 7], [56, 10], [58, 11], [57, 12], [36, 8], [36, 11], [25, 8],
  [3, 28], [9 - 1, 27], [16, 28], [22, 27], [28, 28], [34, 27], [44, 28], [49, 27], [57, 28], [64, 27], [69, 28],
  [55, 33], [56, 35], [58, 34], [57, 37], [55, 38], [1, 34], [1, 37],
  [63, 34], [65, 33], [67, 35], [69, 33], [64, 37], [66, 38], [70, 36], [68, 38],
- [20, 2], [30, 2], [44, 2], [55, 2], [66, 2], [12 + 3, 46 - 3], [45, 34], [36, 35]
+ [20, 2], [30, 2], [44, 2], [55, 2], [41, 8], [43, 7], [46, 9], [42, 11], [45, 11], [44, 9], [66, 2], [12 + 3, 46 - 3], [45, 34], [36, 35]
 ].forEach(([x, y]) => tree(x, y));
 
 /* ================= ENTITIES ================= */
@@ -295,10 +320,10 @@ CLUBS.forEach(c => {
 });
 ents.push(
   { kind: 'sign', x: 25, y: 17, lines: ['EAST SIDE GALLERY', 'About 1.3 km of the Berlin Wall, painted by artists from around the world in 1990.'] },
-  { kind: 'sign', x: 8, y: 12, lines: ['FERNSEHTURM · Alexanderplatz', '368 m tall. You can see it from almost every street in Berlin.'] },
+  { kind: 'sign', x: 47, y: 19, lines: ['FERNSEHTURM · Alexanderplatz', '368 m tall. You can see it from almost every street in Berlin.'] },
   { kind: 'sign', x: 41, y: 21, lines: ['OBERBAUMBRÜCKE', 'The red brick bridge between Friedrichshain and Kreuzberg.'] },
   { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. ://about blank is just around the corner.'] },
-  { kind: 'npc', x: 44, y: 13, dir: 'down', look: LOOKS.spati, lines: ['Späti: Club-Mate? Two euros.', 'Späti: Tip: bouncers spot tourists fast. Learn about a club before you queue.', 'Späti: Wrong clothes? Humana and Blackstyle are just down the street.', 'Späti: And Berghain was a power plant. Everyone asks.'] },
+  { kind: 'npc', x: 43, y: 39, dir: 'down', look: LOOKS.spati, lines: ['Späti: Club-Mate? Two euros.', 'Späti: Tip: bouncers spot tourists fast. Learn about a club before you queue.', 'Späti: Wrong clothes? Coexist and SYLD are on this street. Humana and Blackstyle are up north.', 'Späti: And Berghain was a power plant. Everyone asks.'] },
   { kind: 'npc', x: 26, y: 13, dir: 'right', look: LOOKS.tourist1, lines: ["Tourist: We came as nine from the hostel. He just said 'Heute nicht.'", 'Tourist: Go alone. And keep your phone in your pocket.'] },
   { kind: 'npc', x: 27, y: 13, dir: 'right', look: LOOKS.tourist2, lines: ["Tourist: Is this even Berghain? There's no sign.", "Tourist: …I think that's the point."] },
   { kind: 'npc', x: 28, y: 13, dir: 'right', look: LOOKS.tourist3, lines: ["Local: I'm wearing all black. I rehearsed my answers.", "Local: I'm terrified."] },
@@ -311,10 +336,12 @@ ents.push(
 /* ================= STATE ================= */
 const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 const OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
-const MOVE = 170;
+const MOVE = 170, RUN = 85;
+let runKey = false, runBtn = false;
+const running = () => runKey || runBtn || !!(touch && touch.far);
 const START = { x: 40, y: 16, dir: 'down' };
-const state = { stamps: {}, intro: false, finale: false, outfit: 'tourist' };
-const player = { x: START.x, y: START.y, tx: START.x, ty: START.y, dir: START.dir, moving: false, t: 0, n: 0 };
+const state = { stamps: {}, intro: false, finale: false, outfit: 'tourist', char: null };
+const player = { dur: 170, x: START.x, y: START.y, tx: START.x, ty: START.y, dir: START.dir, moving: false, t: 0, n: 0 };
 let busy = true, titleOn = true;
 const held = [];
 
@@ -322,7 +349,7 @@ function save() {
   try { localStorage.setItem('tuersteher-save', JSON.stringify(snapshot())); } catch (e) { /* storage unavailable */ }
 }
 function snapshot() {
-  return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, x: player.x, y: player.y, dir: player.dir };
+  return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, char: state.char, x: player.x, y: player.y, dir: player.dir };
 }
 function applySave(s) {
   if (!s) return;
@@ -330,6 +357,7 @@ function applySave(s) {
   state.intro = !!s.intro;
   state.finale = !!s.finale;
   state.outfit = OUTFITS[s.outfit] ? s.outfit : 'tourist';
+  state.char = charById(s.char) ? s.char : null;
   ents.forEach(e => { if (e.kind === 'bouncer' && state.stamps[e.club.id]) e.x = e.club.dx + 1; });
   if (Number.isInteger(s.x) && Number.isInteger(s.y) && !blocked(s.x, s.y) && get(s.x, s.y) !== D) {
     player.x = player.tx = s.x; player.y = player.ty = s.y; player.dir = s.dir || 'down';
@@ -523,8 +551,17 @@ function drawStation(b) {
   m.fillText('S', cx - 39, Y + 5);
   m.fillText('OSTKREUZ', cx - 28, Y + 5);
 }
+const towerC = document.createElement('canvas');
 function drawTower(b) {
-  const X = b.x * T, Y = b.y * T, Wd = b.w * T, H = b.h * T, cx = X + Wd / 2;
+  // Draw the whole tower (rows TOWER.top .. bottom of footprint) into its own canvas.
+  const Wd = b.w * T, H = (b.y + b.h - TOWER.top) * T;
+  towerC.width = Wd; towerC.height = H;
+  const g = towerC.getContext('2d');
+  const P = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+  const m = g, X = 0, Y = 0, cx = Wd / 2;
+  // plaza
+  P(0, H - b.h * T + 2, Wd, b.h * T - 2, '#5f5a70');
+  for (let i = 0; i < Wd; i += 8) P(i, H - b.h * T + 2, 1, b.h * T - 2, '#57526a');
   // base pavilion
   P(X + 2, Y + H - 22, Wd - 4, 20, INK);
   P(X + 3, Y + H - 21, Wd - 6, 18, '#77748a');
@@ -543,7 +580,11 @@ function drawTower(b) {
   P(cx - 2, Y + 6, 4, 22, INK);
   for (let i = 0; i < 22; i += 4) P(cx - 1, Y + 6 + i, 2, 4, (i / 4) % 2 ? '#e9e6ef' : '#d64545');
   P(cx - 3, Y + 24, 6, 4, '#bdbacb');
+  // footprint part goes into the static map
+  const fy = (b.y - TOWER.top) * T;
+  mDraw(towerC, 0, fy, Wd, H - fy, b.x * T, b.y * T);
 }
+function mDraw(img, sx, sy, sw, sh, dx, dy) { m.drawImage(img, sx, sy, sw, sh, dx, dy, sw, sh); }
 function drawObTower(b) {
   const X = b.x * T, Y = b.y * T;
   P(X + 1, Y - 10, 14, 26, INK);
@@ -682,11 +723,16 @@ function person(g, X, Y, dir, step, L) {
   if (L.shine) det.push([5, 8, 1, 3, L.shine]);
   if (L.sparkle) det.push([5, 8, 1, 1, L.sparkle], [9, 9, 1, 1, L.sparkle], [7, 10, 1, 1, L.sparkle], [11, 8, 1, 1, L.sparkle]);
   if (L.harness) { if (d === 'left') det.push([6, 7, 1, 4, INK], [6, 9, 4, 1, INK]); else det.push([5, 7, 1, 4, INK], [10, 7, 1, 4, INK], [5, 9, 6, 1, INK]); }
+  if (L.shirt && d === 'down') det.push([7, 7, 2, 5, L.shirt]);
   if (L.tie && d === 'down') det.push([7, 7, 2, 1, '#e9e6ef'], [7, 8, 2, 3, L.tie]);
   if (!L.bald) {
-    if (d === 'down') det.push([4, 1, 8, 2, L.hair], [4, 3, 1, 2, L.hair], [11, 3, 1, 2, L.hair]);
-    else if (d === 'up') det.push([4, 1, 8, 6, L.hair]);
-    else det.push([5, 1, 7, 2, L.hair], [9, 3, 3, 3, L.hair]);
+    if (L.long) {
+      if (d === 'down') det.push([4, 1, 8, 2, L.hair], [3, 2, 2, 7, L.hair], [11, 2, 2, 7, L.hair]);
+      else if (d === 'up') det.push([3, 1, 10, 8, L.hair]);
+      else det.push([5, 1, 7, 2, L.hair], [8, 2, 5, 7, L.hair]);
+    } else if (d === 'down') det.push([4, 1, 8, 2, L.hair], [4, 3, 1, 2, L.hair], [11, 3, 1, 2, L.hair]);
+    else if (!L.long && d === 'up') det.push([4, 1, 8, 6, L.hair]);
+    else if (!L.long) det.push([5, 1, 7, 2, L.hair], [9, 3, 3, 3, L.hair]);
   } else det.push([d === 'left' ? 7 : 5, 2, 2, 1, 'rgba(255,255,255,.4)']);
   if (L.hat) {
     if (d === 'down') det.push([4, 1, 8, 2, L.hat], [3, 3, 10, 1, L.hat]);
@@ -695,11 +741,13 @@ function person(g, X, Y, dir, step, L) {
   }
   if (d === 'down') {
     det.push([6, 4, 1, 2, INK], [9, 4, 1, 2, INK]);
+    if (L.glasses) det.push([5, 4, 2, 2, L.glasses], [9, 4, 2, 2, L.glasses], [7, 4, 2, 1, INK], [6, 5, 1, 1, INK], [9, 5, 1, 1, INK]);
     if (L.shades) det.push([5, 4, 6, 1, INK], [5, 5, 2, 1, INK], [9, 5, 2, 1, INK]);
     if (L.beard) det.push([5, 6, 6, 2, L.beard]);
     if (L.tattoo) det.push([5, 6, 1, 1, '#3b3a5c'], [10, 6, 1, 1, '#3b3a5c'], [7, 2, 2, 1, '#3b3a5c'], [11, 4, 1, 1, '#c0c0d0']);
   } else if (d === 'left') {
     det.push([5, 4, 1, 2, INK]);
+    if (L.glasses) det.push([4, 4, 2, 2, L.glasses], [5, 5, 1, 1, INK], [6, 4, 3, 1, INK]);
     if (L.shades) det.push([4, 4, 3, 1, INK]);
     if (L.beard) det.push([4, 6, 4, 2, L.beard]);
     if (L.tattoo) det.push([7, 5, 1, 1, '#3b3a5c'], [6, 3, 1, 1, '#3b3a5c']);
@@ -744,7 +792,7 @@ const train = { x: -400, wait: 2500 };
 
 function playerPx() {
   if (!player.moving) return [player.x * T, player.y * T];
-  const k = player.t / MOVE;
+  const k = player.t / player.dur;
   return [Math.round((player.x + (player.tx - player.x) * k) * T), Math.round((player.y + (player.ty - player.y) * k) * T)];
 }
 function draw(now) {
@@ -765,8 +813,7 @@ function draw(now) {
       ctx.fillRect(x * T - camX + ((x * 7 + k * 5 + tick) % 11) + 1, y * T - camY + ((y * 11 + x) % 10) + 3, 3, 1);
     }
   }
-  // Fernsehturm beacon
-  if (Math.floor(now / 700) % 2 === 0) { ctx.fillStyle = '#ff3b3b'; ctx.fillRect(2 * T + 39 - camX, 2 * T + 3 - camY, 2, 2); }
+
   // club doors
   CLUBS.forEach(c => {
     const dx = c.dx * T - camX, dy = c.doorY * T - camY;
@@ -799,7 +846,7 @@ function draw(now) {
   list.sort((a, b) => a.y - b.y);
   list.forEach(({ e }) => {
     if (!e) {
-      const step = player.moving ? (player.t < MOVE / 2 ? (player.n % 2) + 1 : 0) : 0;
+      const step = player.moving ? (player.t < player.dur / 2 ? (player.n % 2) + 1 : 0) : 0;
       person(ctx, ppx - camX, ppy - camY - 3, player.dir, step, lookOf(state.outfit));
       return;
     }
@@ -813,6 +860,12 @@ function draw(now) {
       person(ctx, X, Y - 3, e.dir, 0, e.look);
     }
   });
+  // Fernsehturm upper part, drawn in front of everything north of it
+  const tX = TOWER.x * T - camX, tY = TOWER.top * T - camY, fy = (TOWER.y - TOWER.top) * T;
+  if (towerC.width && tX > -towerC.width && tX < VW && tY < VH) {
+    ctx.drawImage(towerC, 0, 0, towerC.width, fy, tX, tY, towerC.width, fy);
+    if (Math.floor(now / 700) % 2 === 0) { ctx.fillStyle = '#ff3b3b'; ctx.fillRect(tX + towerC.width / 2 - 1, tY + 3, 2, 2); }
+  }
 }
 
 /* ================= DIALOG ================= */
@@ -895,7 +948,8 @@ function openShop(sh) {
   $('#shopArea').textContent = sh.area;
   shopMsg.textContent = sh.line;
   shopList.innerHTML = '';
-  const entries = sh.items.concat('__leave');
+  const own = charById(state.char);
+  const entries = (own && !sh.items.includes(own.outfit) ? [own.outfit] : []).concat(sh.items, '__leave');
   entries.forEach((id, i) => {
     const li = document.createElement('li');
     if (id === '__leave') {
@@ -946,6 +1000,66 @@ function leaveShop() {
   player.x = player.tx = sh.dx; player.y = player.ty = sh.by; player.dir = 'down';
   save();
   busy = false;
+}
+
+/* ================= CHARACTER CREATOR ================= */
+const creatorEl = $('#creator'), crList = $('#crList');
+let creator = null;
+function openCreator() {
+  busy = true;
+  creator = { step: 1, sel: 0, gender: 'man' };
+  creatorEl.hidden = false;
+  renderCreator();
+}
+function creatorOptions() {
+  if (creator.step === 1) return [{ label: 'Man', ch: CHARACTERS.man[0] }, { label: 'Woman', ch: CHARACTERS.woman[0] }];
+  return CHARACTERS[creator.gender].map(ch => ({ label: ch.name, ch }));
+}
+function renderCreator() {
+  const opts = creatorOptions();
+  $('#crStep').textContent = `NEW GAME · ${creator.step}/2`;
+  $('#crQ').textContent = creator.step === 1 ? "Who's going out tonight?" : 'Pick your character';
+  crList.dataset.n = opts.length;
+  crList.innerHTML = '';
+  opts.forEach((o, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<canvas width="16" height="16"></canvas><span></span>';
+    li.querySelector('span').textContent = o.label;
+    const g = li.querySelector('canvas').getContext('2d');
+    person(g, 0, 0, 'down', 0, lookFor(o.ch));
+    li.classList.toggle('sel', i === creator.sel);
+    li.addEventListener('click', () => { if (!creator) return; creator.sel = i; creatorA(); });
+    crList.appendChild(li);
+  });
+  const cur = opts[creator.sel];
+  if (creator.step === 1) $('#crDesc').textContent = 'You pick a look next. You can change clothes later in shops.';
+  else {
+    const o = OUTFITS[cur.ch.outfit];
+    $('#crDesc').textContent = `${cur.ch.desc} Starts in: ${o.name} (${o.tags.map(t => TAG_LABEL[t]).join(', ')}).`;
+  }
+}
+function creatorMove(dir) {
+  const n = creatorOptions().length;
+  creator.sel = (creator.sel + (dir === 'left' || dir === 'up' ? -1 : 1) + n) % n;
+  renderCreator();
+}
+function creatorA() {
+  if (creator.step === 1) {
+    creator.gender = creator.sel === 0 ? 'man' : 'woman';
+    creator.step = 2; creator.sel = 0;
+    renderCreator();
+    return;
+  }
+  const ch = CHARACTERS[creator.gender][creator.sel];
+  state.char = ch.id;
+  state.outfit = ch.outfit;
+  creator = null; creatorEl.hidden = true;
+  renderCard(); save();
+  busy = false;
+  if (!state.intro) runIntro();
+}
+function creatorB() {
+  if (creator.step === 2) { creator.step = 1; creator.sel = creator.gender === 'man' ? 0 : 1; renderCreator(); }
 }
 
 /* ================= SCRIPTS ================= */
@@ -1000,7 +1114,7 @@ function pushBack() {
   if (navigator.vibrate) { try { navigator.vibrate(60); } catch (e) {} }
   const [dx, dy] = DIRS[OPP[player.dir]];
   const nx = player.x + dx, ny = player.y + dy;
-  if (!blocked(nx, ny)) { player.tx = nx; player.ty = ny; player.moving = true; player.t = 0; player.n++; }
+  if (!blocked(nx, ny)) { player.tx = nx; player.ty = ny; player.moving = true; player.t = 0; player.n++; player.dur = MOVE; }
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
@@ -1034,6 +1148,7 @@ async function runIntro() {
 /* ================= INPUT ================= */
 function pressA() {
   if (titleOn) { startGame(); return; }
+  if (creator) { creatorA(); return; }
   if (insideResolve) { insideResolve(); return; }
   if (shopUI) { shopA(); return; }
   if (ui || typing) { uiA(); return; }
@@ -1041,12 +1156,14 @@ function pressA() {
   interact();
 }
 function pressB() {
+  if (creator) { creatorB(); return; }
   if (insideResolve) { insideResolve(); return; }
   if (shopUI) { leaveShop(); return; }
   if (typing) { typing.finish(); return; }
   if (ui && ui.mode === 'say') uiA();
 }
 function pressDir(dir) {
+  if (creator) { creatorMove(dir); return; }
   if (shopUI) { shopMove(dir); return; }
   if (!held.includes(dir)) held.push(dir);
   if (ui) uiMove(dir);
@@ -1057,7 +1174,11 @@ const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', Arr
 window.addEventListener('keydown', ev => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const dir = KEYMAP[ev.code];
-  if (dir) { ev.preventDefault(); if (!ev.repeat) pressDir(dir); else if (shopUI) shopMove(dir); else if (ui) uiMove(dir); return; }
+  if (dir) { ev.preventDefault(); if (!ev.repeat) pressDir(dir); else if (creator) creatorMove(dir); else if (shopUI) shopMove(dir); else if (ui) uiMove(dir); return; }
+  if (ev.code === 'Tab' || ev.code === 'ShiftLeft' || ev.code === 'ShiftRight') {
+    if (ev.code === 'Tab' && ev.target && ev.target.closest && ev.target.closest('.card')) return;
+    ev.preventDefault(); runKey = true; return;
+  }
   if (['KeyZ', 'Enter', 'Space'].includes(ev.code)) {
     if (ev.code === 'Space' || ev.code === 'Enter') { if (ev.target && ev.target.tagName === 'BUTTON' && ev.target.id === 'reset') return; ev.preventDefault(); }
     if (!ev.repeat) pressA();
@@ -1065,8 +1186,16 @@ window.addEventListener('keydown', ev => {
   }
   if (['KeyX', 'Escape', 'Backspace'].includes(ev.code)) { ev.preventDefault(); if (!ev.repeat) pressB(); }
 });
-window.addEventListener('keyup', ev => { const dir = KEYMAP[ev.code]; if (dir) releaseDir(dir); });
-window.addEventListener('blur', () => { held.length = 0; });
+window.addEventListener('keyup', ev => {
+  if (ev.code === 'Tab' || ev.code === 'ShiftLeft' || ev.code === 'ShiftRight') runKey = false;
+  const dir = KEYMAP[ev.code]; if (dir) releaseDir(dir);
+});
+window.addEventListener('blur', () => { held.length = 0; runKey = false; runBtn = false; });
+// Keep the latest position when the tab is hidden or closed.
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
+window.addEventListener('pagehide', save);
+// Open the page with ?debug to inspect game state from the browser console (window.__game).
+if (/[?&]debug\b/.test(location.search)) window.__game = { player, state, get busy() { return busy; }, held };
 
 /* Touch on the map: drag to walk (like a joystick), tap for A. */
 let touch = null;
@@ -1079,6 +1208,7 @@ cvs.addEventListener('pointerdown', ev => {
 cvs.addEventListener('pointermove', ev => {
   if (!touch) return;
   const dx = ev.clientX - touch.x, dy = ev.clientY - touch.y;
+  touch.far = Math.hypot(dx, dy) > 70;
   if (Math.hypot(dx, dy) < 18) return;
   const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
   if (dir === touch.dir) return;
@@ -1123,8 +1253,8 @@ document.querySelectorAll('.dpad button').forEach(btn => {
 });
 [['#btnA', pressA], ['#btnB', pressB]].forEach(([sel, fn]) => {
   const btn = $(sel);
-  btn.addEventListener('pointerdown', ev => { ev.preventDefault(); btn.classList.add('on'); fn(); });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => btn.addEventListener(t, () => btn.classList.remove('on')));
+  btn.addEventListener('pointerdown', ev => { ev.preventDefault(); btn.classList.add('on'); if (sel === '#btnB') runBtn = true; fn(); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => btn.addEventListener(t, () => { btn.classList.remove('on'); if (sel === '#btnB') runBtn = false; }));
   btn.addEventListener('keydown', ev => { if (ev.code === 'Enter' || ev.code === 'Space') { ev.stopPropagation(); ev.preventDefault(); fn(); } });
 });
 $('#title').addEventListener('click', () => { if (titleOn) startGame(); });
@@ -1165,7 +1295,8 @@ resetBtn.addEventListener('click', () => {
   }
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
-  state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist';
+  state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
+  if (creator) { creator = null; creatorEl.hidden = true; }
   if (shopUI) { shopUI = null; shopEl.hidden = true; }
   ents.forEach(e => { if (e.kind === 'bouncer') { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
   player.x = player.tx = START.x; player.y = player.ty = START.y; player.dir = START.dir; player.moving = false;
@@ -1179,6 +1310,7 @@ resetBtn.addEventListener('click', () => {
 /* ================= LOOP ================= */
 function startGame() {
   titleOn = false; $('#title').hidden = true;
+  if (!state.char) { openCreator(); return; }
   busy = false;
   if (!state.intro) runIntro();
 }
@@ -1189,6 +1321,7 @@ function tryMove(dir) {
   const nx = player.x + dx, ny = player.y + dy;
   if (blocked(nx, ny)) return;
   player.tx = nx; player.ty = ny; player.moving = true; player.t = 0; player.n++;
+  player.dur = running() ? RUN : MOVE;
 }
 function arrive() {
   if (get(player.x, player.y) === D) {
@@ -1202,7 +1335,7 @@ function arrive() {
 function update(dt) {
   if (player.moving) {
     player.t += dt;
-    if (player.t >= MOVE) {
+    if (player.t >= player.dur) {
       player.x = player.tx; player.y = player.ty; player.moving = false; player.t = 0;
       arrive();
     }

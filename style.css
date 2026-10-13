@@ -204,6 +204,35 @@ body {
 }
 .shop-hint { margin: 0; font-size: 1.6cqw; color: #d9cfe0; text-align: right; }
 
+/* ---------- Character creator ---------- */
+.creator {
+  position: absolute; inset: 0;
+  background: linear-gradient(#120f20, #241a3a 65%, #3b1f3a);
+  color: var(--paper); font-family: var(--font-pixel); text-align: center;
+  display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto auto; gap: 2.2cqw;
+  padding: 3.4cqw 4cqw;
+}
+.cr-step { margin: 0; font-size: 1.8cqw; letter-spacing: .14em; color: #ff8cc4; }
+.cr-q { margin: 0; font-size: 4cqw; font-weight: 400; color: var(--lamp); text-shadow: .5cqw .5cqw 0 var(--ink); text-wrap: balance; }
+.cr-list {
+  --n: 4;
+  list-style: none; margin: 0; padding: 0; min-height: 0;
+  display: grid; gap: 2cqw; align-content: center;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+}
+.cr-list[data-n="2"] { --cols: 2; padding-inline: 14cqw; }
+.cr-list li {
+  background: var(--paper); color: var(--ink); border: .6cqw solid var(--ink);
+  display: grid; justify-items: center; gap: 1.2cqw; padding: 1.6cqw 1cqw 1.8cqw;
+  font-size: 1.9cqw; line-height: 1.4; cursor: pointer;
+  transition: transform .12s ease;
+}
+.cr-list li canvas { width: 70%; aspect-ratio: 1; image-rendering: pixelated; background: var(--paper-2); }
+.cr-list li.sel { background: var(--lamp); transform: translateY(-.8cqw); box-shadow: 0 .8cqw 0 var(--magenta); }
+.cr-desc { margin: 0 auto; max-width: 80cqw; font-family: var(--font-term); font-size: 3.2cqw; line-height: 1.1; color: #e3dcf0; min-height: 2.2em; }
+.cr-hint { margin: 0; font-size: 1.6cqw; color: #9d97ad; }
+.cr-hint .tc { display: none; }
+
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -331,6 +360,7 @@ body {
    and the stamp card slides up as a sheet.
    ===================================================================== */
 .mbar, .card-close, .touch-hint, .in-hint .tc { display: none; }
+@media (prefers-reduced-motion: reduce) { .cr-list li { transition: none; } }
 html { -webkit-tap-highlight-color: transparent; }
 .device, .screen { -webkit-touch-callout: none; }
 
@@ -377,6 +407,18 @@ html { -webkit-tap-highlight-color: transparent; }
   .title .press { font-size: clamp(11px, 3.6cqw, 15px); }
   .touch-hint { display: block; position: relative; z-index: 1; }
 
+  .creator { padding: 12px; gap: 10px; }
+  .cr-step, .cr-hint { font-size: clamp(8px, 2.4cqw, 11px); }
+  .cr-hint .kb { display: none; }
+  .cr-hint .tc { display: inline; }
+  .cr-q { font-size: clamp(14px, 5cqw, 20px); }
+  .cr-list { gap: 10px; }
+  .cr-list[data-n="4"] { --cols: 2; }
+  .cr-list[data-n="2"] { padding-inline: 0; }
+  .cr-list li { font-size: clamp(9px, 3cqw, 12px); padding: 8px 6px 10px; gap: 6px; border-width: 3px; }
+  .cr-list li canvas { width: min(70%, 96px); }
+  .cr-list li.sel { transform: translateY(-3px); box-shadow: 0 3px 0 var(--magenta); }
+  .cr-desc { font-size: clamp(15px, 4.4cqw, 19px); }
   .shop { padding: 10px; gap: 8px; }
   .shop-name { font-size: clamp(14px, 5cqw, 20px); }
   .shop-area, .shop-hint { font-size: clamp(8px, 2.4cqw, 11px); }
