@@ -1,3 +1,4 @@
+import { track } from '../core/monitoring';
 import { save } from '../core/save';
 import { renderCard } from './card';
 import { CLUBS } from '../data/clubs';
@@ -70,6 +71,7 @@ export function shopA() {
   if (id === LEAVE) { leaveShop(); return; }
   if (state.outfit === id) { shopMsg.textContent = "You're already wearing that."; return; }
   state.outfit = id;
+  track('outfit_changed', { outfit: id, shop: RT.shopUI.shop.id });
   shopMsg.textContent = 'You change in the fitting room: ' + OUTFITS[id].name + '.';
   renderShop(); renderCard(); save();
 }

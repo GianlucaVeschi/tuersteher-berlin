@@ -1,3 +1,4 @@
+import { track } from '../core/monitoring';
 import { runIntro } from '../game/scripts';
 import { save } from '../core/save';
 import { renderCard } from './card';
@@ -66,6 +67,7 @@ export function creatorA() {
   const ch = CHARACTERS[cr.gender][cr.sel];
   state.char = ch.id;
   state.outfit = ch.outfit;
+  track('character_selected', { character: ch.id });
   RT.creator = null; creatorEl.hidden = true;
   renderCard(); save();
   RT.busy = false;

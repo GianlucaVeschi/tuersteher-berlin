@@ -1,3 +1,4 @@
+import { track } from '../core/monitoring';
 import type { Act, Entity } from '../types';
 import { blocked } from './collision';
 import { OFF_MAP } from './city';
@@ -11,6 +12,7 @@ export const STREET_ACTS: Record<string, Act> = {};
 
 /** Talking to someone from data/npcs.ts: their act or lines, then walking off if they `leave`. */
 export async function streetTalk(e: Entity) {
+  if (e.npcId) track('npc_talked', { npc: e.npcId });
   if (e.act && STREET_ACTS[e.act]) await STREET_ACTS[e.act](e, '');
   else for (const l of e.lines || []) await say(l);
   if (e.leave && e.npcId) {

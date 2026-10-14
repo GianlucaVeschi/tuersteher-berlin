@@ -183,6 +183,12 @@ All graphics are drawn in code on a 384×256 canvas (16 px tiles, 24×16 visible
 
 Every push to `main` runs `.github/workflows/deploy.yml`: it type-checks, builds, and publishes `dist/` to GitHub Pages (about a minute). The repo's **Settings → Pages → Source** must be set to **GitHub Actions**.
 
+## Monitoring
+
+The live site reports to Datadog RUM (`src/core/monitoring.ts`): sessions, errors, and game events sent with `track()`, e.g. `door_rejected` (club, reason), `door_accepted`, `quest_completed`, `club_entered`, `npc_talked`, `outfit_changed`, `character_selected`, `game_finished`. Only production builds report: `npm run dev` sends nothing, and `npm run preview` reports as `env:local` so test sessions are easy to filter out. Sample rates and privacy are changed in Datadog (remote configuration), no deploy needed.
+
+To track something new, call `track('snake_case_name', { key: 'value' })` where it happens.
+
 ## Debugging
 
 Open the page with `?debug` (e.g. `http://localhost:5173/?debug`) and inspect `window.__game` in the browser console for the player position and game state. `__game.tp(x, y, 'up')` teleports, `__game.enterClub('berghain')` puts you inside.
