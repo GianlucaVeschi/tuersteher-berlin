@@ -3,7 +3,8 @@ import { SHOPS } from '../data/outfits';
 import { RT } from '../core/runtime';
 import { B, BR, C, D, DK, F, G, R, RL, S, SA, TR, W } from './tiles';
 import { get, rect, set } from './grid';
-import type { Building, Entity, Look, Road, ShopSign } from '../types';
+import { NPCS } from '../data/npcs';
+import type { Building, Entity, Road, ShopSign } from '../types';
 
 export function pave(x: number, y: number, t: number) {
   const cur = get(x, y);
@@ -83,16 +84,8 @@ export function buildCity() {
 }
 
 /* ================= ENTITIES ================= */
-export const LOOKS: Record<string, Look> = {
-  spati: { skin: '#c98d6a', hair: '#1a1a1a', top: '#e0a83a', legs: '#2a2a35', beard: '#1a1a1a' },
-  tourist1: { skin: '#f3c9a8', hair: '#d9b25c', top: '#4ea8de', legs: '#3a5a8a', hat: '#e24a4a' },
-  tourist2: { skin: '#f0c7a0', hair: '#5a3a22', top: '#f2c14e', legs: '#3a3a4a' },
-  tourist3: { skin: '#e2b08c', hair: '#111', top: '#1b1b22', legs: '#1b1b22' },
-  tourist4: { skin: '#f3c9a8', hair: '#b04a2a', top: '#58b368', legs: '#3a3a4a' },
-  raver: { skin: '#8d5a3b', hair: '#b36bd1', top: '#222', legs: '#222', shades: true },
-  oldraver: { skin: '#f0c7a0', hair: '#c0c0c0', top: '#d9733a', legs: '#3a3a4a', beard: '#c0c0c0' },
-  monday: { skin: '#e2b08c', hair: '#3a2a20', top: '#9a4ad1', legs: '#2a2a35', shades: true }
-};
+/** Off the map: where street NPCs who left are parked. */
+export const OFF_MAP = -10;
 function cityPeople(): Entity[] {
   const ents: Entity[] = [];
   CLUBS.forEach(c => {
@@ -103,15 +96,9 @@ function cityPeople(): Entity[] {
     { kind: 'sign', x: 25, y: 17, lines: ['EAST SIDE GALLERY', 'About 1.3 km of the Berlin Wall, painted by artists from around the world in 1990.'] },
     { kind: 'sign', x: 47, y: 19, lines: ['FERNSEHTURM · Alexanderplatz', '368 m tall. You can see it from almost every street in Berlin.'] },
     { kind: 'sign', x: 41, y: 21, lines: ['OBERBAUMBRÜCKE', 'The red brick bridge between Friedrichshain and Kreuzberg.'] },
-    { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. ://about blank is just around the corner.'] },
-    { kind: 'npc', x: 43, y: 39, dir: 'down', look: LOOKS.spati, lines: ['Späti: Club-Mate? Two euros.', 'Späti: Tip: bouncers spot tourists fast. Learn about a club before you queue.', 'Späti: Wrong clothes? Coexist and SYLD are on this street. Humana and Blackstyle are up north.', 'Späti: And Berghain was a power plant. Everyone asks.'] },
-    { kind: 'npc', x: 26, y: 13, dir: 'right', look: LOOKS.tourist1, lines: ["Tourist: We came as nine from the hostel. He just said 'Heute nicht.'", 'Tourist: Go alone. And keep your phone in your pocket.'] },
-    { kind: 'npc', x: 27, y: 13, dir: 'right', look: LOOKS.tourist2, lines: ["Tourist: Is this even Berghain? There's no sign.", "Tourist: …I think that's the point."] },
-    { kind: 'npc', x: 28, y: 13, dir: 'right', look: LOOKS.tourist3, lines: ["Local: I'm wearing all black. I rehearsed my answers.", "Local: I'm terrified."] },
-    { kind: 'npc', x: 29, y: 13, dir: 'right', look: LOOKS.tourist4, lines: ['Tourist: Two hours in the queue. Worth it, right?'] },
-    { kind: 'npc', x: 19, y: 39, dir: 'down', look: LOOKS.raver, lines: ['Raver: Tresor and KitKat are both on Köpenicker Straße.', 'Raver: Coexist and SYLD sell clubwear right here. Sisyphos wants color, Berghain wants black.', 'Raver: Read the signs. Bouncers love people who know the place.'] },
-    { kind: 'npc', x: 14, y: 20, dir: 'down', look: LOOKS.oldraver, lines: ['Old raver: I danced at Bar25 for three days straight in 2009.', 'Old raver: Kater Blau is the same crew. New spot, same spirit.'] },
-    { kind: 'npc', x: 70, y: 21, dir: 'left', look: LOOKS.monday, lines: ['Raver: What day is it?', "Raver: I came in on Friday. Sisyphos does that to you."] }
+    { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. ://about blank is just around the corner.'] }
   );
+  // people from data/npcs.ts; `home` lets Start over bring back the ones who left
+  NPCS.forEach(n => ents.push({ kind: 'npc', npcId: n.id, x: n.x, y: n.y, dir: n.dir || 'down', look: n.look, lines: n.lines, act: n.act, leave: n.leave, home: { x: n.x, y: n.y } }));
   return ents;
 }

@@ -38,6 +38,7 @@ export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: D
   if (L.harness) { if (d === 'left') det.push([6, 7, 1, 4, INK], [6, 9, 4, 1, INK]); else det.push([5, 7, 1, 4, INK], [10, 7, 1, 4, INK], [5, 9, 6, 1, INK]); }
   if (L.shirt && d === 'down') det.push([7, 7, 2, 5, L.shirt]);
   if (L.tie && d === 'down') det.push([7, 7, 2, 1, '#e9e6ef'], [7, 8, 2, 3, L.tie]);
+  if (L.btc && d === 'down') det.push([6, 7, 1, 5, L.btc], [7, 7, 1, 1, L.btc], [8, 8, 1, 1, L.btc], [7, 9, 1, 1, L.btc], [8, 10, 1, 1, L.btc], [7, 11, 1, 1, L.btc]);
   if (!L.bald) {
     if (L.long) {
       if (d === 'down') det.push([4, 1, 8, 2, L.hair], [3, 2, 2, 7, L.hair], [11, 2, 2, 7, L.hair]);

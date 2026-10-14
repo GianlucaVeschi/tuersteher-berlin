@@ -79,12 +79,14 @@ resetBtn.addEventListener('click', () => {
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
   state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
-  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false;
+  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {};
   releaseFollower(); endTrip(); endK();
   Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } })); if (inClub()) useScene('city'); updateFloorTag();
   if (RT.creator) { RT.creator = null; creatorEl.hidden = true; }
   if (RT.shopUI) { RT.shopUI = null; shopEl.hidden = true; }
   RT.ents.forEach(e => { if (e.club) { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
+  // street NPCs who walked off come back
+  RT.ents.forEach(e => { if (e.npcId && e.home) { e.x = e.home.x; e.y = e.home.y; e.ox = 0; e.alpha = 1; } });
   player.x = player.tx = START.x; player.y = player.ty = START.y; player.dir = START.dir; player.moving = false;
   if (RT.insideResolve) { inside.hidden = true; RT.insideResolve = null; }
   closeBox(); if (RT.typing) { clearInterval(RT.typing.id); RT.typing = null; }

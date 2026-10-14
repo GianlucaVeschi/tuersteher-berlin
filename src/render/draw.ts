@@ -86,7 +86,11 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.fillStyle = '#b08a52'; ctx.fillRect(X + 2, Y + 2, 12, 7);
       ctx.fillStyle = '#7d5f35'; ctx.fillRect(X + 4, Y + 4, 8, 1); ctx.fillRect(X + 4, Y + 6, 6, 1);
     } else if (e.look) {
-      person(ctx, X, Y - 3, e.dir ?? 'down', 0, e.look);
+      // legs move while sliding to the next tile
+      const step = e.ox ? (Math.floor(Math.abs(e.ox) / 8) % 2) + 1 : 0;
+      ctx.globalAlpha = e.alpha ?? 1;
+      person(ctx, X, Y - 3, e.dir ?? 'down', step, e.look);
+      ctx.globalAlpha = 1;
     }
   });
   // Fernsehturm upper part, drawn in front of everything north of it
