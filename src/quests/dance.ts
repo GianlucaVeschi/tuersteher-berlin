@@ -1,4 +1,4 @@
-import { completeQuest } from './quests';
+import { QUEST_LIST, completeQuest } from './quests';
 import { closeBox, say } from '../ui/dialog';
 import { DANCE_HOOKS } from './sisyphos';
 import { sceneClub, sceneFloor } from '../world/scenes';
@@ -19,7 +19,8 @@ export async function danceHere() {
     await say('(Nice groove. The blinds are still down.)');
   } else {
     await say(pick(['(You lose yourself in the kick drum.)', '(Eyes closed. The bass goes straight through you.)', '(Someone next to you yells "YES". You agree.)']));
-    await completeQuest(clubId, 'dance');
+    // only clubs with a "dance" quest (Berghain); elsewhere dancing is just dancing
+    if (QUEST_LIST(clubId).some(q => q.id === 'dance')) await completeQuest(clubId, 'dance');
   }
   closeBox();
   RT.busy = false;

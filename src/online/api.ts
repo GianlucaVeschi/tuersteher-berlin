@@ -1,3 +1,5 @@
+import { CLUBS } from '../data/clubs';
+
 // Firebase over plain REST (no SDK, a few kB instead of ~80 kB):
 // anonymous login gives every player a unique id, Firestore holds one public document per player.
 // The web config is not a secret: it only names the project. firestore.rules decides what is allowed.
@@ -115,29 +117,67 @@ export interface PlayerRow {
   finishPlayMs: number | null;
 }
 
-/** Everyone who has played (public read, no login needed). */
-export async function listPlayers(): Promise<PlayerRow[]> {
-  const rows: PlayerRow[] = [];
-  let pageToken = '';
-  for (let page = 0; page < 10; page++) {
-    const r = await fetch(`${DB}/players?pageSize=300${pageToken ? '&pageToken=' + encodeURIComponent(pageToken) : ''}`);
-    if (!r.ok) throw new Error('list failed: ' + r.status);
-    const j = await r.json() as { documents?: { name: string; fields: Record<string, FsValue> }[]; nextPageToken?: string };
-    for (const d of j.documents || []) {
-      const f = d.fields || {};
-      const str = (k: string) => { const v = dec(f[k]); return typeof v === 'string' ? v : null; };
-      const num = (k: string) => { const v = dec(f[k]); return typeof v === 'number' ? v : 0; };
-      const clubs = dec(f.clubs);
-      rows.push({
-        uid: d.name.split('/').pop() || '',
-        name: str('name') || '?', char: str('char') || '',
-        createdAt: str('createdAt'), lastSeen: str('lastSeen'),
-        clubs: Array.isArray(clubs) ? clubs : [], stamps: num('stamps'), quests: num('quests'), playMs: num('playMs'),
-        finishedAt: str('finishedAt'), finishPlayMs: f.finishPlayMs && 'integerValue' in f.finishPlayMs ? num('finishPlayMs') : null
-      });
-    }
-    if (!j.nextPageToken) break;
-    pageToken = j.nextPageToken;
-  }
-  return rows;
+type FsDoc = { name: string; fields?: Record<string, FsValue> };
+function toRow(d: FsDoc): PlayerRow {
+  const f = d.fields || {};
+  const str = (k: string) => { const v = dec(f[k]); return typeof v === 'string' ? v : null; };
+  const num = (k: string) => { const v = dec(f[k]); return typeof v === 'number' ? v : 0; };
+  const clubs = dec(f.clubs);
+  return {
+    uid: d.name.split('/').pop() || '',
+    name: str('name') || '?', char: str('char') || '',
+    createdAt: str('createdAt'), lastSeen: str('lastSeen'),
+    clubs: Array.isArray(clubs) ? clubs : [], stamps: num('stamps'), quests: num('quests'), playMs: num('playMs'),
+    finishedAt: str('finishedAt'), finishPlayMs: f.finishPlayMs && 'integerValue' in f.finishPlayMs ? num('finishPlayMs') : null
+  };
+}
+
+/* Queries over `players`. Each uses a single field (filter and sort on the same one), which Firestore
+   indexes automatically, so no composite index has to be deployed. Firestore bills per document
+   read, so the list reads a few short top-lists instead of every player. */
+type Filter = { field: string; op: 'GREATER_THAN' | 'LESS_THAN' | 'EQUAL'; value: number };
+const where = (f: Filter) => ({ fieldFilter: { field: { fieldPath: f.field }, op: f.op, value: { integerValue: String(f.value) } } });
+async function query(q: { filter?: Filter; orderBy: string; dir: 'ASCENDING' | 'DESCENDING'; limit: number }): Promise<PlayerRow[]> {
+  const structuredQuery = {
+    from: [{ collectionId: 'players' }],
+    ...(q.filter ? { where: where(q.filter) } : {}),
+    orderBy: [{ field: { fieldPath: q.orderBy }, direction: q.dir }],
+    limit: q.limit
+  };
+  const r = await fetch(`${DB}:runQuery`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ structuredQuery }) });
+  if (!r.ok) throw new Error('query failed: ' + r.status);
+  const j = await r.json() as { document?: FsDoc }[];
+  return j.flatMap(x => (x.document ? [toRow(x.document)] : []));
+}
+/** How many players match (Firestore bills a count as one read per 1000 entries). */
+async function count(filter?: Filter): Promise<number> {
+  const structuredAggregationQuery = { structuredQuery: { from: [{ collectionId: 'players' }], ...(filter ? { where: where(filter) } : {}) }, aggregations: [{ alias: 'n', count: {} }] };
+  const r = await fetch(`${DB}:runAggregationQuery`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ structuredAggregationQuery }) });
+  if (!r.ok) throw new Error('count failed: ' + r.status);
+  const j = await r.json() as { result?: { aggregateFields?: { n?: { integerValue: string } } } }[];
+  return Number(j[0]?.result?.aggregateFields?.n?.integerValue ?? 0);
+}
+async function getPlayer(uid: string): Promise<PlayerRow | null> {
+  const r = await fetch(`${DB}/players/${encodeURIComponent(uid)}`);
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error('get failed: ' + r.status);
+  return toRow(await r.json() as FsDoc);
+}
+
+export interface GuestList { rows: PlayerRow[]; total: number; finished: number }
+/** The public guest list (no login needed): the fastest finishers, the furthest still out,
+ *  the newest arrivals and your own entry, plus how many people are on the list in total. */
+export async function listPlayers(): Promise<GuestList> {
+  const me = myUid(), all = CLUBS.length;
+  const [fastest, furthest, newest, mine, total, finished] = await Promise.all([
+    query({ filter: { field: 'finishPlayMs', op: 'GREATER_THAN', value: 0 }, orderBy: 'finishPlayMs', dir: 'ASCENDING', limit: 50 }),
+    query({ filter: { field: 'stamps', op: 'LESS_THAN', value: all }, orderBy: 'stamps', dir: 'DESCENDING', limit: 50 }),
+    query({ orderBy: 'createdAt', dir: 'DESCENDING', limit: 30 }),
+    me ? getPlayer(me) : Promise.resolve(null),
+    count(),
+    count({ field: 'stamps', op: 'EQUAL', value: all })
+  ]);
+  const byUid = new Map<string, PlayerRow>();
+  for (const p of [...fastest, ...furthest, ...newest, ...(mine ? [mine] : [])]) byUid.set(p.uid, p);
+  return { rows: [...byUid.values()], total, finished };
 }

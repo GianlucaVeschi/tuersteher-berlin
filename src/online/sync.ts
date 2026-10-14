@@ -4,9 +4,10 @@ import { writePlayer, type Plain } from './api';
 
 /* ================= ONLINE SYNC ================= */
 // Keeps your public entry on the guest list up to date: on joining, new stamps and quests,
-// finishing, every couple of minutes while you play, and when you leave the page.
+// finishing, every 10 minutes while you play, and when you leave the page.
 
-const HEARTBEAT = 120_000;
+// every 10 min: each write is billed, and "Seen … ago" doesn't need to be fresher than that
+const HEARTBEAT = 600_000;
 /** after a failed write, wait this long before the heartbeat tries again */
 const RETRY = 30_000;
 let timer: ReturnType<typeof setTimeout> | null = null;
@@ -64,7 +65,7 @@ export function syncFinish(legacy = false) {
   syncNow();
 }
 
-/** Called every frame: a heartbeat every couple of minutes so "last seen" and play time stay fresh. */
+/** Called every frame: a heartbeat every 10 minutes so "last seen" and play time stay fresh. */
 export function syncTick() {
   const now = Date.now();
   if (state.name && !timer && !busy && now - lastSync > HEARTBEAT && now - lastTry > RETRY) syncSoon(0);

@@ -35,5 +35,5 @@ export const RT = {
   creator: null as CreatorState | null,
   follower: null as Follower | null,
   // timed effects (timestamps in ms)
-  tripUntil: 0, kStart: 0, kUntil: 0, steamUntil: 0,
+  kStart: 0, kUntil: 0, steamUntil: 0,
 };

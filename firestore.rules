@@ -6,9 +6,20 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // The same name rules as src/online/names.ts, enforced here too: the game checks names before
+    // sending, but the API is public, so a name sent around the game must be refused as well.
+    // Keep both lists in sync.
+    function nameOk(n) {
+      return !n.matches('.*[<>\\x00-\\x1f\\x7f].*')
+        // anywhere in the name, ignoring everything but letters (catches "h.i.t.l.e.r")
+        && !n.lower().replace('[^a-zäöüß]', '').matches('.*(nigg|fagg|hitler|nazi|kanake|neger|cunt|fotze|retard).*')
+        // whole words only, so e.g. "Marschall" is fine
+        && !n.lower().matches('(.*[^a-zäöüß])?(fuck|shit|arsch|wichser|spast|schlampe|hure|bitch|dick|penis|porn|sex)([^a-zäöüß].*)?');
+    }
+
     function validPlayer(d) {
       return d.keys().hasOnly(['name', 'char', 'createdAt', 'lastSeen', 'clubs', 'stamps', 'quests', 'playMs', 'finishedAt', 'finishPlayMs'])
-        && d.name is string && d.name.size() >= 1 && d.name.size() <= 16
+        && d.name is string && d.name.size() >= 1 && d.name.size() <= 16 && nameOk(d.name)
         && d.char is string && d.char.size() <= 20
         && d.clubs is list && d.clubs.size() <= 8
         && d.stamps is int && d.stamps == d.clubs.size()
