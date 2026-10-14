@@ -27,6 +27,27 @@
       <div class="screen" id="screen">
         <canvas id="game" width="384" height="256" aria-label="Map of Berlin at night"></canvas>
         <div class="hud" id="hud">STEMPEL 0/7</div>
+        <div class="floor-tag" id="floorTag" hidden></div>
+        <div class="zoom" role="group" aria-label="Zoom">
+          <button type="button" id="zoomIn" aria-label="Zoom in">+</button>
+          <button type="button" id="zoomOut" aria-label="Zoom out">−</button>
+          <button type="button" id="zoomMap" aria-label="Show whole map" aria-pressed="false">MAP</button>
+        </div>
+        <div class="fade" id="fade"></div>
+        <div class="floor-card" id="floorCard" hidden></div>
+        <div class="toast" id="toast" hidden></div>
+        <div class="smack" id="smack" hidden>SMACK!</div>
+        <div class="photo" id="photo" hidden>
+          <canvas id="photoCanvas" width="56" height="200" aria-label="Photo booth strip"></canvas>
+          <div class="photo-side">
+            <p class="photo-title">KITKAT PHOTO BOOTH</p>
+            <p class="photo-note">The only camera allowed in KitKat. Strictly fictional.</p>
+            <div class="photo-actions">
+              <button type="button" id="photoSave">Save photo</button>
+              <button type="button" id="photoClose">Close</button>
+            </div>
+          </div>
+        </div>
         <div class="dialog" id="dialog" hidden aria-live="polite">
           <p id="dtext"></p>
           <ul id="dchoices" hidden></ul>
@@ -37,7 +58,7 @@
           <p class="in-club" id="inClub"></p>
           <p class="in-text" id="inText"></p>
           <div class="in-stamp" id="inStamp">+1 STEMPEL</div>
-          <p class="in-hint"><span class="kb">A</span><span class="tc">Tap</span> · back to the street</p>
+          <p class="in-hint"><span class="kb">A</span><span class="tc">Tap</span> · continue</p>
         </div>
         <div class="shop" id="shop" hidden>
           <div class="shop-head"><p class="shop-name" id="shopName"></p><p class="shop-area" id="shopArea"></p></div>
@@ -82,7 +103,7 @@
         <div><button id="btnA" aria-label="A button">A</button>A</div>
       </div>
     </div>
-    <p class="keys"><kbd>←↑↓→</kbd>/<kbd>WASD</kbd> walk &nbsp; <kbd>Z</kbd>/<kbd>Enter</kbd> talk &nbsp; <kbd>X</kbd> skip &nbsp; hold <kbd>Tab</kbd> run</p>
+    <p class="keys"><kbd>←↑↓→</kbd>/<kbd>WASD</kbd> walk &nbsp; <kbd>Z</kbd>/<kbd>Enter</kbd> talk &nbsp; <kbd>X</kbd> skip &nbsp; hold <kbd>Tab</kbd> run &nbsp; <kbd>+</kbd>/<kbd>−</kbd> zoom &nbsp; <kbd>M</kbd> map</p>
   </section>
 
   <aside class="card" id="card" aria-label="Stamp card">
@@ -95,6 +116,10 @@
       <button class="card-close" id="cardClose" type="button" aria-label="Close stamp card">✕</button>
     </header>
     <div class="wearing"><canvas id="wearingMini" width="16" height="16"></canvas><p><span>Wearing</span><b id="wearing">Red hoodie &amp; cap</b></p></div>
+    <section class="quests" id="quests" hidden>
+      <p class="eyebrow">Side quests <span id="questCount">0/7</span></p>
+      <ol id="questList"></ol>
+    </section>
     <ol id="stamps"></ol>
     <footer>
       <p>Walk up to a bouncer and press A. Get every question right and you're in. One wrong answer and it's <i>Heute nicht.</i></p>
@@ -103,6 +128,7 @@
     </footer>
   </aside>
 </main>
+<script src="interiors.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

@@ -178,7 +178,11 @@ const CHARACTERS = {
 const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman);
 const charById = id => ALL_CHARS.find(c => c.id === id) || null;
 const lookFor = (ch, outfitId) => Object.assign({}, BASE_LOOK, ch ? ch.body : {}, OUTFITS[outfitId || (ch ? ch.outfit : 'tourist')].look);
-const lookOf = id => lookFor(charById(state.char), id);
+const lookOf = id => {
+  const L = lookFor(charById(state.char), id);
+  if (!(state.kkStripped && typeof scene !== 'undefined' && scene.startsWith('kitkat:'))) return L;
+  return Object.assign({}, L, { top: L.skin, legs: '#0c0c12', stripes: undefined, sparkle: undefined, shirt: undefined, tie: undefined, hat: undefined, shine: undefined, harness: L.harness });
+};
 
 // Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
 const DRESS = {
@@ -224,12 +228,29 @@ const FINALE = [
 ];
 
 /* ================= MAP ================= */
-const T = 16, MW = 72, MH = 46;
+const T = 16, CITY_W = 72, CITY_H = 46;
+// MW/MH, map, ents and mc point at the current scene (the street or a club floor).
+let MW = CITY_W, MH = CITY_H;
 // Visible area in game pixels. Desktop uses a fixed 384x256 view; on phones fitCanvas() sizes it to the screen.
 let VW = 384, VH = 256;
 const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12;
 const SOLID = new Set([W, B, TR, C, F, RL]);
-const map = Array.from({ length: MH }, () => Array(MW).fill(G));
+// Interior tiles, mapped from the ASCII legend in interiors.js
+const ICH = { '#': 40, '.': 41, ',': 42, '^': 43, 'v': 44, 'x': 45, 'k': 46, 't': 47, '|': 48, 'P': 49, 'W': 50, 'A': 51, 'N': 52, 'C': 53, 'I': 54, '=': 55, 'c': 56, 'b': 57, 'S': 58, 'D': 59, 'L': 60, '_': 61, ' ': 62,
+  // Sisyphos and other open-air / wooden clubs
+  'a': 63, '~': 64, 'w': 65, 'g': 66, 'T': 67, 'B': 68, 'H': 69, 'u': 70, 'O': 71, 'F': 72, 'R': 73, 'G': 74, 'l': 75, 'h': 76, 'e': 77, 'o': 78, 'K': 79,
+  // doorways between rooms: the same digit on both sides
+  // KitKat
+  'V': 90, 'p': 91, 'Y': 92, 'Z': 93, 'Q': 94, 'X': 95, 'J': 96, 'M': 97, 'n': 98, 'U': 100, 'i': 101,
+  '1': 81, '2': 82, '3': 83, '4': 84, '5': 85, '6': 86, '7': 87, '8': 88, '9': 89 };
+const ICHAR = Object.fromEntries(Object.entries(ICH).map(([k, v]) => [v, k]));
+[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100].forEach(c => SOLID.add(c));
+const COUNTERS = new Set([53, 54, 55, 56, 59]);
+const WALLISH = new Set([40, 50, 51, 52, 60, 62, 68, 69, 74, 78, 79, 90]);
+const DANCES = new Set([42, 63, 75, 77, 91]); // concrete, sand, red tunnel floor, wooden floor, pole stage
+const isDoorTile = t => t >= 81 && t <= 89;
+const STAIRS_UP = 43, STAIRS_DOWN = 44, EXIT = 45, DARK = 46, DANCE = 42;
+let map = Array.from({ length: MH }, () => Array(MW).fill(G));
 const get = (x, y) => (x < 0 || y < 0 || x >= MW || y >= MH) ? TR : map[y][x];
 const set = (x, y, t) => { if (x >= 0 && y >= 0 && x < MW && y < MH) map[y][x] = t; };
 const rect = (x0, y0, w, h, t) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) set(x, y, t); };
@@ -313,7 +334,7 @@ const LOOKS = {
   oldraver: { skin: '#f0c7a0', hair: '#c0c0c0', top: '#d9733a', legs: '#3a3a4a', beard: '#c0c0c0' },
   monday: { skin: '#e2b08c', hair: '#3a2a20', top: '#9a4ad1', legs: '#2a2a35', shades: true }
 };
-const ents = [];
+let ents = [];
 CLUBS.forEach(c => {
   ents.push({ kind: 'bouncer', club: c, x: c.dx, y: c.by, dir: 'down', look: c.look, ox: 0 });
   ents.push({ kind: 'sign', x: c.dx + c.signSide, y: c.by, lines: c.sign });
@@ -340,7 +361,8 @@ const MOVE = 170, RUN = 85;
 let runKey = false, runBtn = false;
 const running = () => runKey || runBtn || !!(touch && touch.far);
 const START = { x: 40, y: 16, dir: 'down' };
-const state = { stamps: {}, intro: false, finale: false, outfit: 'tourist', char: null };
+const state = { stamps: {}, intro: false, finale: false, outfit: 'tourist', char: null, quests: {}, visited: {}, sunrise: {}, coatNo: 0, kStage: 0, pfand: newPfand(), heard: {}, danced: {}, kkStripped: false };
+function newPfand() { return { carry: 0, carryCents: 0, returned: 0, cents: 0, taken: {} }; }
 const player = { dur: 170, x: START.x, y: START.y, tx: START.x, ty: START.y, dir: START.dir, moving: false, t: 0, n: 0 };
 let busy = true, titleOn = true;
 const held = [];
@@ -349,7 +371,11 @@ function save() {
   try { localStorage.setItem('tuersteher-save', JSON.stringify(snapshot())); } catch (e) { /* storage unavailable */ }
 }
 function snapshot() {
-  return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, char: state.char, x: player.x, y: player.y, dir: player.dir };
+  // Inside a club we save the spot outside its door, so a reload puts you back on the street.
+  const club = inClub() ? CLUBS.find(c => c.id === sceneClub()) : null;
+  const pos = club ? { x: club.dx, y: club.by, dir: 'down' } : { x: player.x, y: player.y, dir: player.dir };
+  return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, char: state.char,
+    zoom: { i: zoom.i, fit: zoom.fit }, quests: state.quests, visited: state.visited, sunrise: state.sunrise, coatNo: state.coatNo, kStage: state.kStage, pfand: state.pfand, heard: state.heard, danced: state.danced, kkStripped: state.kkStripped, x: pos.x, y: pos.y, dir: pos.dir };
 }
 function applySave(s) {
   if (!s) return;
@@ -358,6 +384,11 @@ function applySave(s) {
   state.finale = !!s.finale;
   state.outfit = OUTFITS[s.outfit] ? s.outfit : 'tourist';
   state.char = charById(s.char) ? s.char : null;
+  if (s.zoom && ZOOMS[s.zoom.i]) { zoom.i = s.zoom.i; zoom.fit = !!s.zoom.fit; }
+  state.quests = s.quests || {}; state.visited = s.visited || {}; state.sunrise = s.sunrise || {}; state.coatNo = s.coatNo || 0; state.kStage = s.kStage || 0;
+  state.pfand = Object.assign(newPfand(), s.pfand || {}); state.heard = s.heard || {}; state.danced = s.danced || {}; state.kkStripped = !!s.kkStripped;
+  // bottles in your hands are lost if you reload while carrying them outside a club
+  if (!s.pfand) state.pfand.taken = {};
   ents.forEach(e => { if (e.kind === 'bouncer' && state.stamps[e.club.id]) e.x = e.club.dx + 1; });
   if (Number.isInteger(s.x) && Number.isInteger(s.y) && !blocked(s.x, s.y) && get(s.x, s.y) !== D) {
     player.x = player.tx = s.x; player.y = player.ty = s.y; player.dir = s.dir || 'down';
@@ -372,14 +403,27 @@ function blocked(x, y) {
   const t = get(x, y);
   if (t === D) { if (shopAtDoor(x, y)) return false; const c = clubAtDoor(x, y); return !(c && state.stamps[c.id]); }
   if (SOLID.has(t)) return true;
-  return ents.some(e => e.x === x && e.y === y);
+  return ents.some(e => !e.pickup && covers(e, x, y));
 }
+// most people fill one tile; groups on a bed are `w` tiles wide
+const covers = (e, x, y) => e.y === y && x >= e.x && x < e.x + (e.w || 1);
 
 /* ================= PRERENDER MAP ================= */
 const INK = '#14121c';
-const mc = document.createElement('canvas');
+let mc = document.createElement('canvas');
 mc.width = MW * T; mc.height = MH * T;
 const m = mc.getContext('2d');
+
+/* ================= SCENES ================= */
+const SCENES = { city: { id: 'city', map, w: MW, h: MH, ents, canvas: mc } };
+let scene = 'city';
+function useScene(id) {
+  const sc = SCENES[id];
+  scene = id; map = sc.map; MW = sc.w; MH = sc.h; ents = sc.ents; mc = sc.canvas;
+}
+const inClub = () => scene !== 'city';
+const sceneClub = () => scene.split(':')[0];
+const sceneFloor = () => scene.split(':')[1];
 let seed = 1337;
 const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
 const pick = a => a[Math.floor(rnd() * a.length)];
@@ -689,6 +733,7 @@ function prerender() {
     else if (b.kind === 'tower') drawTower(b);
   });
   CLUBS.forEach(drawClub);
+  buildInteriors();
   buildings.forEach(b => { if (b.kind === 'obtower') drawObTower(b); });
 }
 
@@ -739,14 +784,20 @@ function person(g, X, Y, dir, step, L) {
     else if (d === 'up') det.push([4, 1, 8, 3, L.hat]);
     else det.push([5, 1, 7, 2, L.hat], [2, 3, 6, 1, L.hat]);
   }
+  if (L.ears) det.push([4, -2, 2, 3, INK], [10, -2, 2, 3, INK], [4, -1, 2, 2, L.ears], [10, -1, 2, 2, L.ears]);
+  if (L.flowers && d !== 'up') det.push([4, 1, 2, 1, L.flowers[0]], [7, 0, 2, 1, L.flowers[1] || L.flowers[0]], [10, 1, 2, 1, L.flowers[0]]);
+  if (L.flowers && d === 'up') det.push([4, 1, 2, 1, L.flowers[0]], [7, 1, 2, 1, L.flowers[1] || L.flowers[0]], [10, 1, 2, 1, L.flowers[0]]);
   if (d === 'down') {
     det.push([6, 4, 1, 2, INK], [9, 4, 1, 2, INK]);
+    if (L.paint) det.push([5, 6, 1, 1, L.paint], [10, 6, 1, 1, L.paint], [7, 2, 2, 1, L.paint]);
+    if (L.blush) det.push([5, 6, 2, 1, '#ff6b8a'], [9, 6, 2, 1, '#ff6b8a']);
     if (L.glasses) det.push([5, 4, 2, 2, L.glasses], [9, 4, 2, 2, L.glasses], [7, 4, 2, 1, INK], [6, 5, 1, 1, INK], [9, 5, 1, 1, INK]);
     if (L.shades) det.push([5, 4, 6, 1, INK], [5, 5, 2, 1, INK], [9, 5, 2, 1, INK]);
     if (L.beard) det.push([5, 6, 6, 2, L.beard]);
     if (L.tattoo) det.push([5, 6, 1, 1, '#3b3a5c'], [10, 6, 1, 1, '#3b3a5c'], [7, 2, 2, 1, '#3b3a5c'], [11, 4, 1, 1, '#c0c0d0']);
   } else if (d === 'left') {
     det.push([5, 4, 1, 2, INK]);
+    if (L.paint) det.push([6, 6, 1, 1, L.paint]);
     if (L.glasses) det.push([4, 4, 2, 2, L.glasses], [5, 5, 1, 1, INK], [6, 4, 3, 1, INK]);
     if (L.shades) det.push([4, 4, 3, 1, INK]);
     if (L.beard) det.push([4, 6, 4, 2, L.beard]);
@@ -771,8 +822,8 @@ function fitCanvas() {
     if (r.width < 32 || r.height < 32) return;
     // Integer scale keeps pixels crisp; aim for roughly 10-12 tiles across the short side.
     const s = Math.max(2, Math.round(Math.min(r.width, r.height) / 160));
-    w = Math.min(MW * T, Math.floor(r.width / s));
-    h = Math.min(MH * T, Math.floor(r.height / s));
+    w = Math.min(CITY_W * T, Math.floor(r.width / s));
+    h = Math.min(CITY_H * T, Math.floor(r.height / s));
     cvs.style.width = (w * s) + 'px';
     cvs.style.height = (h * s) + 'px';
   } else {
@@ -795,16 +846,18 @@ function playerPx() {
   const k = player.t / player.dur;
   return [Math.round((player.x + (player.tx - player.x) * k) * T), Math.round((player.y + (player.ty - player.y) * k) * T)];
 }
-function draw(now) {
+function drawWorld(now) {
   const [ppx, ppy] = playerPx();
-  const camX = Math.max(0, Math.min(MW * T - VW, ppx + 8 - VW / 2));
-  const camY = Math.max(0, Math.min(MH * T - VH, ppy + 8 - VH / 2));
+  // Small rooms are centred; big maps follow the player.
+  const camX = MW * T <= VW ? Math.round((MW * T - VW) / 2) : Math.max(0, Math.min(MW * T - VW, ppx + 8 - VW / 2));
+  const camY = MH * T <= VH ? Math.round((MH * T - VH) / 2) : Math.max(0, Math.min(MH * T - VH, ppy + 8 - VH / 2));
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, VW, VH);
   ctx.drawImage(mc, -camX, -camY);
 
+  if (inClub()) { drawInteriorFx(now, camX, camY, ppx, ppy); return [camX, camY, ppx, ppy]; }
   // water shimmer
   const tick = Math.floor(now / 450);
-  const x0 = Math.floor(camX / T), y0 = Math.floor(camY / T);
+  const x0 = Math.max(0, Math.floor(camX / T)), y0 = Math.max(0, Math.floor(camY / T));
   for (let y = y0; y <= y0 + VH / T + 1 && y < MH; y++) for (let x = x0; x <= x0 + VW / T + 1 && x < MW; x++) {
     if (map[y][x] !== W) continue;
     const k = (x * 5 + y * 3 + tick) % 7;
@@ -866,6 +919,919 @@ function draw(now) {
     ctx.drawImage(towerC, 0, 0, towerC.width, fy, tX, tY, towerC.width, fy);
     if (Math.floor(now / 700) % 2 === 0) { ctx.fillStyle = '#ff3b3b'; ctx.fillRect(tX + towerC.width / 2 - 1, tY + 3, 2, 2); }
   }
+  return [camX, camY, ppx, ppy];
+}
+
+/* ================= ZOOM ================= */
+const ZOOMS = [2, 1.5, 1, 0.66, 0.5];
+const zoom = { i: 2, fit: false };
+const zoomLevel = () => zoom.fit ? Math.min(VW / (MW * T), VH / (MH * T)) : ZOOMS[zoom.i];
+const CLUB_SHORT = { berghain: 'BERGHAIN', tresor: 'TRESOR', kitkat: 'KITKAT', aboutblank: 'ABOUT BLANK', katerblau: 'KATER BLAU', sisyphos: 'SISYPHOS', cdv: 'CDV' };
+function setZoom(fn) { fn(); zoomUI(); save(); }
+const zoomIn = () => setZoom(() => { if (zoom.fit) { zoom.fit = false; zoom.i = ZOOMS.length - 1; } else zoom.i = Math.max(0, zoom.i - 1); });
+const zoomOut = () => setZoom(() => { if (zoom.i >= ZOOMS.length - 1) zoom.fit = true; else if (!zoom.fit) zoom.i++; });
+const toggleMap = () => setZoom(() => { zoom.fit = !zoom.fit; });
+function zoomUI() {
+  const b = $('#zoomMap');
+  if (b) { b.classList.toggle('on', zoom.fit); b.setAttribute('aria-pressed', String(zoom.fit)); }
+}
+let chipRects = [];
+function chip(text, x, y, bg, fg, size) {
+  ctx.font = size + 'px "Press Start 2P", monospace'; ctx.textBaseline = 'top';
+  const w = Math.ceil(ctx.measureText(text).width) + 6, h = size + 6;
+  const X = Math.round(Math.max(1, Math.min(VW - w - 1, x - w / 2)));
+  let Y = Math.round(Math.max(1, Math.min(VH - h - 1, y - h)));
+  // nudge down until it no longer overlaps a label drawn earlier this frame
+  for (let i = 0; i < 6 && chipRects.some(r => X < r.x + r.w + 2 && X + w + 2 > r.x && Y < r.y + r.h + 2 && Y + h + 2 > r.y); i++) Y += h + 3;
+  chipRects.push({ x: X, y: Y, w, h });
+  ctx.fillStyle = INK; ctx.fillRect(X - 1, Y - 1, w + 2, h + 2);
+  ctx.fillStyle = bg; ctx.fillRect(X, Y, w, h);
+  ctx.fillStyle = fg; ctx.fillText(text, X + 3, Y + 3);
+}
+function draw(now) {
+  const z = zoomLevel();
+  const realW = VW, realH = VH;
+  // draw the world at scale z: everything inside treats VW/VH as the visible world size
+  VW = realW / z; VH = realH / z;
+  ctx.setTransform(z, 0, 0, z, 0, 0);
+  ctx.imageSmoothingEnabled = z < 1;
+  let cam;
+  try { cam = drawWorld(now); } finally {
+    VW = realW; VH = realH;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+  }
+  if (z >= 0.9) return;
+  // zoomed out: label clubs and shops, and mark the player
+  const [camX, camY, ppx, ppy] = cam;
+  const sx = wx => (wx - camX) * z, sy = wy => (wy - camY) * z;
+  const size = VW < 260 ? 6 : 8;
+  chipRects = [];
+  if (!inClub()) {
+    // clubs on the roof, shops at the shopfront (smaller), so neighbours don't collide
+    CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
+    SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + size + 6, '#f3eee3', INK, Math.max(6, size - 2)));
+  }
+  const px = sx(ppx + 8), py = sy(ppy + 2);
+  const pulse = reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(now / 180);
+  ctx.strokeStyle = `rgba(255,77,109,${pulse})`; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(px, sy(ppy + 8), Math.max(6, 10 * z) + 3 * pulse, 0, Math.PI * 2); ctx.stroke();
+  chip('YOU', px, py - 6, '#ff4d6d', '#fff', size);
+}
+
+/* ================= CLUB INTERIORS ================= */
+const DANCER_TOPS = ['#0c0c12', '#16151c', '#1a1920', '#2a2a33', '#0c0c12', '#e8e8f0', '#3a1f2a'];
+const DANCER_SKINS = ['#f3c9a8', '#f0c7a0', '#e2b08c', '#d9a27c', '#c98d6a', '#8d5a3b', '#6b4430'];
+const DANCER_HAIR = ['#111111', '#2a2420', '#5a3a22', '#c9a24a', '#b04a2a', '#c0c0c0', '#e83f8f', '#7ec8ff'];
+let follower = null;
+
+function buildInteriors() {
+  if (!window.INTERIORS) return;
+  Object.entries(window.INTERIORS).forEach(([clubId, club]) => {
+    Object.entries(club.floors).forEach(([floorId, fl]) => {
+      const id = clubId + ':' + floorId;
+      const h = fl.map.length, w = fl.map[0].length;
+      const grid = fl.map.map(row => [...row].map(ch => ICH[ch] !== undefined ? ICH[ch] : 41));
+      const list = fl.people.map(p => Object.assign({ kind: 'npc', dir: p.dir || 'down', lines: [] }, p, { home: { x: p.x, y: p.y } }));
+      list.forEach((e, i) => { if (e.pile) { e.kind = 'pile'; e.act = 'pile'; e.phase = i * 1.37; } });
+      list.forEach(e => { if (e.movedWhen && questDone(clubId, e.movedWhen)) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; } });
+      // scatter dancers on the dancefloor, away from staff and stairs
+      seed = 4242 + id.length * 31;
+      const busyTile = (x, y) => list.some(e => Math.abs(e.x - x) + Math.abs(e.y - y) <= 2);
+      const spawns = Object.values(fl.spawn);
+      let tries = 0, placed = 0, dance = { x0: w, y0: h, x1: 0, y1: 0 };
+      grid.forEach((row, y) => row.forEach((t, x) => { if (DANCES.has(t)) { dance.x0 = Math.min(dance.x0, x); dance.y0 = Math.min(dance.y0, y); dance.x1 = Math.max(dance.x1, x); dance.y1 = Math.max(dance.y1, y); } }));
+      while (placed < (fl.dancers || 0) && tries++ < 2000) {
+        const x = dance.x0 + Math.floor(rnd() * (dance.x1 - dance.x0 + 1)), y = dance.y0 + Math.floor(rnd() * (dance.y1 - dance.y0 + 1));
+        if (!DANCES.has(grid[y][x]) || busyTile(x, y) || spawns.some(s => Math.abs(s[0] - x) + Math.abs(s[1] - y) <= 2)) continue;
+        if (list.some(e => e.x === x && e.y === y)) continue;
+        const long = rnd() < 0.4, pal = club.dancerPalette;
+        const look = pal && pal.style === 'kinky'
+          // latex, leather, harnesses, bare skin, the odd pair of bunny ears
+          ? (() => { const skin = pick(DANCER_SKINS); return { skin, hair: pick(pal.hair), long, bald: !long && rnd() < 0.25, top: rnd() < 0.3 ? skin : pick(pal.tops), legs: pick(pal.legs),
+              harness: rnd() < 0.45, shine: rnd() < 0.4 ? '#7a7a99' : undefined, shades: rnd() < 0.25, ears: rnd() < 0.15 ? pick(pal.extras) : undefined }; })()
+          : pal
+          // colourful festival crowd: glitter, stripes, flower crowns, face paint
+          ? { skin: pick(DANCER_SKINS), hair: pick(pal.hair), long, top: pick(pal.tops), legs: pick(pal.legs), shades: rnd() < 0.2,
+              sparkle: rnd() < 0.35 ? pick(pal.extras) : undefined, stripes: rnd() < 0.3 ? pick(pal.extras) : undefined,
+              flowers: rnd() < 0.3 ? [pick(pal.extras), pick(pal.extras)] : undefined, paint: rnd() < 0.3 ? pick(pal.extras) : undefined,
+              hat: !long && rnd() < 0.2 ? pick(pal.tops) : undefined, beard: !long && rnd() < 0.2 ? pick(pal.hair) : undefined }
+          : { skin: pick(DANCER_SKINS), hair: pick(DANCER_HAIR), bald: !long && rnd() < 0.2, long, top: pick(DANCER_TOPS), legs: '#121116', shades: rnd() < 0.25, harness: rnd() < 0.12, beard: !long && rnd() < 0.2 ? '#2a2420' : undefined };
+        list.push({ kind: 'npc', act: 'dancer', dance: true, phase: rnd() * 10, x, y, dir: 'down', look, lines: [pick(club.dancerLines)] });
+        placed++;
+      }
+      // empty bottles to collect for Pfand (hidden once taken, so a reset brings them back)
+      (fl.bottles || []).forEach(([x, y, type], i) => list.push({ kind: 'bottle', pickup: true, bid: id + ':' + i, type, x, y }));
+      const sc = { id, club: clubId, floor: floorId, map: grid, w, h, ents: list, dance };
+      sc.canvas = drawInteriorTiles(sc);
+      SCENES[id] = sc;
+    });
+  });
+}
+
+function drawInteriorTiles(sc) {
+  const cv = document.createElement('canvas');
+  cv.width = sc.w * T; cv.height = sc.h * T;
+  const g = cv.getContext('2d');
+  const P = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+  const at = (x, y) => (x < 0 || y < 0 || x >= sc.w || y >= sc.h) ? 62 : sc.map[y][x];
+  const floorBase = (X, Y) => { P(X, Y, 16, 16, '#2f2e35'); for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#37363e', '#28272d'])); };
+  const face = (X, Y) => { // raw concrete wall seen from the front, with formwork tie holes
+    P(X, Y, 16, 16, '#5c5a56'); P(X, Y, 1, 16, '#4e4c48'); P(X, Y, 16, 2, '#6e6c67'); P(X, Y + 13, 16, 3, '#2a2928');
+    [[4, 5], [12, 5], [4, 10], [12, 10]].forEach(([a, b]) => P(X + a, Y + b, 1, 1, '#45433f'));
+  };
+  seed = 777 + sc.id.length;
+  for (let y = 0; y < sc.h; y++) for (let x = 0; x < sc.w; x++) {
+    const t = sc.map[y][x], X = x * T, Y = y * T;
+    const frontFace = !WALLISH.has(at(x, y + 1));
+    switch (t) {
+      case 40: if (frontFace) face(X, Y); else { P(X, Y, 16, 16, '#141318'); if (!WALLISH.has(at(x, y - 1)) && y > 0) P(X, Y, 16, 1, '#26252c'); } break;
+      case 41: floorBase(X, Y); break;
+      case 42: P(X, Y, 16, 16, '#222128'); P(X, Y, 16, 1, '#29282f'); P(X, Y, 1, 16, '#29282f'); P(X + 8, Y + 8, 1, 1, '#2f2e36'); break;
+      case 61: P(X, Y, 16, 16, '#3a3a43'); for (let a = 1; a < 16; a += 3) for (let b = 1; b < 16; b += 3) P(X + a, Y + b, 1, 1, '#2c2c34'); break;
+      case 47: P(X, Y, 16, 16, '#40454c'); P(X, Y, 16, 1, '#353940'); P(X, Y + 8, 16, 1, '#353940'); P(X, Y, 1, 16, '#353940'); P(X + 8, Y, 1, 16, '#353940'); break;
+      case 46: P(X, Y, 16, 16, '#07060a'); if (rnd() < 0.2) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, '#121117'); break;
+      case 43: case 44: {
+        const up = t === 43;
+        for (let i = 0; i < 4; i++) {
+          const shade = up ? ['#5d5d68', '#6d6d78', '#7d7d88', '#8d8d98'][3 - i] : ['#4a4a54', '#3e3e47', '#33333b', '#282830'][i];
+          P(X, Y + i * 4, 16, 4, shade); P(X, Y + i * 4, 16, 1, '#c9b25a');
+        }
+        if (at(x - 1, y) !== t) { P(X, Y, 2, 16, '#a7a7b3'); P(X + 2, Y, 1, 16, INK); }
+        if (at(x + 1, y) !== t) { P(X + 14, Y, 2, 16, '#a7a7b3'); P(X + 13, Y, 1, 16, INK); }
+        break;
+      }
+      case 45: P(X, Y, 16, 16, '#0f0e13'); P(X + 2, Y, 12, 16, '#3b3a2c'); P(X + 2, Y + 12, 12, 4, '#6a6648'); if (at(x - 1, y) !== 45) P(X + 4, Y + 2, 8, 3, '#3fbf6f'); break;
+      case 52: P(X, Y, 16, 16, '#3a3226'); for (let a = 1; a < 16; a += 4) for (let b = 1; b < 14; b += 4) P(X + a, Y + b, 3, 3, pick(['#c9a24a', '#a8823a', '#e8dcc0', '#7a5a2a', '#d9c27a'])); P(X, Y + 13, 16, 3, '#2a2928'); break;
+      case 51: {
+        face(X, Y); P(X + 1, Y + 1, 14, 12, INK); P(X + 2, Y + 2, 12, 10, '#07060a');
+        for (let i = 0; i < 14; i++) { const gx = X + 1 + i, wy = Math.round(7 + 3 * Math.sin((gx) / 6)); P(gx, Y + wy, 1, 1, '#9fd6c0'); P(gx, Y + wy + 1, 1, 1, '#4a7a6a'); if (i % 3 === 0) P(gx, Y + 12 - Math.round(2 * Math.cos(gx / 5)), 1, 1, '#f0b8d0'); }
+        break;
+      }
+      case 50: P(X, Y, 16, 16, '#1d1c22'); P(X + 1, Y + 1, 14, 12, '#2a2a32'); for (let i = 2; i < 13; i += 2) P(X + 1, Y + i, 14, 1, '#4c4c56'); P(X, Y + 13, 16, 3, '#2a2928'); break;
+      case 60: face(X, Y); P(X + 3, Y + 2, 10, 14, INK); P(X + 4, Y + 3, 8, 13, '#1a1820'); P(X + 5, Y + 5, 6, 2, '#c9b25a'); break;
+      case 49: floorBase(X, Y); P(X + 3, Y - 9, 10, 25, INK); P(X + 4, Y - 8, 8, 23, '#6a6e78'); P(X + 4, Y - 8, 2, 23, '#8a8e98'); P(X + 10, Y - 8, 2, 23, '#4e525a'); break;
+      case 58: floorBase(X, Y); P(X + 1, Y, 14, 16, INK); P(X + 2, Y + 1, 12, 14, '#1b1a20'); circle(g, X + 8, Y + 9, 4, '#34333b'); circle(g, X + 8, Y + 9, 2, '#0c0c12'); P(X + 4, Y + 2, 8, 2, '#2c2b33'); break;
+      case 59: floorBase(X, Y); P(X, Y + 1, 16, 15, INK); P(X, Y + 2, 16, 13, '#1c1b22'); P(X, Y + 2, 16, 4, '#2c2b33'); for (let i = 0; i < 3; i++) P(X + 2 + Math.floor(rnd() * 12), Y + 3 + Math.floor(rnd() * 2), 1, 1, pick(['#f2c45a', '#ff4d6d', '#6fb7ff'])); break;
+      case 55: floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 9, '#1e1d24'); P(X + 1, Y + 1, 14, 1, '#2e2d36'); P(X + 1, Y + 10, 14, 5, '#111015'); if (rnd() < 0.5) { P(X + 3 + Math.floor(rnd() * 8), Y + 3, 2, 4, pick(['#7ec8ff', '#f2c45a', '#c8f0d0'])); } break;
+      case 53: floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 9, '#7d5838'); P(X + 1, Y + 10, 14, 5, '#553a22'); break;
+      case 54: floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 9, '#d9e6e0'); P(X + 1, Y + 10, 14, 5, '#9fb5ab'); circle(g, X + 5, Y + 5, 2, pick(['#f7c6d9', '#f2e2a0', '#7a4a2e'])); circle(g, X + 11, Y + 5, 2, pick(['#f7c6d9', '#f2e2a0', '#c8f0d0'])); break;
+      case 56: floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 9, '#4a4a52'); P(X + 1, Y + 10, 14, 5, '#33333a'); P(X + 5, Y + 2, 6, 4, '#6fb7ff'); break;
+      case 57: floorBase(X, Y); P(X + 1, Y + 5, 14, 8, INK); P(X + 2, Y + 6, 12, 6, '#2a2930'); P(X + 2, Y + 6, 12, 2, '#3a3942'); break;
+      case 48: P(X, Y, 16, 16, '#40454c'); P(X + 6, Y - 6, 4, 22, INK); P(X + 7, Y - 5, 2, 20, '#8a9098'); break;
+      // ---- Sisyphos ----
+      case 63: P(X, Y, 16, 16, '#c9a86a'); for (let i = 0; i < 7; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#b8955a', '#d9bc84', '#a88a50'])); break;
+      case 64: {
+        P(X, Y, 16, 16, '#2f86ad');
+        for (let i = 0; i < 2; i++) P(X + Math.floor(rnd() * 11), Y + 3 + Math.floor(rnd() * 10), 4, 1, '#5fb6db');
+        const edge = '#e8e4d8';
+        if (at(x, y - 1) !== 64) { P(X, Y, 16, 3, edge); P(X, Y + 3, 16, 1, '#1d5f80'); }
+        if (at(x, y + 1) !== 64) P(X, Y + 14, 16, 2, edge);
+        if (at(x - 1, y) !== 64) P(X, Y, 2, 16, edge);
+        if (at(x + 1, y) !== 64) P(X + 14, Y, 2, 16, edge);
+        break;
+      }
+      case 65: P(X, Y, 16, 16, '#6b4a2e'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#563a22'); P(X + ((y % 2) ? 5 : 11), Y, 1, 16, '#5a3e26'); P(X + 2, Y + 1, 1, 1, '#8a6a48'); break;
+      case 66: P(X, Y, 16, 16, '#3f7a3a'); for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 14), 1, 2, pick(['#4f8f45', '#356a31'])); if (rnd() < 0.25) P(X + Math.floor(rnd() * 14), Y + Math.floor(rnd() * 14), 2, 2, pick(['#ff5e7a', '#ffd23f', '#f3eee3', '#c28cff'])); break;
+      case 67: P(X, Y, 16, 16, '#3f7a3a'); P(X + 7, Y + 10, 2, 6, '#5a3a22'); circle(g, X + 8, Y + 7, 7, INK); circle(g, X + 8, Y + 7, 6, '#2f6b35'); circle(g, X + 6, Y + 5, 3, '#4f8f4a'); P(X + 9, Y + 9, 2, 2, pick(['#ff5e7a', '#ffd23f', '#5ec8ff'])); break;
+      case 68: if (frontFace) { P(X, Y, 16, 16, '#8a4b3a'); for (let r = 0; r < 16; r += 4) { P(X, Y + r + 3, 16, 1, '#6e3a2c'); P(X + ((r / 4) % 2 ? 4 : 12), Y + r, 1, 3, '#6e3a2c'); } P(X, Y + 13, 16, 3, '#4a2a22'); } else { P(X, Y, 16, 16, '#2a1a18'); if (!WALLISH.has(at(x, y - 1)) && y > 0) P(X, Y, 16, 1, '#4a2e28'); } break;
+      case 69: if (frontFace) { P(X, Y, 16, 16, '#c08a55'); for (let i = 3; i < 16; i += 4) P(X + i, Y, 1, 16, '#a06e40'); P(X, Y + 13, 16, 3, '#7a5432'); } else P(X, Y, 16, 16, '#5a3a22'); break;
+      case 70: P(X, Y, 16, 16, '#7a5432'); for (let r = 0; r < 16; r += 4) P(X, Y + r, 16, 3, '#a87a4a'); break;
+      case 71: P(X, Y, 16, 16, '#7a5432'); P(X + 1, Y + 4, 14, 12, INK); P(X + 2, Y + 5, 12, 10, '#3a3a3a'); circle(g, X + 5, Y + 6, 3, '#8a8a8a'); circle(g, X + 10, Y + 6, 3, '#6a6a6a'); circle(g, X + 8, Y + 4, 2, '#9a9a9a'); P(X + 6, Y + 11, 4, 2, '#ff8c42'); break;
+      case 72: P(X, Y, 16, 16, '#3f7a3a'); P(X, Y + 4, 16, 2, '#7a5a3a'); P(X, Y + 10, 16, 2, '#7a5a3a'); P(X + 2, Y + 1, 3, 15, '#8a6a48'); P(X + 11, Y + 1, 3, 15, '#8a6a48'); if (rnd() < 0.4) P(X + 6, Y + 6, 3, 4, pick(['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b'])); break;
+      case 73: {
+        P(X, Y, 16, 16, '#3f7a3a');
+        const cols = ['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b', '#c28cff'];
+        P(X + 3, Y - 10, 10, 26, INK);
+        for (let i = 0; i < 5; i++) P(X + 4, Y - 9 + i * 5, 8, 5, cols[(i + x) % 5]);
+        P(X + 6, Y - 6, 1, 1, INK); P(X + 9, Y - 6, 1, 1, INK); P(X + 6, Y - 3, 4, 1, INK);
+        break;
+      }
+      case 74: if (frontFace) { P(X, Y, 16, 16, '#7fb8b0'); P(X, Y, 16, 1, '#d8e8e0'); P(X, Y + 7, 16, 1, '#d8e8e0'); P(X, Y, 1, 16, '#d8e8e0'); P(X + 2, Y + 2, 2, 4, '#c9efe7'); P(X, Y + 14, 16, 2, '#4a6a66'); } else { P(X, Y, 16, 16, '#26403c'); P(X, Y, 16, 1, '#3f6660'); } break;
+      case 75: P(X, Y, 16, 16, '#4a1416'); P(X, Y, 16, 1, '#6a4a1a'); P(X, Y + 8, 16, 1, '#6a4a1a'); P(X, Y, 1, 16, '#6a4a1a'); P(X + 8, Y, 1, 16, '#6a4a1a'); break;
+      case 76: P(X, Y, 16, 16, '#7a5432'); P(X, Y + 2, 16, 12, INK); P(X, Y + 3, 16, 7, '#e0b47c'); P(X, Y + 10, 16, 3, '#a87a4a'); break;
+      case 77: P(X, Y, 16, 16, '#7a5434'); for (let r = 0; r < 16; r += 4) P(X, Y + r, 16, 1, '#6a4628'); P(X + ((y % 2) ? 3 : 10), Y, 1, 16, '#6a4628'); if (rnd() < 0.3) P(X + Math.floor(rnd() * 13), Y + Math.floor(rnd() * 13), 3, 1, '#8a6440'); break;
+      case 78: P(X, Y, 16, 16, '#8a4b3a'); P(X, Y + 13, 16, 3, '#4a2a22'); circle(g, X + 8, Y + 7, 6, '#c9a24a'); circle(g, X + 8, Y + 7, 4, '#2f6f8f'); P(X + 6, Y + 5, 2, 2, '#9fd0e6'); break;
+      case 79: if (frontFace) { P(X, Y, 16, 16, '#a3161a'); P(X, Y + 2, 16, 1, '#e0b040'); P(X, Y + 11, 16, 1, '#e0b040'); for (let i = 1; i < 16; i += 5) { P(X + i, Y + 4, 3, 1, '#e0b040'); P(X + i, Y + 4, 1, 4, '#e0b040'); P(X + i, Y + 7, 3, 1, '#e0b040'); } P(X, Y + 13, 16, 3, '#5a0a0c'); } else { P(X, Y, 16, 16, '#3a0a0c'); P(X, Y, 16, 1, '#6a1a1c'); } break;
+      // ---- KitKat ----
+      case 90: if (frontFace) {
+        P(X, Y, 16, 16, '#1a0a2a');
+        const neon = ['#39ff14', '#ff2bd6', '#00e5ff', '#fff200'];
+        for (let k = 0; k < 3; k++) { const c = neon[(x + k) % 4], ph = rnd() * 6; for (let i = 0; i < 16; i++) P(X + i, Y + 3 + Math.round(4 + 3 * Math.sin(i / 2.5 + ph + k)), 1, 1, c); }
+        P(X + 4 + Math.floor(rnd() * 8), Y + 4, 2, 2, pick(neon));
+        P(X, Y + 13, 16, 3, '#0a0612');
+      } else P(X, Y, 16, 16, '#0a0612'); break;
+      case 91: P(X, Y, 16, 16, '#2a0a1a'); for (let i = 0; i < 3; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, '#ff2bd6');
+        if (at(x, y + 1) !== 91 && at(x, y + 1) !== 92) P(X, Y + 14, 16, 2, '#e0b040'); break;
+      case 92: P(X, Y, 16, 16, '#2a0a1a'); P(X + 6, Y - 12, 4, 28, INK); P(X + 7, Y - 11, 2, 26, '#d8dce6'); P(X + 7, Y - 11, 1, 26, '#ffffff'); P(X + 4, Y + 13, 8, 3, '#8a9098'); break;
+      case 93: floorBase(X, Y); P(X, Y + 2, 16, 13, INK); P(X + 1, Y + 3, 14, 6, '#3a0a12'); P(X + 1, Y + 9, 14, 5, '#5a1220'); P(X + 2, Y + 4, 12, 1, '#7a2a36'); for (let i = 3; i < 14; i += 4) P(X + i, Y + 6, 1, 1, '#1a0408'); break;
+      case 94: floorBase(X, Y); P(X, Y + 1, 16, 15, INK); P(X + 1, Y + 2, 14, 13, '#2a0a14'); P(X + 1, Y + 2, 14, 1, '#4a1a24'); break;
+      case 95: floorBase(X, Y); for (let i = 0; i < 14; i++) { P(X + 1 + i, Y + 1 + i, 2, 2, '#3a2418'); P(X + 13 - i, Y + 1 + i, 2, 2, '#3a2418'); } P(X + 1, Y + 1, 3, 2, '#0c0c12'); P(X + 12, Y + 1, 3, 2, '#0c0c12'); P(X + 2, Y + 2, 1, 1, '#c0c4cc'); P(X + 13, Y + 2, 1, 1, '#c0c4cc'); break;
+      case 96: floorBase(X, Y); P(X + 3, Y - 8, 1, 16, '#8a9098'); P(X + 12, Y - 8, 1, 16, '#8a9098'); P(X + 2, Y + 8, 12, 4, INK); P(X + 3, Y + 9, 10, 2, '#3a0a12'); break;
+      case 97: P(X, Y, 16, 16, INK); P(X + 1, Y - 6, 14, 22, '#a3161a'); P(X + 1, Y - 6, 14, 4, '#e0b040'); for (let i = 0; i < 6; i++) P(X + 3 + i * 2, Y - 5, 1, 2, i % 2 ? '#fff200' : '#ff2bd6');
+        P(X + 3, Y, 10, 15, '#6a0a18'); for (let i = 4; i < 13; i += 3) P(X + i, Y, 1, 15, '#4a0610'); break;
+      case 98: floorBase(X, Y); P(X, Y + 1, 16, 1, '#8a9098'); for (let i = 1; i < 16; i += 3) P(X + i, Y + 1, 1, 15, '#8a9098'); break;
+      case 100: floorBase(X, Y); P(X + 3, Y + 5, 10, 6, INK); P(X + 4, Y + 6, 8, 4, '#d9e6e0'); P(X + 1, Y + 2, 2, 5, '#8a9098'); P(X + 13, Y + 2, 2, 5, '#8a9098'); P(X + 7, Y + 11, 2, 5, '#8a9098'); break;
+      case 101: P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y + 8, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2'); P(X + 8, Y, 1, 16, '#7fc8d2'); break;
+      case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: {
+        // a doorway with a bead curtain
+        P(X, Y, 16, 16, '#1a1018'); P(X, Y, 16, 2, '#c9a24a'); P(X, Y, 2, 16, '#c9a24a'); P(X + 14, Y, 2, 16, '#c9a24a');
+        const beads = ['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b', '#c28cff'];
+        for (let i = 3; i < 14; i += 2) for (let j = 3; j < 15; j += 3) P(X + i, Y + j, 1, 2, beads[(i + j) % 5]);
+        break;
+      }
+      default: P(X, Y, 16, 16, '#000'); break;
+    }
+  }
+  return cv;
+}
+
+function drawInteriorFx(now, camX, camY, ppx, ppy) {
+  const sc = SCENES[scene];
+  const fl = window.INTERIORS[sc.club].floors[sc.floor];
+  const lights = !reduceMotion;
+  // pool water shimmer
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 64) return;
+    const k = (x * 5 + y * 3 + Math.floor(now / 400)) % 6;
+    if (k < 2) { ctx.fillStyle = k ? '#7fcde8' : '#c9f0ff'; ctx.fillRect(x * T - camX + 3 + ((x * 7 + k * 5) % 8), y * T - camY + 5 + ((y * 11 + x) % 6), 3, 1); }
+  }));
+  // moving coloured spots on the dancefloor
+  if (sc.dance.x1 >= sc.dance.x0) {
+    const d = sc.dance, bx = d.x0 * T - camX, by = d.y0 * T - camY, bw = (d.x1 - d.x0 + 1) * T, bh = (d.y1 - d.y0 + 1) * T;
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
+    ctx.globalCompositeOperation = 'lighter';
+    const cols = fl.spots || (sc.floor === 'pb' ? ['rgba(255,170,90,.16)', 'rgba(255,90,160,.14)', 'rgba(140,120,255,.14)'] : ['rgba(255,40,80,.15)', 'rgba(60,120,255,.15)', 'rgba(255,255,255,.10)', 'rgba(170,80,255,.13)']);
+    for (let i = 0; i < 6; i++) {
+      const t = (lights ? now / 1000 : 0) * (0.35 + i * 0.07) + i * 1.7;
+      const cx = bx + bw / 2 + Math.sin(t) * bw * 0.4, cy = by + bh / 2 + Math.cos(t * 1.3) * bh * 0.4;
+      const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, 34);
+      gr.addColorStop(0, cols[i % cols.length]); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gr; ctx.fillRect(cx - 34, cy - 34, 68, 68);
+    }
+    ctx.restore();
+  }
+  // DJ booth lights
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 59) return;
+    if ((Math.floor(now / 180) + x * 3) % 4 === 0) { ctx.fillStyle = ['#ff4d6d', '#6fb7ff', '#f2c45a'][(x + y) % 3]; ctx.fillRect(x * T - camX + 3 + (x * 5) % 9, y * T - camY + 4, 2, 2); }
+  }));
+  // entities, follower and player, sorted by row
+  const list = ents.map(e => ({ e, y: e.y }));
+  list.push({ e: null, y: ppy / T });
+  if (follower) list.push({ e: 'follower', y: followerPx()[1] / T });
+  list.sort((a, b) => a.y - b.y);
+  list.forEach(({ e }) => {
+    if (!e) {
+      const step = player.moving ? (player.t < player.dur / 2 ? (player.n % 2) + 1 : 0) : 0;
+      person(ctx, ppx - camX, ppy - camY - 3, player.dir, step, lookOf(state.outfit));
+      return;
+    }
+    if (e === 'follower') {
+      const [fx, fy] = followerPx();
+      const step = player.moving ? (player.t < player.dur / 2 ? ((player.n + 1) % 2) + 1 : 0) : 0;
+      person(ctx, fx - camX, fy - camY - 3, follower.dir, step, follower.look);
+      return;
+    }
+    const X = e.x * T - camX, Y = e.y * T - camY;
+    if (X < -16 || Y < -24 || X > VW || Y > VH + 8) return;
+    if (e.kind === 'bottle') { if (!state.pfand.taken[e.bid]) drawBottle(X, Y, e.type, now); return; }
+    if (e.kind === 'pile') { drawPile(e, X, Y, now, lights); return; }
+    if (e.dance && lights) {
+      const beat = Math.floor(now / 230 + e.phase);
+      const dir = ['down', 'left', 'down', 'right'][Math.floor(now / 900 + e.phase) % 4];
+      person(ctx, X, Y - 3 - (beat % 2), dir, (beat % 2) + 1, e.look);
+    } else person(ctx, X, Y - 3, e.dir, 0, e.look);
+  });
+  // main floor: the light bar along the top wall and a short strobe now and then
+  if (sc.floor === 'mf') {
+    ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillRect(T - camX, T + 5 - camY, (sc.w - 2) * T, 2);
+    ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(T - camX, T + 2 - camY, (sc.w - 2) * T, 8);
+    if (lights && now % 3200 < 70) { ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.fillRect(0, 0, VW, VH); }
+  }
+  // Panorama Bar sunrise: open blinds and light falling into the room
+  if (sc.floor === 'pb' && state.sunrise[sc.club]) {
+    sc.map.forEach((row, y) => row.forEach((t, x) => {
+      if (t !== 50) return;
+      const X = x * T - camX, Y = y * T - camY;
+      ctx.fillStyle = '#ffe2a0'; ctx.fillRect(X + 1, Y + 1, 14, 12);
+      ctx.fillStyle = '#fff4d6'; ctx.fillRect(X + 1, Y + 1, 14, 3);
+      ctx.fillStyle = '#c9a26a'; ctx.fillRect(X + 1, Y + 1, 14, 1);
+    }));
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const wx0 = 9 * T - camX, wx1 = 25 * T - camX, wy = 2 * T - camY;
+    const gr = ctx.createLinearGradient(0, wy, 0, wy + 10 * T);
+    gr.addColorStop(0, 'rgba(255,200,120,.30)'); gr.addColorStop(1, 'rgba(255,200,120,0)');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(wx0, wy); ctx.lineTo(wx1, wy); ctx.lineTo(wx1 - 5 * T, wy + 10 * T); ctx.lineTo(wx0 - 6 * T, wy + 10 * T); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  // fairy lights strung between two tiles, sagging a little
+  (fl.fairy || []).forEach(([x0, y0, x1, y1], si) => {
+    const n = Math.max(4, Math.abs(x1 - x0) * 2);
+    for (let i = 0; i <= n; i++) {
+      const k = i / n, sag = Math.sin(k * Math.PI) * 5;
+      const lx = (x0 + (x1 - x0) * k) * T + 8 - camX, ly = (y0 + (y1 - y0) * k) * T + 2 + sag - camY;
+      const on = !lights || (Math.floor(now / 500) + i + si) % 3 !== 0;
+      ctx.fillStyle = 'rgba(20,18,28,.6)'; if (i < n) ctx.fillRect(lx, ly, T / 2, 1);
+      if (on) { ctx.fillStyle = ['#ffd23f', '#ff5e7a', '#5ec8ff', '#b6f36b', '#c28cff'][(i + si) % 5]; ctx.fillRect(lx - 1, ly, 2, 2); }
+    }
+  });
+  // red paper lanterns, swaying (the Tunnel)
+  (fl.lanterns || []).forEach(([lx, ly], i) => {
+    const sway = lights ? Math.sin(now / 700 + i) * 2 : 0;
+    const X = lx * T + 8 - camX + sway, Y = ly * T - 4 - camY;
+    ctx.fillStyle = 'rgba(255,90,40,.18)'; ctx.beginPath(); ctx.arc(X, Y + 6, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = INK; ctx.fillRect(X - 0.5, Y - 6, 1, 6);
+    ctx.fillStyle = '#e0b040'; ctx.fillRect(X - 3, Y, 6, 1); ctx.fillRect(X - 3, Y + 10, 6, 1);
+    ctx.fillStyle = '#d42a1e'; ctx.fillRect(X - 4, Y + 1, 8, 9);
+    ctx.fillStyle = '#ff6a3a'; ctx.fillRect(X - 2, Y + 2, 2, 7);
+    ctx.fillStyle = '#e0b040'; ctx.fillRect(X - 0.5, Y + 11, 1, 3);
+  });
+  // sauna steam (thicker during the Aufguss)
+  if (fl.steam) {
+    const thick = steamUntil > now ? 1 : 0.35;
+    ctx.save(); ctx.globalAlpha = 0.18 * thick;
+    for (let i = 0; i < 14; i++) {
+      const t = (lights ? now / 2600 : 0) + i * 1.3;
+      const sx = ((i * 53 + t * 30) % (sc.w * T)) - camX, sy = (sc.h * T - ((t * 40 + i * 37) % (sc.h * T))) - camY;
+      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(sx, sy, 12 + (i % 4) * 4, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  // open air: warm afternoon light
+  if (fl.daylight) { ctx.fillStyle = 'rgba(255,214,140,.10)'; ctx.fillRect(0, 0, VW, VH); }
+  // KitKat: UV light upstairs, red light in the dungeon
+  if (fl.uv) {
+    ctx.fillStyle = 'rgba(110,30,200,.16)'; ctx.fillRect(0, 0, VW, VH);
+    // the fluorescent paintings glow under the UV
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = lights ? 0.18 + 0.08 * Math.sin(now / 600) : 0.2;
+    sc.map.forEach((row, y) => row.forEach((t, x) => { if (t === 90 && !WALLISH.has(sc.map[y + 1] ? sc.map[y + 1][x] : 40)) ctx.drawImage(mc, x * T, y * T, T, T, x * T - camX, y * T - camY, T, T); }));
+    ctx.restore();
+  }
+  if (fl.red) { ctx.fillStyle = 'rgba(170,0,30,.18)'; ctx.fillRect(0, 0, VW, VH); }
+  // darkroom: you only see right around you
+  if (get(player.x, player.y) === DARK || (player.moving && get(player.tx, player.ty) === DARK)) {
+    const cx = ppx - camX + 8, cy = ppy - camY + 6;
+    const gr = ctx.createRadialGradient(cx, cy, 8, cx, cy, 44);
+    gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,.94)');
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, VW, VH);
+  }
+}
+
+/* ---- follower (someone walking behind you) ---- */
+function followerPx() {
+  if (!player.moving) return [follower.x * T, follower.y * T];
+  const k = player.t / player.dur;
+  return [Math.round((follower.px + (follower.x - follower.px) * k) * T), Math.round((follower.py + (follower.y - follower.py) * k) * T)];
+}
+function followStep(oldX, oldY) {
+  if (!follower) return;
+  follower.px = follower.x; follower.py = follower.y;
+  follower.x = oldX; follower.y = oldY;
+  const dx = follower.x - follower.px, dy = follower.y - follower.py;
+  if (dx || dy) follower.dir = dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : 'up';
+}
+function placeFollower() {
+  if (!follower) return;
+  const [dx, dy] = DIRS[OPP[player.dir]];
+  let fx = player.x + dx, fy = player.y + dy;
+  if (blocked(fx, fy)) { fx = player.x; fy = player.y; }
+  follower.x = follower.px = fx; follower.y = follower.py = fy; follower.dir = player.dir;
+}
+function releaseFollower() {
+  if (!follower) return;
+  const sc = SCENES[follower.homeScene];
+  if (sc && !sc.ents.includes(follower.ent)) { follower.ent.x = follower.ent.home.x; follower.ent.y = follower.ent.home.y; sc.ents.push(follower.ent); }
+  follower = null;
+}
+
+/* ---- transitions ---- */
+const fadeEl = $('#fade'), floorCard = $('#floorCard'), floorTag = $('#floorTag'), toastEl = $('#toast');
+async function fade(on) { fadeEl.classList.toggle('on', on); await wait(reduceMotion ? 0 : 240); }
+let floorCardTimer = null;
+function showFloorCard(title, sub) {
+  floorCard.innerHTML = '<b></b><span></span>';
+  floorCard.querySelector('b').textContent = title;
+  floorCard.querySelector('span').textContent = sub;
+  floorCard.hidden = false; floorCard.classList.remove('out');
+  clearTimeout(floorCardTimer);
+  floorCardTimer = setTimeout(() => { floorCard.classList.add('out'); floorCardTimer = setTimeout(() => { floorCard.hidden = true; }, 400); }, 1400);
+}
+let toastTimer = null;
+function toast(text) {
+  toastEl.textContent = text; toastEl.hidden = false; toastEl.classList.remove('out');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toastEl.classList.add('out'); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 400); }, 2600);
+}
+function updateFloorTag() {
+  if (!inClub()) { floorTag.hidden = true; return; }
+  const fl = window.INTERIORS[sceneClub()].floors[sceneFloor()];
+  floorTag.textContent = window.INTERIORS[sceneClub()].name.toUpperCase() + ' · ' + fl.short;
+  floorTag.hidden = false;
+}
+async function goFloor(clubId, floorId, spawnKey) {
+  busy = true;
+  await fade(true);
+  const fl = window.INTERIORS[clubId].floors[floorId];
+  const [x, y, dir] = fl.spawn[spawnKey];
+  useScene(clubId + ':' + floorId);
+  player.x = player.tx = x; player.y = player.ty = y; player.dir = dir; player.moving = false;
+  placeFollower();
+  updateFloorTag();
+  showFloorCard(fl.short, fl.label);
+  await fade(false);
+  busy = false;
+  await onFloorEnter(clubId, floorId);
+}
+async function enterClub(c, overlayShown) {
+  busy = true;
+  if (!overlayShown && !state.visited[c.id]) await showInside(c, false);
+  const first = !state.visited[c.id];
+  state.visited[c.id] = true;
+  await goFloor(c.id, Object.keys(window.INTERIORS[c.id].floors)[0], 'street');
+  if (first) {
+    busy = true;
+    const welcome = window.INTERIORS[c.id].welcome || ['Security: Phone.', '(He puts stickers over your phone cameras. No photos in here.)', 'Security: Viel Spaß.', '(Side quests unlocked. Check your stamp card.)'];
+    for (const l of welcome) await say(l);
+    closeBox();
+    renderCard(); save();
+    busy = false;
+  }
+}
+async function leaveClub(clubId) {
+  const c = CLUBS.find(cl => cl.id === clubId);
+  busy = true;
+  if (follower) { await say(`(${follower.name} stays inside. They'll wait for you at Panorama Bar.)`); closeBox(); releaseFollower(); }
+  await fade(true);
+  useScene('city');
+  player.x = player.tx = c.dx; player.y = player.ty = c.by; player.dir = 'down'; player.moving = false;
+  updateFloorTag();
+  save();
+  await fade(false);
+  busy = false;
+}
+
+/* ---- side quests ---- */
+const QUEST_LIST = clubId => (window.INTERIORS[clubId] && window.INTERIORS[clubId].quests) || [];
+const questDone = (clubId, id) => !!state.quests[clubId + ':' + id];
+const questCount = clubId => QUEST_LIST(clubId).filter(q => questDone(clubId, q.id)).length;
+async function completeQuest(clubId, id) {
+  if (questDone(clubId, id)) return;
+  state.quests[clubId + ':' + id] = true;
+  const q = QUEST_LIST(clubId).find(x => x.id === id);
+  toast('QUEST DONE · ' + (q ? q.title : id));
+  renderCard(); save();
+  if (questCount(clubId) === QUEST_LIST(clubId).length) {
+    await say(`(You did everything ${window.INTERIORS[clubId].name} has to offer. Almost. Nobody does everything.)`);
+  }
+}
+async function onFloorEnter(clubId, floorId) {
+  if (floorId !== 'pb' || state.sunrise[clubId]) return;
+  const others = QUEST_LIST(clubId).filter(q => q.id !== 'sunrise' && questDone(clubId, q.id)).length;
+  if (others < 3) return;
+  busy = true;
+  await say('(The music drops. The metal blinds start to rise…)');
+  state.sunrise[clubId] = true; save();
+  await say('(Daylight floods Panorama Bar. The whole room screams.)');
+  await say('(Dance now! Press A on the dancefloor.)');
+  closeBox();
+  busy = false;
+}
+let tripUntil = 0;
+// Hint shown on the stamp card for each step of the toilet chain.
+const K_HINTS = { 1: 'Find Mila on the main dancefloor: pink hair, sunglasses, left speakers.', 2: 'You have the bag. Back to the guy at the toilet door.' };
+
+/* ---- the 10-second K hit: melting rows and columns, ghost trails, blur, colour drift, slow motion ---- */
+const K_MS = 10000;
+let kStart = 0, kUntil = 0;
+const kBuf = document.createElement('canvas'), kBufCtx = kBuf.getContext('2d');
+const kTrail = document.createElement('canvas'), kTrailCtx = kTrail.getContext('2d');
+function startK() { kStart = performance.now(); kUntil = kStart + K_MS; kTrailCtx.clearRect(0, 0, kTrail.width, kTrail.height); }
+function endK() { kUntil = 0; cvs.style.filter = ''; }
+// 0..1: rises quickly, holds, fades out over the last seconds
+function kLevel(now) {
+  if (!kUntil) return 0;
+  const p = (now - kStart) / K_MS;
+  if (p >= 1) return 0;
+  return Math.min(1, p * 6) * Math.min(1, (1 - p) * 3);
+}
+const timeScale = now => 1 - 0.6 * kLevel(now);
+function applyK(now) {
+  const env = kLevel(now);
+  if (!env) { endK(); return; }
+  if (reduceMotion) { cvs.style.filter = `blur(${(1.5 * env).toFixed(2)}px) saturate(${(1 + env).toFixed(2)}) hue-rotate(${Math.round(90 * env)}deg)`; return; }
+  const W = cvs.width, H = cvs.height, t = now / 1000;
+  if (kBuf.width !== W || kBuf.height !== H) { kBuf.width = W; kBuf.height = H; kTrail.width = W; kTrail.height = H; }
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  // rows slide sideways in waves
+  kBufCtx.drawImage(cvs, 0, 0);
+  const ax = 12 * env;
+  for (let y = 0; y < H; y += 2) ctx.drawImage(kBuf, 0, y, W, 2, Math.sin(y * 0.045 + t * 2.2) * ax + Math.sin(y * 0.13 + t * 5) * ax * 0.25, y, W, 2);
+  // columns drip downwards: the room melts
+  kBufCtx.drawImage(cvs, 0, 0);
+  const ay = 18 * env;
+  for (let x = 0; x < W; x += 2) {
+    const d = Math.max(0, Math.sin(x * 0.028 + t * 1.1)) * ay + Math.sin(x * 0.17 + t * 3.3) * ay * 0.2;
+    ctx.drawImage(kBuf, x, 0, 2, H, x, d, 2, H);
+  }
+  // ghost trails: everything that moves leaves an echo
+  ctx.globalAlpha = 0.6 * env; ctx.drawImage(kTrail, 0, 0); ctx.globalAlpha = 1;
+  kTrailCtx.drawImage(cvs, 0, 0);
+  cvs.style.filter = `blur(${(2.4 * env).toFixed(2)}px) hue-rotate(${Math.round(now / 9) % 360}deg) saturate(${(1 + 2 * env).toFixed(2)}) contrast(${(1 + 0.35 * env).toFixed(2)})`;
+}
+function startTrip() { tripUntil = performance.now() + 45000; }
+function endTrip() { tripUntil = 0; cvs.style.filter = ''; }
+
+async function danceHere() {
+  busy = true;
+  const dirs = ['down', 'left', 'up', 'right'];
+  for (let i = 0; i < 8; i++) { player.dir = dirs[i % 4]; await wait(reduceMotion ? 0 : 110); }
+  player.dir = 'down';
+  const clubId = sceneClub(), fl = sceneFloor();
+  if (DANCE_HOOKS[clubId]) { await DANCE_HOOKS[clubId](fl); closeBox(); busy = false; return; }
+  if (fl === 'pb' && state.sunrise[clubId]) {
+    await say('(Sunlight on your face, house music in your ears. This is it.)');
+    await completeQuest(clubId, 'sunrise');
+  } else if (fl === 'pb') {
+    await say('(Nice groove. The blinds are still down.)');
+  } else {
+    await say(pick(['(You lose yourself in the kick drum.)', '(Eyes closed. The bass goes straight through you.)', '(Someone next to you yells "YES". You agree.)']));
+    await completeQuest(clubId, 'dance');
+  }
+  closeBox();
+  busy = false;
+}
+
+/* ---- Sisyphos: Pfand, stories, dancing in every room ---- */
+// German bottle deposit: reusable beer bottles 8 ct, Club-Mate 15 ct, cans 25 ct.
+const PFAND = { beer: { name: 'beer bottle', cents: 8 }, mate: { name: 'Club-Mate bottle', cents: 15 }, can: { name: 'can', cents: 25 } };
+const PFAND_GOAL = 8, CARRY_MAX = 4;
+const euro = c => '€' + (c / 100).toFixed(2);
+let steamUntil = 0;
+function pickBottle(e) {
+  const p = state.pfand;
+  if (p.carry >= CARRY_MAX) { toast('HANDS FULL · BRING THEM TO A BAR'); return false; }
+  p.taken[e.bid] = true; p.carry++; p.carryCents += PFAND[e.type].cents;
+  toast(`+1 ${PFAND[e.type].name.toUpperCase()} · ${p.carry}/${CARRY_MAX} IN HANDS`);
+  save(); renderCard();
+  return true;
+}
+function drawBottle(X, Y, type, now) {
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(X + 5, Y + 13, 6, 2);
+  if (type === 'can') {
+    ctx.fillStyle = INK; ctx.fillRect(X + 5, Y + 6, 6, 8);
+    ctx.fillStyle = '#c0c4cc'; ctx.fillRect(X + 6, Y + 7, 4, 6);
+    ctx.fillStyle = '#ff5e7a'; ctx.fillRect(X + 6, Y + 9, 4, 2);
+  } else {
+    const glass = type === 'mate' ? '#2f6b3a' : '#6b3d1a';
+    ctx.fillStyle = INK; ctx.fillRect(X + 5, Y + 6, 6, 8); ctx.fillRect(X + 6, Y + 3, 4, 4);
+    ctx.fillStyle = glass; ctx.fillRect(X + 6, Y + 7, 4, 6); ctx.fillRect(X + 7, Y + 4, 2, 3);
+    if (type === 'mate') { ctx.fillStyle = '#f2c14e'; ctx.fillRect(X + 6, Y + 9, 4, 2); }
+  }
+  // a glint so you spot them
+  if (Math.floor(now / 400 + X) % 5 === 0) { ctx.fillStyle = '#fff'; ctx.fillRect(X + 7, Y + 7, 1, 2); }
+}
+function questHint(clubId, q) {
+  if (clubId === 'berghain' && q.id === 'toilet' && K_HINTS[state.kStage]) return K_HINTS[state.kStage];
+  if (q.id === 'pfand') { const p = state.pfand; return `Returned ${p.returned}/${PFAND_GOAL} · in hands ${p.carry}/${CARRY_MAX} · ${euro(p.cents)} earned. Any bar takes them back.`; }
+  if (q.id === 'stories') return `${Object.keys(state.heard).length}/3 heard. ` + q.hint;
+  if (q.id === 'hopper') return `${roomsDanced(clubId)}/4 rooms. ` + q.hint;
+  return q.hint;
+}
+const roomsDanced = clubId => Object.keys(state.danced).filter(k => k.startsWith(clubId + ':')).length;
+const SISY_DANCE = {
+  strand: '(Barefoot in the sand, sun on your neck. Someone hands you a slice of watermelon.)',
+  wg: "(Glass walls, plants, house music. In the Wintergarten it's always the good part of the afternoon.)",
+  hh: '(The Hammahalle kick drum hits like a hammer. Fair enough.)',
+  df: '(The whole Dampfer seems to sway like a ship. Or is that you?)',
+  tn: '(Red lanterns swing above you. The Tunnel goes on forever.)'
+};
+const DANCE_HOOKS = {
+  async sisyphos(fl) {
+    await say(SISY_DANCE[fl] || '(You dance. Nobody is in a hurry here.)');
+    if (!state.danced['sisyphos:' + fl]) { state.danced['sisyphos:' + fl] = true; save(); renderCard(); }
+    const n = roomsDanced('sisyphos');
+    if (n >= 4) await completeQuest('sisyphos', 'hopper');
+    else toast(`DANCED IN ${n}/4 ROOMS`);
+  }
+};
+
+/* ---- KitKat: groups on beds, Marco, the photo booth ---- */
+function drawPile(e, X, Y, now, lights) {
+  // a bed (or a dark corner) with several people tangled together, rocking slowly
+  const W = (e.w || 1) * T, n = e.looks.length, beat = lights ? now / 430 : 0;
+  ctx.fillStyle = INK; ctx.fillRect(X - 1, Y + 3, W + 2, 13);
+  ctx.fillStyle = e.sheet || '#5a0a1a'; ctx.fillRect(X, Y + 4, W, 11);
+  ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.fillRect(X, Y + 4, W, 2);
+  e.looks.forEach((L, i) => {
+    const bob = Math.round(Math.sin(beat * Math.PI + i * 1.9 + e.phase) * 1.5);
+    const cx = X + 8 + i * (W - 16) / Math.max(1, n - 1);
+    ctx.save();
+    ctx.translate(Math.round(cx), Y + 9 + bob);
+    ctx.rotate(i % 2 ? -Math.PI / 2 : Math.PI / 2);
+    person(ctx, -8, -9, i % 3 === 1 ? 'up' : 'down', 0, L);
+    ctx.restore();
+  });
+  // a blanket over the middle: it's understood, not shown
+  ctx.fillStyle = e.sheet || '#5a0a1a'; ctx.fillRect(X + 3, Y + 10, W - 6, 5);
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(X + 3, Y + 10, W - 6, 1);
+  // little hearts drifting up
+  if (lights) for (let i = 0; i < 3; i++) {
+    const t = ((now / 1700) + i / 3 + e.phase) % 1;
+    const hx = Math.round(X + W / 2 + Math.sin(t * 6 + i) * W / 3), hy = Math.round(Y + 2 - t * 20);
+    ctx.globalAlpha = 1 - t;
+    ctx.fillStyle = '#ff5fa2'; ctx.fillRect(hx - 2, hy, 2, 2); ctx.fillRect(hx + 1, hy, 2, 2); ctx.fillRect(hx - 2, hy + 1, 5, 2); ctx.fillRect(hx - 1, hy + 3, 3, 1); ctx.fillRect(hx, hy + 4, 1, 1);
+    ctx.globalAlpha = 1;
+  }
+}
+const PILE_LINES = {
+  yes: { look: '(A tangle of bodies under a blanket, moving to their own rhythm. Someone looks up and smiles.)', hi: 'Them: Hi, cutie. Want to join us?',
+    ok: 'Them: Everyone? … Yes, yes and yes. Come here.', after: '(A while later you crawl back out, grinning and slightly out of breath.)' },
+  no: { look: '(A tight knot of bodies in the dark. Somebody shifts and looks over at you.)', hi: 'Them: Hey. Something you wanted?',
+    ok: "Them: Sweet of you to ask, but we're a closed group tonight. Have fun out there!" },
+  busy: { look: '(Two people, very busy, very much in their own world.)', hi: 'Them: (breathless) …not now, darling. Maybe later.' }
+};
+async function spankFx(gentle) {
+  const sm = $('#smack');
+  sm.textContent = gentle ? 'pat.' : 'SMACK!';
+  sm.hidden = false; sm.classList.remove('go'); void sm.offsetWidth; sm.classList.add('go');
+  if (!reduceMotion) { screenEl.classList.remove('shake'); void screenEl.offsetWidth; screenEl.classList.add('shake'); }
+  if (navigator.vibrate) { try { navigator.vibrate(gentle ? 40 : [80, 40, 120]); } catch (err) {} }
+  await wait(800);
+  sm.hidden = true; screenEl.classList.remove('shake');
+}
+let photoResolve = null;
+const MARCO_LOOK = { skin: '#d9a27c', hair: '#2a2420', beard: '#2a2420', top: '#d9a27c', legs: '#0c0c12', harness: true, shine: '#7a7a99' };
+function drawPhotoStrip(cv, scale) {
+  const g = cv.getContext('2d'), s = scale || 1;
+  cv.width = 56 * s; cv.height = 200 * s;
+  g.imageSmoothingEnabled = false;
+  g.setTransform(s, 0, 0, s, 0, 0);
+  const sprite = document.createElement('canvas'); sprite.width = 16; sprite.height = 18;
+  const sg = sprite.getContext('2d');
+  const drawP = (L, dir, x, y) => { sg.clearRect(0, 0, 16, 18); person(sg, 0, 2, dir, 0, L); g.drawImage(sprite, 0, 0, 16, 18, x, y, 32, 36); };
+  const me = lookOf(state.outfit);
+  g.fillStyle = '#f3eee3'; g.fillRect(0, 0, 56, 200);
+  for (let f = 0; f < 4; f++) {
+    const fy = 4 + f * 44;
+    g.fillStyle = '#6a0a18'; g.fillRect(4, fy, 48, 40);
+    for (let i = 6; i < 52; i += 5) { g.fillStyle = '#4a0610'; g.fillRect(i, fy, 1, 34); g.fillStyle = '#8a1a28'; g.fillRect(i + 2, fy, 1, 34); }
+    g.fillStyle = '#2a0a10'; g.fillRect(4, fy + 34, 48, 6);
+    if (f === 0) { drawP(me, 'down', 2, fy + 3); drawP(MARCO_LOOK, 'down', 22, fy + 3); }
+    if (f === 1) { drawP(me, 'down', 2, fy + 3); drawP(MARCO_LOOK, 'left', 22, fy + 3); g.fillStyle = MARCO_LOOK.skin; g.fillRect(24, fy + 6, 5, 5); g.fillStyle = '#ffffff'; g.fillRect(31, fy + 4, 4, 1); g.fillRect(32, fy + 7, 4, 1); }
+    if (f === 2) {
+      drawP(Object.assign({}, me, { blush: true }), 'up', 2, fy + 3); drawP(MARCO_LOOK, 'left', 22, fy + 3);
+      g.fillStyle = '#fff200'; [[14, 8], [10, 14], [18, 16], [12, 22]].forEach(([a, b]) => { g.fillRect(4 + a, fy + b, 3, 1); g.fillRect(5 + a, fy + b - 1, 1, 3); });
+      g.font = '8px "Press Start 2P", monospace'; g.textBaseline = 'top'; g.fillStyle = INK; g.fillText('SMACK', 9, fy + 27); g.fillStyle = '#ffffff'; g.fillText('SMACK', 8, fy + 26);
+    }
+    if (f === 3) {
+      drawP(Object.assign({}, me, { blush: true }), 'down', 2, fy + 3); drawP(MARCO_LOOK, 'down', 22, fy + 3);
+      g.fillStyle = '#ff5fa2'; const hx = 25, hy = fy + 4; g.fillRect(hx, hy, 3, 2); g.fillRect(hx + 4, hy, 3, 2); g.fillRect(hx, hy + 2, 7, 2); g.fillRect(hx + 1, hy + 4, 5, 1); g.fillRect(hx + 2, hy + 5, 3, 1); g.fillRect(hx + 3, hy + 6, 1, 1);
+    }
+  }
+  g.font = '8px "Press Start 2P", monospace'; g.textBaseline = 'top'; g.fillStyle = '#a3161a'; g.fillText('KITKAT', 4, 183);
+  g.setTransform(1, 0, 0, 1, 0, 0);
+}
+function showPhotoStrip() {
+  return new Promise(resolve => {
+    const el = $('#photo');
+    drawPhotoStrip($('#photoCanvas'), 1);
+    el.hidden = false;
+    photoResolve = () => { el.hidden = true; photoResolve = null; resolve(); };
+  });
+}
+
+const ACTS = {
+  async pile(e, clubId) {
+    const L = PILE_LINES[e.join] || PILE_LINES.busy;
+    await say(L.look);
+    await say(L.hi);
+    if (e.join === 'busy') return;
+    const a = await ask('', ['Can I join? If everyone is into it', 'Just watch, if that\'s okay', 'Sorry, wrong corner']);
+    if (a === 2) { await say('Them: No worries! Bye!'); return; }
+    if (a === 1) { await say('Them: Watching is fine. No touching, no photos. Enjoy the show.'); return; }
+    await say(L.ok);
+    if (e.join !== 'yes') return;
+    closeBox();
+    await fade(true);
+    await wait(reduceMotion ? 300 : 1200);
+    await fade(false);
+    await say(L.after);
+    await completeQuest(clubId, 'orgy');
+  },
+  async kkGarderobe(e, clubId) {
+    if (state.kkStripped) { await say('Garderobe: Your clothes are safe with me. You look great.'); return; }
+    await say('Garderobe: Clothes off? Most people keep only the essentials.');
+    const a = await ask('', ['Down to my underwear', 'I\'ll keep my outfit']);
+    if (a === 1) { await say('Garderobe: As you like, darling.'); return; }
+    state.kkStripped = true; save(); renderCard();
+    await say('(You hand over your clothes and get a ticket. The air feels very warm on your skin.)');
+    await completeQuest(clubId, 'garderobe');
+  },
+  async pole(e, clubId) {
+    const dirs = ['down', 'left', 'up', 'right'];
+    for (let i = 0; i < 12; i++) { player.dir = dirs[i % 4]; await wait(reduceMotion ? 0 : 80); }
+    player.dir = 'down';
+    await say(pick(['(You grab the pole and spin. The crowd whoops.)', '(One hand on the pole, one leg up. You are a star.)']));
+    await completeQuest(clubId, 'pole');
+  },
+  async kkPool(e, clubId) {
+    if (questDone(clubId, 'swim')) { await say('(The water is still warm. The mermaid waves.)'); return; }
+    const a = await ask('The pool. Warm water, purple light, people floating around in nothing much. Get in?', ['Slide in', 'Just the feet', 'Stay dry']);
+    if (a === 2) return;
+    await say(a === 0 ? '(You slide in. Warm as a bath. Somebody hands you a rubber duck.)' : '(Feet in the warm water. Somebody compliments your ankles.)');
+    await completeQuest(clubId, 'swim');
+  },
+  async swing() {
+    await say('(The love swing. There\'s a small queue and a sign: "Ask the person before you how to get out."');
+  },
+  async marco(e, clubId) {
+    if (questDone(clubId, 'spank')) {
+      await say(questDone(clubId, 'photo') ? 'Marco: Bellissima foto! I keep a copy in my heart.' : 'Marco: Now the photo booth! There, in the corner. Presto, presto!');
+      return;
+    }
+    await say('Marco: Ciao! I am Marco, from Napoli. Twenty years I come to KitKat.');
+    await say('Marco: You have a very… spankable energy. May I? Only if you say yes, eh.');
+    const a = await ask('', ['Yes, go on', 'Yes, but gently', 'No, grazie']);
+    if (a === 2) { await say('Marco: No is no. Perfetto. Enjoy your night, amore.'); return; }
+    closeBox();
+    await spankFx(a === 1);
+    await say(a === 1 ? 'Marco: Piano, piano… delicato, like a cannolo.' : 'Marco: SMACK! Mamma mia, what a sound! The whole dungeon heard it!');
+    await say('Marco: Now we need a souvenir. The photo booth, there in the corner. Andiamo!');
+    await completeQuest(clubId, 'spank');
+  },
+  async booth(e, clubId) {
+    if (!questDone(clubId, 'spank')) { await say('(A photo booth with a red velvet curtain. A handwritten sign: "Ask Marco first."'); return; }
+    await say(questDone(clubId, 'photo') ? '(You squeeze in with Marco again. FLASH. FLASH. FLASH. FLASH.)' : '(Marco squeezes into the booth with you. FLASH. FLASH. FLASH. FLASH.)');
+    closeBox();
+    await showPhotoStrip();
+    await completeQuest(clubId, 'photo');
+  },
+  async pfandBar(e, clubId) {
+    const p = state.pfand;
+    if (p.carry > 0) {
+      const n = p.carry, c = p.carryCents;
+      p.returned += n; p.cents += c; p.carry = 0; p.carryCents = 0;
+      await say(`Bar: ${n} empt${n > 1 ? 'ies' : 'y'}? Pfand, here you go.`);
+      await say(`(+${euro(c)}. You've made ${euro(p.cents)} from bottles tonight.)`);
+      save(); renderCard();
+      if (p.returned >= PFAND_GOAL) {
+        if (!questDone(clubId, 'pfand')) await say('Bar: You cleaned up half the club. Respect. Mate is on the house.');
+        await completeQuest(clubId, 'pfand');
+      } else toast(`PFAND ${p.returned}/${PFAND_GOAL} BOTTLES`);
+      return;
+    }
+    const a = await ask('Bar: What can I get you?', ['Club-Mate', 'Fresh ginger tea', 'Just water', 'Do you take empties?']);
+    const replies = ['(Ice-cold Club-Mate. Somebody plays a ukulele next to you.)', '(Ginger tea with honey. The bartender winks: "for your chakras".)', 'Bar: Water is free. Stay hydrated, festival child.',
+      `Bar: Always. Bring empty bottles here and you get the Pfand back. You can carry ${CARRY_MAX} at a time.`];
+    await say(replies[a]);
+    if (a === 2 && tripUntil) { endTrip(); await say('(You feel a bit steadier.)'); }
+  },
+  async juggler(e, clubId) {
+    if (questDone(clubId, 'juggle')) { await say('Zora: Look at you! Circus material. Come on tour with us.'); return; }
+    await say('Zora: I ran away with the circus at sixteen. Then the circus ran away to Sisyphos.');
+    await say('Zora: Want to learn to juggle? Three balls. Throw on the kick drum, catch in between.');
+    const a = await ask('Zora: Ready? Listen… boom… boom…', ['Throw now!', 'Wait for the next boom', 'Run away']);
+    if (a === 2) { await say('Zora: Next time, little clown.'); return; }
+    if (a === 0) { await say("(Balls everywhere. One lands in someone's Club-Mate.)"); await say('Zora: Too early! Feel the kick, then throw.'); return; }
+    await say('(Boom. Throw. Boom. Catch. Boom. Throw…)');
+    await say('(You juggle three balls for almost ten seconds. A small crowd claps on the beat.)');
+    await completeQuest(clubId, 'juggle');
+  },
+  async story(e, clubId) {
+    const lines = window.INTERIORS[clubId].stories[e.story] || [];
+    for (const l of lines) await say(l);
+    if (!state.heard[e.story]) {
+      state.heard[e.story] = true; save(); renderCard();
+      const n = Object.keys(state.heard).length;
+      if (n >= 3) await completeQuest(clubId, 'stories');
+      else toast(`STORIES ${n}/3`);
+    }
+  },
+  async sauna(e, clubId) {
+    if (questDone(clubId, 'sauna')) { await say('Saunameister: Next Aufguss in twenty minutes. Drink water.'); return; }
+    await say('Saunameister: Aufguss in one minute! Eucalyptus or lavender?');
+    const a = await ask('', ['Eucalyptus', 'Lavender', 'I need air']);
+    if (a === 2) { await say('Saunameister: Wise. The door is behind you.'); return; }
+    await say(`(Water with ${a === 0 ? 'eucalyptus' : 'lavender'} hits the hot stones. A wall of steam rolls over you.)`);
+    steamUntil = clock + 9000;
+    await say('(He waves a towel like a helicopter. Everyone groans happily.)');
+    await say('Kai, from the corner: This is basically a sweat lodge. Basically.');
+    await completeQuest(clubId, 'sauna');
+  },
+  async pool(e, clubId) {
+    if (questDone(clubId, 'swim')) { await say('(The water is still cold. Still worth it.)'); return; }
+    const a = await ask('The pool. People are splashing around in the sun. Jump in?', ['Jump in', 'Just dip your feet', 'Stay dry']);
+    if (a === 2) return;
+    await say(a === 0 ? '(SPLASH. Ice cold. The whole garden cheers. Your outfit will dry. Eventually.)' : '(Feet in the water, sun on your face, sand between your toes. Perfect.)');
+    await completeQuest(clubId, 'swim');
+  },
+  async coat(e, clubId) {
+    if (questDone(clubId, 'coat')) { await say(`Garderobe: Ticket #${state.coatNo}. Don't lose it.`); return; }
+    await say('Garderobe: Jacke?');
+    const a = await ask('Hand over your jacket?', ['Here you go', "I'll keep it"]);
+    if (a === 1) { await say("Garderobe: Suit yourself. It gets hot up there."); return; }
+    state.coatNo = 100 + Math.floor(Math.random() * 900);
+    await say(`(You get ticket #${state.coatNo}. You'll need it at 11am. Or 3pm.)`);
+    await completeQuest(clubId, 'coat');
+  },
+  async cashier() {
+    await say("Kasse: You're in. Hand, please.");
+    await say('(A stamp on the back of your hand. Now you can step out and come back in.)');
+  },
+  async bar(e, clubId) {
+    const a = await ask('Bar: What can I get you?', ['Club-Mate', 'A beer', 'Vodka-Mate', 'Just water']);
+    const replies = ['(Ice cold and very caffeinated. Berlin in a bottle.)', '(A cold Pils. Now you are officially out.)', '(Vodka and Club-Mate. A dangerous combination.)', 'Bar: Good call. Tap water is free.'];
+    await say(replies[a]);
+    if (a === 3 && tripUntil) { endTrip(); await say('(You feel a bit steadier.)'); }
+    await completeQuest(clubId, 'drink');
+  },
+  async ice(e, clubId) {
+    await say('Eisbar: Two scoops?');
+    await ask('Pick a flavour', ['Vanilla', 'Chocolate', "Whatever's coldest"]);
+    await say('(Best ice cream you have ever had at 6am.)');
+    await completeQuest(clubId, 'ice');
+  },
+  async dj(e, clubId) {
+    if (sceneFloor() === 'pb') await say(state.sunrise[clubId] ? '(The DJ throws both arms up. The room loses it.)' : '(The DJ smiles and glances at the windows.)');
+    else await say("(The DJ doesn't look up. Respect.)");
+  },
+  // Toilet chain: the guy at the toilet door wants K -> Mila on the dancefloor has it -> back to him.
+  async toiletGuy(e, clubId) {
+    if (questDone(clubId, 'toilet')) { await say('Toilet guy: Wild, right? Drink some water. Seriously.'); return; }
+    if (state.kStage === 0) {
+      await say('Toilet guy: Toilets are full. Everyone in there is waiting for the same thing.');
+      await say('Toilet guy: Bring some K and you can come in with me. Otherwise, queue.');
+      await say("Toilet guy: Ask Mila. Pink hair, sunglasses, dancing by the speakers on the left. Say I sent you.");
+      state.kStage = 1; save(); renderCard();
+      return;
+    }
+    if (state.kStage === 1) { await say('Toilet guy: Found Mila yet? Pink hair, sunglasses. Left side of the floor, by the speakers.'); return; }
+    await say('Toilet guy: You got it? Nice. Come on.');
+    closeBox();
+    await fade(true);
+    e.x = e.movedTo[0]; e.y = e.movedTo[1]; e.dir = 'right';
+    player.x = player.tx = e.x + 1; player.y = player.ty = e.y; player.dir = 'left'; player.moving = false;
+    await fade(false);
+    await say('(You squeeze into a stall together. He racks up two lines on the back of his phone.)');
+    await say('(You take one. It burns. Then the floor tilts.)');
+    closeBox();
+    state.kStage = 3;
+    startK();
+    await completeQuest(clubId, 'toilet');
+  },
+  async mila(e) {
+    if (state.kStage >= 2) { await say("Mila: Enjoy. Don't overdo it."); return; }
+    if (state.kStage === 0) { await say(pick(['Mila: Woo! This track!', "(She's lost in the music. She doesn't even see you.)"])); return; }
+    await say('Mila: Hm? Who sent you?');
+    const a = await ask('', ['The guy at the toilets', 'Nobody, just asking', 'Are you selling?']);
+    if (a !== 0) { await say(a === 2 ? 'Mila: Wow. Loud. No idea what you mean.' : "Mila: Then I don't know what you're talking about."); return; }
+    await say('Mila: Him? Okay.');
+    await say('(Mila slips a tiny bag into your hand without missing a beat.)');
+    state.kStage = 2; save(); renderCard();
+    toast('GOT · A TINY BAG');
+  },
+  async dancer(e, clubId) {
+    if (clubId === 'berghain' && state.kStage === 1 && Math.random() < 0.6) {
+      await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left.', "Raver: Mila? She's always dancing near the left speakers."]));
+    } else await say(e.lines[0]);
+  },
+  async awareness() {
+    if (tripUntil) {
+      await say("Awareness: Hey, how are you doing? Here's some water. Sit with me for a bit.");
+      endTrip();
+      await say('(You feel steadier.)');
+      return;
+    }
+    await say("Awareness: We're the awareness team. If anything feels wrong, come find us.");
+    await say('Awareness: Drink water, take breaks, look out for each other.');
+  },
+  async sascha(e, clubId) {
+    if (questDone(clubId, 'darkroom')) { await say('Sascha: That was fun. See you on the floor.'); return; }
+    await say('Sascha: Hey. Having a good night?');
+    const a = await ask('', ['Want to go somewhere darker?', 'Just saying hi']);
+    if (a === 1) { await say('Sascha: Hi back.'); return; }
+    const b = await ask('Sascha: Maybe. How do you ask?', ['Only if you want to', 'Grab their hand and go']);
+    if (b === 1) { await say('Sascha: Whoa. Ask first.'); return; }
+    await say('Sascha: I do. Lead the way. The darkroom is on the ground floor.');
+    ents.splice(ents.indexOf(e), 1);
+    follower = { name: 'Sascha', look: e.look, quest: 'darkroom', ent: e, homeScene: scene, x: e.x, y: e.y, px: e.x, py: e.y, dir: 'down' };
+    toast('Sascha follows you');
+  }
+};
+async function darkroomScene() {
+  const clubId = sceneClub();
+  busy = true;
+  await fade(true);
+  await say(`(It's very dark. ${follower.name} squeezes your hand.)`);
+  await say('(What happens in the darkroom stays in the darkroom.)');
+  closeBox();
+  releaseFollower();
+  await fade(false);
+  await completeQuest(clubId, 'darkroom');
+  closeBox();
+  busy = false;
 }
 
 /* ================= DIALOG ================= */
@@ -1098,8 +2064,9 @@ async function bouncerTalk(e) {
   renderCard(); save();
   await wait(reduceMotion ? 0 : 320);
   await showInside(c, true);
-  player.x = player.tx = c.dx; player.y = player.ty = c.by; player.dir = 'down';
   e.dir = 'down';
+  if (window.INTERIORS && window.INTERIORS[c.id]) { await enterClub(c, true); await maybeFinale(); return; }
+  player.x = player.tx = c.dx; player.y = player.ty = c.by; player.dir = 'down';
   save();
   await maybeFinale();
 }
@@ -1121,16 +2088,39 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 async function interact() {
   const [dx, dy] = DIRS[player.dir];
   const tx = player.x + dx, ty = player.y + dy;
-  const e = ents.find(en => en.x === tx && en.y === ty);
+  let e = ents.find(en => covers(en, tx, ty));
+  // staff behind a counter: talk across it
+  if (!e && COUNTERS.has(get(tx, ty))) e = ents.find(en => covers(en, tx + dx, ty + dy));
+  if (e && e.kind === 'bottle') { if (!state.pfand.taken[e.bid]) pickBottle(e); return; }
+  if (!e && inClub()) {
+    const clubId = sceneClub(), ch = ICHAR[get(tx, ty)];
+    const tileAct = window.INTERIORS[clubId].examineActs && window.INTERIORS[clubId].examineActs[ch];
+    if (tileAct && ACTS[tileAct]) {
+      busy = true;
+      try { await ACTS[tileAct](null, clubId); } finally { closeBox(); busy = false; }
+      return;
+    }
+    let lines = window.INTERIORS[clubId].examine[ch];
+    if (ch === 'W' && state.sunrise[clubId]) lines = ['The blinds are up. Morning sun pours into the room.'];
+    if (lines) {
+      busy = true;
+      try { for (const l of lines) await say(l); } finally { closeBox(); busy = false; }
+      return;
+    }
+    if (DANCES.has(get(player.x, player.y))) await danceHere();
+    return;
+  }
   if (!e) return;
   busy = true;
   if (e.kind !== 'sign') e.dir = OPP[player.dir];
   try {
     if (e.kind === 'bouncer') await bouncerTalk(e);
+    else if (e.act && ACTS[e.act]) await ACTS[e.act](e, inClub() ? sceneClub() : null);
     else for (const l of e.lines) await say(l);
   } finally { closeBox(); busy = false; }
 }
 async function enterDoor(c) {
+  if (window.INTERIORS && window.INTERIORS[c.id]) { await enterClub(c, false); return; }
   busy = true;
   await showInside(c, false);
   player.x = player.tx = c.dx; player.y = player.ty = c.by; player.dir = 'down';
@@ -1149,6 +2139,7 @@ async function runIntro() {
 function pressA() {
   if (titleOn) { startGame(); return; }
   if (creator) { creatorA(); return; }
+  if (photoResolve) { photoResolve(); return; }
   if (insideResolve) { insideResolve(); return; }
   if (shopUI) { shopA(); return; }
   if (ui || typing) { uiA(); return; }
@@ -1157,6 +2148,7 @@ function pressA() {
 }
 function pressB() {
   if (creator) { creatorB(); return; }
+  if (photoResolve) { photoResolve(); return; }
   if (insideResolve) { insideResolve(); return; }
   if (shopUI) { leaveShop(); return; }
   if (typing) { typing.finish(); return; }
@@ -1184,6 +2176,9 @@ window.addEventListener('keydown', ev => {
     if (!ev.repeat) pressA();
     return;
   }
+  if (ev.code === 'Equal' || ev.code === 'NumpadAdd') { ev.preventDefault(); zoomIn(); return; }
+  if (ev.code === 'Minus' || ev.code === 'NumpadSubtract') { ev.preventDefault(); zoomOut(); return; }
+  if (ev.code === 'KeyM' && !ev.repeat) { toggleMap(); return; }
   if (['KeyX', 'Escape', 'Backspace'].includes(ev.code)) { ev.preventDefault(); if (!ev.repeat) pressB(); }
 });
 window.addEventListener('keyup', ev => {
@@ -1195,7 +2190,11 @@ window.addEventListener('blur', () => { held.length = 0; runKey = false; runBtn 
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
 window.addEventListener('pagehide', save);
 // Open the page with ?debug to inspect game state from the browser console (window.__game).
-if (/[?&]debug\b/.test(location.search)) window.__game = { player, state, get busy() { return busy; }, held };
+if (/[?&]debug\b/.test(location.search)) window.__game = {
+  player, state, held, get busy() { return busy; }, get scene() { return scene; }, get follower() { return follower; },
+  enterClub: id => enterClub(CLUBS.find(c => c.id === id), true),
+  tp(x, y, dir) { player.x = player.tx = x; player.y = player.ty = y; player.moving = false; if (dir) player.dir = dir; placeFollower(); }
+};
 
 /* Touch on the map: drag to walk (like a joystick), tap for A. */
 let touch = null;
@@ -1258,7 +2257,26 @@ document.querySelectorAll('.dpad button').forEach(btn => {
   btn.addEventListener('keydown', ev => { if (ev.code === 'Enter' || ev.code === 'Space') { ev.stopPropagation(); ev.preventDefault(); fn(); } });
 });
 $('#title').addEventListener('click', () => { if (titleOn) startGame(); });
+$('#zoomIn').addEventListener('click', zoomIn);
+$('#zoomOut').addEventListener('click', zoomOut);
+$('#zoomMap').addEventListener('click', toggleMap);
+let wheelAt = 0;
+cvs.addEventListener('wheel', ev => {
+  ev.preventDefault();
+  if (performance.now() - wheelAt < 180) return;
+  wheelAt = performance.now();
+  if (ev.deltaY < 0) zoomIn(); else if (ev.deltaY > 0) zoomOut();
+}, { passive: false });
 inside.addEventListener('click', () => { if (insideResolve) insideResolve(); });
+// photo booth strip: save a big copy as PNG, or close
+$('#photoClose').addEventListener('click', () => { if (photoResolve) photoResolve(); });
+$('#photoSave').addEventListener('click', () => {
+  const big = document.createElement('canvas');
+  drawPhotoStrip(big, 8);
+  const a = document.createElement('a');
+  a.href = big.toDataURL('image/png'); a.download = 'kitkat-photo-booth.png';
+  document.body.appendChild(a); a.click(); a.remove();
+});
 
 /* ================= STAMP CARD ================= */
 function renderCard() {
@@ -1283,6 +2301,31 @@ function renderCard() {
   $('#wearing').textContent = OUTFITS[state.outfit].name;
   drawMini($('#wearingMini').getContext('2d'), state.outfit);
   $('#hud').textContent = `STEMPEL ${n}/${CLUBS.length}`;
+  // side quests for every club you have been inside
+  const qs = $('#quests'), ql = $('#questList');
+  const clubsIn = Object.keys(window.INTERIORS || {}).filter(id => state.visited[id]);
+  qs.hidden = !clubsIn.length;
+  if (!qs.hidden) {
+    ql.innerHTML = '';
+    let total = 0, doneAll = 0;
+    clubsIn.forEach(clubId => QUEST_LIST(clubId).forEach((q, qi) => {
+      total++; if (questDone(clubId, q.id)) doneAll++;
+      if (qi === 0) {
+        const h = document.createElement('li'); h.className = 'qclub';
+        h.textContent = `${window.INTERIORS[clubId].name} · ${questCount(clubId)}/${QUEST_LIST(clubId).length}`;
+        ql.appendChild(h);
+      }
+      const done = questDone(clubId, q.id);
+      const li = document.createElement('li');
+      li.className = done ? 'done' : '';
+      li.innerHTML = '<span class="qmark"></span><div><b></b><small></small></div>';
+      li.querySelector('.qmark').textContent = done ? '✓' : '○';
+      li.querySelector('b').textContent = q.title;
+      li.querySelector('small').textContent = done ? 'Done' : questHint(clubId, q);
+      ql.appendChild(li);
+    }));
+    $('#questCount').textContent = `${doneAll}/${total}`;
+  }
 }
 const resetBtn = $('#reset');
 let armTimer = null;
@@ -1296,6 +2339,9 @@ resetBtn.addEventListener('click', () => {
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
   state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
+  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false;
+  releaseFollower(); endTrip(); endK();
+  Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } })); if (inClub()) useScene('city'); updateFloorTag();
   if (creator) { creator = null; creatorEl.hidden = true; }
   if (shopUI) { shopUI = null; shopEl.hidden = true; }
   ents.forEach(e => { if (e.kind === 'bouncer') { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
@@ -1320,10 +2366,22 @@ function tryMove(dir) {
   const [dx, dy] = DIRS[dir];
   const nx = player.x + dx, ny = player.y + dy;
   if (blocked(nx, ny)) return;
+  followStep(player.x, player.y);
   player.tx = nx; player.ty = ny; player.moving = true; player.t = 0; player.n++;
   player.dur = running() ? RUN : MOVE;
 }
 function arrive() {
+  if (inClub()) {
+    const t = get(player.x, player.y), clubId = sceneClub(), fl = window.INTERIORS[clubId].floors[sceneFloor()];
+    if (t === STAIRS_UP && fl.up) { goFloor(clubId, fl.up.to, fl.up.at); return; }
+    if (t === STAIRS_DOWN && fl.down) { goFloor(clubId, fl.down.to, fl.down.at); return; }
+    if (t === EXIT && fl.exit) { leaveClub(clubId); return; }
+    if (isDoorTile(t) && fl.doors && fl.doors[ICHAR[t]]) { const d = fl.doors[ICHAR[t]]; goFloor(clubId, d.to, d.at); return; }
+    const b = ents.find(en => en.kind === 'bottle' && en.x === player.x && en.y === player.y && !state.pfand.taken[en.bid]);
+    if (b) pickBottle(b);
+    if (t === DARK && follower && follower.quest === 'darkroom') { darkroomScene(); return; }
+    return;
+  }
   if (get(player.x, player.y) === D) {
     const c = clubAtDoor(player.x, player.y);
     if (c) { enterDoor(c); return; }
@@ -1345,14 +2403,22 @@ function update(dt) {
   if (train.wait > 0) train.wait -= dt;
   else {
     train.x += dt * 0.11;
-    if (train.x > MW * T + 20) { train.x = 13 * T - 140; train.wait = 7000 + Math.random() * 9000; }
+    if (train.x > CITY_W * T + 20) { train.x = 13 * T - 140; train.wait = 7000 + Math.random() * 9000; }
   }
 }
 let last = performance.now();
+let clock = 0;
 function frame(now) {
-  const dt = Math.min(50, now - last); last = now;
+  const raw = Math.min(50, now - last); last = now;
+  const dt = raw * timeScale(now);
+  clock += dt;
   update(dt);
-  draw(now);
+  if (tripUntil && !kUntil) {
+    if (now > tripUntil) endTrip();
+    else cvs.style.filter = reduceMotion ? 'saturate(1.7) hue-rotate(60deg)' : `hue-rotate(${Math.round(now / 25) % 360}deg) saturate(1.8)`;
+  }
+  // keep the loop alive even if one frame fails to draw
+  try { draw(clock); if (kUntil) applyK(now); } catch (err) { console.error(err); }
   requestAnimationFrame(frame);
 }
 
@@ -1361,6 +2427,7 @@ function start() {
   { try { saved = JSON.parse(localStorage.getItem('tuersteher-save') || 'null'); } catch (e) { saved = null; } }
   applySave(saved);
   renderCard();
+  zoomUI();
   if (state.intro) {
     $('#titlePress').textContent = 'PRESS A · CONTINUE';
   }
@@ -1368,7 +2435,7 @@ function start() {
   const fontReady = (document.fonts && document.fonts.load) ? document.fonts.load('8px "Press Start 2P"') : Promise.resolve();
   Promise.race([fontReady, wait(1500)]).catch(() => {}).then(() => {
     prerender();
-    requestAnimationFrame(t => { last = t; frame(t); });
+    requestAnimationFrame(t => { last = t; clock = t; frame(t); });
   });
 }
 

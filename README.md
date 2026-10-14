@@ -8,6 +8,69 @@ A new game starts with a short intro: choose man or woman, then one of four star
 
 Every bouncer checks your outfit first, then asks questions about the club. Get every question right and you're in. One wrong answer and it's *Heute nicht.*
 
+## Inside Berghain
+
+Once the bouncer lets you in, you can walk around inside Berghain. It has three floors connected by steel stairs, following the real layout:
+
+- **Erdgeschoss (ground floor):** ticket desk, coat check, the Piotr Nathan wall installation, a bar and a darkroom.
+- **Main floor (old turbine hall):** dancefloor, seven Funktion-One stacks, DJ booth, two bars, the Eisbar on the mezzanine and the toilets.
+- **Panorama Bar:** wrap-around bar, raised DJ booth, a Wolfgang Tillmans print and tall windows with metal blinds.
+
+Side quests (tracked on the stamp card):
+
+| Quest | Where |
+| --- | --- |
+| Check your coat | Garderobe, ground floor |
+| Order a drink | Any bar |
+| Get ice cream | Eisbar, main floor mezzanine |
+| Dance on the main floor | Press A on the dancefloor |
+| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: 10 seconds of melting, blurry, colour-shifting slow motion |
+| Take someone to the darkroom | Find Sascha at Panorama Bar, ask first, then lead them down to the ground floor |
+| Dance when the blinds open | After three other quests, go to Panorama Bar |
+
+Leave through the exit on the ground floor. Other clubs still show the short "inside" scene.
+
+## Inside Sisyphos
+
+An old dog-biscuit factory in Rummelsburg. You arrive in the garden and walk through doorways (bead curtains) between rooms:
+
+- **Strand:** the open-air garden. Sand dancefloor, a pool with sand around it, art totems, fairy lights, a bar.
+- **Wintergarten:** a glass house full of plants. House music that never stops.
+- **Hammahalle:** the brick factory hall. Techno.
+- **Dampfer:** wooden, ship-like, with portholes. Deep house.
+- **Tunnel:** a long techno corridor with red lacquer walls and swinging paper lanterns.
+- **Sauna:** behind the Dampfer, with a Saunameister doing the Aufguss.
+
+The crowd is a colourful festival and circus bunch with flower crowns, glitter and face paint. Talk to them for stories about yoga retreats, ayahuasca and van life.
+
+| Quest | Where |
+| --- | --- |
+| Pfand hunter (main quest) | Empty bottles lie around every room. Carry up to 4, return them at any bar for the deposit (beer 8 ct, Club-Mate 15 ct, cans 25 ct). Return 8 to finish |
+| Jump in the pool | Press A facing the pool in the garden |
+| Survive the Aufguss | Talk to the Saunameister |
+| Listen to 3 hippie stories | Momo (pool), Luna (Wintergarten), Kai (sauna), Sunny (Tunnel) |
+| Learn to juggle | Zora the circus kid in the garden. Wait for the beat |
+| Dance in 4 different rooms | Press A on any dancefloor: sand, wood, concrete or the red Tunnel floor |
+
+## Inside KitKat
+
+KitKat shares its industrial building on Köpenicker Straße with Sage Club. In the game it has three areas:
+
+- **Main floor:** UV light and fluorescent wall paintings, a pole stage, leather sofas, a love swing, the Garderobe and a dark corner.
+- **Pool lounge:** behind the curtains on the right. A warm pool, beds, and the Awareness Station at the pool bar.
+- **Dungeon:** downstairs, under red light. St Andrew's crosses, cages, the gynaecologist's chair, two darkrooms, Marco from Napoli and a photo booth.
+
+The crowd wears latex, leather, harnesses, bunny ears or nothing much. Groups on beds and in the darkrooms are shown, never spelled out: bodies under a blanket, rocking, little hearts. Talk to a group and ask to join. Some say yes, some are a closed group, some are too busy to answer.
+
+| Quest | Where |
+| --- | --- |
+| Strip down at the Garderobe | By the entrance. You're in underwear for as long as you stay inside |
+| Spin on a pole | Pole stage, top of the main floor |
+| Take a dip in the pool | Pool lounge |
+| Join an orgy | Ask a group that says yes (dark corner on the main floor, a bed by the pool, the big darkroom in the dungeon) |
+| Say yes to Marco | Marco asks to spank you. Yes, gently or no: all answers are respected |
+| Photo booth souvenir | After Marco, the booth in the dungeon prints a 4-frame strip. "Save photo" downloads it as a PNG |
+
 ## Dress codes and shops
 
 | Club | Dress code |
@@ -47,6 +110,10 @@ Then open http://localhost:8000.
 | Talk / confirm | Z / Enter / Space | A |
 | Skip text | X / Esc | B |
 | Run | hold Tab (or Shift) | hold B, or drag far from where your finger started |
+| Zoom | + / − (or mouse wheel over the map) | + / − buttons on the screen |
+| Whole map | M | MAP button |
+
+Zoomed out, the map labels every club (✓ once you've been in) and shop, and marks where you are. The zoom level is saved.
 
 On phones the page switches to a full-screen layout: drag anywhere on the map to walk (like a joystick), tap the map or the text box to talk, or use the big D-pad and A/B buttons. The stamp card opens from the button in the top bar. Landscape puts the D-pad left and A/B right of the map. The visible map area adapts to the screen with crisp integer pixel scaling. Tip: "Add to Home Screen" runs it full-screen.
 
@@ -67,6 +134,7 @@ Most changes happen in `game.js`:
 - **Outfits, dress codes, shops**: `OUTFITS`, `DRESS` and `SHOPS` near the top. Each outfit has `tags` (`black`, `latex`, `colorful`, `vintage`, `tourist`, `suit`). A club's `ok` list needs at least one matching tag; its `no` list rejects any match. Shops are placed on the map by their `x`, `y`, `w`, `h`. The door is at the bottom centre; walk into it to enter.
 - **Starting characters**: `CHARACTERS` in `game.js`. `body` (skin, hair, `long` hair, `glasses`, `beard`) stays when you change clothes; `outfit` is the starting outfit from `OUTFITS`.
 - **Fernsehturm**: `TOWER` sets its position. The base is solid; the tall part is drawn in front of the sprites.
+- **Club interiors**: `interiors.js`. Each floor is ASCII art (legend at the top of the file), plus spawn points, which floor the stairs lead to, the people on that floor (`lines` for chat, or `act` for a quest handler in `game.js` → `ACTS`), how many dancers to scatter, tile descriptions (`examine`) and the quest list. To give another club an interior, add an entry with the club's id (e.g. `tresor`) and its handlers.
 - **NPCs and signs**: the `ents.push(...)` block under `ENTITIES`.
 - **Intro / ending text**: `INTRO` and `FINALE`.
 
@@ -80,4 +148,4 @@ All graphics are drawn in code on a 384×256 canvas (16 px tiles, 24×16 visible
 
 ## Debugging
 
-Open the page with `?debug` (e.g. `http://localhost:8000/?debug`) and inspect `window.__game` in the browser console for the player position and game state.
+Open the page with `?debug` (e.g. `http://localhost:8000/?debug`) and inspect `window.__game` in the browser console for the player position and game state. `__game.tp(x, y, 'up')` teleports, `__game.enterClub('berghain')` puts you inside.
