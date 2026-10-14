@@ -874,6 +874,108 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'fire', title: 'Warm up by the fire', hint: 'Press A facing a fire pit.' },
       { id: 'drink', title: 'Get a drink', hint: 'The bar by the fence.' }
     ]
+  },
+
+  /* Club der Visionäre: a former boathouse on the Flutgraben. One small wooden dancefloor on the
+     water, partly roofed, under a big weeping willow; the Sonnenraum is the small indoor room.
+     Extra legend: y  weeping willow   z  newer deck boards (after the 2019 fire)   q  canal water */
+  cdv: {
+    name: 'Club der Visionäre',
+    welcome: [
+      'Door: Five euro. Cash.',
+      '(A stamp shaped like a little willow leaf.)',
+      "Door: Deck's out back, the Sonnenraum is the little wooden house. See you Monday.",
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      deck: {
+        label: 'The deck · under the willow', short: 'DECK',
+        map: [
+          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'qqwwwwwwwwwwwwwwwwwwwwwwzzzwqq',
+          'qqwwyyyywwwwwwwwwwwwwwwwzzzwqq',
+          'qqwyyyyyywwwwSDDDSwwwwwwwzzwqq',
+          'qqwyyyyyywweeeeeeeeeeewwwwwwqq',
+          'qqwwyyyywwweeeeeeeeeeewwwwbwqq',
+          'qqwwwbbwwwweeeeeeeeeeewwwwbwqq',
+          'qqwwwwwwwwweeeeeeeeeeewwwwwwqq',
+          'qqwwwwwwwwweeeeeeeeeeewwwwwwqq',
+          'qqwwwwwwwwwwwwwwwwwwwHHHHHHHqq',
+          'qqF=====wwwwwwwwwwwwwHHHHHHHqq',
+          'FFF.....FwwwwwwwwwwwwHHH1HHHqq',
+          'FFFFFFFFFwwwwwwwwwwwwwwwwwwwqq',
+          'FgggggggggggggwwgggggggggggggF',
+          'FFFFFFFFFFFFFFxxFFFFFFFFFFFFFF'
+        ],
+        spawn: { street: [14, 14, 'up'], fromSonnen: [24, 13, 'down'] },
+        doors: { '1': { to: 'sonnen', at: 'fromDeck' } },
+        exit: true,
+        dancers: 14,
+        roof: [11, 5, 21, 9],
+        fairy: [[2, 2, 23, 2], [9, 10, 20, 10]],
+        spots: ['rgba(255,200,120,.14)', 'rgba(170,230,160,.10)', 'rgba(255,170,120,.10)'],
+        people: [
+          { x: 15, y: 3, name: 'DJ', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#2a2a2a', legs: '#26242e', hat: '#3a3a3a' }, lines: ['DJ: (without looking up) Lineup? They post it a week before. Sometimes later.', 'DJ: Half the time somebody just walks up and plays. I was only supposed to do two hours. That was Friday.'] },
+          { x: 5, y: 12, dir: 'up', act: 'cdvBar', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#4a5a3a', legs: '#26242e', long: true } },
+          { x: 7, y: 7, dir: 'left', act: 'ines', name: 'Ines', look: { skin: '#e8b896', hair: '#c9c9c9', top: '#8a5a8a', legs: '#3a3a4a', long: true, glasses: '#c9a24a' } },
+          { x: 23, y: 3, dir: 'right', act: 'planks', name: 'Tom', look: { skin: '#c98d6a', hair: '#2a2420', top: '#d9733a', legs: '#2b3f6b', beard: '#2a2420' } },
+          { x: 25, y: 8, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#e9e4d6', legs: '#5a7aa8' }, lines: ['Raver: See the old ship down the river? The Hoppetosse. Same crew as here.', 'Raver: Built in 1928 as an excursion steamer, bombed in 1944, raised again, cut in two and towed to Berlin in the nineties. In winter the party moves over there.'] },
+          { x: 19, y: 11, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#3a3a4a' }, lines: ['Raver: Nearest cash machine? Somewhere in Kreuzberg. Bring cash next time.'] }
+        ]
+      },
+      sonnen: {
+        label: 'Sonnenraum · the little wooden house', short: 'SONNEN',
+        map: [
+          'HHHHHHHHHHHHHHHH',
+          'HHHHHHHHHHHHHHHH',
+          'HwwwwwwwwwwwwwbH',
+          'HwwwwwwwwwwwwwbH',
+          'HwweeeeeeeewwwbH',
+          'HwweeeeeeeewwwwH',
+          'HwweeeeeeeewwwwH',
+          'HwwwwwwwwwwwwwwH',
+          'HwwwwwwwwwwwwwwH',
+          'HHHHHHH1HHHHHHHH'
+        ],
+        spawn: { fromDeck: [7, 8, 'up'] },
+        doors: { '1': { to: 'deck', at: 'fromSonnen' } },
+        dancers: 4,
+        daylight: true,
+        people: [
+          { x: 9, y: 2, act: 'jazz', name: 'Bassist', look: { skin: '#8d5a3b', hair: '#2a2420', top: '#3a3a4a', legs: '#26242e', beard: '#2a2420', hat: '#2a2420' } },
+          { x: 11, y: 2, look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#c94a3a', legs: '#26242e', glasses: '#1a1a1a' }, lines: ['Saxophonist: In winter the whole party squeezes in here. Or goes over to the Hoppetosse.'] },
+          { x: 7, y: 2, look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b3f6b', legs: '#26242e', beard: '#9a9a9a' }, lines: ['Drummer: Jazz at a minimal club? Long pieces, small changes. Same thing, really.'] }
+        ]
+      }
+    },
+    examineActs: { y: 'willow', z: 'planks' },
+    examine: {
+      q: ['The Flutgraben, a flood channel off the Spree. Down the river, the Hoppetosse is moored: CDV\'s sister, a steamer from 1928.'],
+      '=': ['A small wooden bar. A handwritten sign: CASH ONLY.'],
+      H: ['The wooden wall of the Sonnenraum.'],
+      F: ['A wooden fence. Behind it, the Arena and the Badeschiff.'],
+      b: ['A bench worn smooth by twenty summers of sitting.'],
+      S: ['A speaker, turned down a bit. Minimal does not need to be loud.']
+    },
+    dancerLines: [
+      'Raver: This is the best Sunday of my life. Is it Sunday?', 'Raver: Click, click, boom. Forever.', 'Raver: I came for one drink. On Friday.',
+      '(They are dancing very slowly, very precisely.)', 'Raver: Did you sit under the willow yet?', "Raver: Card? Ha. You're new."
+    ],
+    dancerPalette: {
+      hair: ['#2a2420', '#5a3a22', '#c9a24a', '#9a9a9a', '#111111', '#b04a2a'],
+      tops: ['#e9e4d6', '#4a5a3a', '#7a5a3a', '#d9733a', '#3d5f94', '#c9b28a', '#2a2a2a'],
+      legs: ['#26242e', '#3a3a4a', '#5a7aa8', '#7a6a4a'],
+      extras: ['#a6e3a1', '#ffd23f', '#f3eee3', '#ff8c42']
+    },
+    quests: [
+      { id: 'drink', title: 'Cash only', hint: 'Get a drink at the bar. Cards are not really a thing here.' },
+      { id: 'willow', title: 'Under the willow', hint: 'Sit under the big weeping willow. Press A facing it.' },
+      { id: 'monday', title: 'See you Monday', hint: 'Dance on the deck from Saturday through to Monday morning.' },
+      { id: 'planks', title: 'The new planks', hint: 'Some deck boards look newer than the rest. Ask Tom why.' },
+      { id: 'ines', title: 'The early days', hint: 'Ines on the bench has been coming since the start.' },
+      { id: 'jazz', title: 'Jazz in the Sonnenraum', hint: 'Sit in with the trio in the little wooden house.' }
+    ]
   }
 
 };

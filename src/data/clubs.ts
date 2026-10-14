@@ -118,15 +118,18 @@ const CLUB_DEFS: ClubDef[] = [
     look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#4a5a3a', legs: '#26242e', big: true, beard: '#9a9a9a' },
     greet: ['Uwe: Easy, easy.', "Uwe: Deck's full of good people. Answer me two things."],
     reject: 'Uwe: Hmm. Not today, friend.',
-    accept: ['Uwe: Visionary. Come in.'],
+    accept: ['Uwe: Visionary. Come in. Five euro, cash.'],
     again: 'Uwe: The deck missed you. Go on.',
-    inside: 'Sunset over the canal. Minimal grooves on a wooden deck under a big old tree.',
-    sign: ['CLUB DER VISIONÄRE', 'A wooden deck on the Flutgraben canal, where Kreuzberg meets Treptow.', 'Minimal and house. It starts in the afternoon.'],
+    inside: 'Sunset over the Flutgraben. Minimal grooves on a wooden deck under a huge weeping willow.',
+    sign: ['CLUB DER VISIONÄRE', 'A former boathouse on the Flutgraben, where Kreuzberg meets Treptow. Since around 2001.', 'Minimal and house under a weeping willow. Opens in the afternoon. Cash only.'],
     pool: [
-      { q: 'Where does the party happen here?', a: ['On a deck by the canal', 'On a rooftop', 'In a basement', 'On a mountain'], fact: 'CDV sits on a wooden deck on the Flutgraben canal.' },
-      { q: 'What music fits CDV best?', a: ['Minimal and house', 'Schlager', 'Death metal', 'Polka'], fact: 'Minimal and house, ideally at sunset.' },
-      { q: 'Which districts meet here?', a: ['Kreuzberg and Treptow', 'Spandau and Mitte', 'Wedding and Pankow', 'Potsdam and Grunewald'], fact: 'CDV is right where Kreuzberg meets Alt-Treptow.' },
-      { q: 'When do things get going here?', a: ['In the afternoon', 'Exactly midnight', 'Only at 9am', 'Never'], fact: 'CDV is known for long afternoon sessions.' }
+      { q: 'Where does the party happen here?', a: ['On a wooden deck by the canal', 'On a rooftop', 'In a basement', 'On a mountain'], fact: 'CDV is a wooden deck in a former boathouse on the Flutgraben canal.' },
+      { q: 'What hangs over the deck?', a: ['A big weeping willow', 'A disco ball the size of a car', 'A cable car', 'A Zeppelin'], fact: 'The deck sits under a huge weeping willow. It is the heart of the place.' },
+      { q: 'Paying at the bar. What do you bring?', a: ['Cash', 'Just my card', 'Crypto', 'Club-Mate bottle caps'], fact: 'CDV is cash only, like a lot of old Berlin places.' },
+      { q: 'What music fits CDV best?', a: ['Minimal and house', 'Schlager', 'Death metal', 'Polka'], fact: 'CDV is a home of minimal: Villalobos, Zip and Sonja Moonear have all played the deck.' },
+      { q: 'Where does the party go in winter?', a: ['Onto the Hoppetosse, an old ship nearby', 'A ski hut', 'A U-Bahn station', 'Nowhere, it is outside all year'], fact: 'In winter the parties move to the Hoppetosse, CDV\'s sister ship, a steamer from 1928.' },
+      { q: 'How long can a summer weekend here last?', a: ['Friday to Monday, if the sun plays along', 'One hour', '9pm to midnight, strictly', 'Closed on weekends'], fact: 'On busy summer weekends CDV can stay open from Friday to Monday.' },
+      { q: 'Which districts meet here?', a: ['Kreuzberg and Treptow', 'Spandau and Mitte', 'Wedding and Pankow', 'Potsdam and Grunewald'], fact: 'CDV is right where Kreuzberg meets Alt-Treptow.' }
     ]
   },
   {

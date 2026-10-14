@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Notes for agents working on **Türsteher Berlin**, a Pokémon-style pixel game in the browser. You walk around a night map of Berlin, change clothes in shops, pass bouncers' dress codes and quizzes at eight real clubs, and do side quests inside Berghain, Sisyphos, KitKat, RSO and Heideglühen. `README.md` is the player- and editor-facing guide; this file is about how the code works and how to change it safely.
+Notes for agents working on **Türsteher Berlin**, a Pokémon-style pixel game in the browser. You walk around a night map of Berlin, change clothes in shops, pass bouncers' dress codes and quizzes at eight real clubs, and do side quests inside Berghain, Sisyphos, KitKat, RSO, Heideglühen and Club der Visionäre. `README.md` is the player- and editor-facing guide; this file is about how the code works and how to change it safely.
 
 ## Stack and commands
 
@@ -74,7 +74,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 ### Quests
 
 - Handlers are in `ACTS` (`src/quests/acts.ts`), typed `Act = (e: Entity | null, clubId) => Promise<void>`. `e` is the person talked to, or `null` when a tile's `examineActs` triggers it. Handlers that need a person guard with `if (!e) return;`.
-- RSO and Heideglühen handlers live in `quests/rso.ts` and `quests/heide.ts` and are listed by name at the top of `ACTS` (function declarations, so the import cycle is safe). Heideglühen has its own night clock (`state.hgTime`, minutes after midnight, advanced by `hgTick()`) and quest stage (`state.hgStage`).
+- RSO, Heideglühen and Club der Visionäre handlers live in `quests/rso.ts`, `quests/heide.ts` and `quests/cdv.ts` and are listed by name at the top of `ACTS` (function declarations, so the import cycle is safe). CDV's dance hook moves the weekend on a day per dance on the deck (`state.danced['cdv:sat|sun|mon']`) and the bar is cash only (`state.cdvCash`: 0 not tried, 1 card refused, 2 borrowed from Ines, 3 spent). Heideglühen has its own night clock (`state.hgTime`, minutes after midnight, advanced by `hgTick()`) and quest stage (`state.hgStage`).
 - Dancing on a `DANCES` tile runs `danceHere()` (`quests/dance.ts`); clubs can override via `DANCE_HOOKS` (`quests/sisyphos.ts`).
 - Progress: `completeQuest(clubId, id)` sets `state.quests['club:id']`, shows a toast, re-renders the stamp card and saves. Live hints for counting quests come from `questHint()` (`quests/sisyphos.ts`).
 - To give another club an interior: add an `INTERIORS` entry keyed by the club id, add handlers to `ACTS`, add quests to its `quests` list. `enterDoor()` automatically uses the interior instead of the short "inside" scene.

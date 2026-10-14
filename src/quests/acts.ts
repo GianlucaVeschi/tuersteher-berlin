@@ -1,5 +1,6 @@
 import { griess, rsoBar } from './rso';
 import { fire, hgDj, karaoke, woody } from './heide';
+import { cdvBar, ines, jazz, planks, willow } from './cdv';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
@@ -19,6 +20,8 @@ import { PILE_LINES, showPhotoStrip, spankFx } from './kitkat';
 export const ACTS: Record<string, Act> = {
   // RSO and Heideglühen (quests/rso.ts, quests/heide.ts)
   griess, rsoBar, hgDj, woody, karaoke, fire,
+  // Club der Visionäre (quests/cdv.ts)
+  cdvBar, ines, planks, willow, jazz,
   async pile(e, clubId) {
     if (!e) return;
     const L = (e.join && PILE_LINES[e.join]) || PILE_LINES.busy;

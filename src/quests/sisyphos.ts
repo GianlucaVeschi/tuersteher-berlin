@@ -1,5 +1,6 @@
 import { rsoDance, rsoFloorsDanced } from './rso';
 import { HG_FIVE, hgClock, hgDance } from './heide';
+import { cdvDance, cdvHint } from './cdv';
 import type { BottleType, Entity, QuestDef } from '../types';
 import { completeQuest } from './quests';
 import { say } from '../ui/dialog';
@@ -43,6 +44,7 @@ export function drawBottle(X: number, Y: number, type: BottleType, now: number) 
 /** Quest hint on the stamp card, with live progress for counting quests. */
 export function questHint(clubId: string, q: QuestDef): string {
   if (clubId === 'berghain' && q.id === 'toilet' && K_HINTS[state.kStage]) return K_HINTS[state.kStage];
+  if (clubId === 'cdv') return cdvHint(q.id, q.hint);
   if (q.id === 'pfand') { const p = state.pfand; return `Returned ${p.returned}/${PFAND_GOAL} · in hands ${p.carry}/${CARRY_MAX} · ${euro(p.cents)} earned. Any bar takes them back.`; }
   if (q.id === 'stories') return `${Object.keys(state.heard).length}/3 heard. ` + q.hint;
   if (q.id === 'floors') return `${rsoFloorsDanced()}/3 floors. ` + q.hint;
@@ -62,6 +64,7 @@ export const SISY_DANCE: Record<string, string> = {
 export const DANCE_HOOKS: Record<string, (fl: string) => Promise<void>> = {
   rso: rsoDance,
   heidegluehen: hgDance,
+  cdv: cdvDance,
   async sisyphos(fl) {
     await say(SISY_DANCE[fl] || '(You dance. Nobody is in a hurry here.)');
     if (!state.danced['sisyphos:' + fl]) { state.danced['sisyphos:' + fl] = true; save(); renderCard(); }
