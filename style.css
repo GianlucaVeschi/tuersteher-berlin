@@ -284,6 +284,7 @@ body {
 }
 .zoom button:hover { background: var(--lamp); }
 .zoom button.on { background: var(--magenta); color: var(--paper); }
+.zoom button.off { text-decoration: line-through; opacity: .55; }
 .zoom button:focus-visible { outline: .6cqw solid var(--lamp); outline-offset: .3cqw; }
 
 @keyframes blink { 50% { opacity: 0; } }

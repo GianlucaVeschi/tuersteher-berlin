@@ -89,7 +89,7 @@ resetBtn.addEventListener('click', () => {
   // street NPCs who walked off come back
   RT.ents.forEach(e => { if (e.npcId && e.home) { e.x = e.home.x; e.y = e.home.y; e.ox = 0; e.alpha = 1; } });
   player.x = player.tx = START.x; player.y = player.ty = START.y; player.dir = START.dir; player.moving = false;
-  if (RT.insideResolve) { inside.hidden = true; RT.insideResolve = null; }
+  if (RT.insideResolve) { inside.hidden = true; RT.insideResolve = null; RT.overlayClub = null; }
   closeBox(); if (RT.typing) { clearInterval(RT.typing.id); RT.typing = null; }
   RT.busy = true; RT.titleOn = true; $('#title').hidden = false;
   $('#titlePress').textContent = 'PRESS A';

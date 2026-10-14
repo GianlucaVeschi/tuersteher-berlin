@@ -27,6 +27,8 @@ export const RT = {
   typing: null as Typing | null,
   insideResolve: null as null | (() => void),
   photoResolve: null as null | (() => void),
+  /** club whose short entrance scene is showing (picks the music) */
+  overlayClub: null as string | null,
   shopUI: null as ShopUI | null,
   creator: null as CreatorState | null,
   follower: null as Follower | null,

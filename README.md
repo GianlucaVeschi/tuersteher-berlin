@@ -102,6 +102,25 @@ The night has its own clock: it starts at 03:30 and moves on as you dance, sing 
 
 Woody, the DJ and the karaoke are inventions for the game.
 
+## Music
+
+All music is generated in the browser while you play (Web Audio, no audio files). Every club floor has its own style, based on what each club is known for:
+
+| Where | Style |
+| --- | --- |
+| The street | Soft ambient pads, a few bells, a little wind |
+| Berghain main floor | Dark, hypnotic techno with a rumbling kick (heard through the concrete on the ground floor) |
+| Panorama Bar | House with piano stabs and a shuffle |
+| Tresor | Detroit-rooted techno with minor-chord stabs |
+| KitKat | Disco-tinged electro; disco house by the pool; EBM-style techno in the dungeon |
+| RSO | Hypnotic deep techno in ROBUS, dub techno in SUMME, melodic techno on OPAN (muffled in the Keller) |
+| Kater Blau | Bouncy tech house |
+| Sisyphos | Organic house with marimba and hand drums in the garden, deep house in the Wintergarten, techno in the Hammahalle, deep tech house on the Dampfer, acid techno in the Tunnel, ambient in the sauna |
+| Club der Visionäre | Clicky, sparse minimal |
+| Heideglühen | Warm classic house with piano chords (heard through the door in the toilets) |
+
+Music starts with your first click or key press (browsers require that). Styles live in `src/audio/styles.ts`: tempo, 16-step drum patterns, bass line, chords and which sounds play.
+
 ## Dress codes and shops
 
 | Club | Dress code |
@@ -156,6 +175,7 @@ Then open the URL it prints (http://localhost:5173). The page reloads as you sav
 | Run | hold Tab (or Shift) | hold B, or drag far from where your finger started |
 | Zoom | + / − (or mouse wheel over the map) | + / − buttons on the screen |
 | Whole map | M | MAP button |
+| Sound on/off | N | ♪ button on the screen |
 
 Zoomed out, the map labels every club (✓ once you've been in) and shop, and marks where you are. The zoom level is saved.
 
@@ -192,6 +212,7 @@ src/
   effects/trip.ts     the drug effects
   ui/                 dialog box, shops, character select, stamp card, club entrance scene
   input.ts            keyboard, touch, mouse wheel, on-screen buttons
+  audio/              generated music: synth voices, per-club styles, the player
   game/
     scripts.ts        bouncer conversations, talking to people, doors
     loop.ts           movement, the frame loop, start-up

@@ -5,10 +5,12 @@ import { initCanvas } from './render/canvas';
 import { initInput } from './input';
 import { initCard } from './ui/card';
 import { start } from './game/loop';
+import { initMusic } from './audio/music';
 
 buildCity();
 initCityScene();
 initCanvas();
 initInput();
 initCard();
+initMusic();
 start();
