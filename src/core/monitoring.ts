@@ -18,7 +18,7 @@ export function initMonitoring() {
     service: 'tuersteher-berlin',
     env,
     sessionSampleRate: 100,
-    sessionReplaySampleRate: 20,
+    sessionReplaySampleRate: 100,
     trackResources: true,
     trackUserInteractions: true,
     trackLongTasks: true,
