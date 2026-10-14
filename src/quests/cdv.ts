@@ -3,8 +3,6 @@ import { ask, say } from '../ui/dialog';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { toast } from '../interiors/transitions';
-import { endTrip } from '../effects/trip';
-import { RT } from '../core/runtime';
 import { state } from '../core/state';
 import type { Entity } from '../types';
 
@@ -42,7 +40,6 @@ export async function cdvBar(_e: Entity | null, clubId: string) {
   const a = await ask('Bar: What can I get you?', ['Club-Mate', 'A beer', 'Just water']);
   if (a === 2) {
     await say('Bar: Water is free. Tap is right there.');
-    if (RT.tripUntil) { endTrip(); await say('(You feel a bit steadier.)'); }
     return;
   }
   if (state.cdvCash !== 2 && !questDone(clubId, 'drink')) {

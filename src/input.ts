@@ -9,7 +9,7 @@ import { placeFollower } from './interiors/follower';
 import { CLUBS } from './data/clubs';
 import { enterClub } from './interiors/transitions';
 import { save } from './core/save';
-import { toggleMap, zoomIn, zoomOut } from './render/zoom';
+import { toggleMap, zoom, zoomIn, zoomOut } from './render/zoom';
 import { interact } from './game/scripts';
 import { held, player, state } from './core/state';
 import { uiA, uiMove } from './ui/dialog';
@@ -40,7 +40,9 @@ export function pressB() {
   if (RT.insideResolve) { RT.insideResolve(); return; }
   if (RT.shopUI) { leaveShop(); return; }
   if (RT.typing) { RT.typing.finish(); return; }
-  if (RT.ui && RT.ui.mode === 'say') uiA();
+  if (RT.ui && RT.ui.mode === 'say') { uiA(); return; }
+  // nothing else open: B leaves the whole-map view
+  if (zoom.fit && !RT.ui) toggleMap();
 }
 export function pressDir(dir: Dir) {
   if (RT.creator) { creatorMove(dir); return; }
