@@ -91,6 +91,15 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 - A new club or floor needs a style in `STYLES` and an entry in `FLOOR_STYLE` / `CLUB_STYLE`.
 - `?debug`: `__game.music.force('panorama')` forces a style (`null` to stop forcing), `.key` is what's playing, `.level()` reads the output peak/RMS (call it twice; the meter is created on first use), `.styles()` lists ids.
 
+### The guest list (`src/online/`, `src/ui/players.ts`, `firestore.rules`)
+
+- Firebase project `berlin-club-game` (Firestore `(default)` in europe-west3, anonymous Authentication). The game uses **plain REST, no Firebase SDK**: `online/api.ts` signs in anonymously (Identity Toolkit `accounts:signUp`, refresh via `securetoken`), writes with Firestore `documents:commit` (server timestamps via `updateTransforms`), and lists `players` publicly. The web config in `api.ts` is not a secret.
+- One document per player: `players/{uid}` with `name, char, createdAt, lastSeen, clubs, stamps, quests, playMs, finishedAt, finishPlayMs`. Login (`uid`, refresh token) lives in `localStorage['tuersteher-online']`, separate from the save; Start over calls `forgetPlayer()` so a new game is a new entry.
+- `firestore.rules`: anyone can read; only the owner can write their document, only those keys, sane values (`stamps == clubs.size() <= 8`, name 1–16 chars, `playMs` never decreases, `createdAt` set once by the server, `lastSeen == request.time`, `finishedAt` set once and only with 8 stamps). Deploy with `firebase deploy --only firestore:rules`. A client can still lie about its own progress; that's accepted for a fun game.
+- `online/sync.ts`: `syncNow()` on joining, `syncSoon()` after stamps and quests, `syncFinish()` from `maybeFinale()`, a heartbeat every 2 min (`syncTick()` in the frame loop, 30 s backoff after failures), and a `keepalive` write on page hide. `state.playMs` grows in the frame loop only while the page is visible and focused and you have a name. Failures only log a warning; the game never depends on the network.
+- Name: step 3 of the creator (`openNamePrompt()` for older saves without a name); `online/names.ts` trims and filters names.
+- Local testing: `firebase emulators:start --only auth,firestore` (ports in `firebase.json`), then open the game with `?emulator` (uses `localStorage['tuersteher-online-emulator']`, so test players never reach the real list).
+
 ### Saving (`src/core/save.ts`)
 
 - `localStorage['tuersteher-save']` holds `SaveData` (`GameState` + zoom + position). Saves happen after stamps, quests, shop changes, every 8 steps, on page hide, and on zoom.
@@ -99,7 +108,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 ### Input
 
-`pressA` / `pressB` / `pressDir` in `input.ts` route to whatever is open, in this order: title → character creator → photo strip → club entrance scene → shop → dialog → world. Arrows/WASD move, Z/Enter/Space = A, X/Esc = B, Tab/Shift (or holding B on touch) = run, +/−/wheel = zoom, M = map, N = sound. On touch, dragging on the map is a joystick and a tap is A.
+`pressA` / `pressB` / `pressDir` in `input.ts` route to whatever is open, in this order: title → character creator → photo strip → club entrance scene → shop → dialog → world. Arrows/WASD move, Z/Enter/Space = A, X/Esc = B, Tab/Shift (or holding B on touch) = run, +/−/wheel = zoom, M = map, N = sound, G = guest list. On touch, dragging on the map is a joystick and a tap is A.
 
 ## Conventions
 

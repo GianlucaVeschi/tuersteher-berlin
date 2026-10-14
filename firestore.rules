@@ -1,0 +1,41 @@
+rules_version = '2';
+
+// One document per player: players/{uid}, where uid is the player's anonymous Firebase login.
+// Everyone can read the list (it's the public guest list). Only you can write your own entry,
+// and only with sensible values. Entries are never deleted from the game.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function validPlayer(d) {
+      return d.keys().hasOnly(['name', 'char', 'createdAt', 'lastSeen', 'clubs', 'stamps', 'quests', 'playMs', 'finishedAt', 'finishPlayMs'])
+        && d.name is string && d.name.size() >= 1 && d.name.size() <= 16
+        && d.char is string && d.char.size() <= 20
+        && d.clubs is list && d.clubs.size() <= 8
+        && d.stamps is int && d.stamps == d.clubs.size()
+        && d.quests is int && d.quests >= 0 && d.quests <= 100
+        && d.playMs is int && d.playMs >= 0
+        && d.lastSeen == request.time
+        && (d.finishPlayMs == null || d.finishPlayMs is int);
+    }
+
+    match /players/{uid} {
+      allow read: if true;
+
+      allow create: if request.auth != null && request.auth.uid == uid
+        && validPlayer(request.resource.data)
+        && request.resource.data.createdAt == request.time
+        && (request.resource.data.finishedAt == null
+            || (request.resource.data.finishedAt == request.time && request.resource.data.stamps == 8));
+
+      allow update: if request.auth != null && request.auth.uid == uid
+        && validPlayer(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.playMs >= resource.data.playMs
+        // finishing is stamped once, by the server clock, with all eight clubs
+        && (request.resource.data.finishedAt == resource.data.finishedAt
+            || (resource.data.finishedAt == null && request.resource.data.finishedAt == request.time && request.resource.data.stamps == 8));
+
+      allow delete: if false;
+    }
+  }
+}

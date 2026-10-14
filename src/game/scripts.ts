@@ -1,3 +1,4 @@
+import { syncFinish, syncSoon } from '../online/sync';
 import { playEnding } from '../ui/ending';
 import type { Club, Entity } from '../types';
 import { danceHere } from '../quests/dance';
@@ -52,6 +53,7 @@ export async function bouncerTalk(e: Entity) {
   for (const l of c.accept) await say(l);
   closeBox();
   state.stamps[c.id] = true;
+  syncSoon();
   e.x = c.dx + 1; e.ox = -16; e.dir = 'left';
   renderCard(); save();
   await wait(reduceMotion ? 0 : 320);
@@ -65,6 +67,7 @@ export async function bouncerTalk(e: Entity) {
 export async function maybeFinale() {
   if (stampCount() === CLUBS.length && !state.finale) {
     state.finale = true; save();
+    syncFinish();
     for (const l of FINALE) await say(l);
     closeBox();
     await playEnding();
