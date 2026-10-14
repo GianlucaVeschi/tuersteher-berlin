@@ -14,7 +14,7 @@ import type { InteriorDef } from '../types';
 
    Staff stand behind counters; you talk to them across the counter.
    `people` entries: { x, y, look, lines } or { x, y, look, act } where `act`
-   names a quest handler in game.js. Dancers are scattered on ',' tiles.
+   names a quest handler in src/quests/acts.ts (ACTS). Dancers are scattered on ',' tiles.
 */
 export const INTERIORS: Record<string, InteriorDef> = {
   berghain: {
