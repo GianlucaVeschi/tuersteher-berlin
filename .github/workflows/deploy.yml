@@ -17,7 +17,20 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      bundle: ${{ steps.bundle.outputs.bundle }}
     steps:
+      # Pages must publish from this workflow. "Deploy from a branch" makes GitHub publish the
+      # unbuilt repo next to this deploy, and whichever finishes last goes live (broken site).
+      - name: Check Pages source is GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          build_type=$(gh api "repos/${{ github.repository }}/pages" --jq .build_type)
+          if [ "$build_type" != "workflow" ]; then
+            echo "::error::Settings → Pages → Source is '$build_type'. Set it to 'GitHub Actions', or the unbuilt repo gets published over this deploy."
+            exit 1
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -26,6 +39,19 @@ jobs:
       - run: npm ci
       # type-checks, then builds into dist/
       - run: npm run build
+      - name: Check the build output
+        id: bundle
+        run: |
+          if grep -q 'src/main.ts' dist/index.html; then
+            echo "::error::dist/index.html still points at src/main.ts: the build did not bundle the game."
+            exit 1
+          fi
+          bundle=$(grep -o 'assets/index-[^"]*\.js' dist/index.html | head -1)
+          if [ -z "$bundle" ] || [ ! -f "dist/$bundle" ]; then
+            echo "::error::No built JS bundle found in dist/."
+            exit 1
+          fi
+          echo "bundle=$bundle" >> "$GITHUB_OUTPUT"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -40,3 +66,20 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      # The live site must serve the bundle we just built. Retries cover the CDN catching up.
+      - name: Smoke test the live site
+        env:
+          URL: ${{ steps.deployment.outputs.page_url }}
+          BUNDLE: ${{ needs.build.outputs.bundle }}
+        run: |
+          for i in $(seq 1 30); do
+            page=$(curl -fsS "${URL}?deploy=${GITHUB_RUN_ID}-${i}" || true)
+            if echo "$page" | grep -q "$BUNDLE"; then
+              code=$(curl -s -o /dev/null -w '%{http_code}' "${URL}${BUNDLE}?deploy=${GITHUB_RUN_ID}")
+              if [ "$code" = "200" ]; then echo "Live site serves $BUNDLE"; exit 0; fi
+              echo "Bundle returned HTTP $code, retrying"
+            fi
+            sleep 10
+          done
+          echo "::error::After 5 minutes ${URL} still does not serve ${BUNDLE}. Check Settings → Pages → Source is 'GitHub Actions'."
+          exit 1

@@ -181,7 +181,16 @@ All graphics are drawn in code on a 384×256 canvas (16 px tiles, 24×16 visible
 
 ## Deploy
 
-Every push to `main` runs `.github/workflows/deploy.yml`: it type-checks, builds, and publishes `dist/` to GitHub Pages (about a minute). The repo's **Settings → Pages → Source** must be set to **GitHub Actions**.
+Every push to `main` runs `.github/workflows/deploy.yml`: it type-checks, builds, and publishes `dist/` to GitHub Pages (about a minute).
+
+> **Settings → Pages → Source must be "GitHub Actions". Never "Deploy from a branch".**
+> With "Deploy from a branch", GitHub also publishes the unbuilt repo on every push. The two deploys race and if the unbuilt one finishes last, the live site loads `src/main.ts` and the game never starts.
+
+Guards that catch it:
+
+- **Before deploying:** the workflow fails if the Pages source isn't "GitHub Actions", or if `dist/` has no built bundle.
+- **After deploying:** a smoke test waits until the live site serves the bundle that was just built, and fails the run if it doesn't within 5 minutes.
+- **On every pull request:** `.github/workflows/ci.yml` type-checks and builds. Make it a required status check on `main` (Settings → Rules → the `main` ruleset → Require status checks → `build`) so a PR that doesn't build can't be merged.
 
 ## Debugging
 

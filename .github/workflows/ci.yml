@@ -1,0 +1,28 @@
+name: CI
+
+# Every pull request must type-check and build before it can be merged.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Check the build output
+        run: |
+          if grep -q 'src/main.ts' dist/index.html; then
+            echo "::error::dist/index.html still points at src/main.ts: the build did not bundle the game."
+            exit 1
+          fi
+          ls dist/assets/index-*.js > /dev/null
