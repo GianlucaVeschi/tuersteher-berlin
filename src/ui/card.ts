@@ -87,7 +87,7 @@ resetBtn.addEventListener('click', () => {
 /** Wipes all progress and goes back to the title screen. */
 export function resetGame() {
   state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
-  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {}; state.hgTime = HG_START; state.hgStage = 0; state.cdvCash = 0;
+  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {}; state.hgTime = HG_START; state.hgStage = 0; state.cdvCash = 0; state.hair = null;
   // a new game is a new entry on the guest list
   state.name = null; state.playMs = 0; state.finishPlayMs = null; state.onlineFinished = false; forgetPlayer();
   releaseFollower(); endK();

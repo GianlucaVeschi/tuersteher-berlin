@@ -2,7 +2,7 @@ import { syncTick } from '../online/sync';
 import { updateMusic } from '../audio/music';
 import type { Dir } from '../types';
 import { prerender } from '../render/cityTiles';
-import { zoomUI } from '../render/zoom';
+import { zoom, zoomUI } from '../render/zoom';
 import { renderCard } from '../ui/card';
 import { applyK, timeScale } from '../effects/trip';
 import { draw, train } from '../render/draw';
@@ -10,13 +10,13 @@ import { applySave, loadSave, save } from '../core/save';
 import { openShop } from '../ui/shop';
 import { darkroomScene } from '../quests/acts';
 import { pickBottle } from '../quests/sisyphos';
-import { goFloor, leaveClub } from '../interiors/transitions';
+import { enterPlace, goFloor, leaveClub } from '../interiors/transitions';
 import { CITY_W, D, DARK, EXIT, ICHAR, STAIRS_DOWN, STAIRS_UP, T, isDoorTile } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 import { get } from '../world/grid';
 import { inClub, sceneClub, sceneFloor } from '../world/scenes';
 import { followStep } from '../interiors/follower';
-import { blocked, clubAtDoor, shopAtDoor } from '../world/collision';
+import { blocked, clubAtDoor, placeAtDoor, shopAtDoor } from '../world/collision';
 import { enterDoor, runIntro } from './scripts';
 import { openCreator, openNamePrompt } from '../ui/creator';
 import { DIRS, MOVE, RUN, held, player, running, state } from '../core/state';
@@ -57,6 +57,8 @@ export function arrive() {
     if (c) { enterDoor(c); return; }
     const sh = shopAtDoor(player.x, player.y);
     if (sh) { openShop(sh); return; }
+    const pl = placeAtDoor(player.x, player.y);
+    if (pl) { enterPlace(pl); return; }
   }
   if (++saveTimer % 8 === 0) save();
 }
@@ -68,8 +70,9 @@ export function update(dt: number) {
       arrive();
     }
   }
-  if (!player.moving && !RT.busy && !RT.titleOn && held.length) tryMove(held[held.length - 1]);
-  RT.ents.forEach(e => { if (e.ox) e.ox = e.ox > 0 ? Math.max(0, e.ox - dt * 0.08) : Math.min(0, e.ox + dt * 0.08); });
+  if (!player.moving && !RT.busy && !RT.titleOn && !zoom.fit && held.length) tryMove(held[held.length - 1]);
+  const ease = (o: number) => o > 0 ? Math.max(0, o - dt * 0.08) : Math.min(0, o + dt * 0.08);
+  RT.ents.forEach(e => { if (e.ox) e.ox = ease(e.ox); if (e.oy) e.oy = ease(e.oy); });
   if (train.wait > 0) train.wait -= dt;
   else {
     train.x += dt * 0.11;

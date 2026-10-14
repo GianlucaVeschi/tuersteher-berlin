@@ -25,6 +25,7 @@ class Track {
   private next = 0;
   private step = 0;
   private arpN = 0;
+  private vocalN = 0;
   private stopHiss: (() => void) | null = null;
 
   constructor(private style: Style, cutoff?: number) {
@@ -124,6 +125,15 @@ class Track {
     if (s.arp && vel(s.arp.steps)) {
       const notes = voiced(s.arp.octave ?? 2);
       S.pluck(o, t, notes[this.arpN++ % notes.length], s.arp.level ?? 0.08, s.arp.marimba);
+    }
+    if (s.vocal) {
+      const line = s.vocal.notes, k = n % line.length, note = line[k];
+      if (typeof note === 'number') {
+        let hold = 1;
+        while (line[(k + hold) % line.length] === '-' && hold < line.length) hold++;
+        const vowels = s.vocal.vowels || 'a';
+        S.voice(o, t, s.root + 12 * ((s.vocal.octave ?? 1) + 1) + note, s16 * hold, s.vocal.level ?? 0.06, vowels[this.vocalN++ % vowels.length]);
+      }
     }
   }
 

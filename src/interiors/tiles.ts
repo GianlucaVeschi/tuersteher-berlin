@@ -146,6 +146,23 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (let i = 3; i < 14; i += 2) for (let j = 3; j < 15; j += 3) P(X + i, Y + j, 1, 2, beads[(i + j) % 5]);
         break;
       }
+      // ---- Antonio's salon ----
+      case 107: // mirror wall: a big mirror with a row of dressing-room bulbs above it
+        if (frontFace) {
+          P(X, Y, 16, 16, '#4a1a5a'); P(X, Y + 13, 16, 3, '#2a0a34');
+          P(X + 2, Y + 4, 12, 9, INK); P(X + 3, Y + 5, 10, 7, '#9fd6e6'); P(X + 4, Y + 5, 3, 7, '#c9eef6'); P(X + 10, Y + 9, 2, 2, '#c9eef6');
+          for (let i = 2; i < 15; i += 4) P(X + i, Y + 1, 2, 2, '#fff2a8');
+        } else P(X, Y, 16, 16, '#2a0a34');
+        break;
+      case 108: // salon chair: red leather on a chrome foot, facing the mirror
+        P(X, Y, 16, 16, (x + y) % 2 ? '#e8e4d8' : '#14121c');
+        P(X + 3, Y + 2, 10, 8, INK); P(X + 4, Y + 3, 8, 6, '#c4162a'); P(X + 5, Y + 3, 2, 6, '#e8404f');
+        P(X + 2, Y + 9, 12, 3, INK); P(X + 3, Y + 9, 10, 2, '#a3121f');
+        P(X + 7, Y + 12, 2, 3, '#c0c4cc'); P(X + 4, Y + 14, 8, 2, '#8a9098');
+        break;
+      case 109: // black and white checkered floor
+        P(X, Y, 8, 8, '#e8e4d8'); P(X + 8, Y, 8, 8, '#14121c'); P(X, Y + 8, 8, 8, '#14121c'); P(X + 8, Y + 8, 8, 8, '#e8e4d8');
+        break;
       default: P(X, Y, 16, 16, '#000'); break;
     }
   }

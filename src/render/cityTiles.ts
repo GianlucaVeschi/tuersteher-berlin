@@ -5,6 +5,7 @@ import { get } from '../world/grid';
 import { INK, circle, pick, rnd } from '../util';
 import { B, BR, C, D, DK, F, G, R, RL, S, SA, T, TR, W } from '../world/tiles';
 import { RT } from '../core/runtime';
+import { pixelText, pixelTextWidth } from './pixelFont';
 import type { Building, Club } from '../types';
 
 /* ================= PRERENDER MAP ================= */
@@ -148,7 +149,9 @@ export function drawAltbau(b: Building) {
     P(X + 3, sy - 5, Wd - 6, 9, sh.band);
     m.fillStyle = sh.ink; m.font = '8px "Press Start 2P", monospace'; m.textBaseline = 'top';
     const tw = m.measureText(sh.label).width;
-    m.fillText(sh.label, Math.round(X + Wd / 2 - tw / 2), sy - 5);
+    // small shops: if the sign doesn't fit, use the sharp 3×5 font instead
+    if (tw <= Wd - 8) m.fillText(sh.label, Math.round(X + Wd / 2 - tw / 2), sy - 5);
+    else pixelText(m, sh.label, Math.round(X + Wd / 2 - pixelTextWidth(sh.label) / 2), sy - 3, sh.ink);
     if (sh.door) {
       P(dX + 2, sy + 4, 12, 12, INK);
       P(dX + 3, sy + 5, 10, 11, '#fbecb4');

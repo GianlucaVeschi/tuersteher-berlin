@@ -77,6 +77,12 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 - `leave: 'left' | 'right'` makes someone walk off after talking, fade out and stay gone (`state.gone[id]`, cleared by Start over). Freerk works this way.
 - Custom behaviour: `act` plus a handler in `STREET_ACTS` (`world/street.ts`). `interact()` routes any entity with `npcId` to `streetTalk()`. Club quests stay in `quests/`.
 
+### Places (`src/data/places.ts`, `src/places/`)
+
+- Buildings you walk straight into, with no bouncer, stamp or welcome lines: Antonio's salon is the first. A `PLACES` entry (position, sign colours) gets a building and a door from `buildCity()`; walking onto the door runs `enterPlace()` (interiors/transitions.ts), which opens the `INTERIORS` entry with the same id. Leaving and saving use `doorOf()`, which finds a club or a place, so you come back out in front of the right door.
+- Places aren't in `CLUBS`, so they never count towards stamps; leave their `quests` list empty unless they get real quests. Their handlers live in `src/places/` and are listed in `ACTS`.
+- The salon: `state.hair` (a key of `HAIRSTYLES` in `data/hair.ts`, or null) overrides the character's hair in `lookOf()`. `mohawk` is a `Look` flag drawn by `person()`.
+
 ### Quests
 
 - Handlers are in `ACTS` (`src/quests/acts.ts`), typed `Act = (e: Entity | null, clubId) => Promise<void>`. `e` is the person talked to, or `null` when a tile's `examineActs` triggers it. Handlers that need a person guard with `if (!e) return;`.

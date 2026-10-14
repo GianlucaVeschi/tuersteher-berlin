@@ -61,14 +61,14 @@ export function dressOK(clubId: string, outfitId: string): boolean {
 }
 
 const SHOP_DEFS: ShopDef[] = [
-  { id: 'humana', name: 'Humana', area: 'Frankfurter Tor', x: 13, y: 7, w: 6, h: 6, v: 0, band: '#e9e4d6', ink: '#2a6a4a', label: 'HUMANA',
+  { id: 'humana', name: 'Humana', area: 'Frankfurter Tor', x: 15, y: 10, w: 3, h: 3, v: 0, band: '#e9e4d6', ink: '#2a6a4a', label: 'HUMANA',
     line: 'Humana: Second-hand, floor after floor of it. Try anything on.', items: ['thriftblack', 'seventies', 'gdr', 'suit', 'tourist'] },
-  { id: 'blackstyle', name: 'Blackstyle', area: 'Prenzlauer Berg', x: 19, y: 7, w: 6, h: 6, v: 1, band: '#0c0c12', ink: '#e8e8f0', label: 'BLACKSTYLE',
+  { id: 'blackstyle', name: 'Blackstyle', area: 'Prenzlauer Berg', x: 21, y: 10, w: 3, h: 3, v: 1, band: '#0c0c12', ink: '#e8e8f0', label: 'BLACKSTYLE',
     line: "Blackstyle: Latex made in Berlin since 1992. Fitting room's at the back.", items: ['latex', 'harness', 'redlatex'] },
-  { id: 'coexist', name: 'Coexist', area: 'Friedrichshain', x: 13, y: 33, w: 6, h: 6, v: 1, band: '#2bb3a3', ink: '#14121c', label: 'COEXIST',
+  { id: 'coexist', name: 'Coexist', area: 'Friedrichshain', x: 15, y: 36, w: 3, h: 3, v: 1, band: '#2bb3a3', ink: '#14121c', label: 'COEXIST',
     line: 'Coexist: 90s, 00s, black, neon. Something for every door.', items: ['nineties', 'mesh', 'sailor'] },
-  { id: 'syld', name: 'SYLD', area: 'near Frankfurter Allee', x: 30, y: 33, w: 6, h: 6, v: 2, band: '#d94bd1', ink: '#fff6a8', label: 'SYLD',
-    line: 'SYLD: Glitter, chains, shiny pants. All by Berlin designers.', items: ['glitter', 'rainbow'] }
+  { id: 'voo', name: 'Voo Store', area: 'Oranienstraße, Kreuzberg', x: 32, y: 36, w: 3, h: 3, v: 2, band: '#d94bd1', ink: '#fff6a8', label: 'VOO STORE',
+    line: 'Voo Store: Designer pieces in an old Kreuzberg backyard. Try the loud ones on.', items: ['glitter', 'rainbow'] }
 ];
 export const SHOPS: Shop[] = SHOP_DEFS.map(sh => ({ ...sh, dx: sh.x + Math.floor(sh.w / 2), doorY: sh.y + sh.h - 1, by: sh.y + sh.h }));
 CLUBS.forEach(c => { c.sign = c.sign.concat('Dress code: ' + DRESS[c.id].hint); });

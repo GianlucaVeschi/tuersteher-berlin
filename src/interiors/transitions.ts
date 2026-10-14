@@ -11,7 +11,9 @@ import { RT } from '../core/runtime';
 import { INTERIORS } from '../data/interiors';
 import { inClub, sceneClub, sceneFloor, useScene } from '../world/scenes';
 import { $, reduceMotion, wait } from '../util';
-import type { Club } from '../types';
+import { PLACES } from '../data/places';
+import { ACTS } from '../quests/acts';
+import type { Club, Place } from '../types';
 /* ---- transitions ---- */
 export const fadeEl = $('#fade'), floorCard = $('#floorCard'), floorTag = $('#floorTag'), toastEl = $('#toast');
 /** Fade the screen to black (on) or back (off). */
@@ -71,9 +73,19 @@ export async function enterClub(c: Club, overlayShown: boolean) {
     RT.busy = false;
   }
 }
-/** Back out onto the street in front of the club's door. */
+/** Walk into a place without a bouncer (data/places.ts): straight onto its first floor. */
+export async function enterPlace(p: Place) {
+  await goFloor(p.id, Object.keys(INTERIORS[p.id].floors)[0], 'street');
+  const act = p.enter ? ACTS[p.enter] : undefined;
+  if (!act) return;
+  RT.busy = true;
+  try { await act(null, p.id); } finally { closeBox(); RT.busy = false; }
+}
+/** The street door of a club or a place: where you stand when you come back out. */
+export const doorOf = (id: string) => CLUBS.find(cl => cl.id === id) || PLACES.find(p => p.id === id);
+/** Back out onto the street in front of the club's (or place's) door. */
 export async function leaveClub(clubId: string) {
-  const c = CLUBS.find(cl => cl.id === clubId);
+  const c = doorOf(clubId);
   if (!c) return;
   RT.busy = true;
   if (RT.follower) { await say(`(${RT.follower.name} stays inside. They'll wait for you at Panorama Bar.)`); closeBox(); releaseFollower(); }

@@ -160,7 +160,7 @@ Walk into a shop to change clothes (no money yet):
 - **Humana**: second-hand basics, vintage, a suit (trap) and your old hoodie
 - **Blackstyle**: latex and leather
 - **Coexist**: 90s windbreaker, black mesh, sailor stripes
-- **SYLD**: glitter and neon
+- **Voo Store**: glitter and neon
 
 The shop screen shows which clubs each outfit gets you into.
 
@@ -250,6 +250,7 @@ src/
 - **Fernsehturm**: `TOWER` in `src/world/city.ts`. The base is solid; the tall part is drawn in front of the sprites.
 - **Club interiors**: `src/data/interiors.ts`. Each floor is ASCII art (legend at the top of the file), plus spawn points, which floor the stairs lead to, the people on that floor (`lines` for chat, or `act` for a quest handler in `src/quests/acts.ts`), how many dancers to scatter, tile descriptions (`examine`) and the quest list. To give another club an interior, add an entry with the club's id (e.g. `tresor`) and its handlers. TypeScript checks the data against `InteriorDef` in `src/types.ts`, so typos in field names show up in `npm run typecheck`.
 - **People on the street**: one entry each in `src/data/npcs.ts` (id, position, look, `lines`). Add `leave: 'left'` or `'right'` for someone who walks off after talking and stays gone (Start over brings them back). For custom behaviour, set `act` and write a handler in `STREET_ACTS` in `src/world/street.ts`. The `btc` look option prints a ₿ on their top.
+- **Buildings you can walk into** (no bouncer, no stamp), like Antonio's hair salon: an entry in `src/data/places.ts` (position, sign) plus an `INTERIORS` entry with the same id in `src/data/interiors.ts` for the inside. Handlers for its people go in `src/places/` and are listed in `ACTS`. Haircuts are in `src/data/hair.ts`.
 - **Signs on the street**: `cityPeople()` in `src/world/city.ts`.
 - **Intro / ending text**: `INTRO` and `FINALE` in `src/data/clubs.ts`.
 

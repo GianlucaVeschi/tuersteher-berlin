@@ -28,6 +28,8 @@ export interface Look {
   blush?: boolean;
   /** colour of a ₿ printed on the front of the top */
   btc?: string;
+  /** hair as a mohawk: a strip down the middle, shaved sides */
+  mohawk?: boolean;
 }
 
 /* ---------- clubs ---------- */
@@ -121,6 +123,31 @@ export interface Shop extends ShopDef {
   by: number;
 }
 
+/** A building you can walk into freely (no bouncer, no stamp); its inside is an INTERIORS entry with the same id. */
+export interface PlaceDef {
+  id: string;
+  name: string;
+  x: number; y: number; w: number; h: number;
+  /** building colour variant */
+  v: number;
+  band: string;
+  ink: string;
+  label: string;
+  /** handler in ACTS run every time you walk in (e.g. someone comes up to greet you) */
+  enter?: string;
+}
+export interface Place extends PlaceDef {
+  dx: number;
+  doorY: number;
+  by: number;
+}
+
+/** A haircut from Antonio's: replaces the hair of the player's character. */
+export interface HairStyle {
+  name: string;
+  look: Partial<Look>;
+}
+
 /* ---------- world ---------- */
 
 export interface Point { x: number; y: number }
@@ -160,8 +187,9 @@ export interface Entity {
   act?: string;
   name?: string;
   club?: Club;
-  /** horizontal pixel offset while sliding aside */
+  /** pixel offset while sliding to the next tile (eased back to 0 every frame) */
   ox?: number;
+  oy?: number;
   /** 0..1, for people fading out */
   alpha?: number;
   dance?: boolean;
@@ -306,6 +334,8 @@ export interface GameState {
   hgStage: number;
   /** Club der Visionäre bar: 0 not tried, 1 card refused, 2 borrowed cash, 3 spent it */
   cdvCash: number;
+  /** haircut from Antonio's (data/hair.ts), or null for the character's own hair */
+  hair: string | null;
   /** your name on the public guest list (not unique; the login id is) */
   name: string | null;
   /** active play time in ms: only while the game is open and in front */

@@ -5,10 +5,23 @@ import { OFF_MAP } from './city';
 import { save } from '../core/save';
 import { DIRS, state } from '../core/state';
 import { wait } from '../util';
-import { closeBox, say } from '../ui/dialog';
+import { ask, closeBox, say } from '../ui/dialog';
 
 /** Custom behaviour for street NPCs, by the `act` name in data/npcs.ts. Club quests live in quests/acts.ts. */
-export const STREET_ACTS: Record<string, Act> = {};
+export const STREET_ACTS: Record<string, Act> = {
+  // Mustafa's Gemüse Kebap: everyone queues for the Gemüse Kebap, nobody comes for the falafel
+  async mustafa() {
+    const a = await ask('Mustafa: Next! Gemüse Kebap or Falafel?', ['Gemüse Kebap', 'Falafel']);
+    if (a === 0) {
+      await say('Mustafa: Ah, of course! With everything?');
+      await say('(Grilled vegetables, feta, a squeeze of lemon. Worth every minute of the queue.)');
+    } else {
+      await say('Mustafa: … Falafel?');
+      await say('(He looks at you like you asked Berghain for the guest list.)');
+      await say("Mustafa: Okay. Falafel. I'm a little disappointed, but okay.");
+    }
+  }
+};
 
 /** Talking to someone from data/npcs.ts: their act or lines, then walking off if they `leave`. */
 export async function streetTalk(e: Entity) {

@@ -51,6 +51,8 @@ export function renderShop() {
     li.classList.toggle('sel', i === sel);
     li.classList.toggle('worn', entries[i] === state.outfit);
   });
+  // the list scrolls inside its box: keep the selected outfit in view
+  shopList.children[sel]?.scrollIntoView({ block: 'nearest' });
   const id = entries[sel] === LEAVE ? state.outfit : entries[sel];
   drawMini(previewCtx, id);
   shopTags.textContent = OUTFITS[id].tags.map(t => TAG_LABEL[t]).join(' · ');

@@ -1,3 +1,4 @@
+import { PIXEL_H, pixelText, pixelTextWidth } from './pixelFont';
 import type { Entity } from '../types';
 import { SHOPS } from '../data/outfits';
 import { CLUB_SHORT, zoomLevel } from './zoom';
@@ -79,7 +80,7 @@ export function drawWorld(now: number): [number, number, number, number] {
       person(ctx, ppx - camX, ppy - camY - 3, player.dir, step, lookOf(state.outfit));
       return;
     }
-    const X = e.x * T - camX + Math.round(e.ox || 0), Y = e.y * T - camY;
+    const X = e.x * T - camX + Math.round(e.ox || 0), Y = e.y * T - camY + Math.round(e.oy || 0);
     if (X < -16 || Y < -24 || X > RT.VW || Y > RT.VH + 8) return;
     if (e.kind === 'sign') {
       ctx.fillStyle = INK; ctx.fillRect(X + 7, Y + 8, 2, 8); ctx.fillRect(X + 1, Y + 1, 14, 9);
@@ -98,7 +99,7 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.fillRect(X + 11, Y - 2, 2, 15);
     } else if (e.look) {
       // legs move while sliding to the next tile
-      const step = e.ox ? (Math.floor(Math.abs(e.ox) / 8) % 2) + 1 : 0;
+      const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0), step = off ? (Math.floor(off / 8) % 2) + 1 : 0;
       ctx.globalAlpha = e.alpha ?? 1;
       person(ctx, X, Y - 3, e.dir ?? 'down', step, e.look);
       ctx.globalAlpha = 1;
@@ -114,9 +115,12 @@ export function drawWorld(now: number): [number, number, number, number] {
 }
 let chipRects: { x: number; y: number; w: number; h: number }[] = [];
 /** A name label on the zoomed-out map, nudged down if it would overlap another. */
-export function chip(text: string, x: number, y: number, bg: string, fg: string, size: number) {
-  ctx.font = size + 'px "Press Start 2P", monospace'; ctx.textBaseline = 'top';
-  const w = Math.ceil(ctx.measureText(text).width) + 6, h = size + 6;
+/** `size` is a font size in px, or 'small' for the sharp 3×5 pixel font (shops, guest list). */
+export function chip(text: string, x: number, y: number, bg: string, fg: string, size: number | 'small') {
+  const small = size === 'small';
+  if (!small) { ctx.font = size + 'px "Press Start 2P", monospace'; ctx.textBaseline = 'top'; }
+  const pad = small ? 2 : 3;
+  const w = (small ? pixelTextWidth(text) : Math.ceil(ctx.measureText(text).width)) + 2 * pad, h = (small ? PIXEL_H : size) + 2 * pad;
   const X = Math.round(Math.max(1, Math.min(RT.VW - w - 1, x - w / 2)));
   let Y = Math.round(Math.max(1, Math.min(RT.VH - h - 1, y - h)));
   // nudge down until it no longer overlaps a label drawn earlier this frame
@@ -124,7 +128,8 @@ export function chip(text: string, x: number, y: number, bg: string, fg: string,
   chipRects.push({ x: X, y: Y, w, h });
   ctx.fillStyle = INK; ctx.fillRect(X - 1, Y - 1, w + 2, h + 2);
   ctx.fillStyle = bg; ctx.fillRect(X, Y, w, h);
-  ctx.fillStyle = fg; ctx.fillText(text, X + 3, Y + 3);
+  if (small) pixelText(ctx, text, X + pad, Y + pad, fg);
+  else { ctx.fillStyle = fg; ctx.fillText(text, X + pad, Y + pad); }
 }
 export function draw(now: number) {
   const z = zoomLevel();
@@ -148,8 +153,8 @@ export function draw(now: number) {
   if (!inClub()) {
     // clubs on the roof, shops at the shopfront (smaller), so neighbours don't collide
     CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
-    SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + size + 6, '#f3eee3', INK, Math.max(6, size - 2)));
-    RT.ents.forEach(e => { if (e.kind === 'column') chip('GUEST LIST', sx((e.x + 0.5) * T), sy(e.y * T - 8), '#2f6b4f', '#fff', Math.max(6, size - 2)); });
+    SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
+    RT.ents.forEach(e => { if (e.kind === 'column') chip('GUEST LIST', sx((e.x + 0.5) * T), sy(e.y * T - 8), '#2f6b4f', '#fff', 'small'); });
   }
   const px = sx(ppx + 8), py = sy(ppy + 2);
   const pulse = reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(now / 180);

@@ -11,9 +11,11 @@ export const FIREBASE = {
 
 // ?emulator talks to the local Firebase emulators instead (firebase emulators:start), for development
 const EMULATOR = /[?&]emulator\b/.test(location.search);
-const AUTH_URL = EMULATOR ? 'http://127.0.0.1:9099/identitytoolkit.googleapis.com' : 'https://identitytoolkit.googleapis.com';
-const TOKEN_URL = EMULATOR ? 'http://127.0.0.1:9099/securetoken.googleapis.com' : 'https://securetoken.googleapis.com';
-const FS_URL = EMULATOR ? 'http://127.0.0.1:8080' : 'https://firestore.googleapis.com';
+// the emulators run on the machine serving the page, so a phone on the same Wi-Fi reaches them too
+const EMU_HOST = EMULATOR ? location.hostname : '';
+const AUTH_URL = EMULATOR ? `http://${EMU_HOST}:9099/identitytoolkit.googleapis.com` : 'https://identitytoolkit.googleapis.com';
+const TOKEN_URL = EMULATOR ? `http://${EMU_HOST}:9099/securetoken.googleapis.com` : 'https://securetoken.googleapis.com';
+const FS_URL = EMULATOR ? `http://${EMU_HOST}:8080` : 'https://firestore.googleapis.com';
 const CREDS_KEY = EMULATOR ? 'tuersteher-online-emulator' : 'tuersteher-online';
 const DB = `${FS_URL}/v1/projects/${FIREBASE.projectId}/databases/(default)/documents`;
 const DOC_NAME = (uid: string) => `projects/${FIREBASE.projectId}/databases/(default)/documents/players/${uid}`;

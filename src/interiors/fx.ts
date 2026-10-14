@@ -61,7 +61,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       person(ctx, fx - camX, fy - camY - 3, RT.follower.dir, step, RT.follower.look);
       return;
     }
-    const X = e.x * T - camX, Y = e.y * T - camY;
+    const X = e.x * T - camX + Math.round(e.ox || 0), Y = e.y * T - camY + Math.round(e.oy || 0);
     if (X < -16 || Y < -24 || X > RT.VW || Y > RT.VH + 8) return;
     if (e.kind === 'bottle') { if (e.bid && e.type && !state.pfand.taken[e.bid]) drawBottle(X, Y, e.type, now); return; }
     if (e.kind === 'pile') { drawPile(e, X, Y, now, lights); return; }
@@ -71,7 +71,11 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       const beat = Math.floor(now / 230 + phase);
       const dir = (['down', 'left', 'down', 'right'] as const)[Math.floor(now / 900 + phase) % 4];
       person(ctx, X, Y - 3 - (beat % 2), dir, (beat % 2) + 1, e.look);
-    } else person(ctx, X, Y - 3, e.dir ?? 'down', 0, e.look);
+    } else {
+      // legs move while someone walks to the next tile
+      const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0);
+      person(ctx, X, Y - 3, e.dir ?? 'down', off ? (Math.floor(off / 8) % 2) + 1 : 0, e.look);
+    }
   });
   // main floor: the light bar along the top wall and a short strobe now and then
   if (sc.floor === 'mf') {

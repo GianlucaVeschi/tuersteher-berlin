@@ -976,6 +976,60 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'ines', title: 'The early days', hint: 'Ines on the bench has been coming since the start.' },
       { id: 'jazz', title: 'Jazz in the Sonnenraum', hint: 'Sit in with the trio in the little wooden house.' }
     ]
+  },
+
+  /* Antonio's: a hair salon left of Sisyphos (a place, not a club: data/places.ts). Mirrors and
+     chairs along the top wall, a DJ set in the corner, a disco floor. Antonio does the haircuts
+     (handlers in places/salon.ts).
+     Extra legend: E  mirror wall with bulbs   r  salon chair   d  black and white checkered floor */
+  salon: {
+    name: "Antonio's",
+    floors: {
+      main: {
+        label: "Antonio's · hair and disco", short: "ANTONIO'S",
+        map: [
+          '#EEEEEEEE#######',
+          '#drdrdrdrdddddd#',
+          '#ddddddddddSDDS#',
+          '#dddddddddddddd#',
+          '#bbdddddddddddd#',
+          '#dddddddddddddd#',
+          '#dddddddddddddd#',
+          '#######xx#######'
+        ],
+        spawn: { street: [7, 6, 'up'] },
+        exit: true,
+        dancers: 3,
+        spots: ['rgba(255,43,214,.16)', 'rgba(255,242,0,.12)', 'rgba(0,229,255,.12)'],
+        people: [
+          // walks up to you every time you come in (places/salon.ts → salonEnter)
+          { x: 5, y: 3, act: 'antonio', name: 'Antonio', look: { skin: '#c98d6a', hair: '#1a1a1a', long: true, shades: true, beard: '#1a1a1a', top: '#c4162a', legs: '#c4162a', stripes: '#f3eee3', sparkle: '#f2c45a' } },
+          { x: 12, y: 1, look: { skin: '#e2b08c', hair: '#ff8c42', top: '#7a3fd1', legs: '#14121c', shades: true }, lines: ['DJ: Antonio only lets me play Spanish disco and Italo. I asked for techno once. Once.'] },
+          { x: 2, y: 1, dir: 'up', look: { skin: '#f3c9a8', hair: '#5a3a22', top: '#e8e4d8', legs: '#3a3a4a' }, lines: ['Customer: (under foils) He said "trust me" and started bleaching. I trust him. I think.'] },
+          { x: 4, y: 1, dir: 'up', look: { skin: '#8d5a3b', hair: '#111', top: '#e8e4d8', legs: '#2a2a35', beard: '#111' }, lines: ['Customer: I came in for a trim. I am getting a mullet. This is my life now.'] },
+          { x: 1, y: 4, dir: 'right', look: { skin: '#d9a27c', hair: '#2a2420', top: '#f2c14e', legs: '#3a3a4a' }, lines: ['Waiting: Two hours waiting. Worth it. Last time he gave me a mohawk and I got into KitKat.'] }
+        ]
+      }
+    },
+    examine: {
+      E: ['A big mirror with dressing-room bulbs. You look like you need a haircut.'],
+      D: ['Two turntables and a stack of Spanish disco records. Antonio insists on vinyl.'],
+      S: ['A speaker playing at a volume no hairdresser should allow.'],
+      b: ['The waiting bench. The magazines are from 1987.']
+    },
+    examineActs: { r: 'salonChair' },
+    dancerLines: [
+      'Customer: Waiting for my turn. Might as well dance.',
+      'Customer: He cuts better when the music is louder. Science.',
+      '(They are dancing with half their hair cut. Nobody minds.)'
+    ],
+    dancerPalette: {
+      tops: ['#c4162a', '#ff2bd6', '#f2c14e', '#4ea8de', '#58b368', '#e8e4d8'],
+      hair: ['#ff2bd6', '#f2d06b', '#1a1a1a', '#b04a2a', '#58b368', '#c0c0c0'],
+      legs: ['#14121c', '#3a3a8a', '#c4162a', '#e8e4d8'],
+      extras: ['#f2c45a', '#fff200', '#ff2bd6', '#00e5ff']
+    },
+    quests: []
   }
 
 };

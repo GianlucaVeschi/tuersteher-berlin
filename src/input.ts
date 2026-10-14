@@ -31,7 +31,7 @@ export function pressA() {
   if (RT.insideResolve) { RT.insideResolve(); return; }
   if (RT.shopUI) { shopA(); return; }
   if (RT.ui || RT.typing) { uiA(); return; }
-  if (RT.busy || player.moving) return;
+  if (RT.busy || player.moving || zoom.fit) return;
   interact();
 }
 export function pressB() {

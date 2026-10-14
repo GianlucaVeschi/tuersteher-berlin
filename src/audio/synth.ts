@@ -187,6 +187,40 @@ export function pluck(o: Out, t: number, midi: number, v: number, marimba = fals
   g.connect(o.dry); g.connect(o.wet);
   a.start(t); a.stop(t + 0.45);
 }
+/* Formants (resonances that make the vowel) of a soprano singing "ah", "oh", "oo" and "eh":
+   [frequency in Hz, gain] for the first three. */
+const VOWELS: Record<string, [number, number][]> = {
+  a: [[800, 1], [1150, 0.5], [2900, 0.25]],
+  o: [[450, 1], [800, 0.45], [2830, 0.15]],
+  u: [[325, 1], [700, 0.25], [2530, 0.1]],
+  e: [[400, 1], [1700, 0.45], [2700, 0.25]]
+};
+/** A synthesized diva "ooh/aah": two detuned saws through vowel formants, sliding up into the
+ *  note, with vibrato that starts after the attack. No samples, so it sounds like a retro synth singer. */
+export function voice(o: Out, t: number, midi: number, dur: number, v: number, vowel = 'a') {
+  const c = audioCtx(), g = c.createGain(), mix = c.createGain(), hz = midiHz(midi);
+  const lfo = c.createOscillator(), depth = c.createGain();
+  lfo.frequency.value = 5.6; depth.gain.setValueAtTime(0, t); depth.gain.linearRampToValueAtTime(hz * 0.012, t + Math.min(0.35, dur * 0.6));
+  lfo.connect(depth);
+  (VOWELS[vowel] || VOWELS.a).forEach(([f, gain]) => {
+    const bp = c.createBiquadFilter(), fg = c.createGain();
+    bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = 9; fg.gain.value = gain;
+    mix.connect(bp).connect(fg).connect(g);
+  });
+  [-5, 5].forEach(dt => {
+    const osc = c.createOscillator();
+    osc.type = 'sawtooth'; osc.detune.value = dt;
+    osc.frequency.setValueAtTime(hz * 0.97, t); osc.frequency.exponentialRampToValueAtTime(hz, t + 0.07);
+    depth.connect(osc.frequency);
+    osc.connect(mix); osc.start(t); osc.stop(t + dur + 0.35);
+  });
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(v * 3, t + 0.06);
+  g.gain.setValueAtTime(v * 3, t + dur * 0.85);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.3);
+  g.connect(o.dry); g.connect(o.wet);
+  lfo.start(t); lfo.stop(t + dur + 0.35);
+}
 /** A soft bell, for the ambient street music. */
 export function bell(o: Out, t: number, midi: number, v: number) {
   const c = audioCtx(), a = c.createOscillator(), b = c.createOscillator(), g = c.createGain(), bg = c.createGain();

@@ -18,6 +18,10 @@ export interface Style {
   stab?: { steps: string; wave?: OscillatorType; cutoff?: number; decay?: number; level?: number; octave?: number };
   piano?: { steps: string; level?: number; octave?: number };
   pad?: { cutoff?: number; level?: number; octave?: number };
+  /** a sung line (audio/synth.ts voice): one entry per sixteenth, looping. A number is a note
+   *  (semitones above root + 12 × (octave + 1)), '-' holds the note before, null is a rest.
+   *  `vowels` cycles through a/o/u/e, one letter per note. */
+  vocal?: { notes: (number | '-' | null)[]; vowels?: string; level?: number; octave?: number };
   /** plays chord tones one after another */
   arp?: { steps: string; level?: number; octave?: number; marimba?: boolean };
   kickPitch?: number; kickDecay?: number;
@@ -143,6 +147,27 @@ export const STYLES: Record<string, Style> = {
     arp: { steps: '..x...x...x.x...', level: 0.07, octave: 2 }
   },
 
+  // Antonio's salon: funky disco with a synthesized diva singing "ooh, aah" over it
+  salon: {
+    bpm: 118, swing: 0.06, root: 45, space: 0.3, delay: 0.2, barsPerChord: 1,
+    chords: [[0, 3, 7, 10], [5, 8, 12, 15], [-2, 2, 5, 9], [3, 7, 10, 14]],
+    kick: FOUR, clap: '....x.......x...', hat: SIXTEENTHS, ohat: OFF,
+    // octave-jumping disco bass
+    bass: { steps: [0, null, 12, null, 0, null, 12, null, 0, null, 12, null, 0, null, 10, 12], wave: 'sawtooth', cutoff: 700, level: 0.22 },
+    // funk guitar chops on the offbeats
+    stab: { steps: '..o.x..o..o.x..o', wave: 'square', cutoff: 2400, decay: 0.08, level: 0.06, octave: 1 },
+    pad: { cutoff: 2200, level: 0.03, octave: 2 },
+    vocal: {
+      octave: 1, level: 0.06, vowels: 'aoaauoaaeo',
+      notes: [
+        null, null, null, null, 7, '-', '-', '-', 5, '-', 3, '-', '-', '-', null, null,
+        null, null, 5, '-', 7, '-', 10, '-', '-', '-', '-', '-', null, null, null, null,
+        null, null, null, null, 12, '-', '-', '-', 10, '-', 7, '-', 5, '-', null, null,
+        3, '-', '-', '-', '-', '-', 0, '-', '-', '-', '-', '-', '-', '-', null, null
+      ]
+    }
+  },
+
   // Sisyphos: a different house in every room
   sisy_strand: { // organic, melodic open-air house with marimba and hand drums
     bpm: 120, swing: 0.08, root: 38, space: 0.4,
@@ -227,7 +252,8 @@ const FLOOR_STYLE: Record<string, string> = {
   'kitkat:main': 'kitkat', 'kitkat:pool': 'kitkat_pool', 'kitkat:dungeon': 'kitkat_dungeon',
   'rso:opan': 'rso_opan', 'rso:robus': 'rso_robus', 'rso:summe': 'rso_summe',
   'heidegluehen:heide': 'heide',
-  'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen'
+  'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen',
+  'salon:main': 'salon'
 };
 /** What plays during a club's short "inside" scene (clubs without an interior use their own style). */
 const CLUB_STYLE: Record<string, string> = {

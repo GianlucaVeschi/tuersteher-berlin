@@ -1,3 +1,4 @@
+import { PLACES } from '../data/places';
 import { CLUBS } from '../data/clubs';
 import { SHOPS } from '../data/outfits';
 import { RT } from '../core/runtime';
@@ -54,7 +55,14 @@ export function buildCity() {
     building(sh.x, sh.y, sh.w, sh.h, 'altbau', { v: sh.v, shop: { label: sh.label, band: sh.band, ink: sh.ink, door: true } });
     set(sh.dx, sh.doorY, D);
   });
-  building(41, 33, 4, 6, 'altbau', { v: 0, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });
+  // places you can walk into (data/places.ts)
+  PLACES.forEach(p => {
+    building(p.x, p.y, p.w, p.h, 'altbau', { v: p.v, shop: { label: p.label, band: p.band, ink: p.ink, door: true } });
+    set(p.dx, p.doorY, D);
+  });
+  building(42, 36, 2, 3, 'altbau', { v: 0, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });
+  // Mustafa's Gemüse Kebap: the famous Imbiss (the real one is on Mehringdamm), on the green west of Humana
+  building(3, 3, 5, 3, 'altbau', { v: 2, shop: { label: "MUSTAFA'S", band: '#c4162a', ink: '#fff6a8', door: false } });
   // Oberbaumbrücke towers
   building(37, 24, 1, 1, 'obtower');
   building(40, 24, 1, 1, 'obtower');

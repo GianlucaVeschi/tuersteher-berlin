@@ -1,6 +1,7 @@
 import { griess, rsoBar } from './rso';
 import { fire, hgDj, karaoke, woody } from './heide';
 import { cdvBar, ines, jazz, planks, willow } from './cdv';
+import { antonio, salonChair, salonEnter } from '../places/salon';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
@@ -22,6 +23,8 @@ export const ACTS: Record<string, Act> = {
   griess, rsoBar, hgDj, woody, karaoke, fire,
   // Club der Visionäre (quests/cdv.ts)
   cdvBar, ines, planks, willow, jazz,
+  // Antonio's salon (places/salon.ts)
+  antonio, salonChair, salonEnter,
   async pile(e, clubId) {
     if (!e) return;
     const L = (e.join && PILE_LINES[e.join]) || PILE_LINES.busy;
