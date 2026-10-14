@@ -1,3 +1,5 @@
+import { griess, rsoBar } from './rso';
+import { fire, hgDj, karaoke, woody } from './heide';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
@@ -15,6 +17,8 @@ import { ask, closeBox, say } from '../ui/dialog';
 import { PILE_LINES, showPhotoStrip, spankFx } from './kitkat';
 /** Quest handlers, looked up by the `act` name on people and tiles in data/interiors.ts. */
 export const ACTS: Record<string, Act> = {
+  // RSO and Heideglühen (quests/rso.ts, quests/heide.ts)
+  griess, rsoBar, hgDj, woody, karaoke, fire,
   async pile(e, clubId) {
     if (!e) return;
     const L = (e.join && PILE_LINES[e.join]) || PILE_LINES.busy;

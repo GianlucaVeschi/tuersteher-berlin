@@ -1,3 +1,5 @@
+import { rsoDance, rsoFloorsDanced } from './rso';
+import { HG_FIVE, hgClock, hgDance } from './heide';
 import type { BottleType, Entity, QuestDef } from '../types';
 import { completeQuest } from './quests';
 import { say } from '../ui/dialog';
@@ -43,6 +45,8 @@ export function questHint(clubId: string, q: QuestDef): string {
   if (clubId === 'berghain' && q.id === 'toilet' && K_HINTS[state.kStage]) return K_HINTS[state.kStage];
   if (q.id === 'pfand') { const p = state.pfand; return `Returned ${p.returned}/${PFAND_GOAL} · in hands ${p.carry}/${CARRY_MAX} · ${euro(p.cents)} earned. Any bar takes them back.`; }
   if (q.id === 'stories') return `${Object.keys(state.heard).length}/3 heard. ` + q.hint;
+  if (q.id === 'floors') return `${rsoFloorsDanced()}/3 floors. ` + q.hint;
+  if (q.id === 'b2b') return hgHint(q.hint);
   if (q.id === 'hopper') return `${roomsDanced(clubId)}/4 rooms. ` + q.hint;
   return q.hint;
 }
@@ -56,6 +60,8 @@ export const SISY_DANCE: Record<string, string> = {
 };
 /** Club-specific reactions to dancing (floor id as argument). */
 export const DANCE_HOOKS: Record<string, (fl: string) => Promise<void>> = {
+  rso: rsoDance,
+  heidegluehen: hgDance,
   async sisyphos(fl) {
     await say(SISY_DANCE[fl] || '(You dance. Nobody is in a hurry here.)');
     if (!state.danced['sisyphos:' + fl]) { state.danced['sisyphos:' + fl] = true; save(); renderCard(); }
@@ -64,3 +70,11 @@ export const DANCE_HOOKS: Record<string, (fl: string) => Promise<void>> = {
     else toast(`DANCED IN ${n}/4 ROOMS`);
   }
 };
+
+/** Stamp card hint for the Heideglühen back to back, by how far you've got. */
+function hgHint(base: string): string {
+  if (state.hgStage === 0) return base;
+  if (state.hgStage === 1) return 'Find Woody, the booker. Bald, been around forever. Usually by the fire.';
+  if (state.hgTime < HG_FIVE) return `Woody said yes. Back to the DJ at 05:00. It's ${hgClock()} now: dance, sing, sit by the fire.`;
+  return "It's five. Go to the DJ.";
+}

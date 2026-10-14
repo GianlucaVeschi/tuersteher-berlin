@@ -13,7 +13,7 @@ import { drawMini, shopEl } from './shop';
 import { save, stampCount } from '../core/save';
 import { DRESS, OUTFITS, dressOK } from '../data/outfits';
 import { shade } from '../render/sprites';
-import { START, newPfand, player, state } from '../core/state';
+import { HG_START, START, newPfand, player, state } from '../core/state';
 import { CLUBS } from '../data/clubs';
 import { $ } from '../util';
 /* ================= STAMP CARD ================= */
@@ -34,6 +34,7 @@ export function renderCard() {
   });
   const n = stampCount();
   $('#count').textContent = String(n);
+  $('#countTotal').textContent = String(CLUBS.length);
   $('#cardBtnCount').textContent = `${n}/${CLUBS.length}`;
   drawMini($<HTMLCanvasElement>('#mbarMini').getContext('2d')!, state.outfit);
   $('#wearing').textContent = OUTFITS[state.outfit].name;
@@ -79,7 +80,7 @@ resetBtn.addEventListener('click', () => {
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
   state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
-  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {};
+  state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {}; state.hgTime = HG_START; state.hgStage = 0;
   releaseFollower(); endTrip(); endK();
   Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } })); if (inClub()) useScene('city'); updateFloorTag();
   if (RT.creator) { RT.creator = null; creatorEl.hidden = true; }
