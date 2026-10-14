@@ -1,3 +1,4 @@
+import { track } from '../core/monitoring';
 import { CLUBS } from '../data/clubs';
 import { save } from '../core/save';
 import { renderCard } from '../ui/card';
@@ -59,6 +60,7 @@ export async function enterClub(c: Club, overlayShown: boolean) {
   if (!overlayShown && !state.visited[c.id]) await showInside(c, false);
   const first = !state.visited[c.id];
   state.visited[c.id] = true;
+  track('club_entered', { club: c.id, first });
   await goFloor(c.id, Object.keys(INTERIORS[c.id].floors)[0], 'street');
   if (first) {
     RT.busy = true;

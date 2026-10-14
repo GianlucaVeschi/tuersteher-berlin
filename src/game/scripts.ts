@@ -1,3 +1,4 @@
+import { track } from '../core/monitoring';
 import type { Club, Entity } from '../types';
 import { danceHere } from '../quests/dance';
 import { ACTS } from '../quests/acts';
@@ -27,6 +28,7 @@ export async function bouncerTalk(e: Entity) {
   if (state.stamps[c.id]) { await say(c.again); return; }
   await say('(The bouncer looks you up and down.)');
   if (!dressOK(c.id, state.outfit)) {
+    track('door_rejected', { club: c.id, reason: 'dress_code', outfit: state.outfit });
     await say(DRESS[c.id].no_line);
     await say('(Dress code: ' + DRESS[c.id].hint + ')');
     closeBox();
@@ -41,6 +43,7 @@ export async function bouncerTalk(e: Entity) {
     const label = qs.length > 1 ? `(${i + 1}/${qs.length}) ` : '';
     const choice = await ask(label + q.q, opts.map(o => o.t));
     if (!opts[choice].ok) {
+      track('door_rejected', { club: c.id, reason: 'wrong_answer', question: q.q });
       await say(c.reject);
       await say('(' + q.fact + ')');
       closeBox();
@@ -51,6 +54,7 @@ export async function bouncerTalk(e: Entity) {
   for (const l of c.accept) await say(l);
   closeBox();
   state.stamps[c.id] = true;
+  track('door_accepted', { club: c.id, outfit: state.outfit });
   e.x = c.dx + 1; e.ox = -16; e.dir = 'left';
   renderCard(); save();
   await wait(reduceMotion ? 0 : 320);
@@ -64,6 +68,7 @@ export async function bouncerTalk(e: Entity) {
 export async function maybeFinale() {
   if (stampCount() === CLUBS.length && !state.finale) {
     state.finale = true; save();
+    track('game_finished');
     for (const l of FINALE) await say(l);
     closeBox();
   }
