@@ -14,7 +14,7 @@
    `people` entries: { x, y, look, lines } or { x, y, look, act } where `act`
    names a quest handler in game.js. Dancers are scattered on ',' tiles.
 */
-window.INTERIORS = {
+export const INTERIORS: Record<string, any> = {
   berghain: {
     name: 'Berghain',
     floors: {

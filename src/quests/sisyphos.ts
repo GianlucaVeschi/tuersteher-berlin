@@ -1,0 +1,61 @@
+import { completeQuest } from './quests';
+import { say } from '../ui/dialog';
+import { K_HINTS } from '../effects/trip';
+import { INK } from '../util';
+import { ctx } from '../render/canvas';
+import { renderCard } from '../ui/card';
+import { save } from '../core/save';
+import { toast } from '../interiors/transitions';
+import { state } from '../core/state';
+/* ---- Sisyphos: Pfand, stories, dancing in every room ---- */
+// German bottle deposit: reusable beer bottles 8 ct, Club-Mate 15 ct, cans 25 ct.
+export const PFAND = { beer: { name: 'beer bottle', cents: 8 }, mate: { name: 'Club-Mate bottle', cents: 15 }, can: { name: 'can', cents: 25 } };
+export const PFAND_GOAL = 8, CARRY_MAX = 4;
+export const euro = c => '€' + (c / 100).toFixed(2);
+export function pickBottle(e) {
+  const p = state.pfand;
+  if (p.carry >= CARRY_MAX) { toast('HANDS FULL · BRING THEM TO A BAR'); return false; }
+  p.taken[e.bid] = true; p.carry++; p.carryCents += PFAND[e.type].cents;
+  toast(`+1 ${PFAND[e.type].name.toUpperCase()} · ${p.carry}/${CARRY_MAX} IN HANDS`);
+  save(); renderCard();
+  return true;
+}
+export function drawBottle(X, Y, type, now) {
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(X + 5, Y + 13, 6, 2);
+  if (type === 'can') {
+    ctx.fillStyle = INK; ctx.fillRect(X + 5, Y + 6, 6, 8);
+    ctx.fillStyle = '#c0c4cc'; ctx.fillRect(X + 6, Y + 7, 4, 6);
+    ctx.fillStyle = '#ff5e7a'; ctx.fillRect(X + 6, Y + 9, 4, 2);
+  } else {
+    const glass = type === 'mate' ? '#2f6b3a' : '#6b3d1a';
+    ctx.fillStyle = INK; ctx.fillRect(X + 5, Y + 6, 6, 8); ctx.fillRect(X + 6, Y + 3, 4, 4);
+    ctx.fillStyle = glass; ctx.fillRect(X + 6, Y + 7, 4, 6); ctx.fillRect(X + 7, Y + 4, 2, 3);
+    if (type === 'mate') { ctx.fillStyle = '#f2c14e'; ctx.fillRect(X + 6, Y + 9, 4, 2); }
+  }
+  // a glint so you spot them
+  if (Math.floor(now / 400 + X) % 5 === 0) { ctx.fillStyle = '#fff'; ctx.fillRect(X + 7, Y + 7, 1, 2); }
+}
+export function questHint(clubId, q) {
+  if (clubId === 'berghain' && q.id === 'toilet' && K_HINTS[state.kStage]) return K_HINTS[state.kStage];
+  if (q.id === 'pfand') { const p = state.pfand; return `Returned ${p.returned}/${PFAND_GOAL} · in hands ${p.carry}/${CARRY_MAX} · ${euro(p.cents)} earned. Any bar takes them back.`; }
+  if (q.id === 'stories') return `${Object.keys(state.heard).length}/3 heard. ` + q.hint;
+  if (q.id === 'hopper') return `${roomsDanced(clubId)}/4 rooms. ` + q.hint;
+  return q.hint;
+}
+export const roomsDanced = clubId => Object.keys(state.danced).filter(k => k.startsWith(clubId + ':')).length;
+export const SISY_DANCE = {
+  strand: '(Barefoot in the sand, sun on your neck. Someone hands you a slice of watermelon.)',
+  wg: "(Glass walls, plants, house music. In the Wintergarten it's always the good part of the afternoon.)",
+  hh: '(The Hammahalle kick drum hits like a hammer. Fair enough.)',
+  df: '(The whole Dampfer seems to sway like a ship. Or is that you?)',
+  tn: '(Red lanterns swing above you. The Tunnel goes on forever.)'
+};
+export const DANCE_HOOKS = {
+  async sisyphos(fl) {
+    await say(SISY_DANCE[fl] || '(You dance. Nobody is in a hurry here.)');
+    if (!state.danced['sisyphos:' + fl]) { state.danced['sisyphos:' + fl] = true; save(); renderCard(); }
+    const n = roomsDanced('sisyphos');
+    if (n >= 4) await completeQuest('sisyphos', 'hopper');
+    else toast(`DANCED IN ${n}/4 ROOMS`);
+  }
+};
