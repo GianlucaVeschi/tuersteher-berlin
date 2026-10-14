@@ -304,6 +304,8 @@ export interface GameState {
   hgTime: number;
   /** Heideglühen back-to-back quest: 0 not asked, 1 ask Woody, 2 Woody said yes, 3 done */
   hgStage: number;
+  /** Club der Visionäre bar: 0 not tried, 1 card refused, 2 borrowed cash, 3 spent it */
+  cdvCash: number;
   /** your name on the public guest list (not unique; the login id is) */
   name: string | null;
   /** active play time in ms: only while the game is open and in front */

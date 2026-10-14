@@ -194,6 +194,15 @@ export const STYLES: Record<string, Style> = {
     arp: { steps: '.....x.......x..', level: 0.06, octave: 2 }
   },
 
+  // CDV's Sonnenraum: a jazz trio (the founder comes from jazz): swung ride, walking bass, piano comping
+  cdv_sonnen: {
+    bpm: 132, swing: 0.28, root: 41, space: 0.35, level: 0.9,
+    chords: [[2, 5, 9, 12], [7, 11, 14, 17], [0, 4, 7, 11], [9, 12, 16, 19]], barsPerChord: 1,
+    hat: 'x...x.xxx...x.xx', rim: '....o.......o...',
+    bass: { steps: [0, null, null, null, 4, null, null, null, 7, null, null, null, 9, null, null, null], wave: 'triangle', cutoff: 700, level: 0.3 },
+    piano: { steps: '......x.......x.', level: 0.14, octave: 1 }
+  },
+
   // Heideglühen: warm classic house with piano chords around the fire
   heide: {
     bpm: 122, swing: 0.1, root: 36, space: 0.3,
@@ -217,7 +226,8 @@ const FLOOR_STYLE: Record<string, string> = {
   'sisyphos:strand': 'sisy_strand', 'sisyphos:wg': 'sisy_wg', 'sisyphos:hh': 'sisy_hh', 'sisyphos:df': 'sisy_df', 'sisyphos:tn': 'sisy_tn', 'sisyphos:sa': 'sauna',
   'kitkat:main': 'kitkat', 'kitkat:pool': 'kitkat_pool', 'kitkat:dungeon': 'kitkat_dungeon',
   'rso:opan': 'rso_opan', 'rso:robus': 'rso_robus', 'rso:summe': 'rso_summe',
-  'heidegluehen:heide': 'heide'
+  'heidegluehen:heide': 'heide',
+  'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen'
 };
 /** What plays during a club's short "inside" scene (clubs without an interior use their own style). */
 const CLUB_STYLE: Record<string, string> = {

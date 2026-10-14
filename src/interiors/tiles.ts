@@ -113,6 +113,31 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 103: // karaoke machine: a TV on a stand with a mic
         P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
         P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
+      // ---- Club der Visionäre ----
+      case 104: { // weeping willow: a dense canopy, branches hanging down at the edges, trunk under the middle
+        P(X, Y, 16, 16, '#6b4a2e'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#563a22');
+        const top = at(x, y - 1) !== 104, bot = at(x, y + 1) !== 104, lft = at(x - 1, y) !== 104, rgt = at(x + 1, y) !== 104;
+        const x0 = lft ? 2 : 0, x1 = rgt ? 14 : 16, y0 = top ? 3 : 0, y1 = bot ? 8 : 16;
+        if (bot && !lft && !rgt && at(x + 2, y) !== 104) P(X - 2, Y + 6, 4, 10, '#4a3020'); // one trunk, between the two middle tiles
+        P(X + x0, Y + y0, x1 - x0, y1 - y0, '#2f5f2c');
+        if (top) P(X + x0 + 2, Y + y0 - 1, x1 - x0 - 4, 1, '#2f5f2c');
+        for (let i = x0; i < x1; i++) {
+          if (rnd() < 0.3) continue;
+          const len = bot ? 4 + Math.floor(rnd() * 9) : 16 - y0;
+          P(X + i, Y + y0 + Math.floor(rnd() * 3), 1, len, i % 2 ? '#5c9a4c' : '#4a8a40');
+        }
+        if (top) P(X + x0 + 2, Y + y0, x1 - x0 - 4, 1, '#7ab865');
+        break;
+      }
+      case 105: // newer deck boards, lighter than the rest (after the 2019 fire)
+        P(X, Y, 16, 16, '#a9825a'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#8f6a44'); P(X + ((y % 2) ? 5 : 11), Y, 1, 16, '#8f6a44');
+        if (at(x - 1, y) !== 105) P(X, Y, 1, 16, '#2a1a12');
+        break;
+      case 106: // the Flutgraben: dark green canal water
+        P(X, Y, 16, 16, '#2e5652');
+        for (let i = 0; i < 2; i++) P(X + Math.floor(rnd() * 11), Y + 3 + Math.floor(rnd() * 10), 5, 1, '#4a7d76');
+        if (at(x, y + 1) !== 106 && y + 1 < sc.h) P(X, Y + 13, 16, 3, '#3a2a1c');
+        break;
       case 101: P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y + 8, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2'); P(X + 8, Y, 1, 16, '#7fc8d2'); break;
       case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: {
         // a doorway with a bead curtain

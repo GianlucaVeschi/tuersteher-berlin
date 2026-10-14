@@ -86,6 +86,19 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 | A drink in the old brewery | Any bar |
 | The Keller | Downstairs from ROBUS. Ask first |
 
+## Inside Club der Visionäre
+
+CDV is a former boathouse on the Flutgraben, a flood channel off the Spree where Kreuzberg meets Alt-Treptow, started around 2001 by Gregor Kraemer (who comes from jazz). One small wooden dancefloor on the water, partly roofed, under a big weeping willow; the Sonnenraum is the little indoor room. It's a home of minimal (Ricardo Villalobos, Zip, Sonja Moonear, Sammy Dee have all played), the bar is cash only, on busy summer weekends it can run from Friday to Monday, and in winter the parties move to the Hoppetosse, its sister ship nearby (a steamer from 1928). A fire took part of the wooden outdoor area on 15 June 2019, and the regulars helped save the club with the Save CDV crowdfunding in 2020.
+
+| Quest | Where |
+| --- | --- |
+| Cash only | The bar refuses your card. Ines on the bench lends you 10 € |
+| Under the willow | Press A facing the weeping willow |
+| See you Monday | Dance on the deck three times: Saturday, Sunday, Monday morning |
+| The new planks | Tom by the lighter boards tells you about the 2019 fire |
+| The early days | Ines, a regular since the start |
+| Jazz in the Sonnenraum | The bassist of the trio needs someone on the hi-hat |
+
 ## Inside Heideglühen
 
 Heideglühen started in 2011 in a potato garden on Heidestraße and has been at the Westhafen since 2012: mostly open air, fire pits, light installations, a wooden dancefloor under a glass roof, and mostly house music (it has its own label, Heideglühen Tonträger). On the game map it sits in the park in the south-east.
@@ -124,7 +137,7 @@ All music is generated in the browser while you play (Web Audio, no audio files)
 | RSO | Hypnotic deep techno in ROBUS, dub techno in SUMME, melodic techno on OPAN (muffled in the Keller) |
 | Kater Blau | Bouncy tech house |
 | Sisyphos | Organic house with marimba and hand drums in the garden, deep house in the Wintergarten, techno in the Hammahalle, deep tech house on the Dampfer, acid techno in the Tunnel, ambient in the sauna |
-| Club der Visionäre | Clicky, sparse minimal |
+| Club der Visionäre | Clicky, sparse minimal on the deck; a jazz trio (swung ride, walking bass, piano) in the Sonnenraum |
 | Heideglühen | Warm classic house with piano chords (heard through the door in the toilets) |
 
 Music starts with your first click or key press (browsers require that). Styles live in `src/audio/styles.ts`: tempo, 16-step drum patterns, bass line, chords and which sounds play.
