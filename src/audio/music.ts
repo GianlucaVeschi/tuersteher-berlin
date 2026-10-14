@@ -199,7 +199,7 @@ export function toggleSound() {
   writePref();
   renderButton();
   if (!enabled) { stopAll(); return; }
-  if (unlocked) { void S.audioCtx().resume(); updateMusic(); }
+  if (unlocked) { applyPause(); updateMusic(); }
 }
 
 /** Waits for the first click or key press, then starts the audio. */
@@ -210,15 +210,26 @@ export function initMusic() {
     if (unlocked) return;
     unlocked = true;
     skipToggle = ev.target instanceof Element && !!ev.target.closest('#soundBtn');
-    if (enabled) { void S.audioCtx().resume(); updateMusic(); }
+    focused = true; // a click or key press means you're here
+    if (enabled) { applyPause(); updateMusic(); }
   };
   window.addEventListener('pointerdown', unlock, { capture: true });
   window.addEventListener('keydown', unlock, { capture: true });
   $('#soundBtn').addEventListener('click', toggleSound);
-  // pause the music while the tab is in the background
-  document.addEventListener('visibilitychange', () => {
-    if (!unlocked) return;
-    if (document.visibilityState === 'hidden') void S.audioCtx().suspend();
-    else if (enabled) void S.audioCtx().resume();
-  });
+  // only play while you're on the page: pause for another tab, another window or app, or leaving the page
+  window.addEventListener('blur', () => { focused = false; applyPause(); });
+  window.addEventListener('focus', () => { focused = true; applyPause(); });
+  document.addEventListener('visibilitychange', applyPause);
+  window.addEventListener('pagehide', () => { focused = false; applyPause(); });
+  window.addEventListener('pageshow', () => { focused = document.hasFocus(); applyPause(); });
+}
+
+/** Is the player actually looking at the game right now? */
+let focused = document.hasFocus();
+const onPage = () => focused && document.visibilityState === 'visible';
+/** Suspends the audio when you're not on the page, resumes when you're back (if sound is on). */
+function applyPause() {
+  if (!unlocked) return;
+  if (enabled && onPage()) void S.audioCtx().resume();
+  else void S.audioCtx().suspend();
 }
