@@ -94,13 +94,25 @@ The shop screen shows which clubs each outfit gets you into.
 
 ## Play
 
-No build step, no dependencies. Open `index.html` in a browser, or serve the folder:
+Live at https://gianlucaveschi.github.io/tuersteher-berlin/
+
+## Development
+
+The game is TypeScript, built with [Vite](https://vite.dev). You need Node.js 18 or newer.
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-Then open http://localhost:8000.
+Then open the URL it prints (http://localhost:5173). The page reloads as you save.
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Local dev server with live reload |
+| `npm run typecheck` | Type-checks the code (strict mode) |
+| `npm run build` | Type-checks, then builds the site into `dist/` |
+| `npm run preview` | Serves the built `dist/` locally |
 
 ## Controls
 
@@ -119,33 +131,57 @@ On phones the page switches to a full-screen layout: drag anywhere on the map to
 
 Progress (stamps, position) is saved in `localStorage`. "Start over" on the stamp card clears it.
 
-## Files
+## Code layout
 
-- `index.html` – page markup (handheld shell, screen overlays, stamp card)
-- `style.css` – all styling
-- `game.js` – everything else: club data, map, rendering, dialog, input
+```
+index.html            page markup (handheld shell, screen overlays, stamp card)
+style.css             all styling
+src/
+  main.ts             entry point: builds the world, wires up input, starts the loop
+  types.ts            shared types (Club, Outfit, Entity, Scene, GameState, …)
+  util.ts             DOM helper, seeded random numbers, small helpers
+  core/
+    runtime.ts        shared mutable state (RT): current scene, open menus, timers
+    state.ts          saved progress (state), the player, directions
+    save.ts           save / load to localStorage
+  data/
+    clubs.ts          the seven clubs, their bouncers and questions, intro/ending text
+    outfits.ts        outfits, starting characters, dress codes, shops
+    interiors.ts      club floors as ASCII maps, people on them, quest lists
+  world/
+    tiles.ts          tile ids and which ones are solid
+    grid.ts           reading and writing the current map
+    city.ts           lays out the street map and the people on it
+    scenes.ts         the street and every club floor as switchable scenes
+    collision.ts      what you can and can't walk into
+  render/             drawing: street tiles, sprites, camera, zoom, map labels
+  interiors/          club floors: building them, drawing, effects, stairs, the follower
+  quests/             quest handlers (ACTS), dancing, Sisyphos and KitKat specifics
+  effects/trip.ts     the drug effects
+  ui/                 dialog box, shops, character select, stamp card, club entrance scene
+  input.ts            keyboard, touch, mouse wheel, on-screen buttons
+  game/
+    scripts.ts        bouncer conversations, talking to people, doors
+    loop.ts           movement, the frame loop, start-up
+```
 
 ## Editing the game
 
-Most changes happen in `game.js`:
+- **Clubs and questions**: `CLUB_DEFS` in `src/data/clubs.ts`. Each club has `greet`, `reject`, `accept`, `inside`, `sign` lines, `need` (how many questions it asks) and a `pool` of questions. In each question the **first** answer in `a` is the correct one; options get shuffled in game. `fact` is shown after a wrong answer.
+- **Map layout**: `buildCity()` in `src/world/city.ts`. Roads come from `hroad` / `vroad`, buildings from `building(...)`, and trees from the coordinate list. Club position comes from each club's `x`, `y`, `w`, `h`. The door sits at the bottom centre, the bouncer one tile below it.
+- **Outfits, dress codes, shops**: `OUTFITS`, `DRESS` and `SHOP_DEFS` in `src/data/outfits.ts`. Each outfit has `tags` (`black`, `latex`, `colorful`, `vintage`, `tourist`, `suit`, `tech`). A club's `ok` list needs at least one matching tag; its `no` list rejects any match.
+- **Starting characters**: `CHARACTERS` in `src/data/outfits.ts`. `body` (skin, hair, `long` hair, `glasses`, `beard`) stays when you change clothes; `outfit` is the starting outfit.
+- **Fernsehturm**: `TOWER` in `src/world/city.ts`. The base is solid; the tall part is drawn in front of the sprites.
+- **Club interiors**: `src/data/interiors.ts`. Each floor is ASCII art (legend at the top of the file), plus spawn points, which floor the stairs lead to, the people on that floor (`lines` for chat, or `act` for a quest handler in `src/quests/acts.ts`), how many dancers to scatter, tile descriptions (`examine`) and the quest list. To give another club an interior, add an entry with the club's id (e.g. `tresor`) and its handlers. TypeScript checks the data against `InteriorDef` in `src/types.ts`, so typos in field names show up in `npm run typecheck`.
+- **NPCs and signs on the street**: `cityPeople()` in `src/world/city.ts`.
+- **Intro / ending text**: `INTRO` and `FINALE` in `src/data/clubs.ts`.
 
-- **Clubs and questions**: the `CLUBS` array at the top. Each club has `greet`, `reject`, `accept`, `inside`, `sign` lines, `need` (how many questions it asks) and a `pool` of questions. In each question the **first** answer in `a` is the correct one; options get shuffled in game. `fact` is shown after a wrong answer.
-- **Map layout**: the `MAP` section. Roads come from `hroad` / `vroad`, buildings from `building(...)`, and trees from the coordinate list. Club position comes from each club's `x`, `y`, `w`, `h`. The door sits at the bottom centre, the bouncer one tile below it.
-- **Outfits, dress codes, shops**: `OUTFITS`, `DRESS` and `SHOPS` near the top. Each outfit has `tags` (`black`, `latex`, `colorful`, `vintage`, `tourist`, `suit`). A club's `ok` list needs at least one matching tag; its `no` list rejects any match. Shops are placed on the map by their `x`, `y`, `w`, `h`. The door is at the bottom centre; walk into it to enter.
-- **Starting characters**: `CHARACTERS` in `game.js`. `body` (skin, hair, `long` hair, `glasses`, `beard`) stays when you change clothes; `outfit` is the starting outfit from `OUTFITS`.
-- **Fernsehturm**: `TOWER` sets its position. The base is solid; the tall part is drawn in front of the sprites.
-- **Club interiors**: `interiors.js`. Each floor is ASCII art (legend at the top of the file), plus spawn points, which floor the stairs lead to, the people on that floor (`lines` for chat, or `act` for a quest handler in `game.js` → `ACTS`), how many dancers to scatter, tile descriptions (`examine`) and the quest list. To give another club an interior, add an entry with the club's id (e.g. `tresor`) and its handlers.
-- **NPCs and signs**: the `ents.push(...)` block under `ENTITIES`.
-- **Intro / ending text**: `INTRO` and `FINALE`.
+All graphics are drawn in code on a 384×256 canvas (16 px tiles, 24×16 visible). The view size is set in `src/core/runtime.ts` (`VW`/`VH`) and `fitCanvas()` in `src/render/canvas.ts`. There are no image assets.
 
-All graphics are drawn in code on a 384×256 canvas (16 px tiles, 24×16 visible). Change `VW`/`VH` in `game.js` and the canvas size in `index.html` to zoom in or out. There are no image assets.
+## Deploy
 
-## Deploy to GitHub Pages
-
-1. Push this folder to a GitHub repo.
-2. In the repo, go to **Settings → Pages**, set the source to the `main` branch and the `/ (root)` folder.
-3. The game will be live at `https://<user>.github.io/<repo>/`.
+Every push to `main` runs `.github/workflows/deploy.yml`: it type-checks, builds, and publishes `dist/` to GitHub Pages (about a minute). The repo's **Settings → Pages → Source** must be set to **GitHub Actions**.
 
 ## Debugging
 
-Open the page with `?debug` (e.g. `http://localhost:8000/?debug`) and inspect `window.__game` in the browser console for the player position and game state. `__game.tp(x, y, 'up')` teleports, `__game.enterClub('berghain')` puts you inside.
+Open the page with `?debug` (e.g. `http://localhost:5173/?debug`) and inspect `window.__game` in the browser console for the player position and game state. `__game.tp(x, y, 'up')` teleports, `__game.enterClub('berghain')` puts you inside.
