@@ -1,3 +1,5 @@
+import { STREET_ACTS, streetTrigger } from '../world/street';
+import { closeBox } from '../ui/dialog';
 import { syncTick } from '../online/sync';
 import { updateMusic } from '../audio/music';
 import type { Dir } from '../types';
@@ -59,6 +61,13 @@ export function arrive() {
     if (sh) { openShop(sh); return; }
     const pl = placeAtDoor(player.x, player.y);
     if (pl) { enterPlace(pl); return; }
+  }
+  // street triggers (the road out of town, …): run their handler, nothing else moves meanwhile
+  const trig = streetTrigger(player.x, player.y);
+  if (trig && STREET_ACTS[trig.act]) {
+    RT.busy = true;
+    void STREET_ACTS[trig.act](null, '').finally(() => { closeBox(); RT.busy = false; });
+    return;
   }
   if (++saveTimer % 8 === 0) save();
 }

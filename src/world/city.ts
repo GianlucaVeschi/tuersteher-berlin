@@ -106,7 +106,9 @@ function cityPeople(): Entity[] {
     { kind: 'sign', x: 41, y: 21, lines: ['OBERBAUMBRÜCKE', 'The red brick bridge between Friedrichshain and Kreuzberg.'] },
     // Litfaßsäule next to the Fernsehturm: the guest list (ui/players.ts)
     { kind: 'column', x: 48, y: 16, lines: ['LITFASSSÄULE · The guest list', 'Everyone who has tried the doors of Berlin: who made it into every club, who is still out, who just arrived.'] },
-    { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. Change here for Schöneweide and RSO.'] }
+    { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. Change here for Schöneweide and RSO.'] },
+    // the road south out of town; walking towards it turns you back (STREET_TRIGGERS in world/street.ts)
+    { kind: 'sign', x: 41, y: 43, lines: ['MÜNCHEN · 585 km', '(Someone has drawn a tiny man in lederhosen on it.)'] }
   );
   // people from data/npcs.ts; `home` lets Start over bring back the ones who left
   NPCS.forEach(n => ents.push({ kind: 'npc', npcId: n.id, x: n.x, y: n.y, dir: n.dir || 'down', look: n.look, lines: n.lines, act: n.act, leave: n.leave, home: { x: n.x, y: n.y } }));

@@ -3,7 +3,7 @@ import type { Act, Entity } from '../types';
 import { blocked } from './collision';
 import { OFF_MAP } from './city';
 import { save } from '../core/save';
-import { DIRS, state } from '../core/state';
+import { DIRS, held, player, state } from '../core/state';
 import { wait } from '../util';
 import { ask, closeBox, say } from '../ui/dialog';
 
@@ -20,8 +20,28 @@ export const STREET_ACTS: Record<string, Act> = {
       await say('(He looks at you like you asked Berghain for the guest list.)');
       await say("Mustafa: Okay. Falafel. I'm a little disappointed, but okay.");
     }
+  },
+  // heading south out of town: you stop, refuse, and turn back
+  async munich() {
+    held.length = 0;
+    player.dir = 'down';
+    await say('You: München? BAAAAAAH!');
+    await say('You: Not a grandad yet..... HELL NO!');
+    await say("You: Let's keep the party going!");
+    closeBox();
+    // back up to the sidewalk, facing the city
+    player.y = player.ty = 42; player.x = player.tx; player.dir = 'up';
   }
 };
+
+/** Areas of the street that run a STREET_ACTS handler when you step into them: [x0, y0, x1, y1]. */
+export const STREET_TRIGGERS: { area: [number, number, number, number]; act: string }[] = [
+  // the road south, past the München sign: you're not leaving Berlin tonight
+  { area: [36, 43, 40, 45], act: 'munich' }
+];
+/** The trigger at (x, y), if any. */
+export const streetTrigger = (x: number, y: number) =>
+  STREET_TRIGGERS.find(({ area: [x0, y0, x1, y1] }) => x >= x0 && x <= x1 && y >= y0 && y <= y1);
 
 /** Talking to someone from data/npcs.ts: their act or lines, then walking off if they `leave`. */
 export async function streetTalk(e: Entity) {
