@@ -5,7 +5,7 @@ import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
 import { INTERIORS } from '../data/interiors';
-import { endTrip, startK } from '../effects/trip';
+import { startK } from '../effects/trip';
 import { RT } from '../core/runtime';
 import { CARRY_MAX, PFAND_GOAL, euro } from './sisyphos';
 import { renderCard } from '../ui/card';
@@ -64,7 +64,7 @@ export const ACTS: Record<string, Act> = {
     await completeQuest(clubId, 'swim');
   },
   async swing() {
-    await say('(The love swing. There\'s a small queue and a sign: "Ask the person before you how to get out."');
+    await say('(The love swing. There\'s a small queue and a sign: "Ask the person before you how to get out.")');
   },
   async marco(e, clubId) {
     if (questDone(clubId, 'spank')) {
@@ -82,7 +82,7 @@ export const ACTS: Record<string, Act> = {
     await completeQuest(clubId, 'spank');
   },
   async booth(e, clubId) {
-    if (!questDone(clubId, 'spank')) { await say('(A photo booth with a red velvet curtain. A handwritten sign: "Ask Marco first."'); return; }
+    if (!questDone(clubId, 'spank')) { await say('(A photo booth with a red velvet curtain. A handwritten sign: "Ask Marco first.")'); return; }
     await say(questDone(clubId, 'photo') ? '(You squeeze in with Marco again. FLASH. FLASH. FLASH. FLASH.)' : '(Marco squeezes into the booth with you. FLASH. FLASH. FLASH. FLASH.)');
     closeBox();
     await showPhotoStrip();
@@ -106,7 +106,6 @@ export const ACTS: Record<string, Act> = {
     const replies = ['(Ice-cold Club-Mate. Somebody plays a ukulele next to you.)', '(Ginger tea with honey. The bartender winks: "for your chakras".)', 'Bar: Water is free. Stay hydrated, festival child.',
       `Bar: Always. Bring empty bottles here and you get the Pfand back. You can carry ${CARRY_MAX} at a time.`];
     await say(replies[a]);
-    if (a === 2 && RT.tripUntil) { endTrip(); await say('(You feel a bit steadier.)'); }
   },
   async juggler(e, clubId) {
     if (questDone(clubId, 'juggle')) { await say('Zora: Look at you! Circus material. Come on tour with us.'); return; }
@@ -165,7 +164,6 @@ export const ACTS: Record<string, Act> = {
     const a = await ask('Bar: What can I get you?', ['Club-Mate', 'A beer', 'Vodka-Mate', 'Just water']);
     const replies = ['(Ice cold and very caffeinated. Berlin in a bottle.)', '(A cold Pils. Now you are officially out.)', '(Vodka and Club-Mate. A dangerous combination.)', 'Bar: Good call. Tap water is free.'];
     await say(replies[a]);
-    if (a === 3 && RT.tripUntil) { endTrip(); await say('(You feel a bit steadier.)'); }
     await completeQuest(clubId, 'drink');
   },
   async ice(e, clubId) {
@@ -222,12 +220,6 @@ export const ACTS: Record<string, Act> = {
     } else if (e.lines) await say(e.lines[0]);
   },
   async awareness() {
-    if (RT.tripUntil) {
-      await say("Awareness: Hey, how are you doing? Here's some water. Sit with me for a bit.");
-      endTrip();
-      await say('(You feel steadier.)');
-      return;
-    }
     await say("Awareness: We're the awareness team. If anything feels wrong, come find us.");
     await say('Awareness: Drink water, take breaks, look out for each other.');
   },

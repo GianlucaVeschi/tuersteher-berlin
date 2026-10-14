@@ -42,5 +42,3 @@ export function applyK(now: number) {
   kTrailCtx.drawImage(cvs, 0, 0);
   cvs.style.filter = `blur(${(2.4 * env).toFixed(2)}px) hue-rotate(${Math.round(now / 9) % 360}deg) saturate(${(1 + 2 * env).toFixed(2)}) contrast(${(1 + 0.35 * env).toFixed(2)})`;
 }
-export function startTrip() { RT.tripUntil = performance.now() + 45000; }
-export function endTrip() { RT.tripUntil = 0; cvs.style.filter = ''; }

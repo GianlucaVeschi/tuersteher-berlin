@@ -4,8 +4,6 @@ import { ask, say } from '../ui/dialog';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { toast } from '../interiors/transitions';
-import { endTrip } from '../effects/trip';
-import { RT } from '../core/runtime';
 import { state } from '../core/state';
 import type { Entity } from '../types';
 
@@ -44,6 +42,5 @@ export async function griess(_e: Entity | null, clubId: string) {
 export async function rsoBar(_e: Entity | null, clubId: string) {
   const a = await ask('Bar: What do you want?', ['Club-Mate', 'A beer', 'Just water']);
   await say(['(Ice cold and very caffeinated. Fuel for a long weekend.)', '(A cold beer. Fitting, on the grounds of an old brewery.)', 'Bar: Good call. Water is free, refill whenever.'][a]);
-  if (a === 2 && RT.tripUntil) { endTrip(); await say('(You feel a bit steadier.)'); }
   await completeQuest(clubId, 'drink');
 }

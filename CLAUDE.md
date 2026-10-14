@@ -4,7 +4,7 @@ Notes for agents working on **Türsteher Berlin**, a Pokémon-style pixel game i
 
 ## Stack and commands
 
-- TypeScript (strict) + Vite. No framework, no runtime dependencies. Plain Canvas 2D and DOM.
+- TypeScript (strict) + Vite. No framework. Plain Canvas 2D and DOM. The only runtime dependency is `@datadog/browser-rum` (monitoring).
 - npm (not pnpm; the owner chose to stay on npm). Node 18+.
 
 ```bash
@@ -41,7 +41,7 @@ start()           game/loop.ts       load save, wait for the font, prerender, st
 
 ### Shared mutable state: `RT` (`src/core/runtime.ts`)
 
-ES module imports are read-only bindings, so every value that gets **reassigned** from more than one module lives on the `RT` object: current scene (`map`, `MW`, `MH`, `ents`, `mc`, `scene`), view size (`VW`, `VH`), `busy`, `titleOn`, open UI (`ui`, `typing`, `shopUI`, `creator`, `insideResolve`, `photoResolve`), `follower`, `touch`, run keys, effect timers (`tripUntil`, `kStart`, `kUntil`, `steamUntil`), `clock`, and the map-art RNG `seed`. If you add a value that several modules reassign, put it on `RT` and type it there. Objects that are only mutated (not reassigned) can be ordinary exports, e.g. `state`, `player`, `held`, `zoom`, `train`.
+ES module imports are read-only bindings, so every value that gets **reassigned** from more than one module lives on the `RT` object: current scene (`map`, `MW`, `MH`, `ents`, `mc`, `scene`), view size (`VW`, `VH`), `busy`, `titleOn`, open UI (`ui`, `typing`, `shopUI`, `creator`, `insideResolve`, `photoResolve`), `follower`, `touch`, run keys, effect timers (`kStart`, `kUntil`, `steamUntil`), `clock`, and the map-art RNG `seed`. If you add a value that several modules reassign, put it on `RT` and type it there. Objects that are only mutated (not reassigned) can be ordinary exports, e.g. `state`, `player`, `held`, `zoom`, `train`.
 
 `RT.busy` is true while a script, menu or transition has control; movement and talking are blocked while it is set. Every `async` script must set it back to `false` (use `try { … } finally { closeBox(); RT.busy = false; }` as `interact()` does).
 
@@ -71,6 +71,12 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 - `outfits.ts`: `OUTFITS` (with `tags`), `CHARACTERS` (man/woman × 4; `body` survives clothes changes), `DRESS` (per-club `ok`/`no` tag rules, see `dressOK`), `SHOP_DEFS` → `SHOPS`.
 - `interiors.ts`: `INTERIORS: Record<clubId, InteriorDef>`. Floors are ASCII maps with spawn points, stairs/door links (`up`, `down`, `doors`, `exit`), `people` (`lines` for chat or `act` for a handler), dancer count, bottles, decoration flags (`fairy`, `lanterns`, `uv`, `red`, `steam`, `daylight`). Also `examine` text per tile char, `examineActs`, `dancerLines`, `dancerPalette`, `quests`, `welcome`, `stories`. The data is type-checked against `InteriorDef` in `src/types.ts`. There are three legends in the file (Berghain at the top, extra ones for Sisyphos and KitKat further down).
 
+### Street people (`src/data/npcs.ts`, `src/world/street.ts`)
+
+- Everyone on the street except bouncers and signs is one entry in `NPCS` (`data/npcs.ts`): `id`, position, `look`, `lines`. `cityPeople()` turns them into entities with `npcId` and `home`.
+- `leave: 'left' | 'right'` makes someone walk off after talking, fade out and stay gone (`state.gone[id]`, cleared by Start over). Freerk works this way.
+- Custom behaviour: `act` plus a handler in `STREET_ACTS` (`world/street.ts`). `interact()` routes any entity with `npcId` to `streetTalk()`. Club quests stay in `quests/`.
+
 ### Quests
 
 - Handlers are in `ACTS` (`src/quests/acts.ts`), typed `Act = (e: Entity | null, clubId) => Promise<void>`. `e` is the person talked to, or `null` when a tile's `examineActs` triggers it. Handlers that need a person guard with `if (!e) return;`.
@@ -93,13 +99,19 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 ### The guest list (`src/online/`, `src/ui/players.ts`, `firestore.rules`)
 
-- Firebase project `berlin-club-game` (Firestore `(default)` in europe-west3, anonymous Authentication). The game uses **plain REST, no Firebase SDK**: `online/api.ts` signs in anonymously (Identity Toolkit `accounts:signUp`, refresh via `securetoken`), writes with Firestore `documents:commit` (server timestamps via `updateTransforms`), and lists `players` publicly. The web config in `api.ts` is not a secret.
+- Firebase project `berlin-club-game` (Firestore `(default)` in europe-west3, anonymous Authentication). The game uses **plain REST, no Firebase SDK**: `online/api.ts` signs in anonymously (Identity Toolkit `accounts:signUp`, refresh via `securetoken`), writes with Firestore `documents:commit` (server timestamps via `updateTransforms`), and reads the list publicly with small queries (`listPlayers()`: 50 fastest finishers, 50 furthest still out, 30 newest, your own entry, plus counts). Firestore bills per document read, so never fetch the whole collection. Every query filters and sorts on the same single field, so no composite index needs deploying. The web config in `api.ts` is not a secret.
 - One document per player: `players/{uid}` with `name, char, createdAt, lastSeen, clubs, stamps, quests, playMs, finishedAt, finishPlayMs`. Login (`uid`, refresh token) lives in `localStorage['tuersteher-online']`, separate from the save; Start over calls `forgetPlayer()` so a new game is a new entry.
-- `firestore.rules`: anyone can read; only the owner can write their document, only those keys, sane values (`stamps == clubs.size() <= 8`, name 1–16 chars, `playMs` never decreases, `createdAt` set once by the server, `lastSeen == request.time`, `finishedAt` set once and only with 8 stamps). Deploy with `firebase deploy --only firestore:rules`. A client can still lie about its own progress; that's accepted for a fun game.
-- `online/sync.ts`: `syncNow()` on joining, `syncSoon()` after stamps and quests, `syncFinish()` from `maybeFinale()`, a heartbeat every 2 min (`syncTick()` in the frame loop, 30 s backoff after failures), and a `keepalive` write on page hide. `state.playMs` grows in the frame loop only while the page is visible and focused and you have a name. Failures only log a warning; the game never depends on the network.
+- `firestore.rules`: anyone can read; only the owner can write their document, only those keys, sane values (`stamps == clubs.size() <= 8`, name 1–16 chars and passing `nameOk()` (the same blocklist as `online/names.ts`; keep them in sync), `playMs` never decreases, `createdAt` set once by the server, `lastSeen == request.time`, `finishedAt` set once and only with 8 stamps). Deploy with `firebase deploy --only firestore:rules`. A client can still lie about its own progress; that's accepted for a fun game.
+- `online/sync.ts`: `syncNow()` on joining, `syncSoon()` after stamps and quests, `syncFinish()` from `maybeFinale()`, a heartbeat every 10 min (`syncTick()` in the frame loop, 30 s backoff after failures), and a `keepalive` write on page hide. `state.playMs` grows in the frame loop only while the page is visible and focused and you have a name. Failures only log a warning; the game never depends on the network.
 - In the world: the Litfaßsäule (`kind: 'column'`, tile 48,16 east of the Fernsehturm, built in `cityPeople()`) shows its lines, then `interact()` opens the list after releasing `RT.busy` (the list pauses the game itself). Drawn in `render/draw.ts`, labelled GUEST LIST on the zoomed-out map.
 - Name: step 3 of the creator (`openNamePrompt()` for older saves without a name); `online/names.ts` trims and filters names.
 - Local testing: `firebase emulators:start --only auth,firestore` (ports in `firebase.json`), then open the game with `?emulator` (uses `localStorage['tuersteher-online-emulator']`, so test players never reach the real list).
+
+### Monitoring (`src/core/monitoring.ts`)
+
+- Datadog RUM (org Cuadog, US1): sessions, errors, Session Replay and game events. Only production builds report; the live site is `env:prod`, `npm run preview` is `env:local`. Sample rates and privacy can also be changed in Datadog's remote configuration without a deploy.
+- Game events go through `track('snake_case', { … })`, never `datadogRum` directly. Current events: `character_selected`, `outfit_changed`, `door_rejected`, `door_accepted`, `club_entered`, `quest_completed`, `npc_talked`, `game_finished`.
+- Session Replay records the DOM, so the canvas (the map) shows black; dialogs, menus and the stamp card are visible.
 
 ### Saving (`src/core/save.ts`)
 

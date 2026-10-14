@@ -3,3 +3,6 @@ dist
 .DS_Store
 firebase-debug.log
 firestore-debug.log
+.claude
+# editor settings (JetBrains)
+.idea

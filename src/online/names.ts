@@ -1,4 +1,5 @@
-/* Names on the public guest list: trimmed, short, and without slurs or obvious insults. */
+/* Names on the public guest list: trimmed, short, and without slurs or obvious insults.
+   firestore.rules (nameOk) enforces the same lists on the server; keep both in sync. */
 
 // matched anywhere in the name (letters only, lowercase)
 const NEVER = ['nigg', 'fagg', 'hitler', 'nazi', 'kanake', 'neger', 'cunt', 'fotze', 'retard'];

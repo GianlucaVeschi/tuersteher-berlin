@@ -5,7 +5,7 @@ import { creatorEl } from './creator';
 import { RT } from '../core/runtime';
 import { updateFloorTag } from '../interiors/transitions';
 import { SCENES, inClub, useScene } from '../world/scenes';
-import { endK, endTrip } from '../effects/trip';
+import { endK } from '../effects/trip';
 import { releaseFollower } from '../interiors/follower';
 import { questHint } from '../quests/sisyphos';
 import { QUEST_LIST, questCount, questDone } from '../quests/quests';
@@ -90,7 +90,7 @@ export function resetGame() {
   state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {}; state.hgTime = HG_START; state.hgStage = 0; state.cdvCash = 0;
   // a new game is a new entry on the guest list
   state.name = null; state.playMs = 0; state.finishPlayMs = null; state.onlineFinished = false; forgetPlayer();
-  releaseFollower(); endTrip(); endK();
+  releaseFollower(); endK();
   Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } })); if (inClub()) useScene('city'); updateFloorTag();
   if (RT.creator) { RT.creator = null; creatorEl.hidden = true; }
   if (RT.shopUI) { RT.shopUI = null; shopEl.hidden = true; }

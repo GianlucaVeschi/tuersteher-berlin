@@ -4,8 +4,7 @@ import type { Dir } from '../types';
 import { prerender } from '../render/cityTiles';
 import { zoomUI } from '../render/zoom';
 import { renderCard } from '../ui/card';
-import { cvs } from '../render/canvas';
-import { applyK, endTrip, timeScale } from '../effects/trip';
+import { applyK, timeScale } from '../effects/trip';
 import { draw, train } from '../render/draw';
 import { applySave, loadSave, save } from '../core/save';
 import { openShop } from '../ui/shop';
@@ -21,7 +20,7 @@ import { blocked, clubAtDoor, shopAtDoor } from '../world/collision';
 import { enterDoor, runIntro } from './scripts';
 import { openCreator, openNamePrompt } from '../ui/creator';
 import { DIRS, MOVE, RUN, held, player, running, state } from '../core/state';
-import { $, reduceMotion, wait } from '../util';
+import { $, wait } from '../util';
 import { RT } from '../core/runtime';
 /* ================= LOOP ================= */
 export function startGame() {
@@ -87,10 +86,6 @@ export function frame(now: number) {
   // active play time: only while the game is open, in front, and you've joined the guest list
   if (!RT.titleOn && state.name && document.visibilityState === 'visible' && document.hasFocus()) state.playMs += raw;
   syncTick();
-  if (RT.tripUntil && !RT.kUntil) {
-    if (now > RT.tripUntil) endTrip();
-    else cvs.style.filter = reduceMotion ? 'saturate(1.7) hue-rotate(60deg)' : `hue-rotate(${Math.round(now / 25) % 360}deg) saturate(1.8)`;
-  }
   // keep the loop alive even if one frame fails to draw
   try { draw(RT.clock); if (RT.kUntil) applyK(now); } catch (err) { console.error(err); }
   requestAnimationFrame(frame);

@@ -9,7 +9,7 @@ import { listPlayers, myUid, type PlayerRow } from '../online/api';
 import { $ } from '../util';
 
 /* ================= THE GUEST LIST ================= */
-// Everyone who has played: who finished (fastest first), who is still out, who just arrived.
+// Who finished (fastest first), who is furthest still out, who just arrived; the section headers count the people shown.
 
 const panel = $('#players');
 const body = $('#playersBody');
@@ -87,7 +87,7 @@ async function load() {
   statusEl.textContent = 'Checking the guest list…';
   body.innerHTML = '';
   try {
-    const rows = await listPlayers();
+    const { rows, total, finished: finishedTotal } = await listPlayers();
     const me = myUid();
     const t = (iso: string | null) => (iso ? Date.parse(iso) : 0);
     const finished = rows.filter(r => r.finishedAt)
@@ -95,7 +95,7 @@ async function load() {
     const partying = rows.filter(r => !r.finishedAt && (r.stamps || r.quests))
       .sort((a, b) => b.stamps - a.stamps || b.quests - a.quests || t(b.lastSeen) - t(a.lastSeen));
     const arrived = rows.filter(r => !r.finishedAt && !r.stamps && !r.quests).sort((a, b) => t(b.createdAt) - t(a.createdAt));
-    statusEl.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? 'person' : 'people'} on the list. ${finished.length} got into every club.` : 'Nobody here yet. Be the first.';
+    statusEl.textContent = total ? `${total} ${total === 1 ? 'person' : 'people'} on the list. ${finishedTotal} got into every club.` : 'Nobody here yet. Be the first.';
     section('Finished', finished, me);
     section('Still partying', partying, me);
     section('Just arrived', arrived, me);
