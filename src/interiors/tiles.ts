@@ -106,6 +106,13 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X + 3, Y, 10, 15, '#6a0a18'); for (let i = 4; i < 13; i += 3) P(X + i, Y, 1, 15, '#4a0610'); break;
       case 98: floorBase(X, Y); P(X, Y + 1, 16, 1, '#8a9098'); for (let i = 1; i < 16; i += 3) P(X + i, Y + 1, 1, 15, '#8a9098'); break;
       case 100: floorBase(X, Y); P(X + 3, Y + 5, 10, 6, INK); P(X + 4, Y + 6, 8, 4, '#d9e6e0'); P(X + 1, Y + 2, 2, 5, '#8a9098'); P(X + 13, Y + 2, 2, 5, '#8a9098'); P(X + 7, Y + 11, 2, 5, '#8a9098'); break;
+      // ---- Heideglühen ----
+      case 102: // fire pit: a ring of stones with logs (the flames are animated in fx.ts)
+        P(X, Y, 16, 16, '#3f7a3a'); circle(g, X + 8, Y + 9, 7, INK); circle(g, X + 8, Y + 9, 6, '#6a6a72');
+        circle(g, X + 8, Y + 9, 4, '#2a1a12'); P(X + 4, Y + 9, 8, 2, '#6b4a2e'); P(X + 7, Y + 6, 2, 7, '#5a3d24'); break;
+      case 103: // karaoke machine: a TV on a stand with a mic
+        P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
+        P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
       case 101: P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y + 8, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2'); P(X + 8, Y, 1, 16, '#7fc8d2'); break;
       case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: {
         // a doorway with a bead curtain

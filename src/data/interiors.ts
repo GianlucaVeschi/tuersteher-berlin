@@ -601,5 +601,279 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'spank', title: 'Say yes to Marco', hint: 'Marco from Napoli, in the dungeon downstairs.' },
       { id: 'photo', title: 'Photo booth souvenir', hint: 'After Marco: the photo booth in the dungeon.' }
     ]
+  },
+  /* RSO (Revier Südost): the Griessmühle crew's club in the old Bärenquell brewery in Schöneweide.
+     ROBUS and SUMME are the two warehouse floors, OPAN the open-air floor in the yard (all real).
+     The Keller under ROBUS is made up for the game: no source mentions a darkroom at RSO.
+     Uses the Berghain legend plus: B brewery brick, g grass, T tree, F fence, 1-2 doorways. */
+  rso: {
+    name: 'RSO',
+    welcome: [
+      'Door: Phone.',
+      '(Stickers over your cameras. A stamp on your wrist that says RSO.)',
+      'Door: Floors are ROBUS and SUMME inside, OPAN out here. Have a good weekend.',
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      opan: {
+        label: 'OPAN · open air in the brewery yard', short: 'OPAN',
+        map: [
+          'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+          'BBBBBBB1BBBBBBBBBBBBBB2BBBBBBB',
+          'F..........F......F..........F',
+          'Fgggggg....F......F..........F',
+          'FgTgggg.....DDDDDD.........T.F',
+          'Fgggggg......................F',
+          'Fgggggg..,,,,,,,,,,,,........F',
+          'Fgggggg..,,,,,,,,,,,,...FFFFFF',
+          'Fgggggg..,,,,,,,,,,,,...=....F',
+          'FgggTgg..,,,,,,,,,,,,...=....F',
+          'Fgggggg..,,,,,,,,,,,,...=....F',
+          'Fgggggg..,,,,,,,,,,,,...=....F',
+          'Fgbbbgg..,,,,,,,,,,,,...FFFFFF',
+          'Fgggggg..,,,,,,,,,,,,........F',
+          'Fgggggg......................F',
+          'FgTgggg....................T.F',
+          'FggggTg......................F',
+          'Fgggggg......................F',
+          'F............................F',
+          'FFFFFFFFFFFFFFxxFFFFFFFFFFFFFF'
+        ],
+        spawn: { street: [14, 18, 'up'], fromRobus: [7, 2, 'down'], fromSumme: [22, 2, 'down'] },
+        doors: { '1': { to: 'robus', at: 'fromOpan' }, '2': { to: 'summe', at: 'fromOpan' } },
+        exit: true,
+        dancers: 10,
+        daylight: true,
+        fairy: [[1, 2, 10, 2], [19, 2, 28, 2], [8, 14, 21, 14]],
+        spots: ['rgba(255,170,90,.14)', 'rgba(255,220,150,.12)', 'rgba(140,200,255,.10)'],
+        people: [
+          { x: 14, y: 3, act: 'dj', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3a2a20', legs: '#16151c', shades: true } },
+          { x: 25, y: 9, act: 'rsoBar', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 22, y: 14, act: 'griess', name: 'Kalle', dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', beard: '#9a9a9a', top: '#3a3a4a', legs: '#26242e' } },
+          { x: 3, y: 13, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#16151c', legs: '#16151c' }, lines: ['Raver: SUMME is through the right door, ROBUS through the left.', 'Raver: The Keller? Downstairs in ROBUS. Ask first, always.'] }
+        ]
+      },
+      robus: {
+        label: 'ROBUS · the big warehouse floor', short: 'ROBUS',
+        map: [
+          'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+          'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+          'B...........B......B...........B',
+          'B...........B......B...........B',
+          'B............DDDDDD............B',
+          'B..............................B',
+          'B...S.,,,,,,,,,,,,,,,,,,,,.S...B',
+          'B...S.,,,,,,,,,,,,,,,,,,,,.S...B',
+          'BBB...,,,,,,,,,,,,,,,,,,,,.....B',
+          'B.=...,,,,,,,,,,,,,,,,,,,,.....B',
+          'B.=...,,,,,,,,,,,,,,,,,,,,.....B',
+          'B.=...,,,,,,,,,,,,,,,,,,,,.....B',
+          'B.=...,,,,,,,,,,,,,,,,,,,,.....B',
+          'BBB...,,,,,,,,,,,,,,,,,,,,.....B',
+          'B...S.,,,,,,,,,,,,,,,,,,,,.S...B',
+          'B...S.,,,,,,,,,,,,,,,,,,,,.S...B',
+          'B.....,,,,,,,,,,,,,,,,,,,,.....B',
+          'B..............................B',
+          'B.......P..............P....vv.B',
+          'B...........................vv.B',
+          'B..............................B',
+          'BBBBBBBBBBBBBBBB1BBBBBBBBBBBBBBB'
+        ],
+        spawn: { fromOpan: [16, 20, 'up'], fromKeller: [28, 17, 'up'] },
+        doors: { '1': { to: 'opan', at: 'fromRobus' } },
+        down: { to: 'keller', at: 'fromRobus' },
+        dancers: 24,
+        people: [
+          { x: 15, y: 3, act: 'dj', look: { skin: '#f3c9a8', bald: true, top: '#0c0c12', legs: '#0c0c12', tattoo: true } },
+          { x: 1, y: 10, act: 'rsoBar', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#16151c', legs: '#16151c', beard: '#5a3a22' } }
+        ]
+      },
+      summe: {
+        label: 'SUMME · the second warehouse floor', short: 'SUMME',
+        map: [
+          'BBBBBBBBBBBBBBBBBBBBBBBBBB',
+          'BBBBBBBBBBBBBBBBBBBBBBBBBB',
+          'B........B......B........B',
+          'B.........DDDDDD.........B',
+          'B........................B',
+          'B.S.,,,,,,,,,,,,,,,,,,.S.B',
+          'B.S.,,,,,,,,,,,,,,,,,,.S.B',
+          'B...,,,,,,,,,,,,,,,,,,...B',
+          'B...,,,,,,,,,,,,,,,,,,...B',
+          'B...,,,,,,,,,,,,,,,,,,...B',
+          'B...,,,,,,,,,,,,,,,,,,...B',
+          'B...,,,,,,,,,,,,,,,,,,...B',
+          'B...,,,,,,,,,,,,,,,,,,...B',
+          'B........................B',
+          'B........................B',
+          'B.................bbbbb..B',
+          'B........................B',
+          'BBBBBBBBBBBBB2BBBBBBBBBBBB'
+        ],
+        spawn: { fromOpan: [13, 16, 'up'] },
+        doors: { '2': { to: 'opan', at: 'fromSumme' } },
+        dancers: 16,
+        spots: ['rgba(255,60,120,.14)', 'rgba(120,80,255,.14)', 'rgba(255,255,255,.08)'],
+        people: [
+          { x: 12, y: 2, act: 'dj', look: { skin: '#e2b08c', hair: '#e83f8f', long: true, top: '#16151c', legs: '#16151c' } },
+          { x: 20, y: 14, dir: 'left', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#2a2a33', legs: '#1a1920', long: true }, lines: ['Raver: I was at the last Griessmühle party. Kalle out in the yard can tell you all about it.'] }
+        ]
+      },
+      keller: {
+        label: 'Keller · the dark under ROBUS', short: 'KELLER',
+        map: [
+          '######################',
+          '######################',
+          '#^^^kkkkkkkkkkkkkkkkk#',
+          '#.....kkkkkkkkkkkkkkk#',
+          '#.....kkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '#kkkkkkkkkkkkkkkkkkkk#',
+          '######################'
+        ],
+        spawn: { fromRobus: [2, 3, 'down'] },
+        up: { to: 'robus', at: 'fromKeller' },
+        red: true,
+        people: [
+          { pile: true, x: 12, y: 6, w: 3, join: 'yes', sheet: '#2a1a14', looks: [
+            { skin: '#e2b08c', hair: '#111111', top: '#0c0c12', legs: '#0c0c12' }, { skin: '#c98d6a', bald: true, top: '#c98d6a', legs: '#0c0c12', harness: true }, { skin: '#f3c9a8', hair: '#b04a2a', long: true, top: '#0c0c12', legs: '#0c0c12' }] },
+          { pile: true, x: 4, y: 10, w: 3, join: 'no', sheet: '#1a0a14', looks: [
+            { skin: '#e2b08c', hair: '#111111', top: '#0c0c12', legs: '#0c0c12' }, { skin: '#8d5a3b', hair: '#111111', top: '#16151c', legs: '#16151c' }] },
+          { pile: true, x: 15, y: 10, w: 2, join: 'busy', sheet: '#2a0a10', looks: [
+            { skin: '#d9a27c', bald: true, top: '#d9a27c', legs: '#0c0c12', harness: true }, { skin: '#e2b08c', hair: '#111111', top: '#0c0c12', legs: '#0c0c12' }] },
+          { x: 4, y: 3, dir: 'down', look: { skin: '#e2b08c', hair: '#2a2420', top: '#0c0c12', legs: '#0c0c12', shades: true }, lines: ['(Someone by the stairs whispers: "In here, you ask first. Always.")'] }
+        ]
+      }
+    },
+    examine: {
+      B: ['Old brewery brick. Beer was brewed on this site for more than a hundred years, last of all Bärenquell.'],
+      S: ['A custom-built sound system. Your ribcage hums along.'],
+      F: ['A wooden fence around the brewery yard.'],
+      T: ['A tree in the brewery yard, fairy lights in its branches.'],
+      P: ['A cast-iron pillar from the brewery days.']
+    },
+    dancerLines: [
+      'Raver: Deep. So deep.', "Raver: I've been here since Friday. It's fine.", 'Raver: Have you been to OPAN yet? The sunrise!',
+      'Raver: I miss Griessmühle. But this is good too.', '(They are lost in the loop.)', 'Raver: Water at the bar is free.'
+    ],
+    quests: [
+      { id: 'floors', title: 'Dance on all three floors', hint: 'ROBUS, SUMME and OPAN outside. Press A on a dancefloor.' },
+      { id: 'griess', title: 'Hear about Griessmühle', hint: 'Kalle, an old regular, in the OPAN yard.' },
+      { id: 'drink', title: 'A drink in the old brewery', hint: 'Any bar.' },
+      { id: 'orgy', title: 'The Keller', hint: 'Down the stairs in ROBUS. Ask first.' }
+    ]
+  },
+
+  /* Heideglühen: open-air house club at Westhafen since 2012 (it began in 2011 in a potato garden on Heidestraße).
+     Real: fire pits, light installations, a wooden dancefloor under a glass roof, seating along wooden walls, house music.
+     Woody, the DJ and the karaoke in the toilets are for the game.
+     Extra legend: f fire pit, m karaoke machine. Also uses e (wooden dancefloor), H (wooden wall), w (wooden path),
+     g grass, T tree, F fence, R light installation, t / | toilets, 1 doorway. */
+  heidegluehen: {
+    name: 'Heideglühen',
+    welcome: [
+      'Door: Wrist, please.',
+      '(A stamp shaped like a little flame.)',
+      'Door: Fire pits on the left, dancefloor under the roof. No lineup, just trust us.',
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      heide: {
+        label: 'Heideglühen · fire pits and the glass roof', short: 'HEIDE',
+        map: [
+          'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
+          'FgHHHHHHHHHHHHHHHHgggHHHHHHHHggggF',
+          'FgHeeeeH.....HeeeegggHHHHHHHHggggF',
+          'FgHeeeeeDDDDDeeeeegggHHHH1HHHggRgF',
+          'FgHeeeeeeeeeeeeeeeggggggwwgggggggF',
+          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
+          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
+          'FgHbeeeeeeeeeeeeeegggfggwwgggggggF',
+          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
+          'FgHbeeeeeeeeeeeeeeggggggwwggfggggF',
+          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
+          'FgHeeeeeeeeeeeeeeeggggggwwggggggTF',
+          'FgHwwwwwwwwwwwwwwwwwwwwwwwwwwwwggF',
+          'FggwwwwwwwwwwwwwwwwwwwwwwwwwwwwggF',
+          'FgggggggggggggggwwggggggggggHHHHHF',
+          'FTggggggggggggggwwgggggggggg=...HF',
+          'Fgggggggggggggggwwgggggggggg=...HF',
+          'Fggggggggfggggggwwggfggggggg=...HF',
+          'Fgggggggggggggggwwgggggggggg=...HF',
+          'FTggggggggggggggwwggggggggRgHHHHHF',
+          'FgggggggggggRgggwwgggggggggggggggF',
+          'FgggTgggggggggggwwggggggggggggggTF',
+          'FgggggggggggggggwwgggggggggggggggF',
+          'FFFFFFFFFFFFFFFFxxFFFFFFFFFFFFFFFF'
+        ],
+        spawn: { street: [16, 22, 'up'], fromKlo: [25, 4, 'down'] },
+        doors: { '1': { to: 'klo', at: 'fromHeide' } },
+        exit: true,
+        dancers: 18,
+        roof: [3, 2, 17, 11],
+        fairy: [[18, 4, 32, 4], [18, 11, 31, 11], [3, 13, 30, 13], [18, 20, 31, 20]],
+        spots: ['rgba(255,180,90,.16)', 'rgba(255,120,80,.12)', 'rgba(255,230,160,.12)'],
+        people: [
+          { x: 10, y: 2, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
+          { x: 20, y: 8, act: 'woody', name: 'Woody', dir: 'left', look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
+          { x: 29, y: 16, act: 'bar', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#7a5a3a', legs: '#2b3f6b', long: true } },
+          { x: 27, y: 10, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#d9733a', legs: '#3a3a4a' }, lines: ['Raver: No lineup online, ever. You just come and trust the music.'] },
+          { x: 10, y: 18, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Bald, always by the fire, knows everyone.'] }
+        ]
+      },
+      klo: {
+        label: 'Toilets · with karaoke', short: 'KLO',
+        map: [
+          '################',
+          '################',
+          '#tt|tt|tt|ttttt#',
+          '#tt|tt|tt|ttttt#',
+          '#tttttttttttttt#',
+          '#tttttttttttttm#',
+          '#tttttttttttttt#',
+          '#tttttttttttttt#',
+          '#tttttttttttttt#',
+          '########1#######'
+        ],
+        spawn: { fromHeide: [8, 8, 'up'] },
+        doors: { '1': { to: 'heide', at: 'fromKlo' } },
+        people: [
+          { x: 11, y: 4, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8cc4', legs: '#2b3f6b', long: true }, lines: ['Raver: Queue for the mic is longer than the queue for the toilets.'] },
+          { x: 10, y: 7, dir: 'up', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Raver: I came in for the toilet. I stayed for the Whitney.'] }
+        ]
+      }
+    },
+    examineActs: { f: 'fire', m: 'karaoke' },
+    examine: {
+      R: ['A light installation, slowly changing colour against the night sky.'],
+      H: ['A wooden wall. People sit along it, warming their hands.'],
+      F: ['A wooden fence. Behind it: the harbour.'],
+      T: ['A tree full of fairy lights.'],
+      '|': ['A stall door covered in stickers.']
+    },
+    dancerLines: [
+      'Raver: This bassline!', 'Raver: House music is a feeling.', "Raver: I don't even know who's playing. Doesn't matter.",
+      'Raver: The fire pits are the best chill-out in Berlin.', '(They are dancing with their eyes closed.)', 'Raver: Have you tried the karaoke in the toilets?'
+    ],
+    dancerPalette: {
+      hair: ['#2a2420', '#5a3a22', '#c9a24a', '#b04a2a', '#111111', '#9a9a9a'],
+      tops: ['#c94a3a', '#2bb3a3', '#d9733a', '#7a5a3a', '#f2c14e', '#3d5f94', '#e9e4d6'],
+      legs: ['#2b3f6b', '#3a3a4a', '#26242e', '#5a7aa8'],
+      extras: ['#ffd23f', '#ff8c42', '#fff2b0', '#ff5e7a']
+    },
+    quests: [
+      { id: 'b2b', title: 'Back to back at 5am', hint: 'Ask the DJ under the glass roof if you can play with him.' },
+      { id: 'woody', title: "Get Woody's yes", hint: 'Woody is the booker. Bald, been around forever.' },
+      { id: 'karaoke', title: 'Karaoke in the toilets', hint: 'The toilets have a karaoke machine. Of course they do.' },
+      { id: 'fire', title: 'Warm up by the fire', hint: 'Press A facing a fire pit.' },
+      { id: 'drink', title: 'Get a drink', hint: 'The bar by the fence.' }
+    ]
   }
+
 };

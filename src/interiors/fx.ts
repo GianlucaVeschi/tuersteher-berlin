@@ -95,6 +95,38 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(wx0, wy); ctx.lineTo(wx1, wy); ctx.lineTo(wx1 - 5 * T, wy + 10 * T); ctx.lineTo(wx0 - 6 * T, wy + 10 * T); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
+  // Heideglühen: fire pits and the karaoke screen
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 102 && t !== 103) return;
+    const X = x * T - camX, Y = y * T - camY;
+    if (X < -24 || Y < -24 || X > RT.VW + 8 || Y > RT.VH + 8) return;
+    if (t === 102) {
+      const fl = lights ? Math.sin(now / 90 + x * 3) : 0;
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const gr = ctx.createRadialGradient(X + 8, Y + 8, 2, X + 8, Y + 8, 26);
+      gr.addColorStop(0, 'rgba(255,140,40,.35)'); gr.addColorStop(1, 'rgba(255,140,40,0)');
+      ctx.fillStyle = gr; ctx.fillRect(X - 18, Y - 18, 52, 52);
+      ctx.restore();
+      ctx.fillStyle = '#ff5a1f'; ctx.fillRect(X + 5, Y + 3 - fl, 6, 7);
+      ctx.fillStyle = '#ffb347'; ctx.fillRect(X + 6, Y + 1 - Math.round(fl * 1.5), 4, 6);
+      ctx.fillStyle = '#fff2b0'; ctx.fillRect(X + 7, Y + 4, 2, 3);
+    } else {
+      const hue = lights ? Math.floor(now / 700) % 3 : 0;
+      ctx.fillStyle = ['#1a2a6a', '#4a1a5a', '#1a4a4a'][hue]; ctx.fillRect(X + 2, Y + 2, 12, 8);
+      const off = lights ? Math.floor(now / 250) % 8 : 0;
+      ctx.fillStyle = '#fff2b0'; ctx.fillRect(X + 3, Y + 7, Math.max(1, off + 2), 1);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(X + 3, Y + 4, 8, 1);
+    }
+  }));
+  // a glass roof over part of the floor (Heideglühen's covered dancefloor)
+  if (fl.roof) {
+    const [rx0, ry0, rx1, ry1] = fl.roof;
+    const X0 = rx0 * T - camX, Y0 = ry0 * T - camY, W = (rx1 - rx0 + 1) * T, H = (ry1 - ry0 + 1) * T;
+    ctx.fillStyle = 'rgba(170,215,235,.08)'; ctx.fillRect(X0, Y0, W, H);
+    ctx.fillStyle = 'rgba(200,235,250,.18)';
+    for (let x = 0; x <= W; x += 2 * T) ctx.fillRect(X0 + x, Y0, 1, H);
+    for (let y = 0; y <= H; y += 2 * T) ctx.fillRect(X0, Y0 + y, W, 1);
+  }
   // fairy lights strung between two tiles, sagging a little
   (fl.fairy || []).forEach(([x0, y0, x1, y1], si) => {
     const n = Math.max(4, Math.abs(x1 - x0) * 2);

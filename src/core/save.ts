@@ -4,7 +4,7 @@ import { blocked } from '../world/collision';
 import { RT } from './runtime';
 import { OUTFITS, charById } from '../data/outfits';
 import { ZOOMS, zoom } from '../render/zoom';
-import { newPfand, player, state } from './state';
+import { HG_START, newPfand, player, state } from './state';
 import { CLUBS } from '../data/clubs';
 import { inClub, sceneClub } from '../world/scenes';
 import { OFF_MAP } from '../world/city';
@@ -23,7 +23,7 @@ export function snapshot(): SaveData {
   const club = inClub() ? CLUBS.find(c => c.id === sceneClub()) : null;
   const pos = club ? { x: club.dx, y: club.by, dir: 'down' as const } : { x: player.x, y: player.y, dir: player.dir };
   return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, char: state.char,
-    zoom: { i: zoom.i, fit: zoom.fit }, quests: state.quests, visited: state.visited, sunrise: state.sunrise, coatNo: state.coatNo, kStage: state.kStage, pfand: state.pfand, heard: state.heard, danced: state.danced, kkStripped: state.kkStripped, gone: state.gone, x: pos.x, y: pos.y, dir: pos.dir };
+    zoom: { i: zoom.i, fit: zoom.fit }, quests: state.quests, visited: state.visited, sunrise: state.sunrise, coatNo: state.coatNo, kStage: state.kStage, pfand: state.pfand, heard: state.heard, danced: state.danced, kkStripped: state.kkStripped, gone: state.gone, hgTime: state.hgTime, hgStage: state.hgStage, x: pos.x, y: pos.y, dir: pos.dir };
 }
 export function applySave(s: SaveData | null) {
   if (!s) return;
@@ -35,6 +35,7 @@ export function applySave(s: SaveData | null) {
   if (s.zoom && ZOOMS[s.zoom.i]) { zoom.i = s.zoom.i; zoom.fit = !!s.zoom.fit; }
   state.quests = s.quests || {}; state.visited = s.visited || {}; state.sunrise = s.sunrise || {}; state.coatNo = s.coatNo || 0; state.kStage = s.kStage || 0;
   state.pfand = Object.assign(newPfand(), s.pfand || {}); state.heard = s.heard || {}; state.danced = s.danced || {}; state.kkStripped = !!s.kkStripped; state.gone = s.gone || {};
+  state.hgTime = s.hgTime || HG_START; state.hgStage = s.hgStage || 0;
   // bottles in your hands are lost if you reload while carrying them outside a club
   if (!s.pfand) state.pfand.taken = {};
   RT.ents.forEach(e => { if (e.club && state.stamps[e.club.id]) e.x = e.club.dx + 1; });

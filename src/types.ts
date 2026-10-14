@@ -246,6 +246,8 @@ export interface FloorDef {
   red?: boolean;
   /** colours of the moving light spots */
   spots?: string[];
+  /** a glass roof drawn over these tiles [x0, y0, x1, y1] */
+  roof?: [number, number, number, number];
 }
 
 export interface QuestDef { id: string; title: string; hint: string }
@@ -298,6 +300,10 @@ export interface GameState {
   kkStripped: boolean;
   /** street NPCs (by id) who walked off */
   gone: Record<string, boolean>;
+  /** Heideglühen: time of night in minutes after midnight */
+  hgTime: number;
+  /** Heideglühen back-to-back quest: 0 not asked, 1 ask Woody, 2 Woody said yes, 3 done */
+  hgStage: number;
 }
 
 export interface Player {

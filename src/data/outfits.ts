@@ -46,9 +46,10 @@ export const DRESS: Record<string, DressCode> = {
   berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Türsteher: … Nein.' },
   tresor:     { ok: ['black'],               hint: 'Dark and functional. Black works.',     no_line: 'Jens: Bit bright for a vault, mate.' },
   kitkat:     { ok: ['latex'],               hint: 'Fetish: latex, leather or very little.', no_line: "Dee: Darling, you're wearing far too much. And the wrong things." },
-  aboutblank: { no: ['tourist', 'suit', 'tech'], hint: 'Anything with personality. No tourist look, no tech vest, nothing fancy.', no_line: "Kim: That outfit doesn't say anything about you. Not tonight." },
+  rso:        { no: ['tourist', 'suit', 'tech'], hint: 'Dressed for a long weekend in a brewery. No tourist look, no tech vest, nothing fancy.', no_line: "Ronja: You look like you're here for a brewery tour. Not tonight." },
   katerblau:  { ok: ['colorful', 'vintage'], hint: 'Colorful, playful, a bit of costume.',  no_line: 'Olli: Too serious for the boat! Bring some color.' },
   sisyphos:   { ok: ['colorful'],            hint: 'Bright colors, glitter, festival.',     no_line: "Mo: It's a festival in here, not a funeral. Color, please." },
+  heidegluehen: { ok: ['vintage', 'colorful'], hint: 'House heads: vintage or colourful, something cosy for the fire.', no_line: 'Lotte: Too serious for a campfire, honey. Bring some warmth.' },
   cdv:        { no: ['suit'],                hint: 'Relaxed. Just not too fancy.',          no_line: 'Uwe: Bit fancy for a wooden deck, no?' }
 };
 export function dressOK(clubId: string, outfitId: string): boolean {

@@ -231,7 +231,7 @@ export function signText(text: string, X: number, Y: number, Wd: number, color: 
 }
 export function drawClub(c: Club) {
   const X = c.x * T, Y = c.y * T, Wd = c.w * T, H = c.h * T;
-  const base = ({ berghain: '#6c6a66', tresor: '#4c3532', kitkat: '#4f1d3b', aboutblank: '#55555f', katerblau: '#6a4a2c', sisyphos: '#5c4630', cdv: '#5a432d' } as Record<string, string>)[c.style];
+  const base = ({ berghain: '#6c6a66', tresor: '#4c3532', kitkat: '#4f1d3b', rso: '#7a3a2c', heidegluehen: '#4a3420', katerblau: '#6a4a2c', sisyphos: '#5c4630', cdv: '#5a432d' } as Record<string, string>)[c.style];
   P(X, Y, Wd, H, INK);
   P(X + 1, Y + 1, Wd - 2, H - 2, base);
   P(X + 1, Y + 1, Wd - 2, 15, 'rgba(0,0,0,.28)');
@@ -262,15 +262,28 @@ export function drawClub(c: Club) {
       for (let i = 1; i < c.w - 1; i += 2) { circle(m, X + i * T + 8, Y + 34, 5, INK); circle(m, X + i * T + 8, Y + 34, 4, '#ff7ab8'); }
       signText('KITKAT', X, Y, Wd, '#ff8cc4');
       break;
-    case 'aboutblank': {
-      const cols = ['#b6f36b', '#ff5e7a', '#5ec8ff', '#ffd23f', '#c28cff', '#ffffff'];
-      for (let i = 0; i < 60; i++) {
-        const gx = X + 2 + Math.floor(rnd() * (Wd - 10)), gy = Y + 18 + Math.floor(rnd() * (H - 22));
-        const col = pick(cols);
-        P(gx, gy, 2 + Math.floor(rnd() * 6), 2, col);
-        if (rnd() < 0.5) P(gx + 1, gy - 2, 2, 2, col);
+    case 'rso': {
+      // red brewery brick, tall arched factory windows, a brick chimney
+      for (let r = 16; r < H - 1; r += 4) { P(X + 1, Y + r, Wd - 2, 1, '#5e2b20'); for (let i = (r / 4) % 2 ? 4 : 0; i < Wd; i += 8) P(X + i, Y + r - 3, 1, 3, '#5e2b20'); }
+      for (let i = 0; i < c.w; i++) {
+        if (i === Math.floor(c.w / 2)) continue;
+        const wx = X + i * T + 4, wy = Y + 20;
+        P(wx - 1, wy - 2, 10, 24, INK); P(wx, wy, 8, 21, '#2a1e1a'); circle(m, wx + 4, wy, 4, '#2a1e1a');
+        if (rnd() < 0.5) P(wx + 1, wy + 8, 6, 2, '#ff8c42');
       }
-      signText('ABOUT BLANK', X, Y, Wd, '#ffffff');
+      P(X + Wd - 16, Y - 22, 10, 24, INK); P(X + Wd - 15, Y - 21, 8, 22, '#8a3c2c');
+      for (let r = 0; r < 22; r += 4) P(X + Wd - 15, Y - 21 + r, 8, 1, '#5e2b20');
+      signText('RSO', X, Y, Wd, '#ff8c42');
+      break;
+    }
+    case 'heidegluehen': {
+      // a wooden fence with fairy lights, firelight glowing over it, a glass roof behind
+      P(X + 1, Y + 1, Wd - 2, 14, '#9fc7d6'); for (let i = 0; i < Wd; i += 12) P(X + i, Y + 1, 1, 14, '#5a7a86');
+      P(X + 1, Y + 8, Wd - 2, 1, '#5a7a86');
+      for (let i = 2; i < Wd - 2; i += 4) P(X + i, Y + 16, 3, H - 17, i % 8 ? '#6b4a2e' : '#5a3d24');
+      for (let i = 3; i < Wd - 3; i += 5) P(X + i, Y + 20 + ((i / 5 | 0) % 2), 2, 2, pick(['#ffd23f', '#ff8c42', '#fff2b0']));
+      for (let i = 0; i < 3; i++) { const fx = X + 10 + i * 40; circle(m, fx, Y + 46, 7, 'rgba(255,140,40,.35)'); circle(m, fx, Y + 46, 3, '#ffb347'); }
+      signText('HEIDEGLÜHEN', X, Y + 16, Wd, '#ffb347');
       break;
     }
     case 'katerblau':

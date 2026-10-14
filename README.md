@@ -1,8 +1,8 @@
 # Türsteher Berlin
 
-A tiny Pokémon-style pixel game about getting into Berlin clubs. Walk around a night map of Berlin (Spree, Oberbaumbrücke, East Side Gallery, Fernsehturm, Ostkreuz) and answer the bouncer's questions at seven real clubs:
+A tiny Pokémon-style pixel game about getting into Berlin clubs. Walk around a night map of Berlin (Spree, Oberbaumbrücke, East Side Gallery, Fernsehturm, Ostkreuz) and answer the bouncer's questions at eight real clubs:
 
-Berghain · Tresor · KitKatClub · ://about blank · Kater Blau · Sisyphos · Club der Visionäre
+Berghain · Tresor · KitKatClub · RSO · Kater Blau · Sisyphos · Club der Visionäre · Heideglühen
 
 A new game starts with a short intro: choose man or woman, then one of four starting characters (the Tourist, the Hipster, the Tech Guy/Girl, the Local or the Art Student). Each starts in different clothes, so each has a different first route through the clubs.
 
@@ -71,6 +71,37 @@ The crowd wears latex, leather, harnesses, bunny ears or nothing much. Groups on
 | Say yes to Marco | Marco asks to spank you. Yes, gently or no: all answers are respected |
 | Photo booth souvenir | After Marco, the booth in the dungeon prints a 4-frame strip. "Save photo" downloads it as a PNG |
 
+## Inside RSO
+
+RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukölln club in an old pasta factory on the canal that had to close in February 2020 when its lease ran out (after protests and a petition with more than 50,000 signatures). The crew started again the same year in the old Bärenquell brewery in Schöneweide. In the game:
+
+- **OPAN:** the open-air floor in the brewery yard, with fairy lights, a bar and Kalle, an old Griessmühle regular.
+- **ROBUS** and **SUMME:** the two warehouse floors.
+- **Keller:** a dark space under ROBUS. This one is made up for the game; no source mentions a darkroom at RSO.
+
+| Quest | Where |
+| --- | --- |
+| Dance on all three floors | ROBUS, SUMME and OPAN |
+| Hear about Griessmühle | Kalle in the OPAN yard |
+| A drink in the old brewery | Any bar |
+| The Keller | Downstairs from ROBUS. Ask first |
+
+## Inside Heideglühen
+
+Heideglühen started in 2011 in a potato garden on Heidestraße and has been at the Westhafen since 2012: mostly open air, fire pits, light installations, a wooden dancefloor under a glass roof, and mostly house music (it has its own label, Heideglühen Tonträger). On the game map it sits in the park in the south-east.
+
+The night has its own clock: it starts at 03:30 and moves on as you dance, sing and sit by the fire.
+
+| Quest | Where |
+| --- | --- |
+| Back to back at 5am (main quest) | Ask the DJ under the glass roof. He sends you to Woody; once Woody says yes, come back at 05:00 and pick the right records for a three-track set |
+| Get Woody's yes | Woody, the booker: bald, in the scene for decades, usually by the fire |
+| Karaoke in the toilets | The karaoke machine between the sinks |
+| Warm up by the fire | Press A facing a fire pit |
+| Get a drink | The bar by the fence |
+
+Woody, the DJ and the karaoke are inventions for the game.
+
 ## Dress codes and shops
 
 | Club | Dress code |
@@ -78,10 +109,11 @@ The crowd wears latex, leather, harnesses, bunny ears or nothing much. Groups on
 | Berghain | All black |
 | Tresor | Black |
 | KitKatClub | Fetish (latex, leather) |
-| ://about blank | Anything except the tourist look or a suit |
+| RSO | Anything except the tourist look, a tech vest or a suit |
 | Kater Blau | Colorful or vintage |
 | Sisyphos | Colorful, glitter |
 | Club der Visionäre | Anything except a suit |
+| Heideglühen | Vintage or colourful |
 
 Walk into a shop to change clothes (no money yet):
 
@@ -145,7 +177,7 @@ src/
     state.ts          saved progress (state), the player, directions
     save.ts           save / load to localStorage
   data/
-    clubs.ts          the seven clubs, their bouncers and questions, intro/ending text
+    clubs.ts          the eight clubs, their bouncers and questions, intro/ending text
     outfits.ts        outfits, starting characters, dress codes, shops
     interiors.ts      club floors as ASCII maps, people on them, quest lists
   world/

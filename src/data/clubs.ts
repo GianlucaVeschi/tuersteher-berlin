@@ -58,21 +58,24 @@ const CLUB_DEFS: ClubDef[] = [
     ]
   },
   {
-    id: 'aboutblank', name: '://about blank', area: 'near Ostkreuz', x: 48, y: 8, w: 7, h: 5, need: 2, signSide: -2,
-    style: 'aboutblank', glow: '#b6f36b', initials: '://',
-    look: { skin: '#8d5a3b', hair: '#111', top: '#3d5a40', legs: '#22222a', big: true },
-    greet: ["Kim: Hey. We're a collective, so we care who comes in.", 'Kim: Two questions.'],
-    reject: 'Kim: Sorry. Not tonight.',
-    accept: ['Kim: Nice. Welcome to the garden.'],
-    again: 'Kim: Hey again. Go on in.',
-    inside: "The garden is still going at noon. Someone hands you water. That's the vibe here.",
-    sign: ['://ABOUT BLANK · Ostkreuz', 'Run by a collective. Named after the empty browser page.', 'Home of Homopatik. Awareness team on site.'],
+    // RSO (Revier Südost): the Griessmühle crew's new home in the old Bärenquell brewery, Schöneweide.
+    // On the game map it sits where the S-Bahn heads out east.
+    id: 'rso', name: 'RSO', area: 'Schöneweide', x: 48, y: 8, w: 7, h: 5, need: 2, signSide: -2,
+    style: 'rso', glow: '#ff8c42', initials: 'RSO',
+    look: { skin: '#e2b08c', hair: '#2a2420', top: '#16151c', legs: '#16151c', big: true, beard: '#2a2420' },
+    greet: ['Ronja: Moin. RSO.', 'Ronja: Two questions about the place. Then the brewery is yours.'],
+    reject: 'Ronja: Nope. Heute nicht.',
+    accept: ['Ronja: Good. Stickers on the cameras, then straight into the yard.'],
+    again: 'Ronja: Back already? Go on.',
+    inside: 'Brewery brick, deep techno in ROBUS and SUMME, and the sky going pale over OPAN.',
+    sign: ['RSO · REVIER SÜDOST', 'Schnellerstraße 137. The old Bärenquell brewery, more than 100 years of beer on this site.',
+      'Run by the crew from Griessmühle. Floors: ROBUS, SUMME and OPAN outside in summer.'],
     pool: [
-      { q: 'Which station is around the corner?', a: ['Ostkreuz', 'Zoologischer Garten', 'Wannsee', 'Alexanderplatz'], fact: 'Ostkreuz is a short walk away.' },
-      { q: 'Who runs this club?', a: ['A collective', 'A hotel chain', 'A football club', 'A bank'], fact: "It's run by a collective. No boss, lots of meetings." },
-      { q: 'In a browser, what is about:blank?', a: ['An empty page', 'A virus', 'A cookie', 'A password'], fact: "about:blank is the browser's empty page. Hence the name." },
-      { q: "Someone tells you they're not OK. You…", a: ['Find the awareness team', 'Ignore it', 'Film it', 'Leave'], fact: 'The awareness team is there to help. Go find them.' },
-      { q: 'Which queer party is a regular here?', a: ['Homopatik', 'Schlagerparty', 'Oktoberfest', 'Karneval'], fact: 'Homopatik is a long-running queer party here.' }
+      { q: 'What was this site before it was a club?', a: ['A brewery', 'A power plant', 'A bank vault', 'A dog biscuit factory'], fact: 'RSO is in the old Bärenquell brewery.' },
+      { q: 'Which club did the RSO crew run before?', a: ['Griessmühle', 'Tresor', 'Bar25', 'Watergate'], fact: 'Griessmühle in Neukölln. It had to close in 2020.' },
+      { q: "What's the open-air floor called?", a: ['OPAN', 'ROBUS', 'SUMME', 'Panorama Bar'], fact: 'ROBUS and SUMME are inside, OPAN is the open-air floor.' },
+      { q: 'Which S-Bahn station is closest?', a: ['Schöneweide', 'Ostkreuz', 'Wannsee', 'Zoologischer Garten'], fact: 'S Schöneweide, about ten minutes on foot.' },
+      { q: 'Griessmühle sat in an old…', a: ['Pasta factory', 'Power plant', 'Church', 'Airport hangar'], fact: 'An old pasta factory on the canal by Sonnenallee.' }
     ]
   },
   {
@@ -125,19 +128,40 @@ const CLUB_DEFS: ClubDef[] = [
       { q: 'Which districts meet here?', a: ['Kreuzberg and Treptow', 'Spandau and Mitte', 'Wedding and Pankow', 'Potsdam and Grunewald'], fact: 'CDV is right where Kreuzberg meets Alt-Treptow.' },
       { q: 'When do things get going here?', a: ['In the afternoon', 'Exactly midnight', 'Only at 9am', 'Never'], fact: 'CDV is known for long afternoon sessions.' }
     ]
+  },
+  {
+    // Heideglühen: open-air house club at Westhafen (Seestraße), since 2012. Started 2011 in a potato garden on Heidestraße.
+    // On the game map it sits in the park in the south-east.
+    id: 'heidegluehen', name: 'Heideglühen', area: 'Westhafen', x: 63, y: 33, w: 8, h: 6, need: 2, signSide: -2,
+    style: 'heidegluehen', glow: '#ffb347', initials: 'HG',
+    look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#7a5a3a', legs: '#2b3f6b', big: true, long: true },
+    greet: ['Lotte: Na? Heideglühen.', 'Lotte: Two questions, then you can warm up by the fire.'],
+    reject: 'Lotte: Not tonight, honey.',
+    accept: ['Lotte: Lovely. In you go. Fire pits are on the left, house music straight ahead.'],
+    again: 'Lotte: Missed the fire already? Go on.',
+    inside: 'Fire pits, fairy lights, a wooden floor under a glass roof, and house music until the birds join in.',
+    sign: ['HEIDEGLÜHEN · Westhafen', 'Since 2012 by the harbour. It started in 2011 in a potato garden on Heidestraße.',
+      'Mostly house. Own label: Heideglühen Tonträger. 21+.'],
+    pool: [
+      { q: 'Where did Heideglühen start in 2011?', a: ['In a potato garden', 'On a boat', 'In a bunker', 'On a rooftop'], fact: 'A potato garden behind old railway sheds on Heidestraße.' },
+      { q: 'What do they mostly play here?', a: ['House', 'Schlager', 'Drum and bass', 'Metal'], fact: 'Mostly house music.' },
+      { q: "What's the club's own record label?", a: ['Heideglühen Tonträger', 'Ostgut Ton', 'Tresor Records', 'Mute'], fact: 'Heideglühen Tonträger. Ostgut Ton is Berghain\'s.' },
+      { q: 'How old do you have to be?', a: ['21', '16', '18', '30'], fact: 'Heideglühen is 21+.' },
+      { q: 'Which harbour is next door?', a: ['Westhafen', 'Osthafen', 'Spreehafen', 'Hamburg'], fact: 'Westhafen, on Seestraße.' }
+    ]
   }
 ];
 // The door sits in the middle of the bottom wall; the bouncer stands on the pavement below it.
 export const CLUBS: Club[] = CLUB_DEFS.map(c => ({ ...c, dx: c.x + Math.floor(c.w / 2), doorY: c.y + c.h - 1, by: c.y + c.h }));
 export const INTRO = [
   'Friday, 23:47. Warschauer Straße.',
-  'Seven clubs. Seven bouncers. One long weekend.',
+  'Eight clubs. Eight bouncers. One long weekend.',
   "Walk up to a bouncer and press A. Answer right and you're in.",
   'Bouncers check your outfit first. Walk into a shop to change clothes.',
   'Stuck? Read the signs by each door. Locals talk too.'
 ];
 export const FINALE = [
   'Monday, 09:12. The sun is up, and so are you.',
-  'Seven stamps. Every bouncer in Berlin let you in.',
+  'Eight stamps. Every bouncer in Berlin let you in.',
   "You're officially a Berliner now. Go get a Döner."
 ];
