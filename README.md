@@ -102,6 +102,10 @@ The night has its own clock: it starts at 03:30 and moves on as you dance, sing 
 
 Woody, the DJ and the karaoke are inventions for the game.
 
+## The ending
+
+Get a stamp from every club and the night finally catches up with you: you wake up in your childhood bedroom back home (old DJ posters, the controller from year one, an alarm clock at 9:12). Congratulations, you completed Berlin. The game then sums up your seven years, using what you actually did (your Pfand earnings, that one back to back at Heideglühen). Afterwards you can go back to Berlin or start over.
+
 ## Music
 
 All music is generated in the browser while you play (Web Audio, no audio files). Every club floor has its own style, based on what each club is known for:

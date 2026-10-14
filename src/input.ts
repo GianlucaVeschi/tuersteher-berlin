@@ -1,3 +1,4 @@
+import { playEnding } from './ui/ending';
 import { musicDebug, toggleSound } from './audio/music';
 import { drawPhotoStrip } from './quests/kitkat';
 import { inside } from './ui/inside';
@@ -116,6 +117,7 @@ export function initInput() {
   if (/[?&]debug\b/.test(location.search)) window.__game = {
     player, state, held, get busy() { return RT.busy; }, get scene() { return RT.scene; }, get follower() { return RT.follower; },
     music: musicDebug,
+    ending: () => playEnding(),
     enterClub: (id: string) => { const c = CLUBS.find(cl => cl.id === id); if (c) enterClub(c, true); },
     tp(x: number, y: number, dir?: Dir) { player.x = player.tx = x; player.y = player.ty = y; player.moving = false; if (dir) player.dir = dir; placeFollower(); }
   };

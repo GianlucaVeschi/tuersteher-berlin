@@ -79,6 +79,12 @@ resetBtn.addEventListener('click', () => {
   }
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
+  resetGame();
+});
+}
+
+/** Wipes all progress and goes back to the title screen. */
+export function resetGame() {
   state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
   state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {}; state.hgTime = HG_START; state.hgStage = 0;
   releaseFollower(); endTrip(); endK();
@@ -94,5 +100,4 @@ resetBtn.addEventListener('click', () => {
   RT.busy = true; RT.titleOn = true; $('#title').hidden = false;
   $('#titlePress').textContent = 'PRESS A';
   renderCard(); save();
-});
 }

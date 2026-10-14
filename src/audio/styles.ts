@@ -50,6 +50,13 @@ export const STYLES: Record<string, Style> = {
     pad: { cutoff: 900, level: 0.05 }
   },
 
+  // the ending: a quiet, bright morning back home
+  home: {
+    bpm: 60, ambient: true, root: 52, level: 0.7, space: 0.5,
+    chords: [[0, 4, 7, 11, 14], [5, 9, 12, 16, 19], [-3, 4, 7, 12, 16], [7, 11, 14, 17, 21]],
+    pad: { cutoff: 1100, level: 0.05 }
+  },
+
   // Berghain main floor: relentless, dark, hypnotic techno with a rumbling kick in a concrete hall
   berghain: {
     bpm: 132, root: 41, breaks: true, space: 0.35, rumble: 0.7, kickPitch: 46, kickDecay: 0.5,

@@ -150,6 +150,7 @@ let forced: string | null = null;
 /** What should be playing right now. */
 function target(): { id: string; cutoff?: number } {
   if (forced) return { id: forced };
+  if (RT.ending) return { id: 'home' };
   if (RT.titleOn || RT.creator) return { id: 'city' };
   if (RT.overlayClub) return styleForClub(RT.overlayClub);
   if (inClub()) return styleForScene(RT.scene);

@@ -260,6 +260,20 @@ body {
   box-shadow: .6cqw .6cqw 0 var(--magenta);
 }
 
+/* the ending: waking up at home */
+.ending { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity 1.2s ease; }
+.ending.show { opacity: 1; }
+.ending canvas { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; display: block; }
+.end-title {
+  position: absolute; left: 50%; top: 6cqw; transform: translateX(-50%);
+  display: grid; justify-items: center; gap: 1.4cqw; text-align: center; white-space: nowrap;
+  font-family: var(--font-pixel); color: var(--lamp); text-shadow: .5cqw .5cqw 0 var(--ink);
+  animation: endPop .6s ease-out;
+}
+.end-title b { font-size: 5.4cqw; font-weight: 400; }
+.end-title span { font-size: 2.6cqw; color: var(--paper); letter-spacing: .08em; text-transform: uppercase; }
+@keyframes endPop { from { transform: translateX(-50%) scale(.6); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+
 /* quest list on the stamp card */
 .quests { padding: 12px 0 10px; border-bottom: 3px dashed #b9b09c; }
 .quests .eyebrow { display: flex; justify-content: space-between; }
@@ -531,7 +545,8 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .card.open, .fade, .floor-card, .toast { transition: none; }
+  .card, .card.open, .fade, .floor-card, .toast, .ending { transition: none; }
+  .end-title { animation: none; }
 }
 
 /* club header inside the side-quest list */

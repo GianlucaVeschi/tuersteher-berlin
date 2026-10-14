@@ -1,3 +1,4 @@
+import { playEnding } from '../ui/ending';
 import type { Club, Entity } from '../types';
 import { danceHere } from '../quests/dance';
 import { ACTS } from '../quests/acts';
@@ -66,6 +67,7 @@ export async function maybeFinale() {
     state.finale = true; save();
     for (const l of FINALE) await say(l);
     closeBox();
+    await playEnding();
   }
 }
 export function pushBack() {
