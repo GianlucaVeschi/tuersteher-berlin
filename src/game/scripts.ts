@@ -1,5 +1,6 @@
 import { syncFinish, syncSoon } from '../online/sync';
 import { playEnding } from '../ui/ending';
+import { openPlayers } from '../ui/players';
 import type { Club, Entity } from '../types';
 import { danceHere } from '../quests/dance';
 import { ACTS } from '../quests/acts';
@@ -107,13 +108,17 @@ export async function interact() {
   }
   if (!e) return;
   RT.busy = true;
-  if (e.kind !== 'sign') e.dir = OPP[player.dir];
+  if (e.kind !== 'sign' && e.kind !== 'column') e.dir = OPP[player.dir];
+  let guestList = false;
   try {
-    if (e.kind === 'bouncer') await bouncerTalk(e);
+    if (e.kind === 'column') { for (const l of e.lines || []) await say(l); guestList = true; }
+    else if (e.kind === 'bouncer') await bouncerTalk(e);
     else if (e.npcId) await streetTalk(e);
     else if (e.act && ACTS[e.act]) await ACTS[e.act](e, inClub() ? sceneClub() : '');
     else for (const l of e.lines || []) await say(l);
   } finally { closeBox(); RT.busy = false; }
+  // opened after busy is released: the list keeps the game paused itself
+  if (guestList) openPlayers();
 }
 export async function enterDoor(c: Club) {
   if (INTERIORS[c.id]) { await enterClub(c, false); return; }

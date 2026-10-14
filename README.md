@@ -104,7 +104,7 @@ Woody, the DJ and the karaoke are inventions for the game.
 
 ## The guest list
 
-A new game asks for your name (it doesn't have to be unique; each player gets a short ID like `#a3f9`). The **guest list** shows everyone who has played: who finished (fastest first, by active play time: time with the game open and in front), who is still partying (clubs and quests so far), and who just entered a name. It is shared and permanent, stored in Firebase (project `berlin-club-game`, Firestore in Frankfurt). Start over makes a new entry.
+A new game asks for your name (it doesn't have to be unique; each player gets a short ID like `#a3f9`). The **guest list** (G, the button on the stamp card or title screen, or the Litfaßsäule next to the Fernsehturm, labelled GUEST LIST on the map) shows everyone who has played: who finished (fastest first, by active play time: time with the game open and in front), who is still partying (clubs and quests so far), and who just entered a name. It is shared and permanent, stored in Firebase (project `berlin-club-game`, Firestore in Frankfurt). Start over makes a new entry.
 
 ## The ending
 

@@ -145,7 +145,7 @@ export interface NpcDef {
 }
 
 export interface Entity {
-  kind: 'npc' | 'sign' | 'bouncer' | 'bottle' | 'pile';
+  kind: 'npc' | 'sign' | 'column' | 'bouncer' | 'bottle' | 'pile';
   /** street NPCs: id from data/npcs.ts */
   npcId?: string;
   leave?: 'left' | 'right';

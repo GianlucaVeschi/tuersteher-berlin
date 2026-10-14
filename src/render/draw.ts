@@ -85,6 +85,17 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.fillStyle = INK; ctx.fillRect(X + 7, Y + 8, 2, 8); ctx.fillRect(X + 1, Y + 1, 14, 9);
       ctx.fillStyle = '#b08a52'; ctx.fillRect(X + 2, Y + 2, 12, 7);
       ctx.fillStyle = '#7d5f35'; ctx.fillRect(X + 4, Y + 4, 8, 1); ctx.fillRect(X + 4, Y + 6, 6, 1);
+    } else if (e.kind === 'column') {
+      // Litfaßsäule: green dome and base, a round column wrapped in posters, a little taller than a person
+      ctx.fillStyle = INK; ctx.fillRect(X + 2, Y - 5, 12, 21); ctx.fillRect(X + 4, Y - 8, 8, 3);
+      ctx.fillStyle = '#2f6b4f'; ctx.fillRect(X + 5, Y - 7, 6, 2); ctx.fillRect(X + 3, Y - 4, 10, 2); ctx.fillRect(X + 3, Y + 13, 10, 2);
+      ctx.fillStyle = '#e9e2cf'; ctx.fillRect(X + 3, Y - 2, 10, 15);
+      ctx.fillStyle = '#d6453d'; ctx.fillRect(X + 4, Y - 1, 4, 5);
+      ctx.fillStyle = '#f2c14e'; ctx.fillRect(X + 8, Y - 1, 4, 3); ctx.fillRect(X + 4, Y + 7, 3, 5);
+      ctx.fillStyle = '#3d6fb6'; ctx.fillRect(X + 8, Y + 3, 4, 4);
+      ctx.fillStyle = INK; ctx.fillRect(X + 4, Y + 5, 3, 1); ctx.fillRect(X + 8, Y + 8, 4, 1); ctx.fillRect(X + 8, Y + 10, 3, 1);
+      // rounding: darker right edge
+      ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.fillRect(X + 11, Y - 2, 2, 15);
     } else if (e.look) {
       // legs move while sliding to the next tile
       const step = e.ox ? (Math.floor(Math.abs(e.ox) / 8) % 2) + 1 : 0;
@@ -138,6 +149,7 @@ export function draw(now: number) {
     // clubs on the roof, shops at the shopfront (smaller), so neighbours don't collide
     CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
     SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + size + 6, '#f3eee3', INK, Math.max(6, size - 2)));
+    RT.ents.forEach(e => { if (e.kind === 'column') chip('GUEST LIST', sx((e.x + 0.5) * T), sy(e.y * T - 8), '#2f6b4f', '#fff', Math.max(6, size - 2)); });
   }
   const px = sx(ppx + 8), py = sy(ppy + 2);
   const pulse = reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(now / 180);
