@@ -9,12 +9,15 @@ import { STYLES, styleForClub, styleForScene, type Style } from './styles';
 // Browsers only allow sound after a click or key press, so nothing plays before that.
 
 const PREF_KEY = 'tuersteher-sound';
-const FADE = 1.5;
+/** fade-in of the new place's music, and the faster fade-out of the old one */
+const FADE_IN = 1.5, FADE_OUT = 0.5;
 const LOOKAHEAD = 0.12;
 
 /** One running style: a sixteenth-note scheduler feeding its own gain, filter and effect sends. */
 class Track {
   private out: GainNode;
+  /** the reverb send's own fader: the reverb must fade out with the track too */
+  private wetOut: GainNode;
   private input: GainNode;
   private wet: GainNode;
   private stabIn: GainNode;
@@ -39,7 +42,9 @@ class Track {
     this.wet.gain.value = style.space ?? 0.2;
     const wlp = c.createBiquadFilter();
     wlp.type = 'lowpass'; wlp.frequency.value = cutoff ?? style.cutoff ?? 20000;
-    this.wet.connect(wlp).connect(S.reverbIn());
+    this.wetOut = c.createGain();
+    this.wetOut.gain.value = 0.0001;
+    this.wet.connect(wlp).connect(this.wetOut).connect(S.reverbIn());
     // stabs can also go through a dub echo
     this.stabIn = c.createGain();
     this.stabIn.connect(this.input);
@@ -56,23 +61,29 @@ class Track {
   start() {
     const c = S.audioCtx();
     this.next = c.currentTime + 0.05;
-    this.out.gain.setValueAtTime(0.0001, c.currentTime);
-    this.out.gain.linearRampToValueAtTime(1, c.currentTime + FADE);
+    for (const g of [this.out, this.wetOut]) {
+      g.gain.setValueAtTime(0.0001, c.currentTime);
+      g.gain.linearRampToValueAtTime(1, c.currentTime + FADE_IN);
+    }
     if (this.style.ambient) this.stopHiss = S.hiss({ dry: this.input, wet: this.wet }, c.currentTime, 0.012, 450);
     this.timer = setInterval(() => this.schedule(), 25);
     this.schedule();
   }
 
+  /** Stops scheduling right away, fades the music and its reverb send, then disconnects everything. */
   stop() {
     const c = S.audioCtx();
-    this.out.gain.cancelScheduledValues(c.currentTime);
-    this.out.gain.setValueAtTime(this.out.gain.value, c.currentTime);
-    this.out.gain.linearRampToValueAtTime(0.0001, c.currentTime + FADE);
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    for (const g of [this.out, this.wetOut]) {
+      g.gain.cancelScheduledValues(c.currentTime);
+      g.gain.setValueAtTime(Math.max(0.0001, g.gain.value), c.currentTime);
+      g.gain.linearRampToValueAtTime(0.0001, c.currentTime + FADE_OUT);
+    }
     setTimeout(() => {
-      if (this.timer) clearInterval(this.timer);
       this.stopHiss?.();
       this.out.disconnect();
-    }, FADE * 1000 + 300);
+      this.wetOut.disconnect();
+    }, FADE_OUT * 1000 + 100);
   }
 
   private schedule() {
