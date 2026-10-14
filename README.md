@@ -102,6 +102,10 @@ The night has its own clock: it starts at 03:30 and moves on as you dance, sing 
 
 Woody, the DJ and the karaoke are inventions for the game.
 
+## The guest list
+
+A new game asks for your name (it doesn't have to be unique; each player gets a short ID like `#a3f9`). The **guest list** (G, the button on the stamp card or title screen, or the Litfaßsäule next to the Fernsehturm, labelled GUEST LIST on the map) shows everyone who has played: who finished (fastest first, by active play time: time with the game open and in front), who is still partying (clubs and quests so far), and who just entered a name. It is shared and permanent, stored in Firebase (project `berlin-club-game`, Firestore in Frankfurt). Start over makes a new entry.
+
 ## The ending
 
 Get a stamp from every club and the night finally catches up with you: you wake up in your childhood bedroom back home (old DJ posters, the controller from year one, an alarm clock at 9:12). Congratulations, you completed Berlin. The game then sums up your seven years, using what you actually did (your Pfand earnings, that one back to back at Heideglühen). Afterwards you can go back to Berlin or start over.
@@ -180,6 +184,7 @@ Then open the URL it prints (http://localhost:5173). The page reloads as you sav
 | Zoom | + / − (or mouse wheel over the map) | + / − buttons on the screen |
 | Whole map | M | MAP button |
 | Sound on/off | N | ♪ button on the screen |
+| Guest list | G | Guest list button on the stamp card or the title screen |
 
 Zoomed out, the map labels every club (✓ once you've been in) and shop, and marks where you are. The zoom level is saved.
 
@@ -217,6 +222,7 @@ src/
   ui/                 dialog box, shops, character select, stamp card, club entrance scene
   input.ts            keyboard, touch, mouse wheel, on-screen buttons
   audio/              generated music: synth voices, per-club styles, the player
+  online/             the guest list: Firebase over REST, syncing your entry, name checks
   game/
     scripts.ts        bouncer conversations, talking to people, doors
     loop.ts           movement, the frame loop, start-up

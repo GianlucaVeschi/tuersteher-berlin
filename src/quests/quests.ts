@@ -1,4 +1,5 @@
 import { track } from '../core/monitoring';
+import { syncSoon } from '../online/sync';
 import type { QuestDef } from '../types';
 import { RT } from '../core/runtime';
 import { closeBox, say } from '../ui/dialog';
@@ -15,6 +16,7 @@ export async function completeQuest(clubId: string, id: string) {
   if (questDone(clubId, id)) return;
   state.quests[clubId + ':' + id] = true;
   track('quest_completed', { club: clubId, quest: id });
+  syncSoon();
   const q = QUEST_LIST(clubId).find(x => x.id === id);
   toast('QUEST DONE · ' + (q ? q.title : id));
   renderCard(); save();

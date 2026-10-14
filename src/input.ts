@@ -1,3 +1,4 @@
+import { openPlayers } from './ui/players';
 import { playEnding } from './ui/ending';
 import { musicDebug, toggleSound } from './audio/music';
 import { drawPhotoStrip } from './quests/kitkat';
@@ -81,6 +82,7 @@ function onKeyDown(ev: KeyboardEvent) {
   if (ev.code === 'Minus' || ev.code === 'NumpadSubtract') { ev.preventDefault(); zoomOut(); return; }
   if (ev.code === 'KeyM' && !ev.repeat) { toggleMap(); return; }
   if (ev.code === 'KeyN' && !ev.repeat) { toggleSound(); return; }
+  if (ev.code === 'KeyG' && !ev.repeat) { openPlayers(); return; }
   if (['KeyX', 'Escape', 'Backspace'].includes(ev.code)) { ev.preventDefault(); if (!ev.repeat) pressB(); }
 }
 

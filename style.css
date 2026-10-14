@@ -260,6 +260,71 @@ body {
   box-shadow: .6cqw .6cqw 0 var(--magenta);
 }
 
+/* name step in the new-game screen */
+.cr-name { display: grid; gap: 1.6cqw; justify-items: center; align-content: center; }
+.cr-name label { font-size: 2cqw; letter-spacing: .1em; text-transform: uppercase; color: #ff8cc4; }
+.cr-name input {
+  width: min(70cqw, 100%); font-family: var(--font-pixel); font-size: 3.4cqw; text-align: center;
+  background: var(--paper); color: var(--ink); border: .6cqw solid var(--ink); padding: 1.8cqw 2cqw;
+  box-shadow: .8cqw .8cqw 0 var(--magenta);
+}
+.cr-name input:focus-visible { outline: .6cqw solid var(--lamp); outline-offset: .4cqw; }
+.cr-name-err { margin: 0; min-height: 1.4em; font-size: 1.9cqw; color: var(--lamp); }
+
+/* guest list buttons */
+.title-players {
+  position: relative; z-index: 1; font-family: var(--font-pixel); font-size: 2.2cqw;
+  background: transparent; color: var(--paper); border: .4cqw solid var(--paper); padding: 1.2cqw 2cqw; cursor: pointer;
+}
+.title-players:hover, .title-players:focus-visible { background: var(--paper); color: var(--ink); outline: none; }
+.players-btn {
+  display: block; width: 100%; margin: 12px 0 0; padding: 10px 12px; cursor: pointer; text-align: left;
+  font-family: var(--font-pixel); font-size: 10px; letter-spacing: .04em;
+  background: var(--ink); color: var(--paper); border: 0; box-shadow: 4px 4px 0 var(--magenta);
+}
+.players-btn:hover, .players-btn:focus-visible { background: #2a2636; outline: none; }
+
+/* the guest list */
+.players {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+  background: rgba(10, 8, 16, .82); padding: 24px 16px;
+}
+.players-panel {
+  width: min(820px, 100%); max-height: 100%; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--paper); color: var(--ink); padding: 22px 24px 26px; border-radius: 4px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+}
+.players-panel header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; border-bottom: 3px dashed #b9b09c; padding-bottom: 12px; }
+.players-panel h2 { margin: 0; font-family: var(--font-pixel); font-size: 16px; line-height: 1.4; }
+.players-actions { display: flex; gap: 8px; }
+.players-actions button {
+  font-family: var(--font-pixel); font-size: 10px; min-height: 36px; padding: 0 12px; cursor: pointer;
+  background: transparent; border: 2px solid var(--ink); color: var(--ink);
+}
+.players-actions button:hover, .players-actions button:focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+.players-status { margin: 12px 0 0; font-size: 20px; color: #4c4757; }
+.players-body h3 { margin: 18px 0 6px; font-family: var(--font-pixel); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8a2a4a; }
+.pl-list { list-style: none; margin: 0; padding: 0; }
+.pl-row {
+  display: grid; grid-template-columns: 36px minmax(0, 1.4fr) minmax(0, .8fr) minmax(0, 1.4fr);
+  gap: 12px; align-items: center; padding: 8px 6px; border-bottom: 1px solid var(--paper-2);
+}
+.pl-row.me { background: #fff2b0; box-shadow: inset 4px 0 0 var(--magenta); }
+.pl-sprite { width: 32px; height: 32px; image-rendering: pixelated; background: var(--paper-2); }
+.pl-who b { font-family: var(--font-pixel); font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+.pl-id { font-family: var(--font-pixel); font-size: 9px; color: #8a8496; margin-left: 6px; }
+.pl-who small, .pl-status small { display: block; font-size: 17px; line-height: 1.05; color: #6e6878; }
+.pl-stats { display: grid; font-size: 19px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.pl-status { font-size: 19px; line-height: 1.1; }
+.pl-status.done { color: #2f7d4f; }
+@media (max-width: 600px) {
+  .players { padding: 0; }
+  .players-panel { max-height: 100%; height: 100%; border-radius: 0; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .pl-row { grid-template-columns: 36px minmax(0, 1fr); }
+  .pl-stats, .pl-status { grid-column: 2; }
+  .pl-stats { display: flex; gap: 12px; }
+}
+
 /* the ending: waking up at home */
 .ending { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity 1.2s ease; }
 .ending.show { opacity: 1; }

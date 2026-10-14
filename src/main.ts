@@ -7,6 +7,9 @@ import { initInput } from './input';
 import { initCard } from './ui/card';
 import { start } from './game/loop';
 import { initMusic } from './audio/music';
+import { initCreator } from './ui/creator';
+import { initSync } from './online/sync';
+import { initPlayers } from './ui/players';
 
 initMonitoring();
 buildCity();
@@ -15,4 +18,7 @@ initCanvas();
 initInput();
 initCard();
 initMusic();
+initCreator();
+initSync();
+initPlayers();
 start();

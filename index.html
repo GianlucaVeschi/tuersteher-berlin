@@ -82,6 +82,11 @@
           <p class="cr-step" id="crStep">NEW GAME · 1/2</p>
           <h2 class="cr-q" id="crQ">Who's going out tonight?</h2>
           <ul class="cr-list" id="crList"></ul>
+          <div class="cr-name" id="crNameBox" hidden>
+            <label for="crName">Your name on the guest list</label>
+            <input id="crName" type="text" maxlength="16" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="e.g. Gianluca">
+            <p class="cr-name-err" id="crNameErr" aria-live="polite"></p>
+          </div>
           <p class="cr-desc" id="crDesc"></p>
           <p class="cr-hint"><span class="kb">←→ choose · A confirm · B back</span><span class="tc">Tap to choose</span></p>
         </div>
@@ -90,6 +95,7 @@
           <p id="titleSub">Eight clubs. Eight bouncers.<br>One very long weekend.</p>
           <p class="press" id="titlePress">PRESS A</p>
           <p class="touch-hint">Drag on the map to walk · tap to talk</p>
+          <button class="title-players" id="titlePlayers" type="button">GUEST LIST</button>
           <div class="skyline"></div>
         </div>
       </div>
@@ -120,6 +126,7 @@
       <p class="count"><b id="count">0</b>/<span id="countTotal">8</span></p>
       <button class="card-close" id="cardClose" type="button" aria-label="Close stamp card">✕</button>
     </header>
+    <button class="players-btn" id="playersBtn" type="button">Guest list · who else is out tonight</button>
     <div class="wearing"><canvas id="wearingMini" width="16" height="16"></canvas><p><span>Wearing</span><b id="wearing">Red hoodie &amp; cap</b></p></div>
     <section class="quests" id="quests" hidden>
       <p class="eyebrow">Side quests <span id="questCount">0/0</span></p>
@@ -133,6 +140,23 @@
     </footer>
   </aside>
 </main>
+
+<div class="players" id="players" hidden role="dialog" aria-modal="true" aria-labelledby="playersTitle">
+  <div class="players-panel">
+    <header>
+      <div>
+        <p class="eyebrow">Gästeliste</p>
+        <h2 id="playersTitle">Who's out tonight</h2>
+      </div>
+      <div class="players-actions">
+        <button type="button" id="playersRefresh">Refresh</button>
+        <button type="button" id="playersClose" aria-label="Close guest list">✕</button>
+      </div>
+    </header>
+    <p class="players-status" id="playersStatus" aria-live="polite"></p>
+    <div class="players-body" id="playersBody"></div>
+  </div>
+</div>
 <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

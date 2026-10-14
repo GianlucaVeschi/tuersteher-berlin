@@ -145,7 +145,7 @@ export interface NpcDef {
 }
 
 export interface Entity {
-  kind: 'npc' | 'sign' | 'bouncer' | 'bottle' | 'pile';
+  kind: 'npc' | 'sign' | 'column' | 'bouncer' | 'bottle' | 'pile';
   /** street NPCs: id from data/npcs.ts */
   npcId?: string;
   leave?: 'left' | 'right';
@@ -304,6 +304,14 @@ export interface GameState {
   hgTime: number;
   /** Heideglühen back-to-back quest: 0 not asked, 1 ask Woody, 2 Woody said yes, 3 done */
   hgStage: number;
+  /** your name on the public guest list (not unique; the login id is) */
+  name: string | null;
+  /** active play time in ms: only while the game is open and in front */
+  playMs: number;
+  /** play time when you got your last stamp */
+  finishPlayMs: number | null;
+  /** the finish has been recorded on the guest list */
+  onlineFinished: boolean;
 }
 
 export interface Player {
@@ -339,7 +347,8 @@ export interface Typing { id: ReturnType<typeof setInterval>; finish: () => void
 
 export interface ShopUI { shop: Shop; sel: number; entries: string[] }
 
-export interface CreatorState { step: 1 | 2; sel: number; gender: 'man' | 'woman' }
+/** step 1: man/woman, 2: character, 3: your name. nameOnly: just asking an existing player for a name */
+export interface CreatorState { step: 1 | 2 | 3; sel: number; gender: 'man' | 'woman'; nameOnly?: boolean }
 
 export interface TouchState { x: number; y: number; dir: Dir | null; far?: boolean; menu?: boolean }
 

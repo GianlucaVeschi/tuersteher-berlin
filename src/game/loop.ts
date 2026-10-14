@@ -1,3 +1,4 @@
+import { syncTick } from '../online/sync';
 import { updateMusic } from '../audio/music';
 import type { Dir } from '../types';
 import { prerender } from '../render/cityTiles';
@@ -18,7 +19,7 @@ import { inClub, sceneClub, sceneFloor } from '../world/scenes';
 import { followStep } from '../interiors/follower';
 import { blocked, clubAtDoor, shopAtDoor } from '../world/collision';
 import { enterDoor, runIntro } from './scripts';
-import { openCreator } from '../ui/creator';
+import { openCreator, openNamePrompt } from '../ui/creator';
 import { DIRS, MOVE, RUN, held, player, running, state } from '../core/state';
 import { $, reduceMotion, wait } from '../util';
 import { RT } from '../core/runtime';
@@ -26,6 +27,7 @@ import { RT } from '../core/runtime';
 export function startGame() {
   RT.titleOn = false; $('#title').hidden = true;
   if (!state.char) { openCreator(); return; }
+  if (!state.name) { openNamePrompt(); return; }
   RT.busy = false;
   if (!state.intro) runIntro();
 }
@@ -82,6 +84,9 @@ export function frame(now: number) {
   RT.clock += dt;
   update(dt);
   updateMusic();
+  // active play time: only while the game is open, in front, and you've joined the guest list
+  if (!RT.titleOn && state.name && document.visibilityState === 'visible' && document.hasFocus()) state.playMs += raw;
+  syncTick();
   if (RT.tripUntil && !RT.kUntil) {
     if (now > RT.tripUntil) endTrip();
     else cvs.style.filter = reduceMotion ? 'saturate(1.7) hue-rotate(60deg)' : `hue-rotate(${Math.round(now / 25) % 360}deg) saturate(1.8)`;
