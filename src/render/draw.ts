@@ -1,3 +1,4 @@
+import type { Entity } from '../types';
 import { SHOPS } from '../data/outfits';
 import { CLUB_SHORT, zoomLevel } from './zoom';
 import { towerC } from './cityTiles';
@@ -14,12 +15,14 @@ import { T, W } from '../world/tiles';
 import { player, state } from '../core/state';
 export const train = { x: -400, wait: 2500 };
 
-export function playerPx() {
+/** Player position in pixels, including the walk in progress. */
+export function playerPx(): [number, number] {
   if (!player.moving) return [player.x * T, player.y * T];
   const k = player.t / player.dur;
   return [Math.round((player.x + (player.tx - player.x) * k) * T), Math.round((player.y + (player.ty - player.y) * k) * T)];
 }
-export function drawWorld(now) {
+/** Draws the current scene at the world scale; returns [camX, camY, ppx, ppy]. */
+export function drawWorld(now: number): [number, number, number, number] {
   const [ppx, ppy] = playerPx();
   // Small rooms are centred; big maps follow the player.
   const camX = RT.MW * T <= RT.VW ? Math.round((RT.MW * T - RT.VW) / 2) : Math.max(0, Math.min(RT.MW * T - RT.VW, ppx + 8 - RT.VW / 2));
@@ -67,7 +70,7 @@ export function drawWorld(now) {
     ctx.restore();
   }
   // entities + player sorted by row
-  const list = RT.ents.map(e => ({ e, y: e.y }));
+  const list: { e: Entity | null; y: number }[] = RT.ents.map(e => ({ e, y: e.y }));
   list.push({ e: null, y: ppy / T });
   list.sort((a, b) => a.y - b.y);
   list.forEach(({ e }) => {
@@ -82,8 +85,8 @@ export function drawWorld(now) {
       ctx.fillStyle = INK; ctx.fillRect(X + 7, Y + 8, 2, 8); ctx.fillRect(X + 1, Y + 1, 14, 9);
       ctx.fillStyle = '#b08a52'; ctx.fillRect(X + 2, Y + 2, 12, 7);
       ctx.fillStyle = '#7d5f35'; ctx.fillRect(X + 4, Y + 4, 8, 1); ctx.fillRect(X + 4, Y + 6, 6, 1);
-    } else {
-      person(ctx, X, Y - 3, e.dir, 0, e.look);
+    } else if (e.look) {
+      person(ctx, X, Y - 3, e.dir ?? 'down', 0, e.look);
     }
   });
   // Fernsehturm upper part, drawn in front of everything north of it
@@ -94,8 +97,9 @@ export function drawWorld(now) {
   }
   return [camX, camY, ppx, ppy];
 }
-export let chipRects = [];
-export function chip(text, x, y, bg, fg, size) {
+let chipRects: { x: number; y: number; w: number; h: number }[] = [];
+/** A name label on the zoomed-out map, nudged down if it would overlap another. */
+export function chip(text: string, x: number, y: number, bg: string, fg: string, size: number) {
   ctx.font = size + 'px "Press Start 2P", monospace'; ctx.textBaseline = 'top';
   const w = Math.ceil(ctx.measureText(text).width) + 6, h = size + 6;
   const X = Math.round(Math.max(1, Math.min(RT.VW - w - 1, x - w / 2)));
@@ -107,7 +111,7 @@ export function chip(text, x, y, bg, fg, size) {
   ctx.fillStyle = bg; ctx.fillRect(X, Y, w, h);
   ctx.fillStyle = fg; ctx.fillText(text, X + 3, Y + 3);
 }
-export function draw(now) {
+export function draw(now: number) {
   const z = zoomLevel();
   const realW = RT.VW, realH = RT.VH;
   // draw the world at scale z: everything inside treats VW/VH as the visible world size
@@ -123,7 +127,7 @@ export function draw(now) {
   if (z >= 0.9) return;
   // zoomed out: label clubs and shops, and mark the player
   const [camX, camY, ppx, ppy] = cam;
-  const sx = wx => (wx - camX) * z, sy = wy => (wy - camY) * z;
+  const sx = (wx: number) => (wx - camX) * z, sy = (wy: number) => (wy - camY) * z;
   const size = RT.VW < 260 ? 6 : 8;
   chipRects = [];
   if (!inClub()) {

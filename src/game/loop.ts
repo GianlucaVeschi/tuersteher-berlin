@@ -1,10 +1,11 @@
+import type { Dir } from '../types';
 import { prerender } from '../render/cityTiles';
 import { zoomUI } from '../render/zoom';
 import { renderCard } from '../ui/card';
 import { cvs } from '../render/canvas';
 import { applyK, endTrip, timeScale } from '../effects/trip';
 import { draw, train } from '../render/draw';
-import { applySave, save } from '../core/save';
+import { applySave, loadSave, save } from '../core/save';
 import { openShop } from '../ui/shop';
 import { darkroomScene } from '../quests/acts';
 import { pickBottle } from '../quests/sisyphos';
@@ -27,8 +28,8 @@ export function startGame() {
   RT.busy = false;
   if (!state.intro) runIntro();
 }
-export let saveTimer = 0;
-export function tryMove(dir) {
+let saveTimer = 0;
+export function tryMove(dir: Dir) {
   player.dir = dir;
   const [dx, dy] = DIRS[dir];
   const nx = player.x + dx, ny = player.y + dy;
@@ -44,7 +45,7 @@ export function arrive() {
     if (t === STAIRS_DOWN && fl.down) { goFloor(clubId, fl.down.to, fl.down.at); return; }
     if (t === EXIT && fl.exit) { leaveClub(clubId); return; }
     if (isDoorTile(t) && fl.doors && fl.doors[ICHAR[t]]) { const d = fl.doors[ICHAR[t]]; goFloor(clubId, d.to, d.at); return; }
-    const b = RT.ents.find(en => en.kind === 'bottle' && en.x === player.x && en.y === player.y && !state.pfand.taken[en.bid]);
+    const b = RT.ents.find(en => en.kind === 'bottle' && en.x === player.x && en.y === player.y && en.bid && !state.pfand.taken[en.bid]);
     if (b) pickBottle(b);
     if (t === DARK && RT.follower && RT.follower.quest === 'darkroom') { darkroomScene(); return; }
     return;
@@ -57,7 +58,7 @@ export function arrive() {
   }
   if (++saveTimer % 8 === 0) save();
 }
-export function update(dt) {
+export function update(dt: number) {
   if (player.moving) {
     player.t += dt;
     if (player.t >= player.dur) {
@@ -73,8 +74,8 @@ export function update(dt) {
     if (train.x > CITY_W * T + 20) { train.x = 13 * T - 140; train.wait = 7000 + Math.random() * 9000; }
   }
 }
-export let last = performance.now();
-export function frame(now) {
+let last = performance.now();
+export function frame(now: number) {
   const raw = Math.min(50, now - last); last = now;
   const dt = raw * timeScale(now);
   RT.clock += dt;
@@ -89,9 +90,7 @@ export function frame(now) {
 }
 
 export function start() {
-  let saved = null;
-  { try { saved = JSON.parse(localStorage.getItem('tuersteher-save') || 'null'); } catch (e) { saved = null; } }
-  applySave(saved);
+  applySave(loadSave());
   renderCard();
   zoomUI();
   if (state.intro) {

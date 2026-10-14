@@ -5,20 +5,24 @@ import { get } from '../world/grid';
 import { INK, circle, pick, rnd } from '../util';
 import { B, BR, C, D, DK, F, G, R, RL, S, SA, T, TR, W } from '../world/tiles';
 import { RT } from '../core/runtime';
+import type { Building, Club } from '../types';
+
 /* ================= PRERENDER MAP ================= */
+// The street is drawn once into this canvas; each frame copies the visible part.
 RT.mc = document.createElement('canvas');
 RT.mc.width = RT.MW * T; RT.mc.height = RT.MH * T;
-export const m = RT.mc.getContext('2d');
-export function P(x, y, w, h, c) { m.fillStyle = c; m.fillRect(x, y, w, h); }
-export const isWater = t => t === W;
+export const m = RT.mc.getContext('2d')!;
+/** Fill a rectangle on the street map canvas. */
+export function P(x: number, y: number, w: number, h: number, c: string) { m.fillStyle = c; m.fillRect(x, y, w, h); }
+export const isWater = (t: number) => t === W;
 
-export function drawGrass(X, Y) {
+export function drawGrass(X: number, Y: number) {
   P(X, Y, 16, 16, '#26473a');
   for (let i = 0; i < 3; i++) { const a = Math.floor(rnd() * 14), b = Math.floor(rnd() * 14); P(X + a, Y + b, 1, 2, '#30594a'); P(X + a + 1, Y + b + 1, 1, 1, '#30594a'); }
   if (rnd() < 0.15) P(X + Math.floor(rnd() * 14), Y + Math.floor(rnd() * 14), 1, 1, '#8a6fb0');
   if (rnd() < 0.3) P(X + Math.floor(rnd() * 14), Y + Math.floor(rnd() * 14), 2, 1, '#1f3d30');
 }
-export function drawTile(x, y) {
+export function drawTile(x: number, y: number) {
   const X = x * T, Y = y * T, t = RT.map[y][x];
   switch (t) {
     case B:
@@ -109,7 +113,7 @@ export function drawRoadMarks() {
   });
 }
 
-export function windows(X, Y, w, h, skipDoor) {
+export function windows(X: number, Y: number, w: number, h: number, skipDoor: boolean) {
   for (let ry = 1; ry < h; ry++) for (let cx = 0; cx < w; cx++) {
     if (skipDoor && ry === h - 1 && cx === Math.floor(w / 2)) continue;
     for (const ox of [3, 10]) {
@@ -122,10 +126,10 @@ export function windows(X, Y, w, h, skipDoor) {
     }
   }
 }
-export function drawAltbau(b) {
+export function drawAltbau(b: Building) {
   const X = b.x * T, Y = b.y * T, Wd = b.w * T, H = b.h * T;
-  const walls = ['#76687a', '#66737e', '#7d7262'][b.v];
-  const roofs = ['#4a3c58', '#3d4458', '#523d3d'][b.v];
+  const walls = ['#76687a', '#66737e', '#7d7262'][b.v ?? 0];
+  const roofs = ['#4a3c58', '#3d4458', '#523d3d'][b.v ?? 0];
   P(X, Y, Wd, H, INK);
   P(X + 1, Y + 1, Wd - 2, 15, roofs);
   for (let i = 4; i < 15; i += 4) P(X + 1, Y + 1 + i, Wd - 2, 1, 'rgba(0,0,0,.25)');
@@ -157,7 +161,7 @@ export function drawAltbau(b) {
     P(dX + 4, Y + H - 13, 8, 3, '#d9c27a');
   }
 }
-export function drawStation(b) {
+export function drawStation(b: Building) {
   const X = b.x * T, Y = b.y * T, Wd = b.w * T, H = b.h * T;
   P(X, Y, Wd, H, INK);
   P(X + 1, Y + 1, Wd - 2, 30, '#3f6b6e');
@@ -174,12 +178,12 @@ export function drawStation(b) {
   m.fillText('OSTKREUZ', cx - 28, Y + 5);
 }
 export const towerC = document.createElement('canvas');
-export function drawTower(b) {
+export function drawTower(b: Building) {
   // Draw the whole tower (rows TOWER.top .. bottom of footprint) into its own canvas.
   const Wd = b.w * T, H = (b.y + b.h - TOWER.top) * T;
   towerC.width = Wd; towerC.height = H;
-  const g = towerC.getContext('2d');
-  const P = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+  const g = towerC.getContext('2d')!;
+  const P = (x: number, y: number, w: number, h: number, c: string) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
   const m = g, X = 0, Y = 0, cx = Wd / 2;
   // plaza
   P(0, H - b.h * T + 2, Wd, b.h * T - 2, '#5f5a70');
@@ -206,8 +210,8 @@ export function drawTower(b) {
   const fy = (b.y - TOWER.top) * T;
   mDraw(towerC, 0, fy, Wd, H - fy, b.x * T, b.y * T);
 }
-export function mDraw(img, sx, sy, sw, sh, dx, dy) { m.drawImage(img, sx, sy, sw, sh, dx, dy, sw, sh); }
-export function drawObTower(b) {
+export function mDraw(img: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number) { m.drawImage(img, sx, sy, sw, sh, dx, dy, sw, sh); }
+export function drawObTower(b: Building) {
   const X = b.x * T, Y = b.y * T;
   P(X + 1, Y - 10, 14, 26, INK);
   P(X + 2, Y - 9, 12, 24, '#9a4038');
@@ -217,7 +221,7 @@ export function drawObTower(b) {
   P(X + 7, Y - 18, 2, 5, INK);
 }
 
-export function signText(text, X, Y, Wd, color) {
+export function signText(text: string, X: number, Y: number, Wd: number, color: string) {
   m.font = '8px "Press Start 2P", monospace'; m.textBaseline = 'top';
   const tw = Math.ceil(m.measureText(text).width);
   const sx = Math.round(X + Wd / 2 - tw / 2);
@@ -225,9 +229,9 @@ export function signText(text, X, Y, Wd, color) {
   P(sx - 3, Y + 3, tw + 6, 11, '#0b0a10');
   m.fillStyle = color; m.fillText(text, sx, Y + 5);
 }
-export function drawClub(c) {
+export function drawClub(c: Club) {
   const X = c.x * T, Y = c.y * T, Wd = c.w * T, H = c.h * T;
-  const base = { berghain: '#6c6a66', tresor: '#4c3532', kitkat: '#4f1d3b', aboutblank: '#55555f', katerblau: '#6a4a2c', sisyphos: '#5c4630', cdv: '#5a432d' }[c.style];
+  const base = ({ berghain: '#6c6a66', tresor: '#4c3532', kitkat: '#4f1d3b', aboutblank: '#55555f', katerblau: '#6a4a2c', sisyphos: '#5c4630', cdv: '#5a432d' } as Record<string, string>)[c.style];
   P(X, Y, Wd, H, INK);
   P(X + 1, Y + 1, Wd - 2, H - 2, base);
   P(X + 1, Y + 1, Wd - 2, 15, 'rgba(0,0,0,.28)');

@@ -1,8 +1,11 @@
 import { RT } from '../core/runtime';
 import { $ } from '../util';
+import type { Club } from '../types';
+
 /* ================= INSIDE ================= */
 export const inside = $('#inside');
-export function showInside(c, fresh) {
+/** The short "you're in" scene with light beams; fresh shows the +1 STEMPEL badge. Resolves on A. */
+export function showInside(c: Club, fresh: boolean): Promise<void> {
   return new Promise(resolve => {
     inside.style.setProperty('--club', c.glow);
     $('#inClub').textContent = c.name.toUpperCase();

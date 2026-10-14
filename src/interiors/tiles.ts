@@ -1,14 +1,16 @@
+import type { Scene } from '../types';
 import { RT } from '../core/runtime';
 import { INK, circle, pick, rnd } from '../util';
 import { T, WALLISH } from '../world/tiles';
-export function drawInteriorTiles(sc) {
+/** Draws a club floor's tiles once into its own canvas. */
+export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
   const cv = document.createElement('canvas');
   cv.width = sc.w * T; cv.height = sc.h * T;
-  const g = cv.getContext('2d');
-  const P = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
-  const at = (x, y) => (x < 0 || y < 0 || x >= sc.w || y >= sc.h) ? 62 : sc.map[y][x];
-  const floorBase = (X, Y) => { P(X, Y, 16, 16, '#2f2e35'); for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#37363e', '#28272d'])); };
-  const face = (X, Y) => { // raw concrete wall seen from the front, with formwork tie holes
+  const g = cv.getContext('2d')!;
+  const P = (x: number, y: number, w: number, h: number, c: string) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+  const at = (x: number, y: number) => (x < 0 || y < 0 || x >= sc.w || y >= sc.h) ? 62 : sc.map[y][x];
+  const floorBase = (X: number, Y: number) => { P(X, Y, 16, 16, '#2f2e35'); for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#37363e', '#28272d'])); };
+  const face = (X: number, Y: number) => { // raw concrete wall seen from the front, with formwork tie holes
     P(X, Y, 16, 16, '#5c5a56'); P(X, Y, 1, 16, '#4e4c48'); P(X, Y, 16, 2, '#6e6c67'); P(X, Y + 13, 16, 3, '#2a2928');
     [[4, 5], [12, 5], [4, 10], [12, 10]].forEach(([a, b]) => P(X + a, Y + b, 1, 1, '#45433f'));
   };

@@ -1,11 +1,17 @@
+import type { Dir, Look } from '../types';
+
+/** [x, y, w, h, colour] in sprite pixels; a missing colour keeps the previous one */
+type Part = [number, number, number, number, string | undefined];
 import { INK } from '../util';
 /* ================= SPRITES ================= */
-export function shade(hex, k) {
+/** Darken (k < 1) or lighten a hex colour. */
+export function shade(hex: string, k: number) {
   const n = parseInt(hex.slice(1), 16);
-  const f = v => Math.max(0, Math.min(255, Math.round(v * k)));
+  const f = (v: number) => Math.max(0, Math.min(255, Math.round(v * k)));
   return '#' + [f(n >> 16), f((n >> 8) & 255), f(n & 255)].map(v => v.toString(16).padStart(2, '0')).join('');
 }
-export function person(g, X, Y, dir, step, L) {
+/** Draws a 16x16 person. step: 0 standing, 1/2 walking frames. */
+export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: Dir, step: number, L: Look) {
   const flip = dir === 'right';
   const d = flip ? 'left' : dir;
   const b = L.big ? 1 : 0;
@@ -14,7 +20,7 @@ export function person(g, X, Y, dir, step, L) {
   if (flip) { g.translate(16, 0); g.scale(-1, 1); }
   g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(3, 14, 10, 2);
   if (step) g.translate(0, -1);
-  const parts = [];
+  const parts: Part[] = [];
   if (d === 'left') parts.push([step ? 5 : 6, 11, 2, step === 1 ? 3 : 4, L.legs], [step ? 9 : 8, 11, 2, step === 2 ? 3 : 4, L.legs]);
   else parts.push([5, 11, 2, step === 1 ? 3 : 4, L.legs], [9, 11, 2, step === 2 ? 3 : 4, L.legs]);
   parts.push([4 - b, 7, 8 + 2 * b, 5, L.top]);
@@ -22,8 +28,8 @@ export function person(g, X, Y, dir, step, L) {
   parts.push([4, 1, 8, 7, L.skin]);
   g.fillStyle = INK;
   parts.forEach(p => g.fillRect(p[0] - 1, p[1] - 1, p[2] + 2, p[3] + 2));
-  parts.forEach(p => { g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
-  const det = [];
+  parts.forEach(p => { if (p[4] !== undefined) g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
+  const det: Part[] = [];
   if (d === 'left') det.push([6, 8, 3, 3, shade(L.top, 0.7)], [7, 11, 1, 1, L.skin]);
   else det.push([3 - b, 11, 1, 1, L.skin], [12 + b, 11, 1, 1, L.skin]);
   if (L.stripes) det.push([4 - b, 8, 8 + 2 * b, 1, L.stripes], [4 - b, 10, 8 + 2 * b, 1, L.stripes]);
@@ -65,6 +71,6 @@ export function person(g, X, Y, dir, step, L) {
     if (L.beard) det.push([4, 6, 4, 2, L.beard]);
     if (L.tattoo) det.push([7, 5, 1, 1, '#3b3a5c'], [6, 3, 1, 1, '#3b3a5c']);
   }
-  det.forEach(p => { g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
+  det.forEach(p => { if (p[4] !== undefined) g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
   g.restore();
 }

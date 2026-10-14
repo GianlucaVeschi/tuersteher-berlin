@@ -25,23 +25,23 @@ export function renderCard() {
     const li = document.createElement('li');
     li.innerHTML = `<span class="st${done ? ' done' : ''}" style="--c:${shade(c.glow, 0.62)}">${done ? c.initials : '?'}</span>
       <div><b></b><small></small></div>`;
-    li.querySelector('b').textContent = c.name;
-    li.querySelector('small').textContent = `${c.area} · ${c.need} questions${done ? ' · in' : ''}`;
+    li.querySelector('b')!.textContent = c.name;
+    li.querySelector('small')!.textContent = `${c.area} · ${c.need} questions${done ? ' · in' : ''}`;
     const dc = document.createElement('small'); dc.className = 'dress' + (dressOK(c.id, state.outfit) ? ' ok' : '');
     dc.textContent = (dressOK(c.id, state.outfit) ? '✓ ' : '✗ ') + DRESS[c.id].hint;
-    li.querySelector('div').appendChild(dc);
+    li.querySelector('div')!.appendChild(dc);
     ol.appendChild(li);
   });
   const n = stampCount();
-  $('#count').textContent = n;
+  $('#count').textContent = String(n);
   $('#cardBtnCount').textContent = `${n}/${CLUBS.length}`;
-  drawMini($('#mbarMini').getContext('2d'), state.outfit);
+  drawMini($<HTMLCanvasElement>('#mbarMini').getContext('2d')!, state.outfit);
   $('#wearing').textContent = OUTFITS[state.outfit].name;
-  drawMini($('#wearingMini').getContext('2d'), state.outfit);
+  drawMini($<HTMLCanvasElement>('#wearingMini').getContext('2d')!, state.outfit);
   $('#hud').textContent = `STEMPEL ${n}/${CLUBS.length}`;
   // side quests for every club you have been inside
   const qs = $('#quests'), ql = $('#questList');
-  const clubsIn = Object.keys(INTERIORS || {}).filter(id => state.visited[id]);
+  const clubsIn = Object.keys(INTERIORS).filter(id => state.visited[id]);
   qs.hidden = !clubsIn.length;
   if (!qs.hidden) {
     ql.innerHTML = '';
@@ -57,9 +57,9 @@ export function renderCard() {
       const li = document.createElement('li');
       li.className = done ? 'done' : '';
       li.innerHTML = '<span class="qmark"></span><div><b></b><small></small></div>';
-      li.querySelector('.qmark').textContent = done ? '✓' : '○';
-      li.querySelector('b').textContent = q.title;
-      li.querySelector('small').textContent = done ? 'Done' : questHint(clubId, q);
+      li.querySelector('.qmark')!.textContent = done ? '✓' : '○';
+      li.querySelector('b')!.textContent = q.title;
+      li.querySelector('small')!.textContent = done ? 'Done' : questHint(clubId, q);
       ql.appendChild(li);
     }));
     $('#questCount').textContent = `${doneAll}/${total}`;
@@ -84,7 +84,7 @@ resetBtn.addEventListener('click', () => {
   Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } })); if (inClub()) useScene('city'); updateFloorTag();
   if (RT.creator) { RT.creator = null; creatorEl.hidden = true; }
   if (RT.shopUI) { RT.shopUI = null; shopEl.hidden = true; }
-  RT.ents.forEach(e => { if (e.kind === 'bouncer') { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
+  RT.ents.forEach(e => { if (e.club) { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
   player.x = player.tx = START.x; player.y = player.ty = START.y; player.dir = START.dir; player.moving = false;
   if (RT.insideResolve) { inside.hidden = true; RT.insideResolve = null; }
   closeBox(); if (RT.typing) { clearInterval(RT.typing.id); RT.typing = null; }

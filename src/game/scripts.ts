@@ -1,3 +1,4 @@
+import type { Club, Entity } from '../types';
 import { danceHere } from '../quests/dance';
 import { ACTS } from '../quests/acts';
 import { inClub, sceneClub } from '../world/scenes';
@@ -18,8 +19,10 @@ import { ask, closeBox, say } from '../ui/dialog';
 import { DIRS, MOVE, OPP, player, state } from '../core/state';
 /* ================= SCRIPTS ================= */
 
-export async function bouncerTalk(e) {
+/** The door: dress check, then the bouncer's questions. */
+export async function bouncerTalk(e: Entity) {
   const c = e.club;
+  if (!c) return;
   if (state.stamps[c.id]) { await say(c.again); return; }
   await say('(The bouncer looks you up and down.)');
   if (!dressOK(c.id, state.outfit)) {
@@ -77,10 +80,10 @@ export async function interact() {
   let e = RT.ents.find(en => covers(en, tx, ty));
   // staff behind a counter: talk across it
   if (!e && COUNTERS.has(get(tx, ty))) e = RT.ents.find(en => covers(en, tx + dx, ty + dy));
-  if (e && e.kind === 'bottle') { if (!state.pfand.taken[e.bid]) pickBottle(e); return; }
+  if (e && e.kind === 'bottle') { if (e.bid && !state.pfand.taken[e.bid]) pickBottle(e); return; }
   if (!e && inClub()) {
     const clubId = sceneClub(), ch = ICHAR[get(tx, ty)];
-    const tileAct = INTERIORS[clubId].examineActs && INTERIORS[clubId].examineActs[ch];
+    const tileAct = INTERIORS[clubId].examineActs?.[ch];
     if (tileAct && ACTS[tileAct]) {
       RT.busy = true;
       try { await ACTS[tileAct](null, clubId); } finally { closeBox(); RT.busy = false; }
@@ -101,12 +104,12 @@ export async function interact() {
   if (e.kind !== 'sign') e.dir = OPP[player.dir];
   try {
     if (e.kind === 'bouncer') await bouncerTalk(e);
-    else if (e.act && ACTS[e.act]) await ACTS[e.act](e, inClub() ? sceneClub() : null);
-    else for (const l of e.lines) await say(l);
+    else if (e.act && ACTS[e.act]) await ACTS[e.act](e, inClub() ? sceneClub() : '');
+    else for (const l of e.lines || []) await say(l);
   } finally { closeBox(); RT.busy = false; }
 }
-export async function enterDoor(c) {
-  if (INTERIORS && INTERIORS[c.id]) { await enterClub(c, false); return; }
+export async function enterDoor(c: Club) {
+  if (INTERIORS[c.id]) { await enterClub(c, false); return; }
   RT.busy = true;
   await showInside(c, false);
   player.x = player.tx = c.dx; player.y = player.ty = c.by; player.dir = 'down';

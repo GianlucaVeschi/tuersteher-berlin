@@ -1,8 +1,9 @@
 import { CLUBS } from './clubs';
+import type { Character, DressCode, Look, Outfit, Shop, ShopDef, Tag } from '../types';
 /* ================= OUTFITS & SHOPS ================= */
-export const TAG_LABEL = { black: 'ALL BLACK', latex: 'FETISH', colorful: 'COLORFUL', vintage: 'VINTAGE', tourist: 'TOURIST', suit: 'FANCY', tech: 'TECH' };
-export const BASE_LOOK = { skin: '#f0c7a0', hair: '#2b1f1a' };
-export const OUTFITS = {
+export const TAG_LABEL: Record<Tag, string> = { black: 'ALL BLACK', latex: 'FETISH', colorful: 'COLORFUL', vintage: 'VINTAGE', tourist: 'TOURIST', suit: 'FANCY', tech: 'TECH' };
+export const BASE_LOOK: Pick<Look, 'skin' | 'hair'> = { skin: '#f0c7a0', hair: '#2b1f1a' };
+export const OUTFITS: Record<string, Outfit> = {
   tourist:     { name: 'Red hoodie & cap',       tags: ['tourist'],             look: { top: '#e04f5f', legs: '#26243a', hat: '#1c1a28' } },
   sunhat:      { name: 'Sun hat & souvenir tee', tags: ['tourist'],             look: { top: '#f2c14e', legs: '#4ea8de', hat: '#efe3c0' } },
   flannel:     { name: 'Flannel & beanie',       tags: ['vintage'],             look: { top: '#8a2f2f', legs: '#2b3f6b', stripes: '#3a1f1f', hat: '#3a5a40' } },
@@ -24,7 +25,7 @@ export const OUTFITS = {
 };
 
 // Starting characters. `body` is kept when you change clothes; `outfit` is what they start in.
-export const CHARACTERS = {
+export const CHARACTERS: Record<'man' | 'woman', Character[]> = {
   man: [
     { id: 'tourist_m', name: 'The Tourist', desc: 'First night in Berlin. Very excited, very visible.', body: { skin: '#f3c9a8', hair: '#c9a24a' }, outfit: 'tourist' },
     { id: 'hipster_m', name: 'The Hipster', desc: 'Moved to Neukölln in 2014. Has opinions about coffee.', body: { skin: '#e2b08c', hair: '#5a3a22', beard: '#5a3a22' }, outfit: 'flannel' },
@@ -39,8 +40,9 @@ export const CHARACTERS = {
   ]
 };
 export const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman);
-export const charById = id => ALL_CHARS.find(c => c.id === id) || null;
-export const DRESS = {
+export const charById = (id: string | null): Character | null => ALL_CHARS.find(c => c.id === id) || null;
+// Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
+export const DRESS: Record<string, DressCode> = {
   berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Türsteher: … Nein.' },
   tresor:     { ok: ['black'],               hint: 'Dark and functional. Black works.',     no_line: 'Jens: Bit bright for a vault, mate.' },
   kitkat:     { ok: ['latex'],               hint: 'Fetish: latex, leather or very little.', no_line: "Dee: Darling, you're wearing far too much. And the wrong things." },
@@ -49,14 +51,15 @@ export const DRESS = {
   sisyphos:   { ok: ['colorful'],            hint: 'Bright colors, glitter, festival.',     no_line: "Mo: It's a festival in here, not a funeral. Color, please." },
   cdv:        { no: ['suit'],                hint: 'Relaxed. Just not too fancy.',          no_line: 'Uwe: Bit fancy for a wooden deck, no?' }
 };
-export function dressOK(clubId, outfitId) {
+export function dressOK(clubId: string, outfitId: string): boolean {
   const d = DRESS[clubId], tags = OUTFITS[outfitId].tags;
-  if (d.ok && !tags.some(t => d.ok.includes(t))) return false;
-  if (d.no && tags.some(t => d.no.includes(t))) return false;
+  const { ok, no } = d;
+  if (ok && !tags.some(t => ok.includes(t))) return false;
+  if (no && tags.some(t => no.includes(t))) return false;
   return true;
 }
 
-export const SHOPS = [
+const SHOP_DEFS: ShopDef[] = [
   { id: 'humana', name: 'Humana', area: 'Frankfurter Tor', x: 13, y: 7, w: 6, h: 6, v: 0, band: '#e9e4d6', ink: '#2a6a4a', label: 'HUMANA',
     line: 'Humana: Second-hand, floor after floor of it. Try anything on.', items: ['thriftblack', 'seventies', 'gdr', 'suit', 'tourist'] },
   { id: 'blackstyle', name: 'Blackstyle', area: 'Prenzlauer Berg', x: 19, y: 7, w: 6, h: 6, v: 1, band: '#0c0c12', ink: '#e8e8f0', label: 'BLACKSTYLE',
@@ -66,5 +69,5 @@ export const SHOPS = [
   { id: 'syld', name: 'SYLD', area: 'near Frankfurter Allee', x: 30, y: 33, w: 6, h: 6, v: 2, band: '#d94bd1', ink: '#fff6a8', label: 'SYLD',
     line: 'SYLD: Glitter, chains, shiny pants. All by Berlin designers.', items: ['glitter', 'rainbow'] }
 ];
-SHOPS.forEach(sh => { sh.dx = sh.x + Math.floor(sh.w / 2); sh.doorY = sh.y + sh.h - 1; sh.by = sh.y + sh.h; });
+export const SHOPS: Shop[] = SHOP_DEFS.map(sh => ({ ...sh, dx: sh.x + Math.floor(sh.w / 2), doorY: sh.y + sh.h - 1, by: sh.y + sh.h }));
 CLUBS.forEach(c => { c.sign = c.sign.concat('Dress code: ' + DRESS[c.id].hint); });

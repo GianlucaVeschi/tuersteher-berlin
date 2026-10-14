@@ -157,7 +157,8 @@ export interface Entity {
   sheet?: string;
 }
 
-export interface Road { h: boolean; x?: number; y?: number; a: number; b: number }
+/** A two-lane road: horizontal at row y, or vertical at column x, from a to b. */
+export type Road = { h: true; y: number; a: number; b: number } | { h: false; x: number; a: number; b: number };
 
 export interface ShopSign { label: string; band: string; ink: string; door: boolean }
 
@@ -181,6 +182,13 @@ export interface Scene {
   canvas: HTMLCanvasElement;
   /** bounding box of the dancefloor tiles */
   dance?: Rect;
+}
+
+/** A club floor: always belongs to a club and has a dancefloor box (possibly empty). */
+export interface ClubScene extends Scene {
+  club: string;
+  floor: string;
+  dance: Rect;
 }
 
 /* ---------- club interiors (data in data/interiors.ts) ---------- */
@@ -283,3 +291,39 @@ export interface SaveData extends Partial<GameState> {
   y?: number;
   dir?: Dir;
 }
+
+/* ---------- runtime UI state ---------- */
+
+export interface DialogState {
+  mode: 'say' | 'ask';
+  ready: boolean;
+  resolve: (choice: number) => void;
+  /** number of choices (ask) */
+  n: number;
+  /** selected choice (ask) */
+  sel: number;
+}
+
+export interface Typing { id: ReturnType<typeof setInterval>; finish: () => void }
+
+export interface ShopUI { shop: Shop; sel: number; entries: string[] }
+
+export interface CreatorState { step: 1 | 2; sel: number; gender: 'man' | 'woman' }
+
+export interface TouchState { x: number; y: number; dir: Dir | null; far?: boolean; menu?: boolean }
+
+/** Someone walking behind you (Sascha on the way to the darkroom). */
+export interface Follower {
+  name: string;
+  look: Look;
+  quest: string;
+  ent: Entity;
+  homeScene: string;
+  x: number; y: number;
+  /** previous tile, for the walk animation */
+  px: number; py: number;
+  dir: Dir;
+}
+
+/** A quest handler: runs when you talk to someone (e) or examine a tile (e = null) on a club floor. */
+export type Act = (e: Entity | null, clubId: string) => Promise<void>;

@@ -1,3 +1,5 @@
+import type { InteriorDef } from '../types';
+
 /* Club interiors. Each floor is a tile map drawn as ASCII art.
 
    Legend
@@ -14,7 +16,7 @@
    `people` entries: { x, y, look, lines } or { x, y, look, act } where `act`
    names a quest handler in game.js. Dancers are scattered on ',' tiles.
 */
-export const INTERIORS: Record<string, any> = {
+export const INTERIORS: Record<string, InteriorDef> = {
   berghain: {
     name: 'Berghain',
     floors: {

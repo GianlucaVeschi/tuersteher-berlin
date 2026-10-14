@@ -7,7 +7,7 @@ import { player, state } from '../core/state';
 import { RT } from '../core/runtime';
 export async function danceHere() {
   RT.busy = true;
-  const dirs = ['down', 'left', 'up', 'right'];
+  const dirs = ['down', 'left', 'up', 'right'] as const;
   for (let i = 0; i < 8; i++) { player.dir = dirs[i % 4]; await wait(reduceMotion ? 0 : 110); }
   player.dir = 'down';
   const clubId = sceneClub(), fl = sceneFloor();

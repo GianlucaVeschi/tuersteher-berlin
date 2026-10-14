@@ -1,5 +1,7 @@
-/* ================= DATA ================= */
-export const CLUBS = [
+import type { Club, ClubDef } from '../types';
+
+/* ================= CLUBS ================= */
+const CLUB_DEFS: ClubDef[] = [
   {
     id: 'berghain', name: 'Berghain', area: 'Friedrichshain', x: 26, y: 7, w: 10, h: 6, need: 3, signSide: 2,
     style: 'berghain', glow: '#ff4d6d', initials: 'BG',
@@ -125,11 +127,8 @@ export const CLUBS = [
     ]
   }
 ];
-CLUBS.forEach(c => {
-  c.dx = c.x + Math.floor(c.w / 2);
-  c.doorY = c.y + c.h - 1;
-  c.by = c.y + c.h;
-});
+// The door sits in the middle of the bottom wall; the bouncer stands on the pavement below it.
+export const CLUBS: Club[] = CLUB_DEFS.map(c => ({ ...c, dx: c.x + Math.floor(c.w / 2), doorY: c.y + c.h - 1, by: c.y + c.h }));
 export const INTRO = [
   'Friday, 23:47. Warschauer Straße.',
   'Seven clubs. Seven bouncers. One long weekend.',

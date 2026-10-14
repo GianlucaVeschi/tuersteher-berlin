@@ -1,3 +1,4 @@
+import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
 import { INTERIORS } from '../data/interiors';
@@ -12,22 +13,24 @@ import { pick, reduceMotion, wait } from '../util';
 import { fade, toast } from '../interiors/transitions';
 import { ask, closeBox, say } from '../ui/dialog';
 import { PILE_LINES, showPhotoStrip, spankFx } from './kitkat';
-export const ACTS = {
+/** Quest handlers, looked up by the `act` name on people and tiles in data/interiors.ts. */
+export const ACTS: Record<string, Act> = {
   async pile(e, clubId) {
-    const L = PILE_LINES[e.join] || PILE_LINES.busy;
+    if (!e) return;
+    const L = (e.join && PILE_LINES[e.join]) || PILE_LINES.busy;
     await say(L.look);
     await say(L.hi);
     if (e.join === 'busy') return;
     const a = await ask('', ['Can I join? If everyone is into it', 'Just watch, if that\'s okay', 'Sorry, wrong corner']);
     if (a === 2) { await say('Them: No worries! Bye!'); return; }
     if (a === 1) { await say('Them: Watching is fine. No touching, no photos. Enjoy the show.'); return; }
-    await say(L.ok);
+    if (L.ok) await say(L.ok);
     if (e.join !== 'yes') return;
     closeBox();
     await fade(true);
     await wait(reduceMotion ? 300 : 1200);
     await fade(false);
-    await say(L.after);
+    if (L.after) await say(L.after);
     await completeQuest(clubId, 'orgy');
   },
   async kkGarderobe(e, clubId) {
@@ -40,7 +43,7 @@ export const ACTS = {
     await completeQuest(clubId, 'garderobe');
   },
   async pole(e, clubId) {
-    const dirs = ['down', 'left', 'up', 'right'];
+    const dirs = ['down', 'left', 'up', 'right'] as const;
     for (let i = 0; i < 12; i++) { player.dir = dirs[i % 4]; await wait(reduceMotion ? 0 : 80); }
     player.dir = 'down';
     await say(pick(['(You grab the pole and spin. The crowd whoops.)', '(One hand on the pole, one leg up. You are a star.)']));
@@ -110,7 +113,8 @@ export const ACTS = {
     await completeQuest(clubId, 'juggle');
   },
   async story(e, clubId) {
-    const lines = INTERIORS[clubId].stories[e.story] || [];
+    if (!e || !e.story) return;
+    const lines = INTERIORS[clubId].stories?.[e.story] || [];
     for (const l of lines) await say(l);
     if (!state.heard[e.story]) {
       state.heard[e.story] = true; save(); renderCard();
@@ -169,6 +173,7 @@ export const ACTS = {
   },
   // Toilet chain: the guy at the toilet door wants K -> Mila on the dancefloor has it -> back to him.
   async toiletGuy(e, clubId) {
+    if (!e) return;
     if (questDone(clubId, 'toilet')) { await say('Toilet guy: Wild, right? Drink some water. Seriously.'); return; }
     if (state.kStage === 0) {
       await say('Toilet guy: Toilets are full. Everyone in there is waiting for the same thing.');
@@ -181,7 +186,8 @@ export const ACTS = {
     await say('Toilet guy: You got it? Nice. Come on.');
     closeBox();
     await fade(true);
-    e.x = e.movedTo[0]; e.y = e.movedTo[1]; e.dir = 'right';
+    if (e.movedTo) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; }
+    e.dir = 'right';
     player.x = player.tx = e.x + 1; player.y = player.ty = e.y; player.dir = 'left'; player.moving = false;
     await fade(false);
     await say('(You squeeze into a stall together. He racks up two lines on the back of his phone.)');
@@ -203,9 +209,10 @@ export const ACTS = {
     toast('GOT · A TINY BAG');
   },
   async dancer(e, clubId) {
+    if (!e) return;
     if (clubId === 'berghain' && state.kStage === 1 && Math.random() < 0.6) {
       await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left.', "Raver: Mila? She's always dancing near the left speakers."]));
-    } else await say(e.lines[0]);
+    } else if (e.lines) await say(e.lines[0]);
   },
   async awareness() {
     if (RT.tripUntil) {
@@ -218,6 +225,7 @@ export const ACTS = {
     await say('Awareness: Drink water, take breaks, look out for each other.');
   },
   async sascha(e, clubId) {
+    if (!e) return;
     if (questDone(clubId, 'darkroom')) { await say('Sascha: That was fun. See you on the floor.'); return; }
     await say('Sascha: Hey. Having a good night?');
     const a = await ask('', ['Want to go somewhere darker?', 'Just saying hi']);
@@ -226,15 +234,18 @@ export const ACTS = {
     if (b === 1) { await say('Sascha: Whoa. Ask first.'); return; }
     await say('Sascha: I do. Lead the way. The darkroom is on the ground floor.');
     RT.ents.splice(RT.ents.indexOf(e), 1);
+    if (!e.look) return;
     RT.follower = { name: 'Sascha', look: e.look, quest: 'darkroom', ent: e, homeScene: RT.scene, x: e.x, y: e.y, px: e.x, py: e.y, dir: 'down' };
     toast('Sascha follows you');
   }
 };
 export async function darkroomScene() {
   const clubId = sceneClub();
+  const f = RT.follower;
+  if (!f) return;
   RT.busy = true;
   await fade(true);
-  await say(`(It's very dark. ${RT.follower.name} squeezes your hand.)`);
+  await say(`(It's very dark. ${f.name} squeezes your hand.)`);
   await say('(What happens in the darkroom stays in the darkroom.)');
   closeBox();
   releaseFollower();

@@ -1,3 +1,4 @@
+import type { ClubScene, Entity } from '../types';
 import { get } from '../world/grid';
 import { drawPile } from '../quests/kitkat';
 import { drawBottle } from '../quests/sisyphos';
@@ -11,8 +12,9 @@ import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
 import { RT } from '../core/runtime';
 import { SCENES } from '../world/scenes';
-export function drawInteriorFx(now, camX, camY, ppx, ppy) {
-  const sc = SCENES[RT.scene];
+/** Everything on a club floor that moves: lights, people, steam, darkness. */
+export function drawInteriorFx(now: number, camX: number, camY: number, ppx: number, ppy: number) {
+  const sc = SCENES[RT.scene] as ClubScene;
   const fl = INTERIORS[sc.club].floors[sc.floor];
   const lights = !reduceMotion;
   // pool water shimmer
@@ -42,7 +44,7 @@ export function drawInteriorFx(now, camX, camY, ppx, ppy) {
     if ((Math.floor(now / 180) + x * 3) % 4 === 0) { ctx.fillStyle = ['#ff4d6d', '#6fb7ff', '#f2c45a'][(x + y) % 3]; ctx.fillRect(x * T - camX + 3 + (x * 5) % 9, y * T - camY + 4, 2, 2); }
   }));
   // entities, follower and player, sorted by row
-  const list = RT.ents.map(e => ({ e, y: e.y }));
+  const list: { e: Entity | null | 'follower'; y: number }[] = RT.ents.map(e => ({ e, y: e.y }));
   list.push({ e: null, y: ppy / T });
   if (RT.follower) list.push({ e: 'follower', y: followerPx()[1] / T });
   list.sort((a, b) => a.y - b.y);
@@ -53,6 +55,7 @@ export function drawInteriorFx(now, camX, camY, ppx, ppy) {
       return;
     }
     if (e === 'follower') {
+      if (!RT.follower) return;
       const [fx, fy] = followerPx();
       const step = player.moving ? (player.t < player.dur / 2 ? ((player.n + 1) % 2) + 1 : 0) : 0;
       person(ctx, fx - camX, fy - camY - 3, RT.follower.dir, step, RT.follower.look);
@@ -60,13 +63,15 @@ export function drawInteriorFx(now, camX, camY, ppx, ppy) {
     }
     const X = e.x * T - camX, Y = e.y * T - camY;
     if (X < -16 || Y < -24 || X > RT.VW || Y > RT.VH + 8) return;
-    if (e.kind === 'bottle') { if (!state.pfand.taken[e.bid]) drawBottle(X, Y, e.type, now); return; }
+    if (e.kind === 'bottle') { if (e.bid && e.type && !state.pfand.taken[e.bid]) drawBottle(X, Y, e.type, now); return; }
     if (e.kind === 'pile') { drawPile(e, X, Y, now, lights); return; }
+    if (!e.look) return;
     if (e.dance && lights) {
-      const beat = Math.floor(now / 230 + e.phase);
-      const dir = ['down', 'left', 'down', 'right'][Math.floor(now / 900 + e.phase) % 4];
+      const phase = e.phase ?? 0;
+      const beat = Math.floor(now / 230 + phase);
+      const dir = (['down', 'left', 'down', 'right'] as const)[Math.floor(now / 900 + phase) % 4];
       person(ctx, X, Y - 3 - (beat % 2), dir, (beat % 2) + 1, e.look);
-    } else person(ctx, X, Y - 3, e.dir, 0, e.look);
+    } else person(ctx, X, Y - 3, e.dir ?? 'down', 0, e.look);
   });
   // main floor: the light bar along the top wall and a short strobe now and then
   if (sc.floor === 'mf') {

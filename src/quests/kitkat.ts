@@ -1,3 +1,4 @@
+import type { Dir, Entity, Look } from '../types';
 import { RT } from '../core/runtime';
 import { state } from '../core/state';
 import { lookOf } from '../render/looks';
@@ -6,14 +7,15 @@ import { $, INK, reduceMotion, wait } from '../util';
 import { ctx, screenEl } from '../render/canvas';
 import { T } from '../world/tiles';
 /* ---- KitKat: groups on beds, Marco, the photo booth ---- */
-export function drawPile(e, X, Y, now, lights) {
+export function drawPile(e: Entity, X: number, Y: number, now: number, lights: boolean) {
   // a bed (or a dark corner) with several people tangled together, rocking slowly
-  const W = (e.w || 1) * T, n = e.looks.length, beat = lights ? now / 430 : 0;
+  const looks = e.looks || [], phase = e.phase ?? 0;
+  const W = (e.w || 1) * T, n = looks.length, beat = lights ? now / 430 : 0;
   ctx.fillStyle = INK; ctx.fillRect(X - 1, Y + 3, W + 2, 13);
   ctx.fillStyle = e.sheet || '#5a0a1a'; ctx.fillRect(X, Y + 4, W, 11);
   ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.fillRect(X, Y + 4, W, 2);
-  e.looks.forEach((L, i) => {
-    const bob = Math.round(Math.sin(beat * Math.PI + i * 1.9 + e.phase) * 1.5);
+  looks.forEach((L, i) => {
+    const bob = Math.round(Math.sin(beat * Math.PI + i * 1.9 + phase) * 1.5);
     const cx = X + 8 + i * (W - 16) / Math.max(1, n - 1);
     ctx.save();
     ctx.translate(Math.round(cx), Y + 9 + bob);
@@ -26,21 +28,21 @@ export function drawPile(e, X, Y, now, lights) {
   ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(X + 3, Y + 10, W - 6, 1);
   // little hearts drifting up
   if (lights) for (let i = 0; i < 3; i++) {
-    const t = ((now / 1700) + i / 3 + e.phase) % 1;
+    const t = ((now / 1700) + i / 3 + phase) % 1;
     const hx = Math.round(X + W / 2 + Math.sin(t * 6 + i) * W / 3), hy = Math.round(Y + 2 - t * 20);
     ctx.globalAlpha = 1 - t;
     ctx.fillStyle = '#ff5fa2'; ctx.fillRect(hx - 2, hy, 2, 2); ctx.fillRect(hx + 1, hy, 2, 2); ctx.fillRect(hx - 2, hy + 1, 5, 2); ctx.fillRect(hx - 1, hy + 3, 3, 1); ctx.fillRect(hx, hy + 4, 1, 1);
     ctx.globalAlpha = 1;
   }
 }
-export const PILE_LINES = {
+export const PILE_LINES: Record<string, { look: string; hi: string; ok?: string; after?: string }> = {
   yes: { look: '(A tangle of bodies under a blanket, moving to their own rhythm. Someone looks up and smiles.)', hi: 'Them: Hi, cutie. Want to join us?',
     ok: 'Them: Everyone? … Yes, yes and yes. Come here.', after: '(A while later you crawl back out, grinning and slightly out of breath.)' },
   no: { look: '(A tight knot of bodies in the dark. Somebody shifts and looks over at you.)', hi: 'Them: Hey. Something you wanted?',
     ok: "Them: Sweet of you to ask, but we're a closed group tonight. Have fun out there!" },
   busy: { look: '(Two people, very busy, very much in their own world.)', hi: 'Them: (breathless) …not now, darling. Maybe later.' }
 };
-export async function spankFx(gentle) {
+export async function spankFx(gentle: boolean) {
   const sm = $('#smack');
   sm.textContent = gentle ? 'pat.' : 'SMACK!';
   sm.hidden = false; sm.classList.remove('go'); void sm.offsetWidth; sm.classList.add('go');
@@ -49,15 +51,16 @@ export async function spankFx(gentle) {
   await wait(800);
   sm.hidden = true; screenEl.classList.remove('shake');
 }
-export const MARCO_LOOK = { skin: '#d9a27c', hair: '#2a2420', beard: '#2a2420', top: '#d9a27c', legs: '#0c0c12', harness: true, shine: '#7a7a99' };
-export function drawPhotoStrip(cv, scale) {
-  const g = cv.getContext('2d'), s = scale || 1;
+export const MARCO_LOOK: Look = { skin: '#d9a27c', hair: '#2a2420', beard: '#2a2420', top: '#d9a27c', legs: '#0c0c12', harness: true, shine: '#7a7a99' };
+/** The four-frame photo booth strip with you and Marco (scale 1 on screen, 8 for the PNG download). */
+export function drawPhotoStrip(cv: HTMLCanvasElement, scale = 1) {
+  const g = cv.getContext('2d')!, s = scale;
   cv.width = 56 * s; cv.height = 200 * s;
   g.imageSmoothingEnabled = false;
   g.setTransform(s, 0, 0, s, 0, 0);
   const sprite = document.createElement('canvas'); sprite.width = 16; sprite.height = 18;
-  const sg = sprite.getContext('2d');
-  const drawP = (L, dir, x, y) => { sg.clearRect(0, 0, 16, 18); person(sg, 0, 2, dir, 0, L); g.drawImage(sprite, 0, 0, 16, 18, x, y, 32, 36); };
+  const sg = sprite.getContext('2d')!;
+  const drawP = (L: Look, dir: Dir, x: number, y: number) => { sg.clearRect(0, 0, 16, 18); person(sg, 0, 2, dir, 0, L); g.drawImage(sprite, 0, 0, 16, 18, x, y, 32, 36); };
   const me = lookOf(state.outfit);
   g.fillStyle = '#f3eee3'; g.fillRect(0, 0, 56, 200);
   for (let f = 0; f < 4; f++) {
@@ -81,9 +84,9 @@ export function drawPhotoStrip(cv, scale) {
   g.setTransform(1, 0, 0, 1, 0, 0);
 }
 export function showPhotoStrip() {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     const el = $('#photo');
-    drawPhotoStrip($('#photoCanvas'), 1);
+    drawPhotoStrip($<HTMLCanvasElement>('#photoCanvas'), 1);
     el.hidden = false;
     RT.photoResolve = () => { el.hidden = true; RT.photoResolve = null; resolve(); };
   });
