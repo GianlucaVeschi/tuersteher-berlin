@@ -26,6 +26,8 @@ export interface Look {
   flowers?: string[];
   paint?: string;
   blush?: boolean;
+  /** colour of a ₿ printed on the front of the top */
+  btc?: string;
 }
 
 /* ---------- clubs ---------- */
@@ -126,8 +128,27 @@ export interface Point { x: number; y: number }
 export type BottleType = 'beer' | 'mate' | 'can';
 
 /** Anything standing on the map: people, signs, bottles, groups on a bed. */
+/** A person standing on the street (data/npcs.ts). */
+export interface NpcDef {
+  /** unique, used to remember who has left */
+  id: string;
+  x: number;
+  y: number;
+  dir?: Dir;
+  look: Look;
+  /** said one after another; start each with "Name: " */
+  lines?: string[];
+  /** custom behaviour in world/street.ts, instead of (or after) the lines */
+  act?: string;
+  /** after talking, walk off this way, fade out and stay gone */
+  leave?: 'left' | 'right';
+}
+
 export interface Entity {
   kind: 'npc' | 'sign' | 'bouncer' | 'bottle' | 'pile';
+  /** street NPCs: id from data/npcs.ts */
+  npcId?: string;
+  leave?: 'left' | 'right';
   x: number;
   y: number;
   /** width in tiles (groups on a bed) */
@@ -141,6 +162,8 @@ export interface Entity {
   club?: Club;
   /** horizontal pixel offset while sliding aside */
   ox?: number;
+  /** 0..1, for people fading out */
+  alpha?: number;
   dance?: boolean;
   phase?: number;
   home?: Point;
@@ -273,6 +296,8 @@ export interface GameState {
   heard: Record<string, boolean>;
   danced: Record<string, boolean>;
   kkStripped: boolean;
+  /** street NPCs (by id) who walked off */
+  gone: Record<string, boolean>;
 }
 
 export interface Player {

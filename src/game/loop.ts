@@ -67,7 +67,7 @@ export function update(dt: number) {
     }
   }
   if (!player.moving && !RT.busy && !RT.titleOn && held.length) tryMove(held[held.length - 1]);
-  RT.ents.forEach(e => { if (e.ox) e.ox = Math.min(0, e.ox + dt * 0.08); });
+  RT.ents.forEach(e => { if (e.ox) e.ox = e.ox > 0 ? Math.max(0, e.ox - dt * 0.08) : Math.min(0, e.ox + dt * 0.08); });
   if (train.wait > 0) train.wait -= dt;
   else {
     train.x += dt * 0.11;

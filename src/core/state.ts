@@ -10,7 +10,7 @@ export const running = () => RT.runKey || RT.runBtn || !!(RT.touch && RT.touch.f
 export const START: { x: number; y: number; dir: Dir } = { x: 40, y: 16, dir: 'down' };
 export function newPfand(): Pfand { return { carry: 0, carryCents: 0, returned: 0, cents: 0, taken: {} }; }
 /** Everything that gets saved. */
-export const state: GameState = { stamps: {}, intro: false, finale: false, outfit: 'tourist', char: null, quests: {}, visited: {}, sunrise: {}, coatNo: 0, kStage: 0, pfand: newPfand(), heard: {}, danced: {}, kkStripped: false };
+export const state: GameState = { stamps: {}, intro: false, finale: false, outfit: 'tourist', char: null, quests: {}, visited: {}, sunrise: {}, coatNo: 0, kStage: 0, pfand: newPfand(), heard: {}, danced: {}, kkStripped: false, gone: {} };
 export const player: Player = { dur: MOVE, x: START.x, y: START.y, tx: START.x, ty: START.y, dir: START.dir, moving: false, t: 0, n: 0 };
 /** direction keys currently held, most recent last */
 export const held: Dir[] = [];

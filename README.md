@@ -173,7 +173,8 @@ src/
 - **Starting characters**: `CHARACTERS` in `src/data/outfits.ts`. `body` (skin, hair, `long` hair, `glasses`, `beard`) stays when you change clothes; `outfit` is the starting outfit.
 - **Fernsehturm**: `TOWER` in `src/world/city.ts`. The base is solid; the tall part is drawn in front of the sprites.
 - **Club interiors**: `src/data/interiors.ts`. Each floor is ASCII art (legend at the top of the file), plus spawn points, which floor the stairs lead to, the people on that floor (`lines` for chat, or `act` for a quest handler in `src/quests/acts.ts`), how many dancers to scatter, tile descriptions (`examine`) and the quest list. To give another club an interior, add an entry with the club's id (e.g. `tresor`) and its handlers. TypeScript checks the data against `InteriorDef` in `src/types.ts`, so typos in field names show up in `npm run typecheck`.
-- **NPCs and signs on the street**: `cityPeople()` in `src/world/city.ts`.
+- **People on the street**: one entry each in `src/data/npcs.ts` (id, position, look, `lines`). Add `leave: 'left'` or `'right'` for someone who walks off after talking and stays gone (Start over brings them back). For custom behaviour, set `act` and write a handler in `STREET_ACTS` in `src/world/street.ts`. The `btc` look option prints a ₿ on their top.
+- **Signs on the street**: `cityPeople()` in `src/world/city.ts`.
 - **Intro / ending text**: `INTRO` and `FINALE` in `src/data/clubs.ts`.
 
 All graphics are drawn in code on a 384×256 canvas (16 px tiles, 24×16 visible). The view size is set in `src/core/runtime.ts` (`VW`/`VH`) and `fitCanvas()` in `src/render/canvas.ts`. There are no image assets.

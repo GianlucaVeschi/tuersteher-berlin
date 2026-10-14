@@ -1,6 +1,7 @@
 import type { Club, Entity } from '../types';
 import { danceHere } from '../quests/dance';
 import { ACTS } from '../quests/acts';
+import { streetTalk } from '../world/street';
 import { inClub, sceneClub } from '../world/scenes';
 import { pickBottle } from '../quests/sisyphos';
 import { get } from '../world/grid';
@@ -104,6 +105,7 @@ export async function interact() {
   if (e.kind !== 'sign') e.dir = OPP[player.dir];
   try {
     if (e.kind === 'bouncer') await bouncerTalk(e);
+    else if (e.npcId) await streetTalk(e);
     else if (e.act && ACTS[e.act]) await ACTS[e.act](e, inClub() ? sceneClub() : '');
     else for (const l of e.lines || []) await say(l);
   } finally { closeBox(); RT.busy = false; }
