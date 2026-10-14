@@ -1,3 +1,4 @@
+import { updateMusic } from '../audio/music';
 import type { Dir } from '../types';
 import { prerender } from '../render/cityTiles';
 import { zoomUI } from '../render/zoom';
@@ -80,6 +81,7 @@ export function frame(now: number) {
   const dt = raw * timeScale(now);
   RT.clock += dt;
   update(dt);
+  updateMusic();
   if (RT.tripUntil && !RT.kUntil) {
     if (now > RT.tripUntil) endTrip();
     else cvs.style.filter = reduceMotion ? 'saturate(1.7) hue-rotate(60deg)' : `hue-rotate(${Math.round(now / 25) % 360}deg) saturate(1.8)`;

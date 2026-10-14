@@ -79,6 +79,18 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 - Progress: `completeQuest(clubId, id)` sets `state.quests['club:id']`, shows a toast, re-renders the stamp card and saves. Live hints for counting quests come from `questHint()` (`quests/sisyphos.ts`).
 - To give another club an interior: add an `INTERIORS` entry keyed by the club id, add handlers to `ACTS`, add quests to its `quests` list. `enterDoor()` automatically uses the interior instead of the short "inside" scene.
 
+### The ending (`src/ui/ending.ts`)
+
+`maybeFinale()` (game/scripts.ts) runs after every new stamp; with all clubs stamped it shows `FINALE` and then `playEnding()`: a bedroom drawn on its own canvas (`#endCanvas`, 192×128, animated with its own requestAnimationFrame loop), the CONGRATULATIONS title, and the roast in the normal dialog box (the `#ending` overlay sits before `#dialog` in the DOM so the box stays on top). `roast()` builds lines from `state` (Pfand cents, `hgStage`). `RT.ending` switches the music to the `home` style. "Start over" calls `resetGame()` from ui/card.ts. `?debug`: `__game.ending()` plays it any time.
+
+### Music (`src/audio/`)
+
+- No audio files: `synth.ts` makes drums and instruments from Web Audio oscillators and noise (plus one shared generated reverb). `styles.ts` describes each style as data (bpm, swing, 16-step patterns, bass steps, chords, stab/piano/pad/arp, rumble, reverb, dub delay, a wall `cutoff`). `music.ts` runs one style at a time with a look-ahead scheduler and crossfades when the target changes.
+- `updateMusic()` runs every frame and picks the style: title/creator → `city`; a club's entrance scene (`RT.overlayClub`, set by `showInside()`) → `styleForClub`; a club floor → `styleForScene` (with `MUFFLED` floors playing another floor's style through a lowpass); otherwise `city`.
+- Audio only starts after a real user gesture (`initMusic()` listens for the first pointer/key event). Sound on/off is the ♪ button or N, stored in `localStorage['tuersteher-sound']`. The context is suspended while the tab is hidden.
+- A new club or floor needs a style in `STYLES` and an entry in `FLOOR_STYLE` / `CLUB_STYLE`.
+- `?debug`: `__game.music.force('panorama')` forces a style (`null` to stop forcing), `.key` is what's playing, `.level()` reads the output peak/RMS (call it twice; the meter is created on first use), `.styles()` lists ids.
+
 ### Saving (`src/core/save.ts`)
 
 - `localStorage['tuersteher-save']` holds `SaveData` (`GameState` + zoom + position). Saves happen after stamps, quests, shop changes, every 8 steps, on page hide, and on zoom.
@@ -87,7 +99,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 ### Input
 
-`pressA` / `pressB` / `pressDir` in `input.ts` route to whatever is open, in this order: title → character creator → photo strip → club entrance scene → shop → dialog → world. Arrows/WASD move, Z/Enter/Space = A, X/Esc = B, Tab/Shift (or holding B on touch) = run, +/−/wheel = zoom, M = map. On touch, dragging on the map is a joystick and a tap is A.
+`pressA` / `pressB` / `pressDir` in `input.ts` route to whatever is open, in this order: title → character creator → photo strip → club entrance scene → shop → dialog → world. Arrows/WASD move, Z/Enter/Space = A, X/Esc = B, Tab/Shift (or holding B on touch) = run, +/−/wheel = zoom, M = map, N = sound. On touch, dragging on the map is a joystick and a tap is A.
 
 ## Conventions
 

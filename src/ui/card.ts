@@ -79,6 +79,12 @@ resetBtn.addEventListener('click', () => {
   }
   clearTimeout(armTimer);
   resetBtn.classList.remove('armed'); resetBtn.textContent = 'Start over';
+  resetGame();
+});
+}
+
+/** Wipes all progress and goes back to the title screen. */
+export function resetGame() {
   state.stamps = {}; state.intro = false; state.finale = false; state.outfit = 'tourist'; state.char = null;
   state.quests = {}; state.visited = {}; state.sunrise = {}; state.coatNo = 0; state.kStage = 0; state.pfand = newPfand(); state.heard = {}; state.danced = {}; state.kkStripped = false; state.gone = {}; state.hgTime = HG_START; state.hgStage = 0;
   releaseFollower(); endTrip(); endK();
@@ -89,10 +95,9 @@ resetBtn.addEventListener('click', () => {
   // street NPCs who walked off come back
   RT.ents.forEach(e => { if (e.npcId && e.home) { e.x = e.home.x; e.y = e.home.y; e.ox = 0; e.alpha = 1; } });
   player.x = player.tx = START.x; player.y = player.ty = START.y; player.dir = START.dir; player.moving = false;
-  if (RT.insideResolve) { inside.hidden = true; RT.insideResolve = null; }
+  if (RT.insideResolve) { inside.hidden = true; RT.insideResolve = null; RT.overlayClub = null; }
   closeBox(); if (RT.typing) { clearInterval(RT.typing.id); RT.typing = null; }
   RT.busy = true; RT.titleOn = true; $('#title').hidden = false;
   $('#titlePress').textContent = 'PRESS A';
   renderCard(); save();
-});
 }

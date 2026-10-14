@@ -12,6 +12,7 @@ export function showInside(c: Club, fresh: boolean): Promise<void> {
     $('#inText').textContent = c.inside;
     $('#inStamp').hidden = !fresh;
     inside.hidden = false;
-    RT.insideResolve = () => { inside.hidden = true; RT.insideResolve = null; resolve(); };
+    RT.overlayClub = c.id;
+    RT.insideResolve = () => { inside.hidden = true; RT.insideResolve = null; RT.overlayClub = null; resolve(); };
   });
 }

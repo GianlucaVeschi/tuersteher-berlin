@@ -29,6 +29,7 @@
         <div class="hud" id="hud">STEMPEL 0/8</div>
         <div class="floor-tag" id="floorTag" hidden></div>
         <div class="zoom" role="group" aria-label="Zoom">
+          <button type="button" id="soundBtn" aria-label="Sound off" aria-pressed="true">♪</button>
           <button type="button" id="zoomIn" aria-label="Zoom in">+</button>
           <button type="button" id="zoomOut" aria-label="Zoom out">−</button>
           <button type="button" id="zoomMap" aria-label="Show whole map" aria-pressed="false">MAP</button>
@@ -36,6 +37,10 @@
         <div class="fade" id="fade"></div>
         <div class="floor-card" id="floorCard" hidden></div>
         <div class="toast" id="toast" hidden></div>
+        <div class="ending" id="ending" hidden>
+          <canvas id="endCanvas" width="192" height="128" aria-label="Your childhood bedroom, morning"></canvas>
+          <div class="end-title" id="endTitle" hidden><b>CONGRATULATIONS</b><span>You completed Berlin</span></div>
+        </div>
         <div class="smack" id="smack" hidden>SMACK!</div>
         <div class="photo" id="photo" hidden>
           <canvas id="photoCanvas" width="56" height="200" aria-label="Photo booth strip"></canvas>
@@ -103,7 +108,7 @@
         <div><button id="btnA" aria-label="A button">A</button>A</div>
       </div>
     </div>
-    <p class="keys"><kbd>←↑↓→</kbd>/<kbd>WASD</kbd> walk &nbsp; <kbd>Z</kbd>/<kbd>Enter</kbd> talk &nbsp; <kbd>X</kbd> skip &nbsp; hold <kbd>Tab</kbd> run &nbsp; <kbd>+</kbd>/<kbd>−</kbd> zoom &nbsp; <kbd>M</kbd> map</p>
+    <p class="keys"><kbd>←↑↓→</kbd>/<kbd>WASD</kbd> walk &nbsp; <kbd>Z</kbd>/<kbd>Enter</kbd> talk &nbsp; <kbd>X</kbd> skip &nbsp; hold <kbd>Tab</kbd> run &nbsp; <kbd>+</kbd>/<kbd>−</kbd> zoom &nbsp; <kbd>M</kbd> map &nbsp; <kbd>N</kbd> sound</p>
   </section>
 
   <aside class="card" id="card" aria-label="Stamp card">

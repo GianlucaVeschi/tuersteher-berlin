@@ -163,5 +163,5 @@ export const INTRO = [
 export const FINALE = [
   'Monday, 09:12. The sun is up, and so are you.',
   'Eight stamps. Every bouncer in Berlin let you in.',
-  "You're officially a Berliner now. Go get a Döner."
+  '(You close your eyes. Just for a second…)'
 ];
