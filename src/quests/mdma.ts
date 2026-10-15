@@ -17,7 +17,14 @@ export const MD_HINTS: Record<number, string> = {
 
 /** Ronny, on the Dampfer by the benches. Knows a guy. Is the guy. */
 export async function ronny(_e: Entity | null, clubId: string) {
-  if (questDone(clubId, 'mdma')) { await say('Ronny: Still glowing? Drink some water. Seriously.'); return; }
+  if (questDone(clubId, 'mdma')) {
+    // replay the runner
+    await say('Ronny: Still glowing? Drink some water. Seriously.');
+    const again = await ask('Ronny: ...Or another half?', ['Another round on the Ringbahn', 'Water, please']);
+    if (again === 1) { await say('Ronny: Good call.'); return; }
+    await takePill(clubId, true);
+    return;
+  }
   if (state.mdStage === 0) {
     await say('Ronny: Hm? Do I look like I sell stuff?');
     const a = await ask('', ['You look like a man who has a little something', 'Sorry, wrong person']);
@@ -37,20 +44,25 @@ export async function ronny(_e: Entity | null, clubId: string) {
   }
   const b = await ask('Ronny: Taking it now?', ['Yes, now', 'Later']);
   if (b === 1) { await say('Ronny: Smart. Come find me when you are ready.'); return; }
+  await takePill(clubId, false);
+}
+
+/** Swallow the pill and ride the Ringbahn. A replay doesn't change the quest. */
+async function takePill(clubId: string, replay: boolean) {
   await say('(You swallow it with a sip of water. Twenty minutes later the bass turns into the rattle of the Ringbahn...)');
   closeBox();
   await fade(true);
   const won = await playRunner();
   await fade(false);
+  track('runner_finished', { won, replay });
   if (won) {
     await say('(You open your eyes on the Dampfer, hugging a stranger. Everyone is beautiful. The DJ is beautiful. Ronny is beautiful.)');
+    if (replay) return;
     state.mdStage = 4; save();
-    track('runner_finished', { won: true });
     await completeQuest(clubId, 'mdma');
   } else {
     await say('(A Kontrolleur gently takes your hand. You open your eyes on a bench, holding somebody\'s watermelon.)');
     await say('Ronny: Rough ride? Sit for a bit, drink water. Talk to me when you want to go again.');
-    track('runner_finished', { won: false });
   }
 }
 

@@ -191,7 +191,17 @@ export const ACTS: Record<string, Act> = {
   // Toilet chain: the guy at the toilet door wants K -> Mila on the dancefloor has it -> back to him.
   async toiletGuy(e, clubId) {
     if (!e) return;
-    if (questDone(clubId, 'toilet')) { await say('Toilet guy: Wild, right? Drink some water. Seriously.'); return; }
+    if (questDone(clubId, 'toilet')) {
+      // replay: another (small) trip
+      await say('Toilet guy: Wild, right? Drink some water. Seriously.');
+      const again = await ask('', ['One more trip', "No, I'm good"]);
+      if (again === 1) return;
+      await say('Toilet guy: A small one. Then water. Deal?');
+      await say('(Back in the stall. Another line. The floor tilts again.)');
+      closeBox();
+      startK();
+      return;
+    }
     if (state.kStage === 0) {
       await say('Toilet guy: Toilets are full. Everyone in there is waiting for the same thing.');
       await say('Toilet guy: Bring some K and you can come in with me. Otherwise, queue.');

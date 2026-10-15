@@ -39,7 +39,14 @@ const AFTER: [number, number] = [10, 4];
 
 /** The resident DJ. Main quest: he'd let you play, but only if Woody isn't watching. */
 export async function hgDj(e: Entity | null, clubId: string) {
-  if (state.hgStage === 3) { await say('DJ: Look who it is. Woody still thinks it was me playing.'); return; }
+  if (state.hgStage === 3) {
+    // replay the set
+    await say('DJ: Look who it is. Woody still thinks it was me playing.');
+    const again = await ask("DJ: He's off by the fire again. Another set?", ['Give me the decks', 'Not now']);
+    if (again === 1) { await say('DJ: Any time.'); return; }
+    await playSet(e, clubId, true);
+    return;
+  }
   if (state.hgStage === 0) {
     await say('DJ: (one ear in the headphones) Hm?');
     const a = await ask('', ['Can I play a few tracks?', 'Great set!']);
@@ -52,13 +59,20 @@ export async function hgDj(e: Entity | null, clubId: string) {
   }
   if (state.hgStage === 1) { await say("DJ: Woody's still watching. Get him away from the floor first."); return; }
   await say("DJ: Woody's gone? Go, go, go. Thirty seconds, then he's back.");
+  await playSet(e, clubId, false);
+}
+
+/** Into the booth, the 30-second set, back out. A replay doesn't change the quest. */
+async function playSet(e: Entity | null, clubId: string, replay: boolean) {
   closeBox();
   await fade(true);
   [player.x, player.y] = BOOTH; player.tx = player.x; player.ty = player.y; player.dir = 'down'; player.moving = false;
   if (e) e.dir = 'right';
   await fade(false);
   const won = await playDjSet();
-  if (won) {
+  if (won && replay) {
+    await say('(The floor goes off again. The DJ just grins and hands you a water.)');
+  } else if (won) {
     await say('(The sun comes up over the Westhafen. The whole floor screams. The DJ hugs you.)');
     await say('Woody: (back from the fire, smelling of smoke) That last half hour was the best of the night. Who was that?');
     await say("DJ: (straight face) Me, Woody. Always me.");
