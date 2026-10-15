@@ -89,6 +89,16 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 
 People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it. Talk to them again afterwards to replay the mini game.
 
+## The Landwehrkanal
+
+South of the clubs the map continues down to the Landwehrkanal, between Kreuzberg and Neukölln:
+
+- **Admiralbrücke**: the oldest iron bridge over the canal (1880 to 1882), cobblestones and old lanterns, the classic summer sunset hangout. A busker takes requests (yes, Wonderwall), people sit on the bollards, and a resident reminds you it gets cleared at 10pm so the neighbours can sleep.
+- **La Maison** on Paul-Lincke-Ufer: a café and boulangerie with a canal terrace, spritz, and orange wine on tap. Walk in and order at the counter.
+- **Ankerklause** at Kottbusser Brücke: the sailors' pub in an old steamer landing right on the water, half pub, half sailor's fantasy, with a famous jukebox. Walk in, order a Korn, pick a record.
+
+The München sign moved down to the new south edge of the map.
+
 ## Inside Kater Blau
 
 Kater Blau sits on the Spree at Holzmarkt 25, where Bar25 used to be. Bar25 (2003/04 to September 2010) was a wooden village famous for costume and confetti parties; it closed with a five-day party when the land was sold for the Mediaspree development. The crew moved across the river to Kater Holzig in an old soap factory (2011 to early 2014) and came back as Kater Blau in 2014, part of the Holzmarkt cooperative (the area was a timber market 300 years ago). Parties run Friday to Monday; the floors are Heinz Hopper (classic techno) and the Acid Arch (stranger sounds and live sets), and colour and glitter are welcome at the door. In the game: the garden on the river with wooden shacks, a circus tent and a deck, Heinz Hopper and the Acid Arch. (The game's old "boat" is gone: no source mentions one.)

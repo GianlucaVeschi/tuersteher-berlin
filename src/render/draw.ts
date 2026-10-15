@@ -1,3 +1,4 @@
+import { PLACES } from '../data/places';
 import { PIXEL_H, pixelText, pixelTextWidth } from './pixelFont';
 import type { Entity } from '../types';
 import { SHOPS } from '../data/outfits';
@@ -162,6 +163,7 @@ export function draw(now: number) {
     // clubs on the roof, shops at the shopfront (smaller), so neighbours don't collide
     CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
     SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
+    PLACES.forEach(pl => chip(pl.name.toUpperCase(), sx((pl.x + pl.w / 2) * T), sy((pl.y + pl.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
     RT.ents.forEach(e => { if (e.kind === 'column') chip('GUEST LIST', sx((e.x + 0.5) * T), sy(e.y * T - 8), '#2f6b4f', '#fff', 'small'); });
   }
   const px = sx(ppx + 8), py = sy(ppy + 2);

@@ -5,6 +5,7 @@ import { poolHat, ronny } from './mdma';
 import { boxes, detroit, sticker } from './tresor';
 import { bar25, confetti, glitter, spree } from './katerblau';
 import { antonio, salonChair, salonEnter } from '../places/salon';
+import { ankerBar, jukebox, maison } from '../places/canal';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
@@ -34,6 +35,8 @@ export const ACTS: Record<string, Act> = {
   bar25, glitter, confetti, spree,
   // Antonio's salon (places/salon.ts)
   antonio, salonChair, salonEnter,
+  // the Landwehrkanal places (places/canal.ts)
+  maison, ankerBar, jukebox,
   async pile(e, clubId) {
     if (!e) return;
     const L = (e.join && PILE_LINES[e.join]) || PILE_LINES.busy;

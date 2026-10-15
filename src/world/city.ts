@@ -31,15 +31,18 @@ export function building(x: number, y: number, w: number, h: number, kind: Build
 }
 // Fernsehturm: solid footprint is the plaza block; the tall part is drawn in front of sprites.
 export const TOWER = { x: 41, y: 16, w: 6, h: 4, top: 9 };
+/** The Landwehrkanal: three rows of water across the south of the map. */
+export const CANAL = { y: 48, h: 3 };
 // Molecule Man: stands in the Spree, east of the Oberbaumbrücke (drawn onto the water; the river stays solid)
 export const MOLECULE = { x: 45, y: 23, w: 3, h: 3 };
 const tree = (x: number, y: number) => { if (get(x, y) === G) set(x, y, TR); };
 
 /** Lays out the street map: river, roads, buildings, clubs, trees, and the people on it. */
 export function buildCity() {
-  // Water: the Spree and the Flutgraben canal
+  // Water: the Spree, the Flutgraben, and the Landwehrkanal in the south (the Flutgraben joins it)
   rect(0, 22, RT.MW, 5, W);
-  rect(53, 27, 2, 19, W);
+  rect(53, 27, 2, CANAL.y - 27, W);
+  rect(0, CANAL.y, RT.MW, CANAL.h, W);
   // S-Bahn tracks, and the Warschauer Straße platform next to them (world/station.ts)
   rect(13, 1, RT.MW - 13, 1, RL);
   rect(STATION.x0, STATION.y, STATION.x1 - STATION.x0 + 1, 1, PL);
@@ -51,6 +54,8 @@ export function buildCity() {
   vroad(10, 0, RT.MH - 1);
   vroad(38, 3, RT.MH - 1);
   vroad(60, 3, RT.MH - 1);
+  // promenades along both banks of the canal: Paul-Lincke-Ufer (north) and Maybachufer (south)
+  for (let x = 1; x < RT.MW - 1; x++) { pave(x, CANAL.y - 2, S); pave(x, CANAL.y + CANAL.h + 1, S); }
 
   // Buildings
   building(TOWER.x, TOWER.y, TOWER.w, TOWER.h, 'tower');
@@ -81,7 +86,7 @@ export function buildCity() {
   CLUBS.forEach(c => { rect(c.x, c.y, c.w, c.h, C); set(c.dx, c.doorY, D); });
 
   // Trees
-  for (let x = 0; x < RT.MW; x++) { tree(x, 0); tree(x, 44); tree(x, 45); }
+  for (let x = 0; x < RT.MW; x++) { tree(x, 0); tree(x, RT.MH - 2); tree(x, RT.MH - 1); }
   for (let y = 0; y < RT.MH; y++) { tree(0, y); tree(RT.MW - 1, y); }
   [[1, 1], [3, 3], [5, 5], [2, 7], [6, 8], [3, 10], [5, 12], [7, 3], [8, 7], [7, 10], [1, 8], [1, 11], [2, 17], [5, 18], [3, 20], [7, 17], [14, 17], [16, 19],
    [42, 17], [45, 19], [48, 17], [51, 19], [54, 17], [57, 18], [44, 21], [52, 20],
@@ -89,7 +94,11 @@ export function buildCity() {
    [3, 28], [9 - 1, 27], [16, 28], [22, 27], [28, 28], [34, 27], [44, 28], [49, 27], [57, 28], [64, 27], [69, 28],
    [55, 33], [56, 35], [58, 34], [57, 37], [55, 38], [1, 34], [1, 37],
    [63, 34], [65, 33], [67, 35], [69, 33], [64, 37], [66, 38], [70, 36], [68, 38],
-   [20, 2], [30, 2], [44, 2], [55, 2], [41, 8], [43, 7], [46, 9], [42, 11], [45, 11], [44, 9], [66, 2], [12 + 3, 46 - 3], [45, 34], [36, 35]
+   [20, 2], [30, 2], [44, 2], [55, 2], [41, 8], [43, 7], [46, 9], [42, 11], [45, 11], [44, 9], [66, 2], [12 + 3, 46 - 3], [45, 34], [36, 35],
+   // trees along the Landwehrkanal banks
+   [3, 47], [7, 47], [17, 47], [22, 47], [27, 47], [33, 47], [50, 47], [57, 47], [64, 47], [68, 47],
+   [3, 51], [7, 51], [17, 51], [22, 51], [27, 51], [33, 51], [48, 51], [57, 51], [64, 51], [68, 51],
+   [5, 44], [20, 44], [30, 44], [52, 44], [66, 44], [5, 54], [20, 54], [30, 54], [50, 54], [66, 54]
   ].forEach(([x, y]) => tree(x, y));
 
   RT.ents = cityPeople();
@@ -113,7 +122,10 @@ function cityPeople(): Entity[] {
     { kind: 'column', x: 48, y: 16, lines: ['LITFASSSÄULE · The guest list', 'Everyone who has tried the doors of Berlin: who made it into every club, who is still out, who just arrived.'] },
     { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. Change here for Schöneweide and RSO.'] },
     // the road south out of town; walking towards it turns you back (STREET_TRIGGERS in world/street.ts)
-    { kind: 'sign', x: 41, y: 43, lines: ['MÜNCHEN · 585 km', '(Someone has drawn a tiny man in lederhosen on it.)'] },
+    { kind: 'sign', x: 41, y: 54, lines: ['MÜNCHEN · 585 km', '(Someone has drawn a tiny man in lederhosen on it.)'] },
+    // the Landwehrkanal (researched): Admiralbrücke, La Maison on Paul-Lincke-Ufer, Ankerklause at Kottbusser Brücke
+    { kind: 'sign', x: 13, y: 47, lines: ['ADMIRALBRÜCKE', 'Built 1880 to 1882, the oldest iron bridge over the Landwehrkanal. Cobblestones, old lanterns, people on the bollards.', 'On summer evenings half of Kreuzberg sits here with a beer and watches the sunset. It gets cleared at 10pm, so the neighbours can sleep.'] },
+    { kind: 'sign', x: 30, y: 47, lines: ['LANDWEHRKANAL · Paul-Lincke-Ufer', 'The canal between Kreuzberg and Neukölln. Swans, plane trees, and people drinking spritz on the bank.'] },
     // the main street east out of town; walking towards the edge turns you back (STREET_TRIGGERS)
     { kind: 'sign', x: STATION.x1, y: STATION.y, lines: ['S+U WARSCHAUER STRASSE', 'S-Bahn: S3, S5, S7, S75, S9. Change for the U1 on the other side of the bridge.', 'Berghain is ten minutes on foot. Just follow the people running.'] },
     // the street west out of town (STREET_TRIGGERS)

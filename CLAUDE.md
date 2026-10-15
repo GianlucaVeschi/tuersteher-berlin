@@ -63,6 +63,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 ### Tiles (`src/world/tiles.ts`)
 
+- The street map is 72×58 tiles (`CITY_W`, `CITY_H`). The south strip is the Landwehrkanal (`CANAL` in world/city.ts): promenades on both banks, the canal joining the Flutgraben, road bridges where the vertical roads cross (Admiralbrücke on the west one).
 - Street tiles are 0–12 (`G` grass, `R` road, `S` sidewalk, `W` water, `B` building, `TR` tree, `BR` bridge, `C` club, `D` door, …). Note: `R` is the **road tile constant**, not the runtime object.
 - Club floor tiles are 40+ and come from ASCII characters via `ICH` (char → id) / `ICHAR` (id → char). `SOLID`, `COUNTERS` (talk across them), `WALLISH` (drawn as walls), `DANCES` (press A to dance) and the door digits `1`–`9` (81–89) are defined there.
 - **Adding a new interior tile** means: a char in `ICH`, solidity in `SOLID`/`WALLISH` if needed, a `case` in `drawInteriorTiles()`, and a legend line in `data/interiors.ts`.
@@ -81,7 +82,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 ### Places (`src/data/places.ts`, `src/places/`)
 
-- Buildings you walk straight into, with no bouncer, stamp or welcome lines: Antonio's salon is the first. A `PLACES` entry (position, sign colours) gets a building and a door from `buildCity()`; walking onto the door runs `enterPlace()` (interiors/transitions.ts), which opens the `INTERIORS` entry with the same id. Leaving and saving use `doorOf()`, which finds a club or a place, so you come back out in front of the right door.
+- Buildings you walk straight into, with no bouncer, stamp or welcome lines: Antonio's salon, La Maison and the Ankerklause (the last two on the Landwehrkanal, `places/canal.ts`). A `PLACES` entry (position, sign colours) gets a building and a door from `buildCity()`; walking onto the door runs `enterPlace()` (interiors/transitions.ts), which opens the `INTERIORS` entry with the same id. Leaving and saving use `doorOf()`, which finds a club or a place, so you come back out in front of the right door.
 - Places aren't in `CLUBS`, so they never count towards stamps; leave their `quests` list empty unless they get real quests. Their handlers live in `src/places/` and are listed in `ACTS`.
 - The salon: `state.hair` (a key of `HAIRSTYLES` in `data/hair.ts`, or null) overrides the character's hair in `lookOf()`. `mohawk` is a `Look` flag drawn by `person()`.
 

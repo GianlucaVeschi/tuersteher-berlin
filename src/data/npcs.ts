@@ -33,7 +33,16 @@ export const NPCS: NpcDef[] = [
       'Freerk: Good news: I have bitcoin. Time to sell some. Number go up, right?',
       '(He walks off, refreshing a price chart on his phone.)'
     ] },
-  ...mustafaQueue()
+  ...mustafaQueue(),
+  // Admiralbrücke on a summer evening: a busker and people on the bollards (researched: the bridge is
+  // the classic Kreuzberg sunset hangout, and gets cleared at 10pm after residents complained)
+  { id: 'busker', x: 12, y: 49, dir: 'left', act: 'busker', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#7a5a3a', legs: '#3a3a4a', hat: '#2a2420' } },
+  { id: 'bollard1', x: 9, y: 48, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a' },
+    lines: ['Tourist: Is this the bridge everyone talks about? It is just a bridge. With a beer it is the best bridge.'] },
+  { id: 'bollard2', x: 9, y: 50, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#2a2a35' },
+    lines: ['Local: Sunset on the Admiralbrücke, a Sterni from the Späti, a guitar somewhere. That is the whole plan.', 'Local: At ten the neighbours want their sleep. Fair. They were here first.'] },
+  { id: 'resident', x: 14, y: 46, dir: 'down', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a', glasses: '#9fc7e6' },
+    lines: ['Resident: I live right there. Every summer night: guitars, bottles, Wonderwall.', "Resident: Ten o'clock and it is quiet. That was the deal. It mostly works."] }
 ];
 
 /* The famous queue at Mustafa's: one person per tile, snaking from the counter down the green,
