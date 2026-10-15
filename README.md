@@ -24,7 +24,7 @@ Side quests (tracked on the stamp card):
 | Order a drink | Any bar |
 | Get ice cream | Eisbar, main floor mezzanine |
 | Dance on the main floor | Press A on the dancefloor |
-| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: 10 seconds of melting, blurry, colour-shifting slow motion |
+| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: 30 seconds of melting, blurry, colour-shifting slow motion |
 | Take someone to the darkroom | Find Sascha at Panorama Bar, ask first, then lead them down to the ground floor |
 | Dance when the blinds open | After three other quests, go to Panorama Bar |
 
