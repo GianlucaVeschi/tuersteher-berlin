@@ -230,7 +230,7 @@ Then open the URL it prints (http://localhost:5173). The page reloads as you sav
 
 Zoomed out, the map labels every club (✓ once you've been in) and shop, and marks where you are. The zoom level is saved.
 
-On phones the page switches to a full-screen layout: drag anywhere on the map to walk (like a joystick), tap the map or the text box to talk, or use the joystick (hold and slide your thumb, no need to lift it to turn; past the rim you run) and the A/B buttons. The stamp card opens from the button in the top bar. Landscape puts the joystick left and A/B right of the map. The game is drawn at the screen's full resolution, so pixels stay sharp on high-density phones. Club and shop names only show in the MAP view on phones. Tip: "Add to Home Screen" runs it full-screen.
+On phones the page switches to a full-screen layout: drag anywhere on the map to walk (like a joystick), tap the map or the text box to talk, or use the joystick (hold and slide your thumb, no need to lift it to turn; past the rim you run) and the A/B buttons. The stamp card opens from the button in the top bar, and the pink QUESTS button under the stamp counter shows the side quests (the club you're in first, with hints). Landscape puts the joystick left and A/B right of the map. The game is drawn at the screen's full resolution, so pixels stay sharp on high-density phones. Club and shop names only show in the MAP view on phones. Tip: "Add to Home Screen" runs it full-screen.
 
 Progress (stamps, position) is saved in `localStorage`. "Start over" on the stamp card clears it.
 

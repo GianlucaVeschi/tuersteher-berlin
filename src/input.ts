@@ -1,3 +1,4 @@
+import { closeMissions, missionsOpen } from './ui/missions';
 import { openPlayers } from './ui/players';
 import { playEnding } from './ui/ending';
 import { musicDebug, toggleSound } from './audio/music';
@@ -37,6 +38,7 @@ export function pressA() {
 }
 export function pressB() {
   if (RT.runner) return;
+  if (missionsOpen()) { closeMissions(); return; }
   if (RT.creator) { creatorB(); return; }
   if (RT.photoResolve) { RT.photoResolve(); return; }
   if (RT.insideResolve) { RT.insideResolve(); return; }

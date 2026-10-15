@@ -5,6 +5,7 @@ import { renderCard } from '../ui/card';
 import { closeBox, say } from '../ui/dialog';
 import { showInside } from '../ui/inside';
 import { onFloorEnter } from '../quests/quests';
+import { updateQuestsBtn } from '../ui/missions';
 import { placeFollower, releaseFollower } from './follower';
 import { player, state } from '../core/state';
 import { RT } from '../core/runtime';
@@ -36,6 +37,7 @@ export function toast(text: string) {
   toastTimer = setTimeout(() => { toastEl.classList.add('out'); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 400); }, 2600);
 }
 export function updateFloorTag() {
+  updateQuestsBtn();
   if (!inClub()) { floorTag.hidden = true; return; }
   const fl = INTERIORS[sceneClub()].floors[sceneFloor()];
   floorTag.textContent = INTERIORS[sceneClub()].name.toUpperCase() + ' · ' + fl.short;
