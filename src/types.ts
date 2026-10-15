@@ -328,6 +328,8 @@ export interface GameState {
   sunrise: Record<string, boolean>;
   coatNo: number;
   kStage: number;
+  /** Sisyphos MDMA chain: 0 not asked, 1 find Ronny's hat, 2 have the hat, 3 have the pill, 4 done */
+  mdStage: number;
   pfand: Pfand;
   heard: Record<string, boolean>;
   danced: Record<string, boolean>;
@@ -386,6 +388,8 @@ export interface Typing { id: ReturnType<typeof setInterval>; finish: () => void
 export interface ShopUI { shop: Shop; sel: number; entries: string[] }
 
 /** step 1: man/woman, 2: character, 3: your name. nameOnly: just asking an existing player for a name */
+/** While the MDMA runner is on, the buttons and keys go to it. */
+export interface RunnerHooks { dir(d: Dir): void; jump(): void }
 export type Gender = 'man' | 'woman' | 'nb';
 export interface CreatorState { step: 1 | 2 | 3; sel: number; gender: Gender; nameOnly?: boolean }
 

@@ -1,7 +1,7 @@
 // Shared mutable game state that many modules read and reassign.
 // (ES module imports are read-only, so values that get reassigned live on this object.)
 import { CITY_W, CITY_H } from '../world/tiles';
-import type { CreatorState, DialogState, Entity, Follower, ShopUI, TouchState, Typing } from '../types';
+import type { CreatorState, DialogState, Entity, Follower, RunnerHooks, ShopUI, TouchState, Typing } from '../types';
 
 export const RT = {
   // current scene: the street or one club floor (see world/scenes.ts)
@@ -29,6 +29,8 @@ export const RT = {
   typing: null as Typing | null,
   insideResolve: null as null | (() => void),
   photoResolve: null as null | (() => void),
+  /** the MDMA runner minigame (effects/runner.ts) */
+  runner: null as RunnerHooks | null,
   /** club whose short entrance scene is showing (picks the music) */
   overlayClub: null as string | null,
   /** the wake-up-at-home ending is playing */

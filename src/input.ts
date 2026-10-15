@@ -25,6 +25,7 @@ declare global {
 
 /* ================= INPUT ================= */
 export function pressA() {
+  if (RT.runner) { RT.runner.jump(); return; }
   if (RT.titleOn) { startGame(); return; }
   if (RT.creator) { creatorA(); return; }
   if (RT.photoResolve) { RT.photoResolve(); return; }
@@ -35,6 +36,7 @@ export function pressA() {
   interact();
 }
 export function pressB() {
+  if (RT.runner) return;
   if (RT.creator) { creatorB(); return; }
   if (RT.photoResolve) { RT.photoResolve(); return; }
   if (RT.insideResolve) { RT.insideResolve(); return; }
@@ -45,6 +47,7 @@ export function pressB() {
   if (zoom.fit && !RT.ui) toggleMap();
 }
 export function pressDir(dir: Dir) {
+  if (RT.runner) { RT.runner.dir(dir); return; }
   if (RT.creator) { creatorMove(dir); return; }
   if (RT.shopUI) { shopMove(dir); return; }
   if (!held.includes(dir)) held.push(dir);

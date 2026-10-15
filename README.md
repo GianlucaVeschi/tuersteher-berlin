@@ -51,6 +51,7 @@ The crowd is a colourful festival and circus bunch with flower crowns, glitter a
 | Listen to 3 hippie stories | Momo (pool), Luna (Wintergarten), Kai (sauna), Sunny (Tunnel) |
 | Learn to juggle | Zora the circus kid in the garden. Wait for the beat |
 | Dance in 4 different rooms | Press A on any dancefloor: sand, wood, concrete or the red Tunnel floor |
+| Ringbahn rush | Ronny on the Dampfer wants his bucket hat back (the raver at the pool found it). His pill turns the game into a 30-second 3D runner through an S-Bahn: swipe or the joystick to switch tracks, A or up to jump over bikes and Sterni crates, dodge the Kontrolleure and poles, grab water for an extra heart |
 
 ## Inside KitKat
 

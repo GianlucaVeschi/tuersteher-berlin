@@ -222,7 +222,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 4, y: 13, act: 'pfandBar', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#b6f36b', legs: '#2b3f6b', stripes: '#ff5e7a', hat: '#f2c14e' } },
           { x: 13, y: 4, act: 'juggler', name: 'Zora', look: { skin: '#f3c9a8', hair: '#e83f8f', top: '#ff5e7a', legs: '#f3eee3', stripes: '#f3eee3', paint: '#5ec8ff', hat: '#14121c' } },
           { x: 27, y: 7, act: 'story', story: 'momo', dir: 'left', look: { skin: '#d9a27c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#c28cff', legs: '#ff8c42', flowers: ['#b6f36b', '#ffd23f'] } },
-          { x: 19, y: 8, dir: 'up', look: { skin: '#8d5a3b', hair: '#111', top: '#5ec8ff', legs: '#ffd23f', sparkle: '#fff6a8' }, lines: ['Raver: The water is FREEZING. Ten out of ten.'] },
+          { x: 19, y: 8, dir: 'up', act: 'poolHat', look: { skin: '#8d5a3b', hair: '#111', top: '#5ec8ff', legs: '#ffd23f', sparkle: '#fff6a8' }, lines: ['Raver: The water is FREEZING. Ten out of ten.'] },
           { x: 16, y: 16, look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#ffd23f', legs: '#c28cff', sparkle: '#ff5e7a', paint: '#ff5e7a' }, lines: ['Raver: Welcome to Sisyphos! Time works differently here.', "Raver: The bars take back empty bottles. Pfand! That's how I pay for my Mate."] }
         ]
       },
@@ -316,7 +316,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
         people: [
           { x: 4, y: 2, look: { skin: '#f0c7a0', hair: '#c0c0c0', beard: '#c0c0c0', top: '#2b3f6b', legs: '#f3eee3', hat: '#f3eee3' }, lines: ['(The DJ wears a captain\'s hat. Full steam ahead.)'] },
           { x: 5, y: 11, act: 'pfandBar', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#f3eee3', legs: '#2b3f6b', stripes: '#2b4c7a' } },
-          { x: 23, y: 7, dir: 'left', look: { skin: '#c98d6a', hair: '#b6f36b', top: '#ff8c42', legs: '#7a3fd1', sparkle: '#fff6a8', paint: '#b6f36b' }, lines: ['Raver: The sauna is through the little door at the back. Go sweat it out.'] }
+          { x: 23, y: 7, dir: 'left', look: { skin: '#c98d6a', hair: '#b6f36b', top: '#ff8c42', legs: '#7a3fd1', sparkle: '#fff6a8', paint: '#b6f36b' }, lines: ['Raver: The sauna is through the little door at the back. Go sweat it out.'] },
+          { x: 23, y: 10, dir: 'left', act: 'ronny', name: 'Ronny', look: { skin: '#e2b08c', hair: '#c9a24a', top: '#7a3fd1', legs: '#2b3f6b', stripes: '#b6f36b', sparkle: '#fff6a8' } }
         ]
       },
       tn: {
@@ -410,7 +411,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'sauna', title: 'Survive the Aufguss', hint: 'The sauna is behind the Dampfer.' },
       { id: 'stories', title: 'Listen to 3 hippie stories', hint: 'Momo, Luna, Kai and Sunny each have one.' },
       { id: 'juggle', title: 'Learn to juggle', hint: 'Zora the circus kid, in the garden.' },
-      { id: 'hopper', title: 'Dance in 4 different rooms', hint: 'Strand, Wintergarten, Hammahalle, Dampfer, Tunnel.' }
+      { id: 'hopper', title: 'Dance in 4 different rooms', hint: 'Strand, Wintergarten, Hammahalle, Dampfer, Tunnel.' },
+      { id: 'mdma', title: 'Ringbahn rush', hint: 'Ronny on the Dampfer, by the benches, might have something.' }
     ]
   },
   /* KitKatClub: Köpenicker Straße 76, in the building it shares with Sage Club.

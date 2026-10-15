@@ -228,6 +228,16 @@ export const STYLES: Record<string, Style> = {
     piano: { steps: '......x.......x.', level: 0.14, octave: 1 }
   },
 
+  // the MDMA runner: euphoric trance, rolling bass and a sparkling arp
+  runner: {
+    bpm: 140, root: 38, space: 0.35,
+    chords: [[0, 3, 7, 10], [-4, 3, 8, 12], [-2, 2, 5, 10], [-5, 2, 7, 10]], barsPerChord: 1,
+    kick: FOUR, clap: '....x.......x...', ohat: OFF, hat: SIXTEENTHS,
+    bass: { steps: [null, null, 0, 0, null, null, 0, 0, null, null, 0, 0, null, null, 12, 0], wave: 'sawtooth', cutoff: 520, level: 0.2 },
+    arp: { steps: 'xxxxxxxxxxxxxxxx', level: 0.07, octave: 2 },
+    pad: { cutoff: 1600, level: 0.04, octave: 1 }
+  },
+
   // Heideglühen: warm classic house with piano chords around the fire
   heide: {
     bpm: 122, swing: 0.1, root: 36, space: 0.3,
