@@ -6,6 +6,7 @@ import { boxes, detroit, sticker } from './tresor';
 import { bar25, confetti, glitter, spree } from './katerblau';
 import { antonio, salonChair, salonEnter } from '../places/salon';
 import { ankerBar, jukebox, maison } from '../places/canal';
+import { golf, golfDesk } from '../places/goerli';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
@@ -37,6 +38,8 @@ export const ACTS: Record<string, Act> = {
   antonio, salonChair, salonEnter,
   // the Landwehrkanal places (places/canal.ts)
   maison, ankerBar, jukebox,
+  // the black-light minigolf in Görli (places/goerli.ts)
+  golfDesk, golf,
   async pile(e, clubId) {
     if (!e) return;
     const L = (e.join && PILE_LINES[e.join]) || PILE_LINES.busy;

@@ -176,7 +176,9 @@ export interface NpcDef {
 }
 
 export interface Entity {
-  kind: 'npc' | 'sign' | 'column' | 'bouncer' | 'bottle' | 'pile';
+  kind: 'npc' | 'sign' | 'column' | 'bouncer' | 'bottle' | 'pile' | 'animal';
+  /** animals at the Görli children's farm */
+  species?: 'goat' | 'donkey' | 'sheep' | 'rabbit';
   /** street NPCs: id from data/npcs.ts */
   npcId?: string;
   leave?: 'left' | 'right';

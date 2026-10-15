@@ -6,10 +6,14 @@ import { save } from '../core/save';
 import { DIRS, held, player, state } from '../core/state';
 import { wait } from '../util';
 import { RT } from '../core/runtime';
+import { CITY_H } from './tiles';
+import { farm, gorli, gorliGrill, hoops, kick, kuhle, railway, skate } from '../places/goerli';
 import { ask, closeBox, say } from '../ui/dialog';
 
 /** Custom behaviour for street NPCs, by the `act` name in data/npcs.ts. Club quests live in quests/acts.ts. */
 export const STREET_ACTS: Record<string, Act> = {
+  // Görlitzer Park (places/goerli.ts)
+  gorli, railway, farm, hoops, kick, skate, gorliGrill, kuhle,
   // the busker on the Admiralbrücke
   async busker() {
     await say('Busker: Any requests? I know three songs. Well. Two and a half.');
@@ -66,7 +70,7 @@ export const STREET_ACTS: Record<string, Act> = {
 /** Areas of the street that run a STREET_ACTS handler when you step into them: [x0, y0, x1, y1]. */
 export const STREET_TRIGGERS: { area: [number, number, number, number]; act: string }[] = [
   // the road south, past the München sign: you're not leaving Berlin tonight
-  { area: [36, 55, 40, 57], act: 'munich' },
+  { area: [9, CITY_H - 3, 12, CITY_H - 1], act: 'munich' },
   // the main street east, past the Cottbus sign
   { area: [70, 39, 71, 42], act: 'cottbus' },
   // the street west, past the Hannover sign

@@ -4,7 +4,7 @@ import type { Entity } from '../types';
 import { SHOPS } from '../data/outfits';
 import { CLUB_SHORT, zoom, zoomLevel } from './zoom';
 import { towerC } from './cityTiles';
-import { TOWER } from '../world/city';
+import { GORLI, TOWER } from '../world/city';
 import { lookOf } from './looks';
 import { person } from './sprites';
 import { INK, reduceMotion } from '../util';
@@ -104,6 +104,8 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.fillStyle = INK; ctx.fillRect(X + 4, Y + 5, 3, 1); ctx.fillRect(X + 8, Y + 8, 4, 1); ctx.fillRect(X + 8, Y + 10, 3, 1);
       // rounding: darker right edge
       ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.fillRect(X + 11, Y - 2, 2, 15);
+    } else if (e.kind === 'animal') {
+      drawAnimal(e, X, Y, now);
     } else if (e.look) {
       // legs move while sliding to the next tile
       const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0), step = off ? (Math.floor(off / 8) % 2) + 1 : 0;
@@ -120,6 +122,28 @@ export function drawWorld(now: number): [number, number, number, number] {
   }
   return [camX, camY, ppx, ppy];
 }
+/** The animals at the Görli children's farm, facing left or right, nibbling now and then. */
+function drawAnimal(e: Entity, X: number, Y: number, now: number) {
+  const nib = !reduceMotion && Math.floor(now / 900 + e.x) % 4 === 0 ? 1 : 0, L = e.dir === 'left';
+  const hx = L ? X : X + 11;
+  if (e.species === 'rabbit') {
+    ctx.fillStyle = INK; ctx.fillRect(X + 4, Y + 9, 8, 6);
+    ctx.fillStyle = '#c9b8a0'; ctx.fillRect(X + 5, Y + 10, 6, 4); ctx.fillStyle = INK; ctx.fillRect(L ? X + 3 : X + 10, Y + 6 + nib, 3, 5);
+    ctx.fillStyle = '#c9b8a0'; ctx.fillRect(L ? X + 4 : X + 11, Y + 4 + nib, 1, 3); ctx.fillStyle = '#f3eee3'; ctx.fillRect(L ? X + 11 : X + 4, Y + 11, 2, 2);
+    return;
+  }
+  const big = e.species === 'donkey';
+  const body = e.species === 'goat' ? '#e8e0d0' : e.species === 'sheep' ? '#f3eee3' : '#8a8494';
+  ctx.fillStyle = INK; ctx.fillRect(X + 3, Y + 11, 2, 4); ctx.fillRect(X + 10, Y + 11, 2, 4);
+  ctx.fillRect(X + 2, Y + (big ? 3 : 4), 12, big ? 9 : 8);
+  ctx.fillStyle = body; ctx.fillRect(X + 3, Y + (big ? 4 : 5), 10, big ? 7 : 6);
+  if (e.species === 'goat') { ctx.fillStyle = '#8a5a3a'; ctx.fillRect(X + 5, Y + 6, 4, 3); }
+  ctx.fillStyle = e.species === 'sheep' ? INK : body; ctx.fillRect(hx, Y + 4 + nib, 5, 4);
+  ctx.fillStyle = INK; ctx.fillRect(hx, Y + 4 + nib, 5, 1);
+  if (e.species === 'donkey') { ctx.fillRect(hx + 1, Y - 1 + nib, 1, 5); ctx.fillRect(hx + 3, Y - 1 + nib, 1, 5); }
+  if (e.species === 'goat') { ctx.fillStyle = '#c9c0a8'; ctx.fillRect(hx + 1, Y + 1 + nib, 1, 3); ctx.fillRect(hx + 3, Y + 1 + nib, 1, 3); }
+}
+
 let chipRects: { x: number; y: number; w: number; h: number }[] = [];
 /** A name label on the zoomed-out map, nudged down if it would overlap another. */
 /** `size` is a font size in px, or 'small' for the sharp 3×5 pixel font (shops, guest list). */
@@ -164,6 +188,7 @@ export function draw(now: number) {
     CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
     SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
     PLACES.forEach(pl => chip(pl.name.toUpperCase(), sx((pl.x + pl.w / 2) * T), sy((pl.y + pl.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
+    chip('GÖRLI', sx((GORLI.x0 + GORLI.x1) / 2 * T), sy((GORLI.y0 + 2) * T), '#3f7a3a', '#fff', size);
     RT.ents.forEach(e => { if (e.kind === 'column') chip('GUEST LIST', sx((e.x + 0.5) * T), sy(e.y * T - 8), '#2f6b4f', '#fff', 'small'); });
   }
   const px = sx(ppx + 8), py = sy(ppy + 2);

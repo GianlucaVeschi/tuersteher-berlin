@@ -1419,6 +1419,45 @@ export const INTERIORS: Record<string, InteriorDef> = {
     },
     dancerLines: [],
     quests: []
+  },
+
+  /* Black-light minigolf in Görlitzer Park (a place, not a club: data/places.ts): neon walls,
+     glowing lanes under UV. Extra legend: @  a neon minigolf lane (press A to putt) */
+  minigolf: {
+    name: 'Minigolf',
+    floors: {
+      main: {
+        label: 'Black-light minigolf · 18 neon holes', short: 'GOLF',
+        map: [
+          'VVVVVVVVVVVVVVVVVV',
+          'V................V',
+          'V.@@..@@..@@..=..V',
+          'V................V',
+          'V.@@..@@..@@.....V',
+          'V................V',
+          'V.@@..@@..@@.....V',
+          'V................V',
+          'V................V',
+          'VVVVVVVVxxVVVVVVVV'
+        ],
+        spawn: { street: [8, 8, 'up'] },
+        exit: true,
+        uv: true,
+        people: [
+          { x: 15, y: 2, dir: 'left', act: 'golfDesk', look: { skin: '#e2b08c', hair: '#39ff14', top: '#14121c', legs: '#14121c', glasses: '#ff2bd6' } },
+          { x: 5, y: 3, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#f3eee3', legs: '#5ec8ff' }, lines: ['Player: My white T-shirt glows. My teeth glow. My score does not.'] },
+          { x: 9, y: 5, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', top: '#ff2bd6', legs: '#26242e' }, lines: ['Player: Hole seven has a loop-the-loop. It has beaten me four times. Tonight is the night.'] },
+          { x: 12, y: 7, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#00e5ff', legs: '#14121c', shades: true }, lines: ['Player: First date idea, every Kreuzberg person ever: black-light minigolf. It works, though.'] }
+        ]
+      }
+    },
+    examineActs: { '@': 'golf' },
+    examine: {
+      V: ['Painted walls glowing under the UV: jellyfish, planets, a giant neon octopus.'],
+      '=': ['The desk. Clubs, glowing balls, and a sign: NO SOCKS ARE TOO BRIGHT.']
+    },
+    dancerLines: [],
+    quests: []
   }
 
 };

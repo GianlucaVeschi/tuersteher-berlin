@@ -97,7 +97,9 @@ South of the clubs the map continues down to the Landwehrkanal, between Kreuzber
 - **La Maison** on Paul-Lincke-Ufer: a café and boulangerie with a canal terrace, spritz, and orange wine on tap. Walk in and order at the counter.
 - **Ankerklause** at Kottbusser Brücke: the sailors' pub in an old steamer landing right on the water, half pub, half sailor's fantasy, with a famous jukebox. Walk in, order a Korn, pick a record.
 
-The München sign moved down to the new south edge of the map.
+- **Görlitzer Park ("Görli")**: south of the canal, on the grounds of the old Görlitzer Bahnhof (last passenger trains 1951, demolished from 1962, freight until 1985, a park since the late 1980s; old rails still in the grass). The Senate fenced it in 2025/26 (16 gates, about 1.74 million euros) and locked it every night from March 2026, until the courts stopped it: in June 2026 five residents won an urgent case, and in October 2026 the higher court threw out the Senate's appeal. In the game the fence stands with every gate open, activists chant "Görli bleibt auf!", and inside are the Kuhle (the bowl lawn) for picnics, basketball, football and a skate park you can try, a grill zone, bike paths, the Kinderbauernhof with goats, donkeys, sheep and rabbits, and the black-light minigolf to walk into and putt at the neon holes.
+
+The München sign moved down to the new south edge of the map, at the end of the western road.
 
 ## Inside Kater Blau
 
