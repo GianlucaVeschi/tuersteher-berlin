@@ -1,9 +1,10 @@
 import { buildInteriors } from '../interiors/build';
 import { CLUBS } from '../data/clubs';
-import { TOWER, buildings, roads } from '../world/city';
+import { MOLECULE, TOWER, buildings, roads } from '../world/city';
+import { STATION } from '../world/station';
 import { get } from '../world/grid';
 import { INK, circle, pick, rnd } from '../util';
-import { B, BR, C, D, DK, F, G, R, RL, S, SA, T, TR, W } from '../world/tiles';
+import { B, BR, C, D, DK, F, G, PL, R, RL, S, SA, T, TR, W } from '../world/tiles';
 import { RT } from '../core/runtime';
 import { pixelText, pixelTextWidth } from './pixelFont';
 import type { Building, Club } from '../types';
@@ -89,6 +90,10 @@ export function drawTile(x: number, y: number) {
       P(X, Y, 16, 16, '#3c3744');
       for (let i = 0; i < 16; i += 4) P(X + i, Y + 2, 2, 12, '#5a4636');
       P(X, Y + 4, 16, 1, '#a9a9b8'); P(X, Y + 11, 16, 1, '#a9a9b8');
+      break;
+    case PL: // S-Bahn platform: concrete slabs, yellow safety line along the track
+      P(X, Y, 16, 16, '#8a8696'); P(X, Y + 8, 16, 1, '#7a7686'); P(X + (x % 2 ? 4 : 11), Y + 3, 1, 13, '#7a7686');
+      P(X, Y, 16, 2, '#f2c14e'); P(X, Y + 2, 16, 1, '#5a5668');
       break;
     case DK:
       P(X, Y, 16, 16, '#6e4b2e');
@@ -214,6 +219,35 @@ export function drawTower(b: Building) {
   mDraw(towerC, 0, fy, Wd, H - fy, b.x * T, b.y * T);
 }
 export function mDraw(img: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number) { m.drawImage(img, sx, sy, sw, sh, dx, dy, sw, sh); }
+/** The name board of Warschauer Straße, up above the tracks (over the trees) so people on the platform don't cover it. */
+function drawStationBoard() {
+  const name = 'WARSCHAUER STRASSE', w = pixelTextWidth(name) + 16, X = STATION.x0 * T + Math.round(((STATION.x1 - STATION.x0 + 1) * T - w) / 2), Y = (STATION.y - 2) * T + 3;
+  P(X + 3, Y + 9, 1, 4, INK); P(X + w - 4, Y + 9, 1, 4, INK); // posts
+  P(X, Y, w, 10, INK); P(X + 1, Y + 1, w - 2, 8, '#1b2a3a');
+  circle(m, X + 6, Y + 5, 3, '#1f8a4a'); pixelText(m, 'S', X + 5, Y + 3, '#ffffff');
+  pixelText(m, name, X + 12, Y + 3, '#ffffff');
+}
+/** Molecule Man: three aluminium figures standing in the river, arms meeting in the middle,
+ *  full of round holes. Drawn onto the static map over the water tiles. */
+export function drawMoleculeMan() {
+  const X = MOLECULE.x * T, Y = MOLECULE.y * T, W = MOLECULE.w * T, H = MOLECULE.h * T;
+  const metal = '#c7cbd6', shadow = '#9aa0ae', water = Y + H - 6;
+  // ripples where the legs go into the water, and a shimmer of reflection
+  P(X + 2, water + 1, W - 4, 2, '#2b4f8c'); P(X + 6, water + 4, W - 12, 1, '#5d86c4');
+  [6, 22, 38].forEach((cx, i) => {
+    const top = Y - 10 + (i === 1 ? 0 : 4); // the middle figure stands a little taller
+    // legs, body, head (outline first, then aluminium, then a shaded edge)
+    P(X + cx - 4, top + 8, 10, water - top - 8, INK);
+    P(X + cx - 3, top + 9, 8, water - top - 9, metal);
+    P(X + cx + 3, top + 9, 2, water - top - 9, shadow);
+    P(X + cx, top + 28, 1, water - top - 28, INK); // the gap between the legs
+    circle(m, X + cx + 1, top + 4, 5, INK); circle(m, X + cx + 1, top + 4, 4, metal);
+    // the holes
+    for (let k = 0; k < 5; k++) circle(m, X + cx - 1 + Math.floor(rnd() * 5), top + 12 + Math.floor(rnd() * (water - top - 16)), 1, '#2a2d38');
+  });
+  // arms reaching to the middle, meeting above the water
+  P(X + 4, Y - 1, W - 8, 4, INK); P(X + 5, Y, W - 10, 2, metal);
+}
 export function drawObTower(b: Building) {
   const X = b.x * T, Y = b.y * T;
   P(X + 1, Y - 10, 14, 26, INK);
@@ -333,4 +367,6 @@ export function prerender() {
   CLUBS.forEach(drawClub);
   buildInteriors();
   buildings.forEach(b => { if (b.kind === 'obtower') drawObTower(b); });
+  drawMoleculeMan();
+  drawStationBoard();
 }

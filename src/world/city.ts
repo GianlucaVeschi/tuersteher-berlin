@@ -2,7 +2,8 @@ import { PLACES } from '../data/places';
 import { CLUBS } from '../data/clubs';
 import { SHOPS } from '../data/outfits';
 import { RT } from '../core/runtime';
-import { B, BR, C, D, DK, F, G, R, RL, S, SA, TR, W } from './tiles';
+import { B, BR, C, D, DK, F, G, PL, R, RL, S, SA, TR, W } from './tiles';
+import { STATION } from './station';
 import { get, rect, set } from './grid';
 import { NPCS } from '../data/npcs';
 import type { Building, Entity, Road, ShopSign } from '../types';
@@ -30,6 +31,8 @@ export function building(x: number, y: number, w: number, h: number, kind: Build
 }
 // Fernsehturm: solid footprint is the plaza block; the tall part is drawn in front of sprites.
 export const TOWER = { x: 41, y: 16, w: 6, h: 4, top: 9 };
+// Molecule Man: stands in the Spree, east of the Oberbaumbrücke (drawn onto the water; the river stays solid)
+export const MOLECULE = { x: 45, y: 23, w: 3, h: 3 };
 const tree = (x: number, y: number) => { if (get(x, y) === G) set(x, y, TR); };
 
 /** Lays out the street map: river, roads, buildings, clubs, trees, and the people on it. */
@@ -37,8 +40,9 @@ export function buildCity() {
   // Water: the Spree and the Flutgraben canal
   rect(0, 22, RT.MW, 5, W);
   rect(53, 27, 2, 19, W);
-  // S-Bahn tracks
+  // S-Bahn tracks, and the Warschauer Straße platform next to them (world/station.ts)
   rect(13, 1, RT.MW - 13, 1, RL);
+  rect(STATION.x0, STATION.y, STATION.x1 - STATION.x0 + 1, 1, PL);
   // Streets
   hroad(4, 10, RT.MW - 1);
   hroad(14, 0, RT.MW - 1);
@@ -104,11 +108,15 @@ function cityPeople(): Entity[] {
     { kind: 'sign', x: 25, y: 17, lines: ['EAST SIDE GALLERY', 'About 1.3 km of the Berlin Wall, painted by artists from around the world in 1990.'] },
     { kind: 'sign', x: 47, y: 19, lines: ['FERNSEHTURM · Alexanderplatz', '368 m tall. You can see it from almost every street in Berlin.'] },
     { kind: 'sign', x: 41, y: 21, lines: ['OBERBAUMBRÜCKE', 'The red brick bridge between Friedrichshain and Kreuzberg.'] },
+    { kind: 'sign', x: 46, y: 27, lines: ['MOLECULE MAN · in the Spree', 'Three aluminium figures, 30 m tall, by the American artist Jonathan Borofsky (1999). They meet in the river where Friedrichshain, Kreuzberg and Treptow touch.', '(The holes stand for the molecules we are all made of.)'] },
     // Litfaßsäule next to the Fernsehturm: the guest list (ui/players.ts)
     { kind: 'column', x: 48, y: 16, lines: ['LITFASSSÄULE · The guest list', 'Everyone who has tried the doors of Berlin: who made it into every club, who is still out, who just arrived.'] },
     { kind: 'sign', x: 63, y: 13, lines: ['S OSTKREUZ', 'The busiest S-Bahn interchange in town. Change here for Schöneweide and RSO.'] },
     // the road south out of town; walking towards it turns you back (STREET_TRIGGERS in world/street.ts)
-    { kind: 'sign', x: 41, y: 43, lines: ['MÜNCHEN · 585 km', '(Someone has drawn a tiny man in lederhosen on it.)'] }
+    { kind: 'sign', x: 41, y: 43, lines: ['MÜNCHEN · 585 km', '(Someone has drawn a tiny man in lederhosen on it.)'] },
+    // the main street east out of town; walking towards the edge turns you back (STREET_TRIGGERS)
+    { kind: 'sign', x: STATION.x1, y: STATION.y, lines: ['S+U WARSCHAUER STRASSE', 'S-Bahn: S3, S5, S7, S75, S9. Change for the U1 on the other side of the bridge.', 'Berghain is ten minutes on foot. Just follow the people running.'] },
+    { kind: 'sign', x: 69, y: 43, lines: ['COTTBUS · 130 km', '(Someone has stuck a FCK AFD sticker on it.)'] }
   );
   // people from data/npcs.ts; `home` lets Start over bring back the ones who left
   NPCS.forEach(n => ents.push({ kind: 'npc', npcId: n.id, x: n.x, y: n.y, dir: n.dir || 'down', look: n.look, lines: n.lines, act: n.act, leave: n.leave, home: { x: n.x, y: n.y } }));

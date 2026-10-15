@@ -31,13 +31,26 @@ export const STREET_ACTS: Record<string, Act> = {
     closeBox();
     // back up to the sidewalk, facing the city
     player.y = player.ty = 42; player.x = player.tx; player.dir = 'up';
+  },
+  // heading east out of town towards Cottbus: same idea, turn back
+  async cottbus() {
+    held.length = 0;
+    player.dir = 'right';
+    await say('You: AHHH! Cottbus?? I\'ve heard that\'s full of naz....');
+    await say('You: FCK AFD, ya know?');
+    await say("You: Let's better go back and keep the party going!");
+    closeBox();
+    // back along the street, facing the city
+    player.x = player.tx = 69; player.y = player.ty; player.dir = 'left';
   }
 };
 
 /** Areas of the street that run a STREET_ACTS handler when you step into them: [x0, y0, x1, y1]. */
 export const STREET_TRIGGERS: { area: [number, number, number, number]; act: string }[] = [
   // the road south, past the München sign: you're not leaving Berlin tonight
-  { area: [36, 43, 40, 45], act: 'munich' }
+  { area: [36, 43, 40, 45], act: 'munich' },
+  // the main street east, past the Cottbus sign
+  { area: [70, 39, 71, 42], act: 'cottbus' }
 ];
 /** The trigger at (x, y), if any. */
 export const streetTrigger = (x: number, y: number) =>

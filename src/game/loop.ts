@@ -1,3 +1,4 @@
+import { updateTrain } from '../world/station';
 import { STREET_ACTS, streetTrigger } from '../world/street';
 import { closeBox } from '../ui/dialog';
 import { syncTick } from '../online/sync';
@@ -13,7 +14,7 @@ import { openShop } from '../ui/shop';
 import { darkroomScene } from '../quests/acts';
 import { pickBottle } from '../quests/sisyphos';
 import { enterPlace, goFloor, leaveClub } from '../interiors/transitions';
-import { CITY_W, D, DARK, EXIT, ICHAR, STAIRS_DOWN, STAIRS_UP, T, isDoorTile } from '../world/tiles';
+import { D, DARK, EXIT, ICHAR, STAIRS_DOWN, STAIRS_UP, T, isDoorTile } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 import { get } from '../world/grid';
 import { inClub, sceneClub, sceneFloor } from '../world/scenes';
@@ -82,11 +83,7 @@ export function update(dt: number) {
   if (!player.moving && !RT.busy && !RT.titleOn && !zoom.fit && held.length) tryMove(held[held.length - 1]);
   const ease = (o: number) => o > 0 ? Math.max(0, o - dt * 0.08) : Math.min(0, o + dt * 0.08);
   RT.ents.forEach(e => { if (e.ox) e.ox = ease(e.ox); if (e.oy) e.oy = ease(e.oy); });
-  if (train.wait > 0) train.wait -= dt;
-  else {
-    train.x += dt * 0.11;
-    if (train.x > CITY_W * T + 20) { train.x = 13 * T - 140; train.wait = 7000 + Math.random() * 9000; }
-  }
+  updateTrain(dt);
 }
 let last = performance.now();
 export function frame(now: number) {

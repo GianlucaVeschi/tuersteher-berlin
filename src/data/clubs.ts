@@ -6,10 +6,16 @@ const CLUB_DEFS: ClubDef[] = [
     id: 'berghain', name: 'Berghain', area: 'Friedrichshain', x: 26, y: 7, w: 10, h: 6, need: 3, signSide: 2,
     style: 'berghain', glow: '#ff4d6d', initials: 'BG',
     look: { skin: '#e2b08c', bald: true, top: '#111016', legs: '#111016', big: true, tattoo: true },
-    greet: ['Türsteher: …', '(He looks at you. For a long time.)', 'Türsteher: Three questions. One wrong and you go home.'],
-    reject: 'Türsteher: Heute nicht.',
-    accept: ['(He nods. Barely.)', 'Türsteher: Rein.'],
-    again: 'Türsteher: … Go.',
+    bouncer: 'Sven',
+    intro: {
+      ask: 'Sven: I guess you know who I am, right?',
+      yes: ["Sven: I'm the most feared bouncer in the whole world! (I even have a Netflix documentary, hehe.)"],
+      no: 'Sven: Heute nicht!'
+    },
+    greet: ['(He looks at you. For a long time.)', 'Sven: Three questions. One wrong and you go home.'],
+    reject: 'Sven: Heute nicht.',
+    accept: ['(He nods. Barely.)', 'Sven: Rein.'],
+    again: 'Sven: … Go.',
     inside: 'Concrete, fog and a kick drum you feel in your teeth. You walk out Sunday afternoon.',
     sign: ['BERGHAIN · Friedrichshain', 'No sign on the building, on purpose. A former power plant, open since 2004.', 'Upstairs: Panorama Bar. Cameras get a sticker. Come alone or in a small group.'],
     pool: [

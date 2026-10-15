@@ -14,7 +14,8 @@ import { ctx } from './canvas';
 import { RT } from '../core/runtime';
 import { T, W } from '../world/tiles';
 import { player, state } from '../core/state';
-export const train = { x: -400, wait: 2500 };
+/** The S-Bahn: x position, ms until the next one comes, ms left standing at the station, stopped there yet this run. */
+export const train = { x: -400, wait: 2500, dwell: 0, served: false };
 
 /** Player position in pixels, including the walk in progress. */
 export function playerPx(): [number, number] {
@@ -67,6 +68,11 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.fillStyle = '#a8323a'; ctx.fillRect(tx, ty + 6, 42, 6);
       ctx.fillStyle = '#26223a'; ctx.fillRect(tx + 3, ty + 2, 36, 3);
       ctx.fillStyle = '#f2d06b'; for (let j = 5; j < 38; j += 7) ctx.fillRect(tx + j, ty + 2, 2, 2);
+      // DB logo: red letters on white inside a red frame, with a pixel of white around the letters
+      // (without it the eye reads the gaps as the letters)
+      ctx.fillStyle = '#ec0016'; ctx.fillRect(tx + 15, ty + 2, 11, 9);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(tx + 16, ty + 3, 9, 7);
+      pixelText(ctx, 'DB', tx + 17, ty + 4, '#ec0016');
     }
     ctx.restore();
   }

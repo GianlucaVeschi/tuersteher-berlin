@@ -55,6 +55,10 @@ export interface ClubDef {
   glow: string;
   initials: string;
   look: Look;
+  /** the bouncer's name in the narration, e.g. "(Sven looks you up and down.)"; default "The bouncer" */
+  bouncer?: string;
+  /** a yes/no question before the dress check (Sven at Berghain): "No" means you're turned away right there */
+  intro?: { ask: string; yes: string[]; no: string };
   greet: string[];
   reject: string;
   accept: string[];
@@ -192,6 +196,8 @@ export interface Entity {
   oy?: number;
   /** 0..1, for people fading out */
   alpha?: number;
+  /** people at the S-Bahn station (world/station.ts) */
+  passenger?: 'waiting' | 'boarding' | 'running';
   dance?: boolean;
   phase?: number;
   home?: Point;

@@ -43,7 +43,7 @@ export const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman);
 export const charById = (id: string | null): Character | null => ALL_CHARS.find(c => c.id === id) || null;
 // Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
 export const DRESS: Record<string, DressCode> = {
-  berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Türsteher: … Nein.' },
+  berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Sven: … Nein.' },
   tresor:     { ok: ['black'],               hint: 'Dark and functional. Black works.',     no_line: 'Jens: Bit bright for a vault, mate.' },
   kitkat:     { ok: ['latex'],               hint: 'Fetish: latex, leather or very little.', no_line: "Dee: Darling, you're wearing far too much. And the wrong things." },
   rso:        { no: ['tourist', 'suit', 'tech'], hint: 'Dressed for a long weekend in a brewery. No tourist look, no tech vest, nothing fancy.', no_line: "Ronja: You look like you're here for a brewery tour. Not tonight." },

@@ -29,7 +29,11 @@ export async function bouncerTalk(e: Entity) {
   const c = e.club;
   if (!c) return;
   if (state.stamps[c.id]) { await say(c.again); return; }
-  await say('(The bouncer looks you up and down.)');
+  if (c.intro) {
+    if (await ask(c.intro.ask, ['Yes', 'No']) === 1) { await say(c.intro.no); closeBox(); pushBack(); return; }
+    for (const l of c.intro.yes) await say(l);
+  }
+  await say(`(${c.bouncer ?? 'The bouncer'} looks you up and down.)`);
   if (!dressOK(c.id, state.outfit)) {
     track('door_rejected', { club: c.id, reason: 'dress_code', outfit: state.outfit });
     await say(DRESS[c.id].no_line);

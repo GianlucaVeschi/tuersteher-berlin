@@ -1,6 +1,6 @@
 /* ================= MAP ================= */
 export const T = 16, CITY_W = 72, CITY_H = 46;
-export const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12;
+export const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12, PL = 13;
 export const SOLID = new Set<number>([W, B, TR, C, F, RL]);
 // Interior tiles, mapped from the ASCII legend in data/interiors.ts
 export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43, 'v': 44, 'x': 45, 'k': 46, 't': 47, '|': 48, 'P': 49, 'W': 50, 'A': 51, 'N': 52, 'C': 53, 'I': 54, '=': 55, 'c': 56, 'b': 57, 'S': 58, 'D': 59, 'L': 60, '_': 61, ' ': 62,
