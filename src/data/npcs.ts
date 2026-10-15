@@ -123,11 +123,11 @@ function canalCrowds(): NpcDef[] {
   ];
   const spots = (ids: string, list: [number, number, NpcDef['dir']][], lines: string[], off: number) =>
     list.map(([x, y, dir], i) => ({ id: `${ids}-${i}`, x, y, dir, look: CROWD_LOOKS[(i + off) % CROWD_LOOKS.length], lines: [lines[(i * 3 + off) % lines.length]] }));
-  // La Maison (door at 46,45): the promenade in front (row 46) and the canal wall (row 47), except the way in
+  // La Maison (door at 65,45): the promenade in front (row 46) and the canal wall (row 47), except the way in
+  // along the canal wall from the bridge pavement (x62), then up
   const maison: [number, number, NpcDef['dir']][] = [
-    [41, 46, 'right'], [42, 46, 'up'], [43, 46, 'right'], [44, 46, 'up'], [45, 46, 'right'],
-    [47, 46, 'left'], [48, 46, 'up'], [49, 46, 'left'], [50, 46, 'up'], [51, 46, 'left'], [52, 46, 'left'],
-    [47, 47, 'down'], [48, 47, 'down'], [49, 47, 'down'], [51, 47, 'down'], [52, 47, 'down']
+    [63, 46, 'right'], [64, 46, 'up'], [66, 46, 'left'], [67, 46, 'up'], [68, 46, 'left'], [69, 46, 'up'], [70, 46, 'left'],
+    [66, 47, 'down'], [67, 47, 'down'], [68, 47, 'down'], [70, 47, 'down']
   ];
   // Ankerklause (door at 43,51): the promenade (row 52), the grass behind it (row 53), the bridge pavement
   const anker: [number, number, NpcDef['dir']][] = [
