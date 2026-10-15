@@ -34,6 +34,7 @@ export const NPCS: NpcDef[] = [
       '(He walks off, refreshing a price chart on his phone.)'
     ] },
   ...mustafaQueue(),
+  ...canalCrowds(),
   // Admiralbrücke on a summer evening: a busker and people on the bollards (researched: the bridge is
   // the classic Kreuzberg sunset hangout, and gets cleared at 10pm after residents complained)
   { id: 'busker', x: 12, y: 49, dir: 'left', act: 'busker', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#7a5a3a', legs: '#3a3a4a', hat: '#2a2420' } },
@@ -81,4 +82,58 @@ function mustafaQueue(): NpcDef[] {
     { skin: '#d9a27c', hair: '#c0c0c0', top: '#3d5f94', legs: '#3d5f94', glasses: '#9fc7e6' }
   ];
   return path.map(([x, y, dir], i) => ({ id: `queue-mustafa-${i}`, x, y, dir, look: looks[i % looks.length], lines: [lines[i % lines.length]] }));
+}
+
+/* The crowds at La Maison and the Ankerklause: every spot on the canal wall and the pavement is
+   taken. One narrow way through is left to each door (La Maison: along the canal wall from the
+   bridge, then up; Ankerklause: along the grass from the bridge, then up). */
+function canalCrowds(): NpcDef[] {
+  // inside the function: NPCS calls this at load time, before module-level consts below it exist
+  const CROWD_LOOKS: NpcDef['look'][] = [
+    { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true },
+    { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' },
+    { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' },
+    { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' },
+    { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' },
+    { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' },
+    { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true },
+    { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true },
+    { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' },
+    { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }
+  ];
+  const MAISON_LINES = [
+    'Guest: No free table. There is never a free table.',
+    'Guest: I have been waiting for a spot on the canal wall since noon.',
+    "Guest: Orange wine, the canal, the sun. I'm not moving until October.",
+    'Guest: Sorry, this spot is taken. And that one. All of them, actually.',
+    'Guest: Want our table? We leave in about... three hours.',
+    "(Legs dangling over the canal, a spritz in hand. They don't even look up.)",
+    'Guest: Hold my croissant, I need to photograph the swans.',
+    'Guest: The queue for the toilet is longer than the queue for Berghain.'
+  ];
+  const ANKER_LINES = [
+    'Regular: Inside is full. Outside is full. The bridge is the overflow.',
+    'Regular: A Pils from the Ankerklause and the sunset over the canal. Every single night.',
+    '(They are singing along to the jukebox through the open window.)',
+    'Regular: Want to get in? Squeeze. Everybody squeezes.',
+    'Tourist: Is it always like this? ...Every night? Wow.',
+    'Regular: Mind the bike. And the dog. And my beer.',
+    'Regular: Kreuzberg or Neukölln? We are standing exactly on the border. Cheers to both.',
+    "(Someone is balancing four beers through the crowd. Respect.)"
+  ];
+  const spots = (ids: string, list: [number, number, NpcDef['dir']][], lines: string[], off: number) =>
+    list.map(([x, y, dir], i) => ({ id: `${ids}-${i}`, x, y, dir, look: CROWD_LOOKS[(i + off) % CROWD_LOOKS.length], lines: [lines[(i * 3 + off) % lines.length]] }));
+  // La Maison (door at 46,45): the promenade in front (row 46) and the canal wall (row 47), except the way in
+  const maison: [number, number, NpcDef['dir']][] = [
+    [41, 46, 'right'], [42, 46, 'up'], [43, 46, 'right'], [44, 46, 'up'], [45, 46, 'right'],
+    [47, 46, 'left'], [48, 46, 'up'], [49, 46, 'left'], [50, 46, 'up'], [51, 46, 'left'], [52, 46, 'left'],
+    [47, 47, 'down'], [48, 47, 'down'], [49, 47, 'down'], [51, 47, 'down'], [52, 47, 'down']
+  ];
+  // Ankerklause (door at 43,51): the promenade (row 52), the grass behind it (row 53), the bridge pavement
+  const anker: [number, number, NpcDef['dir']][] = [
+    [40, 48, 'right'], [40, 49, 'right'], [40, 50, 'up'],
+    [41, 52, 'right'], [42, 52, 'up'], [44, 52, 'up'], [45, 52, 'left'], [46, 52, 'up'], [47, 52, 'left'], [48, 52, 'left'],
+    [44, 53, 'up'], [45, 53, 'left'], [46, 53, 'up'], [47, 53, 'left'], [49, 52, 'left'], [48, 53, 'up']
+  ];
+  return [...spots('maison-crowd', maison, MAISON_LINES, 0), ...spots('anker-crowd', anker, ANKER_LINES, 4)];
 }
