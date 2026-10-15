@@ -116,6 +116,8 @@ function cityPeople(): Entity[] {
     { kind: 'sign', x: 41, y: 43, lines: ['MÜNCHEN · 585 km', '(Someone has drawn a tiny man in lederhosen on it.)'] },
     // the main street east out of town; walking towards the edge turns you back (STREET_TRIGGERS)
     { kind: 'sign', x: STATION.x1, y: STATION.y, lines: ['S+U WARSCHAUER STRASSE', 'S-Bahn: S3, S5, S7, S75, S9. Change for the U1 on the other side of the bridge.', 'Berghain is ten minutes on foot. Just follow the people running.'] },
+    // the street west out of town (STREET_TRIGGERS)
+    { kind: 'sign', x: 1, y: 28, lines: ['HANNOVER · 285 km', '(Nobody has drawn anything on this one.)'] },
     { kind: 'sign', x: 69, y: 43, lines: ['COTTBUS · 130 km', '(Someone has stuck a FCK AFD sticker on it.)'] }
   );
   // people from data/npcs.ts; `home` lets Start over bring back the ones who left

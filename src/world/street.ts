@@ -42,6 +42,15 @@ export const STREET_ACTS: Record<string, Act> = {
     closeBox();
     // back along the street, facing the city
     player.x = player.tx = 69; player.y = player.ty; player.dir = 'left';
+  },
+  // heading west out of town towards Hannover
+  async hannover() {
+    held.length = 0;
+    player.dir = 'left';
+    await say('You: Hannover? Mmmm... Never heard of it!');
+    await say("You: Let's better keep the party going!");
+    closeBox();
+    player.x = player.tx = 2; player.y = player.ty; player.dir = 'right';
   }
 };
 
@@ -50,7 +59,9 @@ export const STREET_TRIGGERS: { area: [number, number, number, number]; act: str
   // the road south, past the München sign: you're not leaving Berlin tonight
   { area: [36, 43, 40, 45], act: 'munich' },
   // the main street east, past the Cottbus sign
-  { area: [70, 39, 71, 42], act: 'cottbus' }
+  { area: [70, 39, 71, 42], act: 'cottbus' },
+  // the street west, past the Hannover sign
+  { area: [0, 29, 1, 32], act: 'hannover' }
 ];
 /** The trigger at (x, y), if any. */
 export const streetTrigger = (x: number, y: number) =>

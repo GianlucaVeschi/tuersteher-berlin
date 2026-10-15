@@ -9,7 +9,7 @@ export const NPCS: NpcDef[] = [
   { id: 'spati', x: 43, y: 39, look: { skin: '#c98d6a', hair: '#1a1a1a', top: '#e0a83a', legs: '#2a2a35', beard: '#1a1a1a' },
     lines: ['Späti: Club-Mate? Two euros.', 'Späti: Tip: bouncers spot tourists fast. Learn about a club before you queue.', 'Späti: Wrong clothes? Coexist and Voo Store are on this street. Humana and Blackstyle are up north.', 'Späti: And Berghain was a power plant. Everyone asks.'] },
   { id: 'queue1', x: 26, y: 13, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#4ea8de', legs: '#3a5a8a', hat: '#e24a4a' },
-    lines: ["Tourist: We came as nine from the hostel. He just said 'Heute nicht.'", 'Tourist: Go alone. And keep your phone in your pocket.'] },
+    lines: ["Regular: You don't look like you come here all the time (like me).", "Regular: I guess I'm cooler!"] },
   { id: 'queue2', x: 27, y: 13, dir: 'right', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#f2c14e', legs: '#3a3a4a' },
     lines: ["Tourist: Is this even Berghain? There's no sign.", "Tourist: …I think that's the point."] },
   { id: 'queue3', x: 28, y: 13, dir: 'right', look: { skin: '#e2b08c', hair: '#111', top: '#1b1b22', legs: '#1b1b22' },
