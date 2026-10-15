@@ -48,8 +48,16 @@ export const NPCS: NpcDef[] = [
   { id: 'gorli-kick3', x: 50, y: 60, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#58b368', legs: '#26242e' }, lines: ['Kid: I am the goalkeeper because I am the smallest. That is the rule.'] },
   { id: 'gorli-skate1', x: 44, y: 65, dir: 'right', act: 'skate', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#14121c', legs: '#ff8c42' } },
   { id: 'gorli-skate2', x: 47, y: 67, dir: 'left', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', hat: '#c94a3a' }, lines: ['Skater: Best bowl in Kreuzberg. Do not tell anyone. Everyone knows.'] },
-  { id: 'gorli-grill', x: 29, y: 66, dir: 'down', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#2a2420', top: '#ff8c42', legs: '#3a3a4a', beard: '#2a2420' } },
-  { id: 'gorli-grill2', x: 32, y: 66, dir: 'left', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#f3eee3', legs: '#2b3f6b' }, lines: ['Picnic: Twelve people, one grill, and a cool box from the Späti. Perfect Sunday.'] },
+  // grill groups round the four grills, smoke rising (render/draw.ts → drawSmoke)
+  { id: 'gorli-grill', x: 26, y: 66, dir: 'right', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#2a2420', top: '#ff8c42', legs: '#3a3a4a', beard: '#2a2420' } },
+  { id: 'gorli-grill1b', x: 27, y: 65, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#f3eee3', legs: '#2b3f6b' }, lines: ['Griller: Twelve people, one grill, and a cool box from the Späti. Perfect Sunday.'] },
+  { id: 'gorli-grill2a', x: 29, y: 67, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#26242e' }, lines: ['Griller: My uncle says you need charcoal from Turkey. My uncle says a lot of things.'] },
+  { id: 'gorli-grill2b', x: 31, y: 67, dir: 'left', look: { skin: '#c98d6a', hair: '#5a3a22', long: true, top: '#c94a3a', legs: '#26242e' }, lines: ['Griller: (fanning the smoke away with a paper plate) It is fine! It is fine! It is a lot of smoke.'] },
+  { id: 'gorli-grill2c', x: 30, y: 68, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a' }, lines: ['Griller: Corn on the cob, aubergine, and Köfte. Sit down, there is enough for the whole park.'] },
+  { id: 'gorli-grill3a', x: 34, y: 66, dir: 'left', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#ffd23f', legs: '#2b3f6b' } },
+  { id: 'gorli-grill3b', x: 33, y: 65, dir: 'down', look: { skin: '#8d5a3b', hair: '#2a2420', top: '#f3eee3', legs: '#c94a3a', shades: true }, lines: ['Griller: We came at ten to get this spot. Worth it.'] },
+  { id: 'gorli-grill4a', x: 34, y: 68, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#b6f36b', legs: '#3a3a4a' }, lines: ['Griller: Halloumi first, then the sausages, then whatever falls through the grill. That is the order.'] },
+  { id: 'gorli-grill4b', x: 36, y: 68, dir: 'left', look: { skin: '#c98d6a', hair: '#111111', long: true, top: '#7a3fd1', legs: '#26242e' }, lines: ['Griller: The smoke is how your friends find you. Better than any group chat.'] },
   { id: 'gorli-kuhle', x: 26, y: 58, dir: 'down', act: 'kuhle', look: { skin: '#f0c7a0', hair: '#c9a24a', long: true, top: '#c28cff', legs: '#5ec8ff' } },
   { id: 'gorli-kuhle2', x: 29, y: 59, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#ffd23f', legs: '#26242e', shades: true }, lines: ['Sunbather: Lie in the Kuhle and you only see sky. Best spot in Kreuzberg.'] },
   { id: 'gorli-kuhle3', x: 31, y: 58, dir: 'left', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, top: '#7a5a3a', legs: '#26242e', beard: '#5a3a22' }, lines: ['(He is playing Wonderwall on a guitar with five strings.)'] },
@@ -122,16 +130,16 @@ function canalCrowds(): NpcDef[] {
   ];
   const MAISON_LINES = [
     'Guest: No free table. There is never a free table.',
-    'Guest: I have been waiting for a spot on the canal wall since noon.',
+    'Guest: I have been waiting for a table on this terrace since noon.',
     "Guest: Orange wine, the canal, the sun. I'm not moving until October.",
     'Guest: Sorry, this spot is taken. And that one. All of them, actually.',
     'Guest: Want our table? We leave in about... three hours.',
-    "(Legs dangling over the canal, a spritz in hand. They don't even look up.)",
+    "(A spritz, a croissant, the canal glittering behind them. They don't even look up.)",
     'Guest: Hold my croissant, I need to photograph the swans.',
     'Guest: The queue for the toilet is longer than the queue for Berghain.'
   ];
   const ANKER_LINES = [
-    'Regular: Inside is full. Outside is full. The bridge is the overflow.',
+    'Regular: Inside is full. The terrace is full. You can stand by the water, if you like.',
     'Regular: A Pils from the Ankerklause and the sunset over the canal. Every single night.',
     '(They are singing along to the jukebox through the open window.)',
     'Regular: Want to get in? Squeeze. Everybody squeezes.',
@@ -142,17 +150,13 @@ function canalCrowds(): NpcDef[] {
   ];
   const spots = (ids: string, list: [number, number, NpcDef['dir']][], lines: string[], off: number) =>
     list.map(([x, y, dir], i) => ({ id: `${ids}-${i}`, x, y, dir, look: CROWD_LOOKS[(i + off) % CROWD_LOOKS.length], lines: [lines[(i * 3 + off) % lines.length]] }));
-  // La Maison (door at 65,45): the promenade in front (row 46) and the canal wall (row 47), except the way in
-  // along the canal wall from the bridge pavement (x62), then up
+  // La Maison's terrace (door at 65,45): guests at the bistro tables; the way in along row 46 stays free
   const maison: [number, number, NpcDef['dir']][] = [
-    [63, 46, 'right'], [64, 46, 'up'], [66, 46, 'left'], [67, 46, 'up'], [68, 46, 'left'], [69, 46, 'up'], [70, 46, 'left'],
-    [66, 47, 'down'], [67, 47, 'down'], [68, 47, 'down'], [70, 47, 'down']
+    [63, 47, 'right'], [65, 47, 'left'], [66, 47, 'right'], [68, 47, 'left'], [68, 46, 'right'], [70, 46, 'left'], [66, 46, 'down'], [70, 47, 'up']
   ];
-  // Ankerklause (door at 43,51): the promenade (row 52), the grass behind it (row 53), the bridge pavement
+  // the Ankerklause terrace (door at 43,51): guests round the polka-dot tables; row 52 from the bridge stays free
   const anker: [number, number, NpcDef['dir']][] = [
-    [40, 48, 'right'], [40, 49, 'right'], [40, 50, 'up'],
-    [41, 52, 'right'], [42, 52, 'up'], [44, 52, 'up'], [45, 52, 'left'], [46, 52, 'up'], [47, 52, 'left'], [48, 52, 'left'],
-    [44, 53, 'up'], [45, 53, 'left'], [46, 53, 'up'], [47, 53, 'left'], [49, 52, 'left'], [48, 53, 'up']
+    [40, 53, 'right'], [42, 53, 'left'], [44, 53, 'right'], [46, 53, 'left'], [47, 53, 'right'], [49, 53, 'left'], [45, 52, 'down'], [48, 52, 'down']
   ];
   return [...spots('maison-crowd', maison, MAISON_LINES, 0), ...spots('anker-crowd', anker, ANKER_LINES, 4)];
 }

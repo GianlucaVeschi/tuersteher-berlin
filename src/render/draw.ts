@@ -13,7 +13,7 @@ import { drawInteriorFx } from '../interiors/fx';
 import { inClub } from '../world/scenes';
 import { MOBILE, PX, ctx } from './canvas';
 import { RT } from '../core/runtime';
-import { T, W } from '../world/tiles';
+import { GRL, T, W } from '../world/tiles';
 import { player, state } from '../core/state';
 /** The S-Bahn: x position, ms until the next one comes, ms left standing at the station, stopped there yet this run. */
 export const train = { x: -400, wait: 2500, dwell: 0, served: false };
@@ -114,6 +114,7 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.globalAlpha = 1;
     }
   });
+  drawSmoke(now, camX, camY);
   // Fernsehturm upper part, drawn in front of everything north of it
   const tX = TOWER.x * T - camX, tY = TOWER.top * T - camY, fy = (TOWER.y - TOWER.top) * T;
   if (towerC.width && tX > -towerC.width && tX < RT.VW && tY < RT.VH) {
@@ -142,6 +143,23 @@ function drawAnimal(e: Entity, X: number, Y: number, now: number) {
   ctx.fillStyle = INK; ctx.fillRect(hx, Y + 4 + nib, 5, 1);
   if (e.species === 'donkey') { ctx.fillRect(hx + 1, Y - 1 + nib, 1, 5); ctx.fillRect(hx + 3, Y - 1 + nib, 1, 5); }
   if (e.species === 'goat') { ctx.fillStyle = '#c9c0a8'; ctx.fillRect(hx + 1, Y + 1 + nib, 1, 3); ctx.fillRect(hx + 3, Y + 1 + nib, 1, 3); }
+}
+
+/** Grill smoke in Görli: grey puffs rising and drifting from every grill on screen, embers glowing. */
+let grills: [number, number][] | null = null;
+function drawSmoke(now: number, camX: number, camY: number) {
+  if (!grills) { grills = []; RT.map.forEach((row, y) => row.forEach((t, x) => { if (t === GRL) grills!.push([x, y]); })); }
+  for (const [gx, gy] of grills) {
+    const X = gx * T - camX, Y = gy * T - camY;
+    if (X < -32 || X > RT.VW + 16 || Y < -16 || Y > RT.VH + 48) continue;
+    ctx.fillStyle = Math.floor(now / 160 + gx) % 3 ? '#ff8c42' : '#ffd23f'; ctx.fillRect(X + 6, Y + 6, 4, 1);
+    for (let i = 0; i < 6; i++) {
+      const p = reduceMotion ? i / 6 : ((now / 2600 + i / 6 + gx * 0.13) % 1);
+      const r = 2 + p * 6;
+      ctx.fillStyle = `rgba(214,210,222,${(0.55 * (1 - p)).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(X + 8 + Math.sin(p * 5 + gx) * 5 + p * 10, Y + 4 - p * 34, r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
 }
 
 let chipRects: { x: number; y: number; w: number; h: number }[] = [];

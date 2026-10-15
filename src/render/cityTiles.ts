@@ -4,7 +4,7 @@ import { MOLECULE, TOWER, buildings, roads } from '../world/city';
 import { STATION } from '../world/station';
 import { get } from '../world/grid';
 import { INK, circle, pick, rnd } from '../util';
-import { B, BK, BR, C, D, DK, F, FB, FN, G, GRL, KU, OT, PL, R, RL, S, SA, SK, T, TR, TW, W } from '../world/tiles';
+import { ATB, B, BK, BR, C, D, DK, F, FB, FN, G, GRL, KU, MTB, OT, PL, R, RL, S, SA, SK, T, TER, TR, TW, UMB, W } from '../world/tiles';
 import { RT } from '../core/runtime';
 import { pixelText, pixelTextWidth } from './pixelFont';
 import type { Building, Club } from '../types';
@@ -145,6 +145,26 @@ export function drawTile(x: number, y: number) {
       P(X, Y + 5, 16, 1, '#8a8a96'); P(X, Y + 10, 16, 1, '#8a8a96');
       if (rnd() < 0.5) P(X + Math.floor(rnd() * 13), Y + 7, 3, 2, '#4f8f45');
       break;
+    // ---- canal terraces ----
+    case TER: case ATB: case MTB: case UMB: {
+      // cobblestones
+      P(X, Y, 16, 16, '#7a7468');
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) P(X + c * 4 + (r % 2) * 2, Y + r * 4, 3, 3, pick(['#8e8879', '#857f71', '#948e80']));
+      if (t === ATB) { // Ankerklause: red tablecloth with white dots, blue folding chairs either side
+        P(X, Y + 5, 3, 7, '#2b5aa8'); P(X + 13, Y + 5, 3, 7, '#2b5aa8'); P(X, Y + 5, 3, 1, '#9fc0f0'); P(X + 13, Y + 5, 3, 1, '#9fc0f0');
+        P(X + 3, Y + 3, 10, 8, INK); P(X + 3, Y + 3, 10, 7, '#d6453d');
+        for (let i = 0; i < 4; i++) P(X + 4 + (i % 2) * 5 + (i > 1 ? 2 : 0), Y + 4 + (i > 1 ? 3 : 0), 1, 1, '#f3eee3');
+        P(X + 4, Y + 11, 1, 4, '#c9c5d4'); P(X + 11, Y + 11, 1, 4, '#c9c5d4');
+        P(X + 7, Y + 4, 2, 3, '#ffd23f');
+      } else if (t === MTB) { // La Maison: a small round bistro table, rattan chairs either side
+        P(X, Y + 6, 3, 7, '#c9a26a'); P(X + 13, Y + 6, 3, 7, '#c9a26a'); P(X, Y + 6, 3, 1, '#e0c08a'); P(X + 13, Y + 6, 3, 1, '#e0c08a');
+        circle(m, X + 8, Y + 7, 5, INK); circle(m, X + 8, Y + 7, 4, '#3a2a20');
+        P(X + 7, Y + 11, 2, 4, INK); P(X + 6, Y + 5, 2, 2, '#ff8c42'); P(X + 9, Y + 6, 1, 2, '#e8d8b0');
+      } else if (t === UMB) { // a folded parasol in brewery blue
+        P(X + 7, Y + 10, 2, 6, '#c9c5d4'); P(X + 5, Y - 14, 6, 25, INK); P(X + 6, Y - 13, 4, 23, '#1f3f7a'); P(X + 6, Y - 4, 4, 2, '#e8f0ff');
+      }
+      break;
+    }
     case DK:
       P(X, Y, 16, 16, '#6e4b2e');
       for (let r = 0; r < 4; r++) P(X, Y + r * 4 + 3, 16, 1, '#553821');
@@ -207,6 +227,12 @@ export function drawAltbau(b: Building) {
     // small shops: if the sign doesn't fit, use the sharp 3×5 font instead
     if (tw <= Wd - 8) m.fillText(sh.label, Math.round(X + Wd / 2 - tw / 2), sy - 5);
     else pixelText(m, sh.label, Math.round(X + Wd / 2 - pixelTextWidth(sh.label) / 2), sy - 3, sh.ink);
+    if (sh.awning) {
+      // a striped awning under the sign, like the Ankerklause's red and white one
+      for (let i = 0; i < Wd - 4; i += 4) P(X + 2 + i, sy + 4, 4, 5, sh.awning[(i / 4) % 2]);
+      P(X + 2, sy + 9, Wd - 4, 1, INK);
+      for (let i = 0; i < Wd - 4; i += 8) P(X + 4 + i, sy + 10, 1, 1, '#ffd23f');
+    }
     if (sh.door) {
       P(dX + 2, sy + 4, 12, 12, INK);
       P(dX + 3, sy + 5, 10, 11, '#fbecb4');

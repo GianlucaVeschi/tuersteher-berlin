@@ -2,7 +2,7 @@ import { PLACES } from '../data/places';
 import { CLUBS } from '../data/clubs';
 import { SHOPS } from '../data/outfits';
 import { RT } from '../core/runtime';
-import { B, BK, BR, C, D, DK, F, FB, FN, G, GRL, KU, OT, PL, R, RL, S, SA, SK, TR, TW, W } from './tiles';
+import { ATB, B, BK, BR, C, D, DK, F, FB, FN, G, GRL, KU, MTB, OT, PL, R, RL, S, SA, SK, TER, TR, TW, UMB, W } from './tiles';
 import { STATION } from './station';
 import { get, rect, set } from './grid';
 import { NPCS } from '../data/npcs';
@@ -39,6 +39,17 @@ export const GORLI = { x0: 13, y0: 55, x1: 58, y1: 70 };
 export const MOLECULE = { x: 45, y: 23, w: 3, h: 3 };
 const tree = (x: number, y: number) => { if (get(x, y) === G) set(x, y, TR); };
 
+/** The canal terraces: cobblestones, tables and chairs by the water in front of the Ankerklause
+ *  (polka-dot cloths, blue chairs, a folded parasol) and La Maison (round bistro tables). One way
+ *  through to each door stays free (Ankerklause: row 52 from the bridge; La Maison: row 46 from x62). */
+function buildTerraces() {
+  rect(40, 52, 10, 2, TER);
+  [[41, 53], [45, 53], [48, 53]].forEach(([x, y]) => set(x, y, ATB));
+  set(47, 52, UMB);
+  rect(63, 46, 8, 2, TER);
+  [[64, 47], [67, 47], [69, 46]].forEach(([x, y]) => set(x, y, MTB));
+}
+
 /** Görlitzer Park (researched): on the grounds of the old Görlitzer Bahnhof. The Senate's new fence
  *  with sixteen gates, all open; the Kuhle (the bowl lawn), basketball, football and a skate park,
  *  the children's farm, a grill zone, old rails in the grass, bike paths, and the black-light minigolf
@@ -61,7 +72,7 @@ function buildGorli() {
   rect(42, 57, 6, 4, BK);                                   // basketball
   rect(49, 56, 9, 6, FB);                                   // football
   rect(42, 64, 7, 5, SK);                                   // skate park
-  rect(27, 65, 7, 4, SA); set(28, 66, GRL); set(31, 67, GRL); // grill zone
+  rect(26, 65, 11, 4, SA); [[27, 66], [30, 67], [33, 66], [35, 68]].forEach(([x, y]) => set(x, y, GRL)); // grill zone
   for (let x = 26; x <= 36; x++) set(x, 64, OT);           // old rails of the Görlitzer Bahnhof
   // the children's farm: a fenced yard with a stable
   for (let x = 14; x <= 24; x++) { set(x, 64, FN); set(x, 69, FN); }
@@ -90,6 +101,7 @@ export function buildCity() {
   // promenades along both banks of the canal: Paul-Lincke-Ufer (north) and Maybachufer (south)
   for (let x = 1; x < RT.MW - 1; x++) { pave(x, CANAL.y - 2, S); pave(x, CANAL.y + CANAL.h + 1, S); }
   buildGorli();
+  buildTerraces();
 
   // Buildings
   building(TOWER.x, TOWER.y, TOWER.w, TOWER.h, 'tower');
@@ -100,7 +112,7 @@ export function buildCity() {
   });
   // places you can walk into (data/places.ts)
   PLACES.forEach(p => {
-    building(p.x, p.y, p.w, p.h, 'altbau', { v: p.v, shop: { label: p.label, band: p.band, ink: p.ink, door: true } });
+    building(p.x, p.y, p.w, p.h, 'altbau', { v: p.v, shop: { label: p.label, band: p.band, ink: p.ink, door: true, awning: p.awning } });
     set(p.dx, p.doorY, D);
   });
   building(42, 36, 2, 3, 'altbau', { v: 0, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });

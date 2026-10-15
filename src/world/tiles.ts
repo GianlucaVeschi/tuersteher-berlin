@@ -3,7 +3,9 @@ export const T = 16, CITY_W = 72, CITY_H = 74;
 export const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12, PL = 13;
 // Görlitzer Park: wire fence, grill, towel, the Kuhle (the bowl lawn), basketball court, football pitch, skate bowl, old rails in the grass
 export const FN = 14, GRL = 15, TW = 16, KU = 17, BK = 18, FB = 19, SK = 20, OT = 21;
-export const SOLID = new Set<number>([W, B, TR, C, F, RL, FN, GRL]);
+// canal terraces: cobblestones, an Ankerklause table (polka-dot cloth, blue chairs), a La Maison bistro table, a folded parasol
+export const TER = 22, ATB = 23, MTB = 24, UMB = 25;
+export const SOLID = new Set<number>([W, B, TR, C, F, RL, FN, GRL, ATB, MTB, UMB]);
 // Interior tiles, mapped from the ASCII legend in data/interiors.ts
 export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43, 'v': 44, 'x': 45, 'k': 46, 't': 47, '|': 48, 'P': 49, 'W': 50, 'A': 51, 'N': 52, 'C': 53, 'I': 54, '=': 55, 'c': 56, 'b': 57, 'S': 58, 'D': 59, 'L': 60, '_': 61, ' ': 62,
   // Sisyphos and other open-air / wooden clubs
