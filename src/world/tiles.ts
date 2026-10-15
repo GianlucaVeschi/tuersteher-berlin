@@ -1,7 +1,11 @@
 /* ================= MAP ================= */
-export const T = 16, CITY_W = 72, CITY_H = 46;
+export const T = 16, CITY_W = 72, CITY_H = 74;
 export const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12, PL = 13;
-export const SOLID = new Set<number>([W, B, TR, C, F, RL]);
+// Görlitzer Park: wire fence, grill, towel, the Kuhle (the bowl lawn), basketball court, football pitch, skate bowl, old rails in the grass
+export const FN = 14, GRL = 15, TW = 16, KU = 17, BK = 18, FB = 19, SK = 20, OT = 21;
+// canal terraces: cobblestones, an Ankerklause table (polka-dot cloth, blue chairs), a La Maison bistro table, a folded parasol
+export const TER = 22, ATB = 23, MTB = 24, UMB = 25;
+export const SOLID = new Set<number>([W, B, TR, C, F, RL, FN, GRL, ATB, MTB, UMB]);
 // Interior tiles, mapped from the ASCII legend in data/interiors.ts
 export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43, 'v': 44, 'x': 45, 'k': 46, 't': 47, '|': 48, 'P': 49, 'W': 50, 'A': 51, 'N': 52, 'C': 53, 'I': 54, '=': 55, 'c': 56, 'b': 57, 'S': 58, 'D': 59, 'L': 60, '_': 61, ' ': 62,
   // Sisyphos and other open-air / wooden clubs
@@ -19,9 +23,13 @@ export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43,
   's': 110, 'j': 111,
   // Kater Blau
   '*': 112,
+  // Ankerklause
+  '%': 113,
+  // the black-light minigolf
+  '@': 114,
   '1': 81, '2': 82, '3': 83, '4': 84, '5': 85, '6': 86, '7': 87, '8': 88, '9': 89 };
 export const ICHAR: Record<number, string> = Object.fromEntries(Object.entries(ICH).map(([k, v]) => [v, k]));
-[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112].forEach(c => SOLID.add(c));
+[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112, 113, 114].forEach(c => SOLID.add(c));
 export const COUNTERS = new Set([53, 54, 55, 56, 59]);
 export const WALLISH = new Set([40, 50, 51, 52, 60, 62, 68, 69, 74, 78, 79, 90, 107]);
 export const DANCES = new Set([42, 63, 75, 77, 91, 109]); // concrete, sand, red tunnel floor, wooden floor, pole stage, salon checkers

@@ -5,10 +5,23 @@ import { OFF_MAP } from './city';
 import { save } from '../core/save';
 import { DIRS, held, player, state } from '../core/state';
 import { wait } from '../util';
+import { RT } from '../core/runtime';
+import { CITY_H } from './tiles';
+import { farm, gorli, gorliGrill, hoops, kick, kuhle, railway, skate } from '../places/goerli';
 import { ask, closeBox, say } from '../ui/dialog';
 
 /** Custom behaviour for street NPCs, by the `act` name in data/npcs.ts. Club quests live in quests/acts.ts. */
 export const STREET_ACTS: Record<string, Act> = {
+  // Görlitzer Park (places/goerli.ts)
+  gorli, railway, farm, hoops, kick, skate, gorliGrill, kuhle,
+  // the busker on the Admiralbrücke
+  async busker() {
+    await say('Busker: Any requests? I know three songs. Well. Two and a half.');
+    const a = await ask('', ['Wonderwall', 'Something you wrote yourself', 'Manu Chao']);
+    if (a === 0) { await say('(He sighs the sigh of a man who has played Wonderwall four hundred times this summer. He plays it anyway.)'); await say('(The whole bridge sings along. Badly. Beautifully.)'); return; }
+    if (a === 1) { await say('Busker: Really? Nobody asks that.'); await say('(A quiet song about a girl from Neukölln. Someone on a bollard wipes a tear.)'); return; }
+    await say('(Clandestino. Of course. Three Italian tourists start dancing on the cobblestones.)');
+  },
   // Mustafa's Gemüse Kebap: everyone queues for the Gemüse Kebap, nobody comes for the falafel
   async mustafa() {
     const a = await ask('Mustafa: Next! Gemüse Kebap or Falafel?', ['Gemüse Kebap', 'Falafel']);
@@ -30,7 +43,7 @@ export const STREET_ACTS: Record<string, Act> = {
     await say("You: Let's keep the party going!");
     closeBox();
     // back up to the sidewalk, facing the city
-    player.y = player.ty = 42; player.x = player.tx; player.dir = 'up';
+    player.y = player.ty = RT.MH - 4; player.x = player.tx; player.dir = 'up';
   },
   // heading east out of town towards Cottbus: same idea, turn back
   async cottbus() {
@@ -57,7 +70,7 @@ export const STREET_ACTS: Record<string, Act> = {
 /** Areas of the street that run a STREET_ACTS handler when you step into them: [x0, y0, x1, y1]. */
 export const STREET_TRIGGERS: { area: [number, number, number, number]; act: string }[] = [
   // the road south, past the München sign: you're not leaving Berlin tonight
-  { area: [36, 43, 40, 45], act: 'munich' },
+  { area: [9, CITY_H - 3, 12, CITY_H - 1], act: 'munich' },
   // the main street east, past the Cottbus sign
   { area: [70, 39, 71, 42], act: 'cottbus' },
   // the street west, past the Hannover sign

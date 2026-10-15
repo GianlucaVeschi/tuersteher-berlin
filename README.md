@@ -89,6 +89,18 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 
 People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it. Talk to them again afterwards to replay the mini game.
 
+## The Landwehrkanal
+
+South of the clubs the map continues down to the Landwehrkanal, between Kreuzberg and Neukölln:
+
+- **Admiralbrücke**: the oldest iron bridge over the canal (1880 to 1882), cobblestones and old lanterns, the classic summer sunset hangout. A busker takes requests (yes, Wonderwall), people sit on the bollards, and a resident reminds you it gets cleared at 10pm so the neighbours can sleep.
+- **La Maison** on Paul-Lincke-Ufer: a café and boulangerie with a packed cobbled terrace of bistro tables by the canal, spritz, and orange wine on tap. Walk in and order at the counter.
+- **Ankerklause** at Kottbusser Brücke: the sailors' pub in an old steamer landing right on the water, half pub, half sailor's fantasy, with a famous jukebox. Out front: the red and white awning and a full terrace of polka-dot tables and blue chairs by the river. Walk in, order a Korn, pick a record.
+
+- **Görlitzer Park ("Görli")**: south of the canal, on the grounds of the old Görlitzer Bahnhof (last passenger trains 1951, demolished from 1962, freight until 1985, a park since the late 1980s; old rails still in the grass). The Senate fenced it in 2025/26 (16 gates, about 1.74 million euros) and locked it every night from March 2026, until the courts stopped it: in June 2026 five residents won an urgent case, and in October 2026 the higher court threw out the Senate's appeal. In the game the fence stands with every gate open, activists chant "Görli bleibt auf!", and inside are the Kuhle (the bowl lawn) for picnics, basketball, football and a skate park you can try, a grill zone with smoking grills and grill parties round them, bike paths, the Kinderbauernhof with goats, donkeys, sheep and rabbits, and the black-light minigolf to walk into and putt at the neon holes.
+
+The München sign moved down to the new south edge of the map, at the end of the western road.
+
 ## Inside Kater Blau
 
 Kater Blau sits on the Spree at Holzmarkt 25, where Bar25 used to be. Bar25 (2003/04 to September 2010) was a wooden village famous for costume and confetti parties; it closed with a five-day party when the land was sold for the Mediaspree development. The crew moved across the river to Kater Holzig in an old soap factory (2011 to early 2014) and came back as Kater Blau in 2014, part of the Holzmarkt cooperative (the area was a timber market 300 years ago). Parties run Friday to Monday; the floors are Heinz Hopper (classic techno) and the Acid Arch (stranger sounds and live sets), and colour and glitter are welcome at the door. In the game: the garden on the river with wooden shacks, a circus tent and a deck, Heinz Hopper and the Acid Arch. (The game's old "boat" is gone: no source mentions one.)

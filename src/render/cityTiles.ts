@@ -4,7 +4,7 @@ import { MOLECULE, TOWER, buildings, roads } from '../world/city';
 import { STATION } from '../world/station';
 import { get } from '../world/grid';
 import { INK, circle, pick, rnd } from '../util';
-import { B, BR, C, D, DK, F, G, PL, R, RL, S, SA, T, TR, W } from '../world/tiles';
+import { ATB, B, BK, BR, C, D, DK, F, FB, FN, G, GRL, KU, MTB, OT, PL, R, RL, S, SA, SK, T, TER, TR, TW, UMB, W } from '../world/tiles';
 import { RT } from '../core/runtime';
 import { pixelText, pixelTextWidth } from './pixelFont';
 import type { Building, Club } from '../types';
@@ -95,6 +95,76 @@ export function drawTile(x: number, y: number) {
       P(X, Y, 16, 16, '#8a8696'); P(X, Y + 8, 16, 1, '#7a7686'); P(X + (x % 2 ? 4 : 11), Y + 3, 1, 13, '#7a7686');
       P(X, Y, 16, 2, '#f2c14e'); P(X, Y + 2, 16, 1, '#5a5668');
       break;
+    // ---- Görlitzer Park ----
+    case FN: // the new fence: wire mesh between posts
+      drawGrass(X, Y);
+      P(X, Y + 5, 16, 1, '#9a9aa6'); P(X, Y + 10, 16, 1, '#9a9aa6');
+      for (let i = 1; i < 16; i += 5) P(X + i, Y + 2, 2, 13, '#6a6a76');
+      break;
+    case GRL: // a kettle grill on the sand
+      P(X, Y, 16, 16, '#9a8256');
+      P(X + 4, Y + 10, 1, 5, INK); P(X + 11, Y + 10, 1, 5, INK);
+      circle(m, X + 8, Y + 8, 5, INK); circle(m, X + 8, Y + 8, 4, '#2a2a30'); P(X + 5, Y + 6, 6, 1, '#ff8c42');
+      break;
+    case TW: // a towel on the grass
+      drawGrass(X, Y); { const c = pick(['#ff5e7a', '#5ec8ff', '#ffd23f', '#b6f36b', '#c28cff']); P(X + 2, Y + 3, 12, 10, c); P(X + 2, Y + 6, 12, 2, '#f3eee3'); P(X + 2, Y + 10, 12, 1, '#f3eee3'); }
+      break;
+    case KU: { // the Kuhle: the lawn dips into a bowl, darker towards the middle
+      const edge = [get(x, y - 1), get(x, y + 1), get(x - 1, y), get(x + 1, y)].filter(n => n !== KU && n !== TW).length;
+      P(X, Y, 16, 16, edge ? '#3a6e36' : '#2f5f2c');
+      for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 14), 1, 2, pick(['#4f8f45', '#356a31']));
+      if (get(x, y - 1) !== KU && get(x, y - 1) !== TW) P(X, Y, 16, 2, '#2a5228');
+      break;
+    }
+    case BK: // basketball court: orange-red with white lines, a hoop at the ends
+      P(X, Y, 16, 16, '#b4523a');
+      if (get(x, y - 1) !== BK) P(X, Y, 16, 1, '#f3eee3');
+      if (get(x, y + 1) !== BK) P(X, Y + 15, 16, 1, '#f3eee3');
+      if (get(x - 1, y) !== BK) { P(X, Y, 1, 16, '#f3eee3'); if (get(x, y - 1) === BK && get(x, y + 1) === BK) { P(X + 1, Y + 4, 3, 8, INK); P(X + 3, Y + 6, 3, 4, '#ff8c42'); } }
+      if (get(x + 1, y) !== BK) { P(X + 15, Y, 1, 16, '#f3eee3'); if (get(x, y - 1) === BK && get(x, y + 1) === BK) { P(X + 12, Y + 4, 3, 8, INK); P(X + 10, Y + 6, 3, 4, '#ff8c42'); } }
+      break;
+    case FB: // football pitch: stripes of grass, white lines round the edge and through the middle
+      P(X, Y, 16, 16, x % 2 ? '#4a8a3e' : '#448236');
+      if (get(x, y - 1) !== FB) P(X, Y, 16, 1, '#f3eee3');
+      if (get(x, y + 1) !== FB) P(X, Y + 15, 16, 1, '#f3eee3');
+      if (get(x - 1, y) !== FB) { P(X, Y, 1, 16, '#f3eee3'); P(X + 1, Y + 5, 2, 6, '#e8e4d8'); }
+      if (get(x + 1, y) !== FB) { P(X + 15, Y, 1, 16, '#f3eee3'); P(X + 13, Y + 5, 2, 6, '#e8e4d8'); }
+      break;
+    case SK: { // skate park: smooth grey concrete; the rim of the bowl gets a coping edge
+      P(X, Y, 16, 16, '#8a8696');
+      for (let i = 0; i < 3; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 2, 1, '#7a7686');
+      if (get(x, y - 1) !== SK) P(X, Y, 16, 2, '#c9c5d4');
+      if (get(x - 1, y) !== SK) P(X, Y, 2, 16, '#c9c5d4');
+      if (get(x + 1, y) !== SK) P(X + 14, Y, 2, 16, '#5a5668');
+      if (get(x, y + 1) !== SK) P(X, Y + 14, 16, 2, '#5a5668');
+      break;
+    }
+    case OT: // old rails of the Görlitzer Bahnhof, half grown over
+      drawGrass(X, Y);
+      for (let i = 1; i < 16; i += 5) P(X + i, Y + 4, 3, 8, '#5a4636');
+      P(X, Y + 5, 16, 1, '#8a8a96'); P(X, Y + 10, 16, 1, '#8a8a96');
+      if (rnd() < 0.5) P(X + Math.floor(rnd() * 13), Y + 7, 3, 2, '#4f8f45');
+      break;
+    // ---- canal terraces ----
+    case TER: case ATB: case MTB: case UMB: {
+      // cobblestones
+      P(X, Y, 16, 16, '#7a7468');
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) P(X + c * 4 + (r % 2) * 2, Y + r * 4, 3, 3, pick(['#8e8879', '#857f71', '#948e80']));
+      if (t === ATB) { // Ankerklause: red tablecloth with white dots, blue folding chairs either side
+        P(X, Y + 5, 3, 7, '#2b5aa8'); P(X + 13, Y + 5, 3, 7, '#2b5aa8'); P(X, Y + 5, 3, 1, '#9fc0f0'); P(X + 13, Y + 5, 3, 1, '#9fc0f0');
+        P(X + 3, Y + 3, 10, 8, INK); P(X + 3, Y + 3, 10, 7, '#d6453d');
+        for (let i = 0; i < 4; i++) P(X + 4 + (i % 2) * 5 + (i > 1 ? 2 : 0), Y + 4 + (i > 1 ? 3 : 0), 1, 1, '#f3eee3');
+        P(X + 4, Y + 11, 1, 4, '#c9c5d4'); P(X + 11, Y + 11, 1, 4, '#c9c5d4');
+        P(X + 7, Y + 4, 2, 3, '#ffd23f');
+      } else if (t === MTB) { // La Maison: a small round bistro table, rattan chairs either side
+        P(X, Y + 6, 3, 7, '#c9a26a'); P(X + 13, Y + 6, 3, 7, '#c9a26a'); P(X, Y + 6, 3, 1, '#e0c08a'); P(X + 13, Y + 6, 3, 1, '#e0c08a');
+        circle(m, X + 8, Y + 7, 5, INK); circle(m, X + 8, Y + 7, 4, '#3a2a20');
+        P(X + 7, Y + 11, 2, 4, INK); P(X + 6, Y + 5, 2, 2, '#ff8c42'); P(X + 9, Y + 6, 1, 2, '#e8d8b0');
+      } else if (t === UMB) { // a folded parasol in brewery blue
+        P(X + 7, Y + 10, 2, 6, '#c9c5d4'); P(X + 5, Y - 14, 6, 25, INK); P(X + 6, Y - 13, 4, 23, '#1f3f7a'); P(X + 6, Y - 4, 4, 2, '#e8f0ff');
+      }
+      break;
+    }
     case DK:
       P(X, Y, 16, 16, '#6e4b2e');
       for (let r = 0; r < 4; r++) P(X, Y + r * 4 + 3, 16, 1, '#553821');
@@ -157,6 +227,12 @@ export function drawAltbau(b: Building) {
     // small shops: if the sign doesn't fit, use the sharp 3×5 font instead
     if (tw <= Wd - 8) m.fillText(sh.label, Math.round(X + Wd / 2 - tw / 2), sy - 5);
     else pixelText(m, sh.label, Math.round(X + Wd / 2 - pixelTextWidth(sh.label) / 2), sy - 3, sh.ink);
+    if (sh.awning) {
+      // a striped awning under the sign, like the Ankerklause's red and white one
+      for (let i = 0; i < Wd - 4; i += 4) P(X + 2 + i, sy + 4, 4, 5, sh.awning[(i / 4) % 2]);
+      P(X + 2, sy + 9, Wd - 4, 1, INK);
+      for (let i = 0; i < Wd - 4; i += 8) P(X + 4 + i, sy + 10, 1, 1, '#ffd23f');
+    }
     if (sh.door) {
       P(dX + 2, sy + 4, 12, 12, INK);
       P(dX + 3, sy + 5, 10, 11, '#fbecb4');

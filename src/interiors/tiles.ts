@@ -113,6 +113,21 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 103: // karaoke machine: a TV on a stand with a mic
         P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
         P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
+      // ---- black-light minigolf ----
+      case 114: { // a glowing lane: dark felt, neon rails, a hole with a flag
+        P(X, Y, 16, 16, '#0c0b14'); P(X + 1, Y + 1, 14, 14, '#123a24');
+        const neon = ['#39ff14', '#ff2bd6', '#00e5ff', '#fff200'][(x + y) % 4];
+        P(X + 1, Y + 1, 14, 1, neon); P(X + 1, Y + 14, 14, 1, neon); P(X + 1, Y + 1, 1, 14, neon); P(X + 14, Y + 1, 1, 14, neon);
+        if ((x + y) % 2) { circle(g, X + 8, Y + 9, 2, INK); P(X + 8, Y + 3, 1, 6, '#f3eee3'); P(X + 9, Y + 3, 3, 2, '#ff2bd6'); }
+        else { P(X + 4, Y + 6, 8, 1, neon); P(X + 6, Y + 9, 4, 1, neon); }
+        break;
+      }
+      // ---- Ankerklause ----
+      case 113: // the jukebox: a rounded cabinet with coloured light tubes
+        P(X, Y, 16, 16, '#6b4a2e'); P(X + 2, Y + 1, 12, 15, INK); P(X + 3, Y + 2, 10, 13, '#7a1a22');
+        P(X + 4, Y + 2, 8, 3, '#ffd23f'); P(X + 3, Y + 5, 1, 9, '#ff5e7a'); P(X + 12, Y + 5, 1, 9, '#ff5e7a');
+        P(X + 5, Y + 6, 6, 4, '#2a2420'); P(X + 6, Y + 7, 4, 1, '#c9a24a'); P(X + 5, Y + 11, 6, 2, '#5ec8ff');
+        break;
       // ---- Kater Blau ----
       case 112: { // circus tent: red and white stripes, a pointed roof on the top row
         P(X, Y, 16, 16, '#3f7a3a');

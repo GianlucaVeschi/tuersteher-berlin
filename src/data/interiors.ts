@@ -1284,6 +1284,180 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'floors', title: 'Dance on both floors', hint: 'Heinz Hopper and the Acid Arch.' },
       { id: 'drink', title: 'Get a drink', hint: 'The bar shack in the garden.' }
     ]
+  },
+
+  /* La Maison: café and boulangerie on Paul-Lincke-Ufer (a place, not a club: data/places.ts).
+     A glass counter of pastries, bistro tables, the canal terrace outside. */
+  maison: {
+    name: 'La Maison',
+    floors: {
+      main: {
+        label: 'La Maison · café on the canal', short: 'CAFÉ',
+        map: [
+          '################',
+          '#........#.....#',
+          '#IIIII===#.....#',
+          '#dddddddddddddd#',
+          '#dbbddbbddbbddd#',
+          '#dddddddddddddd#',
+          '#dbbddbbddddddd#',
+          '#dddddddddddddd#',
+          '#######xx#######'
+        ],
+        spawn: { street: [7, 7, 'up'] },
+        exit: true,
+        daylight: true,
+        people: [
+          { x: 4, y: 1, act: 'maison', name: 'Baker', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#f3eee3', legs: '#2b3f6b', hat: '#f3eee3' } },
+          { x: 2, y: 3, dir: 'up', look: { skin: '#e2b08c', hair: '#c9a24a', long: true, top: '#ff8c42', legs: '#3a3a4a', glasses: '#1a1a1a' }, lines: ['Guest: Sunday after the flea market on Maybachufer, a spritz here. That is my religion.'] },
+          { x: 11, y: 5, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#c94a3a', legs: '#26242e', beard: '#111111' }, lines: ['Guest: They have orange wine on tap. On TAP. I moved to the right city.'] },
+          { x: 6, y: 7, dir: 'up', look: { skin: '#f3c9a8', hair: '#b04a2a', long: true, top: '#58b368', legs: '#f3eee3' }, lines: ['Guest: Grab your coffee and sit on the canal wall outside. Watch out for the swans, they steal.'] },
+          // packed: one free path from the door up to the counter (column 8, then row 3)
+          { x: 1, y: 3, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Guest: Every chair is taken. I am sitting on my own bag.'] },
+          { x: 9, y: 3, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Guest: Excuse me, is anyone sitting... yes. Of course they are.'] },
+          { x: 10, y: 3, dir: 'down', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Guest: The pain au chocolat sells out by eleven. It is three. I am still hoping.'] },
+          { x: 12, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Guest: We came for one coffee. That was four hours ago.'] },
+          { x: 14, y: 3, dir: 'left', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['(Elbows, croissant crumbs and three languages at one tiny table.)'] },
+          { x: 4, y: 4, dir: 'right', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Guest: Every chair is taken. I am sitting on my own bag.'] },
+          { x: 5, y: 4, dir: 'left', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Guest: Excuse me, is anyone sitting... yes. Of course they are.'] },
+          { x: 9, y: 4, dir: 'right', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['Guest: The pain au chocolat sells out by eleven. It is three. I am still hoping.'] },
+          { x: 12, y: 4, dir: 'left', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Guest: We came for one coffee. That was four hours ago.'] },
+          { x: 13, y: 4, dir: 'up', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['(Elbows, croissant crumbs and three languages at one tiny table.)'] },
+          { x: 1, y: 5, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Guest: Every chair is taken. I am sitting on my own bag.'] },
+          { x: 3, y: 5, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Guest: Excuse me, is anyone sitting... yes. Of course they are.'] },
+          { x: 5, y: 5, dir: 'up', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Guest: The pain au chocolat sells out by eleven. It is three. I am still hoping.'] },
+          { x: 10, y: 5, dir: 'up', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Guest: We came for one coffee. That was four hours ago.'] },
+          { x: 12, y: 5, dir: 'up', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['(Elbows, croissant crumbs and three languages at one tiny table.)'] },
+          { x: 14, y: 5, dir: 'left', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Guest: Every chair is taken. I am sitting on my own bag.'] },
+          { x: 4, y: 6, dir: 'right', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Guest: Excuse me, is anyone sitting... yes. Of course they are.'] },
+          { x: 5, y: 6, dir: 'left', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['Guest: The pain au chocolat sells out by eleven. It is three. I am still hoping.'] },
+          { x: 9, y: 6, dir: 'right', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Guest: We came for one coffee. That was four hours ago.'] },
+          { x: 10, y: 6, dir: 'up', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['(Elbows, croissant crumbs and three languages at one tiny table.)'] },
+          { x: 12, y: 6, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Guest: Every chair is taken. I am sitting on my own bag.'] },
+          { x: 14, y: 6, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Guest: Excuse me, is anyone sitting... yes. Of course they are.'] },
+          { x: 1, y: 7, dir: 'up', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Guest: The pain au chocolat sells out by eleven. It is three. I am still hoping.'] },
+          { x: 3, y: 7, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Guest: We came for one coffee. That was four hours ago.'] },
+          { x: 10, y: 7, dir: 'up', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['(Elbows, croissant crumbs and three languages at one tiny table.)'] },
+          { x: 12, y: 7, dir: 'left', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Guest: Every chair is taken. I am sitting on my own bag.'] },
+          { x: 14, y: 7, dir: 'up', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Guest: Excuse me, is anyone sitting... yes. Of course they are.'] }
+        ]
+      }
+    },
+    examine: {
+      I: ['A glass counter full of croissants, pain au chocolat and tarte au citron. Your willpower: gone.'],
+      '=': ['The till and a big tap: orange wine.'],
+      b: ['A little bistro table, wobbling exactly like in Paris.']
+    },
+    dancerLines: [],
+    quests: []
+  },
+
+  /* Ankerklause: sailors' pub at Kottbusser Brücke, in an old steamer landing on the Landwehrkanal
+     (a place, not a club). Wood panelling, portholes, nets, the jukebox.
+     Extra legend: %  the jukebox */
+  anker: {
+    name: 'Ankerklause',
+    floors: {
+      main: {
+        label: 'Ankerklause · the harbour bar with no harbour', short: 'BAR',
+        map: [
+          'HHoHHoHHoHHoHHHH',
+          'H%wwwwwwww=wwwwH',
+          'Hwwwwwwwww=wwwwH',
+          'Hwwwwwwwww=wwwwH',
+          'Hwwwwwwwww=wwwwH',
+          'HwwwwwwwwwHHHHHH',
+          'HwbbwwbbwwwwwwwH',
+          'HwwwwwwwwwwwwwwH',
+          'HHHHHHHxxHHHHHHH'
+        ],
+        spawn: { street: [7, 7, 'up'] },
+        exit: true,
+        fairy: [[1, 1, 9, 1], [1, 5, 14, 5]],
+        spots: ['rgba(255,90,60,.14)', 'rgba(255,214,120,.12)', 'rgba(80,140,255,.10)'],
+        people: [
+          { x: 11, y: 2, dir: 'left', act: 'ankerBar', name: 'Barkeeper', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#1f2f4d', legs: '#26242e', beard: '#9a9a9a', stripes: '#f3eee3', hat: '#1f2f4d' } },
+          { x: 8, y: 3, dir: 'right', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#2b4c7a', legs: '#26242e', beard: '#c9c9c9', hat: '#f3eee3' }, lines: ['Old sailor: Excursion boats used to leave from right outside. You bought your ticket where I am sitting now.', 'Old sailor: Now it is a pub. Best thing that ever happened to this building.'] },
+          { x: 4, y: 7, dir: 'up', look: { skin: '#c98d6a', hair: '#111111', top: '#14121c', legs: '#3a3a4a', glasses: '#1a1a1a' }, lines: ['Regular: Kreuzberg or Neukölln? Depends who you ask. The post office says Kreuzberg.'] },
+          { x: 13, y: 7, dir: 'left', look: { skin: '#f3c9a8', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#7a1a22' }, lines: ['Regular: Put something loud on the jukebox. That is the house rule. The only one.'] },
+          // packed: one free path from the door to the bar (column 8, then 9) and along the top row to the jukebox
+          { x: 2, y: 2, dir: 'right', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
+          { x: 3, y: 2, dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
+          { x: 5, y: 2, dir: 'right', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
+          { x: 6, y: 2, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
+          { x: 1, y: 3, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
+          { x: 3, y: 3, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
+          { x: 4, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
+          { x: 6, y: 3, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
+          { x: 2, y: 4, dir: 'up', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
+          { x: 5, y: 4, dir: 'right', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
+          { x: 6, y: 4, dir: 'left', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
+          { x: 1, y: 5, dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
+          { x: 3, y: 5, dir: 'right', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
+          { x: 5, y: 5, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
+          { x: 6, y: 5, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
+          { x: 1, y: 6, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
+          { x: 4, y: 6, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
+          { x: 5, y: 6, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
+          { x: 9, y: 6, dir: 'up', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
+          { x: 11, y: 6, dir: 'left', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
+          { x: 12, y: 6, dir: 'up', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
+          { x: 14, y: 6, dir: 'left', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
+          { x: 2, y: 7, dir: 'up', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
+          { x: 10, y: 7, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
+          { x: 11, y: 7, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
+          { x: 14, y: 7, dir: 'up', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] }
+        ]
+      }
+    },
+    examineActs: { '%': 'jukebox' },
+    examine: {
+      o: ['A porthole window. Outside: the Landwehrkanal, the Kottbusser Brücke, a swan.'],
+      H: ['Dark wood panelling, covered in life rings, anchors and postcards from ports nobody here has been to.'],
+      '=': ['A sticky wooden bar. A bell hangs above it. Nobody knows what it is for.'],
+      b: ['A wobbly table with a candle in a bottle.']
+    },
+    dancerLines: [],
+    quests: []
+  },
+
+  /* Black-light minigolf in Görlitzer Park (a place, not a club: data/places.ts): neon walls,
+     glowing lanes under UV. Extra legend: @  a neon minigolf lane (press A to putt) */
+  minigolf: {
+    name: 'Minigolf',
+    floors: {
+      main: {
+        label: 'Black-light minigolf · 18 neon holes', short: 'GOLF',
+        map: [
+          'VVVVVVVVVVVVVVVVVV',
+          'V................V',
+          'V.@@..@@..@@..=..V',
+          'V................V',
+          'V.@@..@@..@@.....V',
+          'V................V',
+          'V.@@..@@..@@.....V',
+          'V................V',
+          'V................V',
+          'VVVVVVVVxxVVVVVVVV'
+        ],
+        spawn: { street: [8, 8, 'up'] },
+        exit: true,
+        uv: true,
+        people: [
+          { x: 15, y: 2, dir: 'left', act: 'golfDesk', look: { skin: '#e2b08c', hair: '#39ff14', top: '#14121c', legs: '#14121c', glasses: '#ff2bd6' } },
+          { x: 5, y: 3, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#f3eee3', legs: '#5ec8ff' }, lines: ['Player: My white T-shirt glows. My teeth glow. My score does not.'] },
+          { x: 9, y: 5, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', top: '#ff2bd6', legs: '#26242e' }, lines: ['Player: Hole seven has a loop-the-loop. It has beaten me four times. Tonight is the night.'] },
+          { x: 12, y: 7, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#00e5ff', legs: '#14121c', shades: true }, lines: ['Player: First date idea, every Kreuzberg person ever: black-light minigolf. It works, though.'] }
+        ]
+      }
+    },
+    examineActs: { '@': 'golf' },
+    examine: {
+      V: ['Painted walls glowing under the UV: jellyfish, planets, a giant neon octopus.'],
+      '=': ['The desk. Clubs, glowing balls, and a sign: NO SOCKS ARE TOO BRIGHT.']
+    },
+    dancerLines: [],
+    quests: []
   }
 
 };

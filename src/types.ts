@@ -137,6 +137,8 @@ export interface PlaceDef {
   band: string;
   ink: string;
   label: string;
+  /** striped awning over the front (the Ankerklause) */
+  awning?: [string, string];
   /** handler in ACTS run every time you walk in (e.g. someone comes up to greet you) */
   enter?: string;
 }
@@ -176,7 +178,9 @@ export interface NpcDef {
 }
 
 export interface Entity {
-  kind: 'npc' | 'sign' | 'column' | 'bouncer' | 'bottle' | 'pile';
+  kind: 'npc' | 'sign' | 'column' | 'bouncer' | 'bottle' | 'pile' | 'animal';
+  /** animals at the Görli children's farm */
+  species?: 'goat' | 'donkey' | 'sheep' | 'rabbit';
   /** street NPCs: id from data/npcs.ts */
   npcId?: string;
   leave?: 'left' | 'right';
@@ -217,7 +221,7 @@ export interface Entity {
 /** A two-lane road: horizontal at row y, or vertical at column x, from a to b. */
 export type Road = { h: true; y: number; a: number; b: number } | { h: false; x: number; a: number; b: number };
 
-export interface ShopSign { label: string; band: string; ink: string; door: boolean }
+export interface ShopSign { label: string; band: string; ink: string; door: boolean; /** striped awning over the front, two colours */ awning?: [string, string] }
 
 export interface Building {
   x: number; y: number; w: number; h: number;

@@ -1,9 +1,10 @@
+import { PLACES } from '../data/places';
 import { PIXEL_H, pixelText, pixelTextWidth } from './pixelFont';
 import type { Entity } from '../types';
 import { SHOPS } from '../data/outfits';
 import { CLUB_SHORT, zoom, zoomLevel } from './zoom';
 import { towerC } from './cityTiles';
-import { TOWER } from '../world/city';
+import { GORLI, TOWER } from '../world/city';
 import { lookOf } from './looks';
 import { person } from './sprites';
 import { INK, reduceMotion } from '../util';
@@ -12,7 +13,7 @@ import { drawInteriorFx } from '../interiors/fx';
 import { inClub } from '../world/scenes';
 import { MOBILE, PX, ctx } from './canvas';
 import { RT } from '../core/runtime';
-import { T, W } from '../world/tiles';
+import { GRL, T, W } from '../world/tiles';
 import { player, state } from '../core/state';
 /** The S-Bahn: x position, ms until the next one comes, ms left standing at the station, stopped there yet this run. */
 export const train = { x: -400, wait: 2500, dwell: 0, served: false };
@@ -103,6 +104,8 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.fillStyle = INK; ctx.fillRect(X + 4, Y + 5, 3, 1); ctx.fillRect(X + 8, Y + 8, 4, 1); ctx.fillRect(X + 8, Y + 10, 3, 1);
       // rounding: darker right edge
       ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.fillRect(X + 11, Y - 2, 2, 15);
+    } else if (e.kind === 'animal') {
+      drawAnimal(e, X, Y, now);
     } else if (e.look) {
       // legs move while sliding to the next tile
       const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0), step = off ? (Math.floor(off / 8) % 2) + 1 : 0;
@@ -111,6 +114,7 @@ export function drawWorld(now: number): [number, number, number, number] {
       ctx.globalAlpha = 1;
     }
   });
+  drawSmoke(now, camX, camY);
   // Fernsehturm upper part, drawn in front of everything north of it
   const tX = TOWER.x * T - camX, tY = TOWER.top * T - camY, fy = (TOWER.y - TOWER.top) * T;
   if (towerC.width && tX > -towerC.width && tX < RT.VW && tY < RT.VH) {
@@ -119,6 +123,45 @@ export function drawWorld(now: number): [number, number, number, number] {
   }
   return [camX, camY, ppx, ppy];
 }
+/** The animals at the Görli children's farm, facing left or right, nibbling now and then. */
+function drawAnimal(e: Entity, X: number, Y: number, now: number) {
+  const nib = !reduceMotion && Math.floor(now / 900 + e.x) % 4 === 0 ? 1 : 0, L = e.dir === 'left';
+  const hx = L ? X : X + 11;
+  if (e.species === 'rabbit') {
+    ctx.fillStyle = INK; ctx.fillRect(X + 4, Y + 9, 8, 6);
+    ctx.fillStyle = '#c9b8a0'; ctx.fillRect(X + 5, Y + 10, 6, 4); ctx.fillStyle = INK; ctx.fillRect(L ? X + 3 : X + 10, Y + 6 + nib, 3, 5);
+    ctx.fillStyle = '#c9b8a0'; ctx.fillRect(L ? X + 4 : X + 11, Y + 4 + nib, 1, 3); ctx.fillStyle = '#f3eee3'; ctx.fillRect(L ? X + 11 : X + 4, Y + 11, 2, 2);
+    return;
+  }
+  const big = e.species === 'donkey';
+  const body = e.species === 'goat' ? '#e8e0d0' : e.species === 'sheep' ? '#f3eee3' : '#8a8494';
+  ctx.fillStyle = INK; ctx.fillRect(X + 3, Y + 11, 2, 4); ctx.fillRect(X + 10, Y + 11, 2, 4);
+  ctx.fillRect(X + 2, Y + (big ? 3 : 4), 12, big ? 9 : 8);
+  ctx.fillStyle = body; ctx.fillRect(X + 3, Y + (big ? 4 : 5), 10, big ? 7 : 6);
+  if (e.species === 'goat') { ctx.fillStyle = '#8a5a3a'; ctx.fillRect(X + 5, Y + 6, 4, 3); }
+  ctx.fillStyle = e.species === 'sheep' ? INK : body; ctx.fillRect(hx, Y + 4 + nib, 5, 4);
+  ctx.fillStyle = INK; ctx.fillRect(hx, Y + 4 + nib, 5, 1);
+  if (e.species === 'donkey') { ctx.fillRect(hx + 1, Y - 1 + nib, 1, 5); ctx.fillRect(hx + 3, Y - 1 + nib, 1, 5); }
+  if (e.species === 'goat') { ctx.fillStyle = '#c9c0a8'; ctx.fillRect(hx + 1, Y + 1 + nib, 1, 3); ctx.fillRect(hx + 3, Y + 1 + nib, 1, 3); }
+}
+
+/** Grill smoke in Görli: grey puffs rising and drifting from every grill on screen, embers glowing. */
+let grills: [number, number][] | null = null;
+function drawSmoke(now: number, camX: number, camY: number) {
+  if (!grills) { grills = []; RT.map.forEach((row, y) => row.forEach((t, x) => { if (t === GRL) grills!.push([x, y]); })); }
+  for (const [gx, gy] of grills) {
+    const X = gx * T - camX, Y = gy * T - camY;
+    if (X < -32 || X > RT.VW + 16 || Y < -16 || Y > RT.VH + 48) continue;
+    ctx.fillStyle = Math.floor(now / 160 + gx) % 3 ? '#ff8c42' : '#ffd23f'; ctx.fillRect(X + 6, Y + 6, 4, 1);
+    for (let i = 0; i < 6; i++) {
+      const p = reduceMotion ? i / 6 : ((now / 2600 + i / 6 + gx * 0.13) % 1);
+      const r = 2 + p * 6;
+      ctx.fillStyle = `rgba(214,210,222,${(0.55 * (1 - p)).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(X + 8 + Math.sin(p * 5 + gx) * 5 + p * 10, Y + 4 - p * 34, r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+}
+
 let chipRects: { x: number; y: number; w: number; h: number }[] = [];
 /** A name label on the zoomed-out map, nudged down if it would overlap another. */
 /** `size` is a font size in px, or 'small' for the sharp 3×5 pixel font (shops, guest list). */
@@ -162,6 +205,8 @@ export function draw(now: number) {
     // clubs on the roof, shops at the shopfront (smaller), so neighbours don't collide
     CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
     SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
+    PLACES.forEach(pl => chip(pl.name.toUpperCase(), sx((pl.x + pl.w / 2) * T), sy((pl.y + pl.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
+    chip('GÖRLI', sx((GORLI.x0 + GORLI.x1) / 2 * T), sy((GORLI.y0 + 2) * T), '#3f7a3a', '#fff', size);
     RT.ents.forEach(e => { if (e.kind === 'column') chip('GUEST LIST', sx((e.x + 0.5) * T), sy(e.y * T - 8), '#2f6b4f', '#fff', 'small'); });
   }
   const px = sx(ppx + 8), py = sy(ppy + 2);
