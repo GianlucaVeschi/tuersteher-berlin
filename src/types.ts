@@ -386,7 +386,8 @@ export interface Typing { id: ReturnType<typeof setInterval>; finish: () => void
 export interface ShopUI { shop: Shop; sel: number; entries: string[] }
 
 /** step 1: man/woman, 2: character, 3: your name. nameOnly: just asking an existing player for a name */
-export interface CreatorState { step: 1 | 2 | 3; sel: number; gender: 'man' | 'woman'; nameOnly?: boolean }
+export type Gender = 'man' | 'woman' | 'nb';
+export interface CreatorState { step: 1 | 2 | 3; sel: number; gender: Gender; nameOnly?: boolean }
 
 export interface TouchState { x: number; y: number; dir: Dir | null; far?: boolean; menu?: boolean }
 

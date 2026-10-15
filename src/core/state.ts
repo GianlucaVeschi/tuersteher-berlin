@@ -6,7 +6,7 @@ export const DIRS: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], 
 export const OPP: Record<Dir, Dir> = { up: 'down', down: 'up', left: 'right', right: 'left' };
 /** ms per tile when walking / running */
 export const MOVE = 170, RUN = 85;
-export const running = () => RT.runKey || RT.runBtn || !!(RT.touch && RT.touch.far);
+export const running = () => RT.runKey || RT.runBtn || RT.runStick || !!(RT.touch && RT.touch.far);
 export const START: { x: number; y: number; dir: Dir } = { x: 40, y: 16, dir: 'down' };
 /** Heideglühen's night starts at 03:30 (minutes after midnight). */
 export const HG_START = 210;

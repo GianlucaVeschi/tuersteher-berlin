@@ -5,7 +5,7 @@ import { renderCard } from './card';
 import { state } from '../core/state';
 import { lookFor } from '../render/looks';
 import { person } from '../render/sprites';
-import { CHARACTERS, OUTFITS, TAG_LABEL } from '../data/outfits';
+import { CHARACTERS, GENDERS, OUTFITS, TAG_LABEL } from '../data/outfits';
 import { RT } from '../core/runtime';
 import { $ } from '../util';
 import type { Character, CreatorState, Dir } from '../types';
@@ -13,7 +13,7 @@ import { checkName } from '../online/names';
 import { syncFinish, syncNow } from '../online/sync';
 
 /* ================= CHARACTER CREATOR ================= */
-// Step 1: man or woman. Step 2: one of four starting characters. Step 3: your name for the guest list.
+// Step 1: man, woman or non-binary. Step 2: one of four starting characters. Step 3: your name for the guest list.
 export const creatorEl = $('#creator'), crList = $('#crList');
 const nameBox = $('#crNameBox'), nameInput = $<HTMLInputElement>('#crName'), nameErr = $('#crNameErr');
 export function openCreator() {
@@ -23,7 +23,7 @@ export function openCreator() {
   renderCreator();
 }
 function creatorOptions(cr: CreatorState): { label: string; ch: Character }[] {
-  if (cr.step === 1) return [{ label: 'Man', ch: CHARACTERS.man[0] }, { label: 'Woman', ch: CHARACTERS.woman[0] }];
+  if (cr.step === 1) return GENDERS.map(g => ({ label: g.label, ch: CHARACTERS[g.id][0] }));
   return CHARACTERS[cr.gender].map(ch => ({ label: ch.name, ch }));
 }
 /** Existing players without a name (from before the guest list) only get the name step. */
@@ -80,7 +80,7 @@ export function creatorA() {
   const cr = RT.creator;
   if (!cr) return;
   if (cr.step === 1) {
-    cr.gender = cr.sel === 0 ? 'man' : 'woman';
+    cr.gender = GENDERS[cr.sel].id;
     cr.step = 2; cr.sel = 0;
     renderCreator();
     return;
@@ -109,7 +109,7 @@ export function creatorA() {
 export function creatorB() {
   const cr = RT.creator;
   if (cr && cr.step === 3 && !cr.nameOnly) { cr.step = 2; cr.sel = CHARACTERS[cr.gender].findIndex(c => c.id === state.char); if (cr.sel < 0) cr.sel = 0; renderCreator(); return; }
-  if (cr && cr.step === 2) { cr.step = 1; cr.sel = cr.gender === 'man' ? 0 : 1; renderCreator(); }
+  if (cr && cr.step === 2) { cr.step = 1; cr.sel = Math.max(0, GENDERS.findIndex(g => g.id === cr.gender)); renderCreator(); }
 }
 
 /** Enter in the name field confirms; Escape goes back. */

@@ -96,6 +96,39 @@ function endTouch() {
   RT.touch = null;
 }
 
+/* Joystick: hold it and slide your thumb to walk, change direction without lifting, past the rim to run. */
+function initStick() {
+  const stick = $('#stick'), knob = $('#stickKnob');
+  let id: number | null = null, dir: Dir | null = null;
+  const set = (d: Dir | null) => {
+    if (d === dir) return;
+    if (dir) releaseDir(dir);
+    dir = d;
+    if (d) pressDir(d);
+  };
+  const move = (ev: PointerEvent) => {
+    const r = stick.getBoundingClientRect(), R = r.width / 2;
+    const dx = ev.clientX - (r.left + R), dy = ev.clientY - (r.top + R), d = Math.hypot(dx, dy);
+    const k = Math.min(1, (R * 0.5) / (d || 1));
+    knob.style.transform = `translate(${dx * k}px, ${dy * k}px)`;
+    RT.runStick = d > R * 1.05;
+    set(d < R * 0.22 ? null : Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+  };
+  const end = () => {
+    id = null; set(null); RT.runStick = false;
+    knob.style.transform = ''; stick.classList.remove('on');
+  };
+  stick.addEventListener('pointerdown', ev => {
+    ev.preventDefault();
+    id = ev.pointerId; stick.classList.add('on');
+    try { stick.setPointerCapture(ev.pointerId); } catch { /* not supported */ }
+    move(ev);
+  });
+  stick.addEventListener('pointermove', ev => { if (ev.pointerId === id) move(ev); });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => stick.addEventListener(t, ev => { if ((ev as PointerEvent).pointerId === id) end(); }));
+  stick.addEventListener('contextmenu', ev => ev.preventDefault());
+}
+
 /* Stamp card sheet (mobile). */
 const cardEl = $('#card');
 function setCard(open: boolean) {
@@ -113,7 +146,7 @@ export function initInput() {
     if (isRunKey(ev.code)) RT.runKey = false;
     const dir = KEYMAP[ev.code]; if (dir) releaseDir(dir);
   });
-  window.addEventListener('blur', () => { held.length = 0; RT.runKey = false; RT.runBtn = false; });
+  window.addEventListener('blur', () => { held.length = 0; RT.runKey = false; RT.runBtn = false; RT.runStick = false; });
   // Keep the latest position when the tab is hidden or closed.
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
   window.addEventListener('pagehide', save);
@@ -160,16 +193,7 @@ export function initInput() {
   $('#cardClose').addEventListener('click', () => setCard(false));
   window.addEventListener('keydown', ev => { if (ev.code === 'Escape' && cardEl.classList.contains('open')) setCard(false); }, true);
 
-  document.querySelectorAll<HTMLButtonElement>('.dpad button').forEach(btn => {
-    const dir = btn.dataset.dir as Dir;
-    const down = (ev: PointerEvent) => { ev.preventDefault(); btn.classList.add('on'); pressDir(dir); try { btn.setPointerCapture(ev.pointerId); } catch { /* not supported */ } };
-    const up = () => { btn.classList.remove('on'); releaseDir(dir); };
-    btn.addEventListener('pointerdown', down);
-    btn.addEventListener('pointerup', up);
-    btn.addEventListener('pointercancel', up);
-    btn.addEventListener('lostpointercapture', up);
-    btn.addEventListener('contextmenu', ev => ev.preventDefault());
-  });
+  initStick();
   ([['#btnA', pressA], ['#btnB', pressB]] as const).forEach(([sel, fn]) => {
     const btn = $(sel);
     // holding B also makes you run
