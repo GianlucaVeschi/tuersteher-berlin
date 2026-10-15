@@ -92,7 +92,7 @@ const CLUB_DEFS: ClubDef[] = [
     reject: 'Olli: Ahoi… and goodbye. Heute nicht.',
     accept: ['Olli: Welcome aboard!'],
     again: 'Olli: Ahoi again! Hop in.',
-    inside: 'Fairy lights over the Spree, a wooden boat full of dancers, sunrise on the water.',
+    inside: 'Fairy lights over the Spree, wooden shacks and a circus tent, glitter everywhere, sunrise on the water.',
     sign: ['KATER BLAU · Holzmarkt', 'On the Spree. Heir of Bar25 and Kater Holzig.', "'Kater' means tomcat. It also means hangover."],
     pool: [
       { q: 'Which legendary club came before us?', a: ['Bar25', 'Studio 54', 'Ministry of Sound', 'Pacha'], fact: 'Bar25, then Kater Holzig, then Kater Blau. Same family.' },

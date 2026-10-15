@@ -823,10 +823,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
         spots: ['rgba(255,180,90,.16)', 'rgba(255,120,80,.12)', 'rgba(255,230,160,.12)'],
         people: [
           { x: 10, y: 2, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
-          { x: 20, y: 8, act: 'woody', name: 'Woody', dir: 'left', look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
+          { x: 20, y: 8, act: 'woody', name: 'Woody', dir: 'left', movedWhen: 'woody', movedTo: [21, 17], look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
           { x: 29, y: 16, act: 'bar', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#7a5a3a', legs: '#2b3f6b', long: true } },
           { x: 27, y: 10, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#d9733a', legs: '#3a3a4a' }, lines: ['Raver: No lineup online, ever. You just come and trust the music.'] },
-          { x: 10, y: 18, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Bald, always by the fire, knows everyone.'] }
+          { x: 10, y: 18, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Never leaves the dancefloor. Well, except when someone is passing round a really big joint.'] }
         ]
       },
       klo: {
@@ -870,8 +870,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       extras: ['#ffd23f', '#ff8c42', '#fff2b0', '#ff5e7a']
     },
     quests: [
-      { id: 'b2b', title: 'Back to back at 5am', hint: 'Ask the DJ under the glass roof if you can play with him.' },
-      { id: 'woody', title: "Get Woody's yes", hint: 'Woody is the booker. Bald, been around forever.' },
+      { id: 'b2b', title: 'Steal the decks', hint: 'Ask the DJ under the glass roof if you can play a few tracks.' },
+      { id: 'woody', title: 'Get Woody off the dancefloor', hint: 'Woody the booker never leaves the floor. Unless someone offers him something big.' },
       { id: 'karaoke', title: 'Karaoke in the toilets', hint: 'The toilets have a karaoke machine. Of course they do.' },
       { id: 'fire', title: 'Warm up by the fire', hint: 'Press A facing a fire pit.' },
       { id: 'drink', title: 'Get a drink', hint: 'The bar by the fence.' }
@@ -1032,6 +1032,258 @@ export const INTERIORS: Record<string, InteriorDef> = {
       extras: ['#f2c45a', '#fff200', '#ff2bd6', '#00e5ff']
     },
     quests: []
+  },
+
+  /* Tresor: since 2007 in the old Kraftwerk power station on Köpenicker Straße. Globus upstairs (house),
+     a long concrete tunnel, and the vault in the basement (techno, fog, strobe) with safe-deposit boxes
+     from the original 1991 club in the Wertheim vault.
+     Extra legend: s  old safe-deposit boxes   j  iron bars in front of the DJ */
+  tresor: {
+    name: 'Tresor',
+    welcome: [
+      'Door: Phone.',
+      '(A sticker goes over your camera. The bouncer taps it twice: it stays on.)',
+      "Door: Globus is up here. The vault is down the stairs, through the tunnel. You'll hear it.",
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      globus: {
+        label: 'Globus · house upstairs', short: 'GLOBUS',
+        map: [
+          '##########################',
+          '#.........S...S.....=....#',
+          '#.........SDDDS.....=....#',
+          '#...,,,,,,,,,,,,,...=....#',
+          '#...,,,,,,,,,,,,,...=....#',
+          '#...,,,,,,,,,,,,,...=....#',
+          '#...,,,,,,,,,,,,,...######',
+          '#...,,,,,,,,,,,,,........#',
+          '#.P...............P......#',
+          '#........................#',
+          '#bbb.................vvv.#',
+          '#........................#',
+          '#........................#',
+          '###########xx#############'
+        ],
+        spawn: { street: [11, 12, 'up'], fromDown: [22, 11, 'down'] },
+        down: { to: 'tunnel', at: 'fromUp' },
+        exit: true,
+        dancers: 14,
+        spots: ['rgba(255,170,80,.12)', 'rgba(120,160,255,.10)', 'rgba(255,110,90,.10)'],
+        people: [
+          { x: 12, y: 1, look: { skin: '#c98d6a', hair: '#2a2420', top: '#2a2a2a', legs: '#26242e', glasses: '#1a1a1a' }, lines: ['(The DJ plays deep, warm house. Upstairs is where you warm up for the vault.)'] },
+          { x: 21, y: 3, dir: 'left', act: 'bar', look: { skin: '#f0c7a0', hair: '#111111', top: '#1a1920', legs: '#1a1920' } },
+          { x: 6, y: 9, dir: 'right', act: 'detroit', name: 'Jens', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#1a1920', legs: '#26242e', beard: '#9a9a9a', glasses: '#1a1a1a' } },
+          { x: 17, y: 9, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#3a3a4a', legs: '#26242e' }, lines: ['Raver: Globus for house, the vault for techno. Pace yourself.'] }
+        ]
+      },
+      tunnel: {
+        label: 'The tunnel · thirty metres down to the vault', short: 'TUNNEL',
+        map: [
+          '##################################',
+          '##################################',
+          '#^^............................vv#',
+          '#^^............................vv#',
+          '#..............................vv#',
+          '##################################'
+        ],
+        spawn: { fromUp: [3, 3, 'right'], fromDown: [29, 3, 'left'] },
+        up: { to: 'globus', at: 'fromDown' },
+        down: { to: 'vault', at: 'fromUp' },
+        spots: ['rgba(255,140,40,.16)'],
+        people: [
+          { x: 16, y: 2, dir: 'down', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#1a1920', legs: '#1a1920' }, lines: ['Raver: Listen. Every step the kick gets louder. Best walk in Berlin.'] }
+        ]
+      },
+      vault: {
+        label: 'The vault · techno in the basement', short: 'VAULT',
+        map: [
+          '##########################',
+          '#sssssssss#.....#ssssssss#',
+          '#.........jjDDDjj........#',
+          '#s......................s#',
+          '#s..P,,,,,,,,,,,,,,,P...s#',
+          '#s...,,,,,,,,,,,,,,,....s#',
+          '#s...,,,,,,,,,,,,,,,....s#',
+          '#s..P,,,,,,,,,,,,,,,P...s#',
+          '#s...,,,,,,,,,,,,,,,....s#',
+          '#s......................s#',
+          '#S......................S#',
+          '#s.......====...........s#',
+          '#s......................s#',
+          '#s^^....................s#',
+          '##########################'
+        ],
+        spawn: { fromUp: [5, 13, 'right'] },
+        up: { to: 'tunnel', at: 'fromDown' },
+        dancers: 18,
+        fog: true,
+        strobe: true,
+        spots: ['rgba(255,140,40,.14)', 'rgba(255,255,255,.08)', 'rgba(255,90,40,.10)'],
+        people: [
+          { x: 13, y: 1, look: { skin: '#8d5a3b', hair: '#111111', top: '#1a1920', legs: '#1a1920', hat: '#111111' }, lines: ['(The DJ plays Detroit techno from behind iron bars. In the fog you only see hands and a strobe.)'] },
+          { x: 10, y: 12, dir: 'up', act: 'bar', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#1a1920', legs: '#1a1920', bald: true } },
+          { x: 21, y: 9, dir: 'up', act: 'sticker', look: { skin: '#f3c9a8', hair: '#c9a24a', top: '#26242e', legs: '#5a7aa8' } },
+          { x: 3, y: 9, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', long: true, top: '#1a1920', legs: '#1a1920' }, lines: ['Raver: The fog is so thick I danced with a pillar for an hour. Best partner tonight.'] }
+        ]
+      }
+    },
+    examineActs: { s: 'boxes' },
+    examine: {
+      j: ['Thick iron bars. In the old vault the DJ played from behind bars too.'],
+      S: ['A speaker stack. The bass comes up through your shoes.'],
+      '=': ['A bar in the dark. Club-Mate, beer, water.'],
+      b: ['A bench by the wall. Someone left a Tresor tote bag on it.'],
+      '#': ['Concrete, old and thick. This used to be a power station.']
+    },
+    dancerLines: [
+      'Raver: This is the hardest kick drum in Berlin.', '(They dance without moving their face at all.)', 'Raver: Detroit! DETROIT!',
+      "Raver: I came in at midnight. What day is it?", 'Raver: Did you walk the tunnel? Goosebumps every time.', '(Somebody hands you a cup of water without a word.)'
+    ],
+    dancerPalette: {
+      hair: ['#111111', '#2a2420', '#5a3a22', '#9a9a9a', '#c9a24a', '#d9b25c'],
+      tops: ['#1a1920', '#26242e', '#2a2a2a', '#3a3a4a', '#1a1920', '#4a4a52'],
+      legs: ['#1a1920', '#26242e', '#2b3f6b', '#3a3a4a'],
+      extras: ['#ff8c42', '#e8e4f0', '#ff5a1f', '#9a9a9a']
+    },
+    quests: [
+      { id: 'tunnel', title: 'Through the tunnel', hint: 'Take the stairs down from Globus and follow the tunnel to the vault.' },
+      { id: 'boxes', title: 'The old deposit boxes', hint: 'Press A facing the wall of old safe-deposit boxes in the vault.' },
+      { id: 'detroit', title: 'The Detroit connection', hint: 'Jens in Globus has been coming since 1991. Know your Tresor history.' },
+      { id: 'sticker', title: 'Keep the sticker on', hint: 'Someone in the vault is filming. Deal with it, nicely.' },
+      { id: 'dance', title: 'Lose yourself in the fog', hint: 'Press A on a dancefloor. The vault, ideally.' },
+      { id: 'drink', title: 'Get a drink', hint: 'Bars in Globus and in the vault.' }
+    ]
+  },
+
+  /* Kater Blau: on the Spree at Holzmarkt 25, where Bar25 used to be. Open-air garden with wooden shacks,
+     a circus tent and a deck over the river; inside, Heinz Hopper (classic techno) and the Acid Arch.
+     Extra legend: *  circus tent   q  river water (as at CDV) */
+  katerblau: {
+    name: 'Kater Blau',
+    welcome: [
+      'Door: Ahoi! Hand, please.',
+      '(A stamp shaped like a little cat with a sailor hat.)',
+      'Door: Garden and river out here, Heinz Hopper in the left shack, the Acid Arch through the circus tent. See you Monday.',
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      garden: {
+        label: 'The garden · on the Spree', short: 'GARDEN',
+        map: [
+          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww',
+          'wwbbwwwwwwwwwwwwwwwwwwwwwwwwbbww',
+          'gggggggggggggggggggggggggggggggg',
+          'gHHHHHHHgggg*****gggggggHHHHHHHg',
+          'gHHH1HHHgggg**2**gggggggH.....Hg',
+          'ggggggggggggggggggggggggH=====Hg',
+          'gggggggggggggggggggggggggggggggg',
+          'ggTgggggaaaaaaaaaaaaaaaggggggTgg',
+          'ggggggggaaaaaaaaaaaaaaaggggggggg',
+          'ggggggggaaaaaaaaaaaaaaaggggggggg',
+          'gTggggggaaaaaaaaaaaaaaagggggTggg',
+          'gggggggggggggggggggggggggggggggg',
+          'gggRgggggggggggggggggggggggggggg',
+          'FFFFFFFFFFFFFFxxFFFFFFFFFFFFFFFF'
+        ],
+        spawn: { street: [14, 14, 'up'], fromHopper: [4, 7, 'down'], fromArch: [14, 7, 'down'] },
+        doors: { '1': { to: 'hopper', at: 'fromGarden' }, '2': { to: 'arch', at: 'fromGarden' } },
+        exit: true,
+        dancers: 12,
+        daylight: true,
+        fairy: [[0, 4, 31, 4], [8, 8, 22, 8], [8, 13, 22, 13]],
+        spots: ['rgba(126,200,255,.12)', 'rgba(255,140,200,.10)', 'rgba(255,214,120,.10)'],
+        people: [
+          { x: 27, y: 6, dir: 'down', act: 'bar', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b4c7a', legs: '#20202a', stripes: '#f3eee3', hat: '#1f2f4d' } },
+          { x: 20, y: 3, dir: 'down', act: 'bar25', name: 'Hanne', look: { skin: '#e2b08c', hair: '#c9c9c9', long: true, top: '#c94a3a', legs: '#3a3a8a', flowers: ['#ffd23f', '#ff5e7a'], sparkle: '#fff6a8' } },
+          { x: 4, y: 14, dir: 'left', act: 'glitter', name: 'Glitter fairy', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#c28cff', legs: '#ff5e7a', sparkle: '#fff6a8', paint: '#ffd23f' } },
+          { x: 10, y: 3, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', top: '#ffd23f', legs: '#5ec8ff', sparkle: '#ff5e7a' }, lines: ['Raver: Friday to Monday morning. I am on day three. Or four.'] },
+          { x: 25, y: 11, dir: 'left', look: { skin: '#c98d6a', hair: '#5a3a22', top: '#b6f36b', legs: '#7a3fd1', hat: '#ff8c42' }, lines: ['Raver: The restaurant here is called Katerschmaus. I had breakfast there. At four in the afternoon. On a Monday.'] }
+        ]
+      },
+      hopper: {
+        label: 'Heinz Hopper · classic techno', short: 'HOPPER',
+        map: [
+          'HHHHHHHHHHHHHHHHHHHHHHHHHH',
+          'HwwwwwwwwwwwwwwwwwwwwwwwwH',
+          'HwwwwwwwwwwSDDDSwwwwwwwwwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwwwwwwwwwwwwwwwwwwwwwwwwH',
+          'HbbbwwwwwwwwwwwwwwwwwwwwwH',
+          'HwwwwwwwwwwwwwwwwwwwwwwwwH',
+          'HHHHHHHHHHH1HHHHHHHHHHHHHH'
+        ],
+        spawn: { fromGarden: [11, 12, 'up'] },
+        doors: { '1': { to: 'garden', at: 'fromHopper' } },
+        dancers: 18,
+        fairy: [[1, 3, 24, 3], [1, 9, 24, 9]],
+        spots: ['rgba(126,200,255,.14)', 'rgba(255,90,140,.12)', 'rgba(255,214,120,.10)'],
+        people: [
+          { x: 12, y: 1, look: { skin: '#e2b08c', hair: '#2a2420', top: '#3d5f94', legs: '#20202a', hat: '#ff5e7a' }, lines: ['(The DJ plays classic techno in a sailor shirt. Somebody keeps throwing confetti at the booth.)'] },
+          { x: 21, y: 10, dir: 'left', act: 'confetti', name: 'Mimi', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#ff5e7a', legs: '#ffd23f', sparkle: '#fff6a8' } }
+        ]
+      },
+      arch: {
+        label: 'Acid Arch · live sets and stranger sounds', short: 'ARCH',
+        map: [
+          'BBBBBBBBBBBBBBBBBBBBBB',
+          'BBBBBBBBBBBBBBBBBBBBBB',
+          'B....................B',
+          'B........SDDS........B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B....................B',
+          'B....................B',
+          'BBBBBBBBBB2BBBBBBBBBBB'
+        ],
+        spawn: { fromGarden: [10, 10, 'up'] },
+        doors: { '2': { to: 'garden', at: 'fromArch' } },
+        dancers: 10,
+        uv: true,
+        people: [
+          { x: 10, y: 2, look: { skin: '#c98d6a', hair: '#b6f36b', top: '#14121c', legs: '#14121c', glasses: '#1a1a1a' }, lines: ['(A live act hunched over a pile of synths and cables. Nobody knows what is plugged into what. It sounds incredible.)'] },
+          { x: 2, y: 9, dir: 'right', look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#5ec8ff', legs: '#c28cff', paint: '#b6f36b' }, lines: ['Raver: Acid Arch. Weird music for weird people. My favourite room in Berlin.'] }
+        ]
+      }
+    },
+    examineActs: { q: 'spree' },
+    examine: {
+      '*': ['A red and white circus tent. Through it: the Acid Arch.'],
+      H: ['A wooden shack, patched together from old boards and fairy lights.'],
+      R: ['The glitter booth. Jars of glitter in every colour, and a hand-painted sign: NO GLITTER, NO PARTY.'],
+      B: ['Old brick, curving up into an arch over your head.'],
+      F: ['A wooden fence covered in stickers and somebody\'s lost sequin jacket.'],
+      T: ['A tree full of fairy lights and one lost shoe.']
+    },
+    dancerLines: [
+      'Raver: Have you been glittered yet?', 'Raver: Bar25 forever!', '(They are wearing a cat costume. In August.)',
+      'Raver: Kater means hangover. That is a Tuesday problem.', 'Raver: The sunrise on the Spree, oh my god.', '(Someone throws a handful of confetti over you and dances away.)'
+    ],
+    dancerPalette: {
+      hair: ['#ff8cc4', '#5ec8ff', '#c9a24a', '#2a2420', '#b6f36b', '#7a3fd1', '#c9c9c9'],
+      tops: ['#ff5e7a', '#ffd23f', '#5ec8ff', '#c28cff', '#b6f36b', '#f3eee3', '#2b4c7a'],
+      legs: ['#3a3a8a', '#ff5e7a', '#20202a', '#ffd23f', '#5ec8ff'],
+      extras: ['#fff6a8', '#ff5e7a', '#ffd23f', '#5ec8ff']
+    },
+    quests: [
+      { id: 'bar25', title: 'The Bar25 story', hint: 'Hanne on the deck by the river has been coming since Bar25.' },
+      { id: 'glitter', title: 'Get glittered', hint: 'The glitter booth in the garden. No glitter, no party.' },
+      { id: 'confetti', title: 'Fire the confetti', hint: 'Mimi on the Heinz Hopper floor needs help with the confetti cannon.' },
+      { id: 'spree', title: 'Sunrise on the Spree', hint: 'Press A facing the river from the wooden deck.' },
+      { id: 'floors', title: 'Dance on both floors', hint: 'Heinz Hopper and the Acid Arch.' },
+      { id: 'drink', title: 'Get a drink', hint: 'The bar shack in the garden.' }
+    ]
   }
 
 };

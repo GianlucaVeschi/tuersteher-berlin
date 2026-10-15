@@ -24,11 +24,11 @@ Side quests (tracked on the stamp card):
 | Order a drink | Any bar |
 | Get ice cream | Eisbar, main floor mezzanine |
 | Dance on the main floor | Press A on the dancefloor |
-| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: 10 seconds of melting, blurry, colour-shifting slow motion |
+| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: the club turns 3D for 30 seconds. Walk and turn freely through the main floor (up/down walk, left/right turn, or drag) while the walls melt, the room wobbles, everything leaves ghost trails and the colours drift. You come round wherever you walked to |
 | Take someone to the darkroom | Find Sascha at Panorama Bar, ask first, then lead them down to the ground floor |
 | Dance when the blinds open | After three other quests, go to Panorama Bar |
 
-Leave through the exit on the ground floor. Other clubs still show the short "inside" scene.
+Leave through the exit on the ground floor.
 
 ## Inside Sisyphos
 
@@ -87,7 +87,33 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 | A drink in the old brewery | Any bar |
 | The Keller | Downstairs from ROBUS. Ask first |
 
-People inside clubs with a side quest for you have a red **!** over their head; it disappears once that quest is done.
+People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it. Talk to them again afterwards to replay the mini game.
+
+## Inside Kater Blau
+
+Kater Blau sits on the Spree at Holzmarkt 25, where Bar25 used to be. Bar25 (2003/04 to September 2010) was a wooden village famous for costume and confetti parties; it closed with a five-day party when the land was sold for the Mediaspree development. The crew moved across the river to Kater Holzig in an old soap factory (2011 to early 2014) and came back as Kater Blau in 2014, part of the Holzmarkt cooperative (the area was a timber market 300 years ago). Parties run Friday to Monday; the floors are Heinz Hopper (classic techno) and the Acid Arch (stranger sounds and live sets), and colour and glitter are welcome at the door. In the game: the garden on the river with wooden shacks, a circus tent and a deck, Heinz Hopper and the Acid Arch. (The game's old "boat" is gone: no source mentions one.)
+
+| Quest | Where |
+| --- | --- |
+| The Bar25 story | Hanne on the deck by the river |
+| Get glittered | The glitter booth in the garden |
+| Fire the confetti | Mimi on Heinz Hopper. Wait for the drop |
+| Sunrise on the Spree | Press A facing the river from the deck |
+| Dance on both floors | Heinz Hopper and the Acid Arch |
+| Get a drink | The bar shack in the garden |
+
+## Inside Tresor
+
+Tresor opened in 1991 in the old bank vault of the Wertheim department store on Leipziger Straße, found by Dimitri Hegemann and friends in the no man's land after the Wall fell. House played upstairs in Globus, hard techno in the vault, and the Detroit link ran deep: Hard Wax brought over Jeff Mills, Blake Baxter, Juan Atkins and Underground Resistance, whose X-101 "Sonic Destroyer" was Tresor Records' first release. That site closed in 2005; since 2007 Tresor is in the old Kraftwerk power station on Köpenicker Straße, with some of the original safe-deposit boxes in the basement and a long tunnel down to them. In the game: Globus (house) upstairs, the tunnel, and the vault (fog, strobe, the DJ behind iron bars).
+
+| Quest | Where |
+| --- | --- |
+| Through the tunnel | Stairs down from Globus, along the tunnel into the vault |
+| The old deposit boxes | Press A facing the wall of safe-deposit boxes in the vault |
+| The Detroit connection | Jens in Globus, a regular since 1991. Know the first Tresor Records release |
+| Keep the sticker on | A tourist in the vault is filming. Ask him nicely |
+| Lose yourself in the fog | Dance in the vault |
+| Get a drink | Bars in Globus and the vault |
 
 ## Inside Club der Visionäre
 
@@ -110,8 +136,8 @@ The night has its own clock: it starts at 03:30 and moves on as you dance, sing 
 
 | Quest | Where |
 | --- | --- |
-| Back to back at 5am (main quest) | Ask the DJ under the glass roof. He sends you to Woody; once Woody says yes, come back at 05:00 and pick the right records for a three-track set |
-| Get Woody's yes | Woody, the booker: bald, in the scene for decades, usually by the fire |
+| Steal the decks (main quest, mini game) | The DJ under the glass roof would let you play, but Woody is watching. Get Woody off the floor, then play a 30-second rhythm set: records slide down three lanes, hit them on the line (left / A or up / right, or tap the screen) and keep the crowd meter above half |
+| Get Woody off the dancefloor | Woody, the booker, never leaves it. Tell him someone by the fire wants to share a huge joint |
 | Karaoke in the toilets | The karaoke machine between the sinks |
 | Warm up by the fire | Press A facing a fire pit |
 | Get a drink | The bar by the fence |

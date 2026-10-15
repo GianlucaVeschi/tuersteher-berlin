@@ -166,6 +166,18 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     }
     ctx.restore();
   }
+  // vault fog: big slow grey clouds, and a strobe now and then
+  if (fl.fog) {
+    for (let i = 0; i < 16; i++) {
+      const t = (lights ? now / 4200 : 0) + i * 2.1;
+      const fx0 = ((i * 71 + t * 22) % (sc.w * T + 80)) - 40 - camX, fy0 = ((i * 43 + Math.sin(t + i) * 20) % (sc.h * T)) - camY;
+      const r = 34 + (i % 5) * 8;
+      const gr = ctx.createRadialGradient(fx0, fy0, 0, fx0, fy0, r);
+      gr.addColorStop(0, 'rgba(205,200,220,.22)'); gr.addColorStop(1, 'rgba(205,200,220,0)');
+      ctx.fillStyle = gr; ctx.fillRect(fx0 - r, fy0 - r, r * 2, r * 2);
+    }
+  }
+  if (fl.strobe && lights && now % 2600 < 60) { ctx.fillStyle = 'rgba(255,255,255,.24)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
   // open air: warm afternoon light
   if (fl.daylight) { ctx.fillStyle = 'rgba(255,214,140,.10)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
   // KitKat: UV light upstairs, red light in the dungeon

@@ -2,12 +2,14 @@ import { griess, rsoBar } from './rso';
 import { fire, hgDj, karaoke, woody } from './heide';
 import { cdvBar, ines, jazz, planks, willow } from './cdv';
 import { poolHat, ronny } from './mdma';
+import { boxes, detroit, sticker } from './tresor';
+import { bar25, confetti, glitter, spree } from './katerblau';
 import { antonio, salonChair, salonEnter } from '../places/salon';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
 import { INTERIORS } from '../data/interiors';
-import { startK } from '../effects/trip';
+import { playKHole } from '../effects/khole';
 import { RT } from '../core/runtime';
 import { CARRY_MAX, PFAND_GOAL, euro } from './sisyphos';
 import { renderCard } from '../ui/card';
@@ -26,6 +28,10 @@ export const ACTS: Record<string, Act> = {
   cdvBar, ines, planks, willow, jazz,
   // Sisyphos MDMA chain (quests/mdma.ts)
   ronny, poolHat,
+  // Tresor (quests/tresor.ts)
+  boxes, detroit, sticker,
+  // Kater Blau (quests/katerblau.ts)
+  bar25, glitter, confetti, spree,
   // Antonio's salon (places/salon.ts)
   antonio, salonChair, salonEnter,
   async pile(e, clubId) {
@@ -185,7 +191,17 @@ export const ACTS: Record<string, Act> = {
   // Toilet chain: the guy at the toilet door wants K -> Mila on the dancefloor has it -> back to him.
   async toiletGuy(e, clubId) {
     if (!e) return;
-    if (questDone(clubId, 'toilet')) { await say('Toilet guy: Wild, right? Drink some water. Seriously.'); return; }
+    if (questDone(clubId, 'toilet')) {
+      // replay: another (small) trip
+      await say('Toilet guy: Wild, right? Drink some water. Seriously.');
+      const again = await ask('', ['One more trip', "No, I'm good"]);
+      if (again === 1) return;
+      await say('Toilet guy: A small one. Then water. Deal?');
+      await say('(Back in the stall. Another line. The floor tilts again.)');
+      closeBox();
+      await playKHole();
+      return;
+    }
     if (state.kStage === 0) {
       await say('Toilet guy: Toilets are full. Everyone in there is waiting for the same thing.');
       await say('Toilet guy: Bring some K and you can come in with me. Otherwise, queue.');
@@ -204,8 +220,9 @@ export const ACTS: Record<string, Act> = {
     await say('(You squeeze into a stall together. He racks up two lines on the back of his phone.)');
     await say('(You take one. It burns. Then the floor tilts.)');
     closeBox();
+    await playKHole();
+    await say('(You come round somewhere on the main floor. How long was that? Thirty seconds? Three hours?)');
     state.kStage = 3;
-    startK();
     await completeQuest(clubId, 'toilet');
   },
   async mila(e) {

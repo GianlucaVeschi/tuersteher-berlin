@@ -8,6 +8,7 @@ import { renderCard } from '../ui/card';
 import { toast } from '../interiors/transitions';
 import { state } from '../core/state';
 import { INTERIORS } from '../data/interiors';
+import { tresorVault } from './tresor';
 /* ---- side quests ---- */
 export const QUEST_LIST = (clubId: string): QuestDef[] => (INTERIORS[clubId] && INTERIORS[clubId].quests) || [];
 export const questDone = (clubId: string, id: string) => !!state.quests[clubId + ':' + id];
@@ -26,6 +27,11 @@ export async function completeQuest(clubId: string, id: string) {
 }
 /** Panorama Bar: after three other quests the blinds go up. */
 export async function onFloorEnter(clubId: string, floorId: string) {
+  if (clubId === 'tresor' && floorId === 'vault') {
+    RT.busy = true;
+    try { await tresorVault(clubId); } finally { closeBox(); RT.busy = false; }
+    return;
+  }
   if (floorId !== 'pb' || state.sunrise[clubId]) return;
   const others = QUEST_LIST(clubId).filter(q => q.id !== 'sunrise' && questDone(clubId, q.id)).length;
   if (others < 3) return;

@@ -53,7 +53,7 @@ export function pressDir(dir: Dir) {
   if (!held.includes(dir)) held.push(dir);
   if (RT.ui) uiMove(dir);
 }
-export function releaseDir(dir: Dir) { const i = held.indexOf(dir); if (i >= 0) held.splice(i, 1); }
+export function releaseDir(dir: Dir) { RT.runner?.release?.(dir); const i = held.indexOf(dir); if (i >= 0) held.splice(i, 1); }
 
 const KEYMAP: Record<string, Dir> = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 const isRunKey = (code: string) => code === 'Tab' || code === 'ShiftLeft' || code === 'ShiftRight';

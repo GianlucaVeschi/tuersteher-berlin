@@ -275,6 +275,10 @@ export interface FloorDef {
   fairy?: [number, number, number, number][];
   lanterns?: [number, number][];
   steam?: boolean;
+  /** thick drifting fog (the Tresor vault) */
+  fog?: boolean;
+  /** a short white strobe flash every few seconds */
+  strobe?: boolean;
   daylight?: boolean;
   uv?: boolean;
   red?: boolean;
@@ -388,8 +392,8 @@ export interface Typing { id: ReturnType<typeof setInterval>; finish: () => void
 export interface ShopUI { shop: Shop; sel: number; entries: string[] }
 
 /** step 1: man/woman, 2: character, 3: your name. nameOnly: just asking an existing player for a name */
-/** While the MDMA runner is on, the buttons and keys go to it. */
-export interface RunnerHooks { dir(d: Dir): void; jump(): void }
+/** While a mini game (the MDMA runner, the DJ set) is on, the buttons and keys go to it. */
+export interface RunnerHooks { dir(d: Dir): void; jump(): void; /** a direction let go (for games you steer by holding) */ release?(d: Dir): void; /** music style while it runs (default 'runner') */ music?: string }
 export type Gender = 'man' | 'woman' | 'nb';
 export interface CreatorState { step: 1 | 2 | 3; sel: number; gender: Gender; nameOnly?: boolean }
 
