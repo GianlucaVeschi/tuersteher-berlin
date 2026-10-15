@@ -1032,6 +1032,128 @@ export const INTERIORS: Record<string, InteriorDef> = {
       extras: ['#f2c45a', '#fff200', '#ff2bd6', '#00e5ff']
     },
     quests: []
+  },
+
+  /* Tresor: since 2007 in the old Kraftwerk power station on Köpenicker Straße. Globus upstairs (house),
+     a long concrete tunnel, and the vault in the basement (techno, fog, strobe) with safe-deposit boxes
+     from the original 1991 club in the Wertheim vault.
+     Extra legend: s  old safe-deposit boxes   j  iron bars in front of the DJ */
+  tresor: {
+    name: 'Tresor',
+    welcome: [
+      'Door: Phone.',
+      '(A sticker goes over your camera. The bouncer taps it twice: it stays on.)',
+      "Door: Globus is up here. The vault is down the stairs, through the tunnel. You'll hear it.",
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      globus: {
+        label: 'Globus · house upstairs', short: 'GLOBUS',
+        map: [
+          '##########################',
+          '#.........S...S.....=....#',
+          '#.........SDDDS.....=....#',
+          '#...,,,,,,,,,,,,,...=....#',
+          '#...,,,,,,,,,,,,,...=....#',
+          '#...,,,,,,,,,,,,,...=....#',
+          '#...,,,,,,,,,,,,,...######',
+          '#...,,,,,,,,,,,,,........#',
+          '#.P...............P......#',
+          '#........................#',
+          '#bbb.................vvv.#',
+          '#........................#',
+          '#........................#',
+          '###########xx#############'
+        ],
+        spawn: { street: [11, 12, 'up'], fromDown: [22, 11, 'down'] },
+        down: { to: 'tunnel', at: 'fromUp' },
+        exit: true,
+        dancers: 14,
+        spots: ['rgba(255,170,80,.12)', 'rgba(120,160,255,.10)', 'rgba(255,110,90,.10)'],
+        people: [
+          { x: 12, y: 1, look: { skin: '#c98d6a', hair: '#2a2420', top: '#2a2a2a', legs: '#26242e', glasses: '#1a1a1a' }, lines: ['(The DJ plays deep, warm house. Upstairs is where you warm up for the vault.)'] },
+          { x: 21, y: 3, dir: 'left', act: 'bar', look: { skin: '#f0c7a0', hair: '#111111', top: '#1a1920', legs: '#1a1920' } },
+          { x: 6, y: 9, dir: 'right', act: 'detroit', name: 'Jens', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#1a1920', legs: '#26242e', beard: '#9a9a9a', glasses: '#1a1a1a' } },
+          { x: 17, y: 9, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#3a3a4a', legs: '#26242e' }, lines: ['Raver: Globus for house, the vault for techno. Pace yourself.'] }
+        ]
+      },
+      tunnel: {
+        label: 'The tunnel · thirty metres down to the vault', short: 'TUNNEL',
+        map: [
+          '##################################',
+          '##################################',
+          '#^^............................vv#',
+          '#^^............................vv#',
+          '#..............................vv#',
+          '##################################'
+        ],
+        spawn: { fromUp: [3, 3, 'right'], fromDown: [29, 3, 'left'] },
+        up: { to: 'globus', at: 'fromDown' },
+        down: { to: 'vault', at: 'fromUp' },
+        spots: ['rgba(255,140,40,.16)'],
+        people: [
+          { x: 16, y: 2, dir: 'down', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#1a1920', legs: '#1a1920' }, lines: ['Raver: Listen. Every step the kick gets louder. Best walk in Berlin.'] }
+        ]
+      },
+      vault: {
+        label: 'The vault · techno in the basement', short: 'VAULT',
+        map: [
+          '##########################',
+          '#sssssssss#.....#ssssssss#',
+          '#.........jjDDDjj........#',
+          '#s......................s#',
+          '#s..P,,,,,,,,,,,,,,,P...s#',
+          '#s...,,,,,,,,,,,,,,,....s#',
+          '#s...,,,,,,,,,,,,,,,....s#',
+          '#s..P,,,,,,,,,,,,,,,P...s#',
+          '#s...,,,,,,,,,,,,,,,....s#',
+          '#s......................s#',
+          '#S......................S#',
+          '#s.......====...........s#',
+          '#s......................s#',
+          '#s^^....................s#',
+          '##########################'
+        ],
+        spawn: { fromUp: [5, 13, 'right'] },
+        up: { to: 'tunnel', at: 'fromDown' },
+        dancers: 18,
+        fog: true,
+        strobe: true,
+        spots: ['rgba(255,140,40,.14)', 'rgba(255,255,255,.08)', 'rgba(255,90,40,.10)'],
+        people: [
+          { x: 13, y: 1, look: { skin: '#8d5a3b', hair: '#111111', top: '#1a1920', legs: '#1a1920', hat: '#111111' }, lines: ['(The DJ plays Detroit techno from behind iron bars. In the fog you only see hands and a strobe.)'] },
+          { x: 10, y: 12, dir: 'up', act: 'bar', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#1a1920', legs: '#1a1920', bald: true } },
+          { x: 21, y: 9, dir: 'up', act: 'sticker', look: { skin: '#f3c9a8', hair: '#c9a24a', top: '#26242e', legs: '#5a7aa8' } },
+          { x: 3, y: 9, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', long: true, top: '#1a1920', legs: '#1a1920' }, lines: ['Raver: The fog is so thick I danced with a pillar for an hour. Best partner tonight.'] }
+        ]
+      }
+    },
+    examineActs: { s: 'boxes' },
+    examine: {
+      j: ['Thick iron bars. In the old vault the DJ played from behind bars too.'],
+      S: ['A speaker stack. The bass comes up through your shoes.'],
+      '=': ['A bar in the dark. Club-Mate, beer, water.'],
+      b: ['A bench by the wall. Someone left a Tresor tote bag on it.'],
+      '#': ['Concrete, old and thick. This used to be a power station.']
+    },
+    dancerLines: [
+      'Raver: This is the hardest kick drum in Berlin.', '(They dance without moving their face at all.)', 'Raver: Detroit! DETROIT!',
+      "Raver: I came in at midnight. What day is it?", 'Raver: Did you walk the tunnel? Goosebumps every time.', '(Somebody hands you a cup of water without a word.)'
+    ],
+    dancerPalette: {
+      hair: ['#111111', '#2a2420', '#5a3a22', '#9a9a9a', '#c9a24a', '#d9b25c'],
+      tops: ['#1a1920', '#26242e', '#2a2a2a', '#3a3a4a', '#1a1920', '#4a4a52'],
+      legs: ['#1a1920', '#26242e', '#2b3f6b', '#3a3a4a'],
+      extras: ['#ff8c42', '#e8e4f0', '#ff5a1f', '#9a9a9a']
+    },
+    quests: [
+      { id: 'tunnel', title: 'Through the tunnel', hint: 'Take the stairs down from Globus and follow the tunnel to the vault.' },
+      { id: 'boxes', title: 'The old deposit boxes', hint: 'Press A facing the wall of old safe-deposit boxes in the vault.' },
+      { id: 'detroit', title: 'The Detroit connection', hint: 'Jens in Globus has been coming since 1991. Know your Tresor history.' },
+      { id: 'sticker', title: 'Keep the sticker on', hint: 'Someone in the vault is filming. Deal with it, nicely.' },
+      { id: 'dance', title: 'Lose yourself in the fog', hint: 'Press A on a dancefloor. The vault, ideally.' },
+      { id: 'drink', title: 'Get a drink', hint: 'Bars in Globus and in the vault.' }
+    ]
   }
 
 };

@@ -89,6 +89,19 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 
 People inside clubs with a side quest for you have a red **!** over their head; it disappears once that quest is done.
 
+## Inside Tresor
+
+Tresor opened in 1991 in the old bank vault of the Wertheim department store on Leipziger Straße, found by Dimitri Hegemann and friends in the no man's land after the Wall fell. House played upstairs in Globus, hard techno in the vault, and the Detroit link ran deep: Hard Wax brought over Jeff Mills, Blake Baxter, Juan Atkins and Underground Resistance, whose X-101 "Sonic Destroyer" was Tresor Records' first release. That site closed in 2005; since 2007 Tresor is in the old Kraftwerk power station on Köpenicker Straße, with some of the original safe-deposit boxes in the basement and a long tunnel down to them. In the game: Globus (house) upstairs, the tunnel, and the vault (fog, strobe, the DJ behind iron bars).
+
+| Quest | Where |
+| --- | --- |
+| Through the tunnel | Stairs down from Globus, along the tunnel into the vault |
+| The old deposit boxes | Press A facing the wall of safe-deposit boxes in the vault |
+| The Detroit connection | Jens in Globus, a regular since 1991. Know the first Tresor Records release |
+| Keep the sticker on | A tourist in the vault is filming. Ask him nicely |
+| Lose yourself in the fog | Dance in the vault |
+| Get a drink | Bars in Globus and the vault |
+
 ## Inside Club der Visionäre
 
 CDV is a former boathouse on the Flutgraben, a flood channel off the Spree where Kreuzberg meets Alt-Treptow, started around 2001 by Gregor Kraemer (who comes from jazz). One small wooden dancefloor on the water, partly roofed, under a big weeping willow; the Sonnenraum is the little indoor room. It's a home of minimal (Ricardo Villalobos, Zip, Sonja Moonear, Sammy Dee have all played), the bar is cash only, on busy summer weekends it can run from Friday to Monday, and in winter the parties move to the Hoppetosse, its sister ship nearby (a steamer from 1928). A fire took part of the wooden outdoor area on 15 June 2019, and the regulars helped save the club with the Save CDV crowdfunding in 2020.

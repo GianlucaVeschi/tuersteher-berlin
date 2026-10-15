@@ -113,6 +113,19 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 103: // karaoke machine: a TV on a stand with a mic
         P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
         P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
+      // ---- Tresor ----
+      case 110: // the old Wertheim safe-deposit boxes: a wall of little steel doors with keyholes
+        P(X, Y, 16, 16, '#2a2c32');
+        for (let by = 0; by < 4; by++) for (let bx = 0; bx < 3; bx++) {
+          const x0 = X + 1 + bx * 5, y0 = Y + 1 + by * 4;
+          P(x0, y0, 4, 3, pick(['#6a6e78', '#5c606a', '#757984'])); P(x0, y0, 4, 1, '#8a8e98'); P(x0 + 2, y0 + 1, 1, 1, '#1b1a20');
+        }
+        break;
+      case 111: // iron bars in front of the DJ, like the cage in the old vault
+        floorBase(X, Y);
+        for (let i = 1; i < 16; i += 4) { P(X + i, Y - 6, 2, 22, INK); P(X + i, Y - 6, 1, 22, '#6a6e78'); }
+        P(X, Y - 6, 16, 2, INK); P(X, Y - 6, 16, 1, '#6a6e78');
+        break;
       // ---- Club der Visionäre ----
       case 104: { // weeping willow: a dense canopy, branches hanging down at the edges, trunk under the middle
         P(X, Y, 16, 16, '#6b4a2e'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#563a22');

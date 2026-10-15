@@ -275,6 +275,10 @@ export interface FloorDef {
   fairy?: [number, number, number, number][];
   lanterns?: [number, number][];
   steam?: boolean;
+  /** thick drifting fog (the Tresor vault) */
+  fog?: boolean;
+  /** a short white strobe flash every few seconds */
+  strobe?: boolean;
   daylight?: boolean;
   uv?: boolean;
   red?: boolean;

@@ -89,6 +89,16 @@ export const STYLES: Record<string, Style> = {
     pad: { cutoff: 1100, level: 0.03, octave: 1 }
   },
 
+  // Tresor's Globus: warm, deep house upstairs, before the techno in the vault
+  globus: {
+    bpm: 124, swing: 0.08, root: 43, space: 0.3,
+    chords: [[0, 3, 7, 10], [5, 8, 12, 15], [-2, 2, 5, 9], [3, 7, 10, 14]],
+    kick: FOUR, clap: '....x.......x...', hat: OFF, rim: '..o...o...o..o..',
+    bass: { steps: HOUSE_BASS, wave: 'square', cutoff: 380, level: 0.22 },
+    stab: { steps: 'x..x......x.....', cutoff: 1300, decay: 0.3, level: 0.08, octave: 1 },
+    pad: { cutoff: 1200, level: 0.03, octave: 1 }
+  },
+
   // KitKat: hedonistic disco-tinged electro, octave bass and bright chords
   kitkat: {
     bpm: 126, root: 38, space: 0.25, swing: 0.05,
@@ -252,7 +262,8 @@ export const STYLES: Record<string, Style> = {
 const MUFFLED: Record<string, [string, number]> = {
   'berghain:eg': ['berghain', 420],        // the main floor, through the concrete above
   'rso:keller': ['rso_robus', 360],        // ROBUS, through the ceiling
-  'heidegluehen:klo': ['heide', 650]       // the toilets: the dancefloor through the door
+  'heidegluehen:klo': ['heide', 650],      // the toilets: the dancefloor through the door
+  'tresor:tunnel': ['tresor', 700]         // the tunnel: the vault getting louder ahead
 };
 
 /** Which style plays on each club floor. */
@@ -263,6 +274,7 @@ const FLOOR_STYLE: Record<string, string> = {
   'rso:opan': 'rso_opan', 'rso:robus': 'rso_robus', 'rso:summe': 'rso_summe',
   'heidegluehen:heide': 'heide',
   'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen',
+  'tresor:globus': 'globus', 'tresor:vault': 'tresor',
   'salon:main': 'salon'
 };
 /** What plays during a club's short "inside" scene (clubs without an interior use their own style). */
