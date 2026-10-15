@@ -275,6 +275,7 @@ const FLOOR_STYLE: Record<string, string> = {
   'heidegluehen:heide': 'heide',
   'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen',
   'tresor:globus': 'globus', 'tresor:vault': 'tresor',
+  'katerblau:garden': 'katerblau', 'katerblau:hopper': 'rso_robus', 'katerblau:arch': 'sisy_tn',
   'salon:main': 'salon'
 };
 /** What plays during a club's short "inside" scene (clubs without an interior use their own style). */

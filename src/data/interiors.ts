@@ -1154,6 +1154,136 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'dance', title: 'Lose yourself in the fog', hint: 'Press A on a dancefloor. The vault, ideally.' },
       { id: 'drink', title: 'Get a drink', hint: 'Bars in Globus and in the vault.' }
     ]
+  },
+
+  /* Kater Blau: on the Spree at Holzmarkt 25, where Bar25 used to be. Open-air garden with wooden shacks,
+     a circus tent and a deck over the river; inside, Heinz Hopper (classic techno) and the Acid Arch.
+     Extra legend: *  circus tent   q  river water (as at CDV) */
+  katerblau: {
+    name: 'Kater Blau',
+    welcome: [
+      'Door: Ahoi! Hand, please.',
+      '(A stamp shaped like a little cat with a sailor hat.)',
+      'Door: Garden and river out here, Heinz Hopper in the left shack, the Acid Arch through the circus tent. See you Monday.',
+      '(Side quests unlocked. Check your stamp card.)'
+    ],
+    floors: {
+      garden: {
+        label: 'The garden · on the Spree', short: 'GARDEN',
+        map: [
+          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww',
+          'wwbbwwwwwwwwwwwwwwwwwwwwwwwwbbww',
+          'gggggggggggggggggggggggggggggggg',
+          'gHHHHHHHgggg*****gggggggHHHHHHHg',
+          'gHHH1HHHgggg**2**gggggggH.....Hg',
+          'ggggggggggggggggggggggggH=====Hg',
+          'gggggggggggggggggggggggggggggggg',
+          'ggTgggggaaaaaaaaaaaaaaaggggggTgg',
+          'ggggggggaaaaaaaaaaaaaaaggggggggg',
+          'ggggggggaaaaaaaaaaaaaaaggggggggg',
+          'gTggggggaaaaaaaaaaaaaaagggggTggg',
+          'gggggggggggggggggggggggggggggggg',
+          'gggRgggggggggggggggggggggggggggg',
+          'FFFFFFFFFFFFFFxxFFFFFFFFFFFFFFFF'
+        ],
+        spawn: { street: [14, 14, 'up'], fromHopper: [4, 7, 'down'], fromArch: [14, 7, 'down'] },
+        doors: { '1': { to: 'hopper', at: 'fromGarden' }, '2': { to: 'arch', at: 'fromGarden' } },
+        exit: true,
+        dancers: 12,
+        daylight: true,
+        fairy: [[0, 4, 31, 4], [8, 8, 22, 8], [8, 13, 22, 13]],
+        spots: ['rgba(126,200,255,.12)', 'rgba(255,140,200,.10)', 'rgba(255,214,120,.10)'],
+        people: [
+          { x: 27, y: 6, dir: 'down', act: 'bar', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b4c7a', legs: '#20202a', stripes: '#f3eee3', hat: '#1f2f4d' } },
+          { x: 20, y: 3, dir: 'down', act: 'bar25', name: 'Hanne', look: { skin: '#e2b08c', hair: '#c9c9c9', long: true, top: '#c94a3a', legs: '#3a3a8a', flowers: ['#ffd23f', '#ff5e7a'], sparkle: '#fff6a8' } },
+          { x: 4, y: 14, dir: 'left', act: 'glitter', name: 'Glitter fairy', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#c28cff', legs: '#ff5e7a', sparkle: '#fff6a8', paint: '#ffd23f' } },
+          { x: 10, y: 3, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', top: '#ffd23f', legs: '#5ec8ff', sparkle: '#ff5e7a' }, lines: ['Raver: Friday to Monday morning. I am on day three. Or four.'] },
+          { x: 25, y: 11, dir: 'left', look: { skin: '#c98d6a', hair: '#5a3a22', top: '#b6f36b', legs: '#7a3fd1', hat: '#ff8c42' }, lines: ['Raver: The restaurant here is called Katerschmaus. I had breakfast there. At four in the afternoon. On a Monday.'] }
+        ]
+      },
+      hopper: {
+        label: 'Heinz Hopper · classic techno', short: 'HOPPER',
+        map: [
+          'HHHHHHHHHHHHHHHHHHHHHHHHHH',
+          'HwwwwwwwwwwwwwwwwwwwwwwwwH',
+          'HwwwwwwwwwwSDDDSwwwwwwwwwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwweeeeeeeeeeeeeeeeeeeewwH',
+          'HwwwwwwwwwwwwwwwwwwwwwwwwH',
+          'HbbbwwwwwwwwwwwwwwwwwwwwwH',
+          'HwwwwwwwwwwwwwwwwwwwwwwwwH',
+          'HHHHHHHHHHH1HHHHHHHHHHHHHH'
+        ],
+        spawn: { fromGarden: [11, 12, 'up'] },
+        doors: { '1': { to: 'garden', at: 'fromHopper' } },
+        dancers: 18,
+        fairy: [[1, 3, 24, 3], [1, 9, 24, 9]],
+        spots: ['rgba(126,200,255,.14)', 'rgba(255,90,140,.12)', 'rgba(255,214,120,.10)'],
+        people: [
+          { x: 12, y: 1, look: { skin: '#e2b08c', hair: '#2a2420', top: '#3d5f94', legs: '#20202a', hat: '#ff5e7a' }, lines: ['(The DJ plays classic techno in a sailor shirt. Somebody keeps throwing confetti at the booth.)'] },
+          { x: 21, y: 10, dir: 'left', act: 'confetti', name: 'Mimi', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#ff5e7a', legs: '#ffd23f', sparkle: '#fff6a8' } }
+        ]
+      },
+      arch: {
+        label: 'Acid Arch · live sets and stranger sounds', short: 'ARCH',
+        map: [
+          'BBBBBBBBBBBBBBBBBBBBBB',
+          'BBBBBBBBBBBBBBBBBBBBBB',
+          'B....................B',
+          'B........SDDS........B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B..,,,,,,,,,,,,,,,,..B',
+          'B....................B',
+          'B....................B',
+          'BBBBBBBBBB2BBBBBBBBBBB'
+        ],
+        spawn: { fromGarden: [10, 10, 'up'] },
+        doors: { '2': { to: 'garden', at: 'fromArch' } },
+        dancers: 10,
+        uv: true,
+        people: [
+          { x: 10, y: 2, look: { skin: '#c98d6a', hair: '#b6f36b', top: '#14121c', legs: '#14121c', glasses: '#1a1a1a' }, lines: ['(A live act hunched over a pile of synths and cables. Nobody knows what is plugged into what. It sounds incredible.)'] },
+          { x: 2, y: 9, dir: 'right', look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#5ec8ff', legs: '#c28cff', paint: '#b6f36b' }, lines: ['Raver: Acid Arch. Weird music for weird people. My favourite room in Berlin.'] }
+        ]
+      }
+    },
+    examineActs: { q: 'spree' },
+    examine: {
+      '*': ['A red and white circus tent. Through it: the Acid Arch.'],
+      H: ['A wooden shack, patched together from old boards and fairy lights.'],
+      R: ['The glitter booth. Jars of glitter in every colour, and a hand-painted sign: NO GLITTER, NO PARTY.'],
+      B: ['Old brick, curving up into an arch over your head.'],
+      F: ['A wooden fence covered in stickers and somebody\'s lost sequin jacket.'],
+      T: ['A tree full of fairy lights and one lost shoe.']
+    },
+    dancerLines: [
+      'Raver: Have you been glittered yet?', 'Raver: Bar25 forever!', '(They are wearing a cat costume. In August.)',
+      'Raver: Kater means hangover. That is a Tuesday problem.', 'Raver: The sunrise on the Spree, oh my god.', '(Someone throws a handful of confetti over you and dances away.)'
+    ],
+    dancerPalette: {
+      hair: ['#ff8cc4', '#5ec8ff', '#c9a24a', '#2a2420', '#b6f36b', '#7a3fd1', '#c9c9c9'],
+      tops: ['#ff5e7a', '#ffd23f', '#5ec8ff', '#c28cff', '#b6f36b', '#f3eee3', '#2b4c7a'],
+      legs: ['#3a3a8a', '#ff5e7a', '#20202a', '#ffd23f', '#5ec8ff'],
+      extras: ['#fff6a8', '#ff5e7a', '#ffd23f', '#5ec8ff']
+    },
+    quests: [
+      { id: 'bar25', title: 'The Bar25 story', hint: 'Hanne on the deck by the river has been coming since Bar25.' },
+      { id: 'glitter', title: 'Get glittered', hint: 'The glitter booth in the garden. No glitter, no party.' },
+      { id: 'confetti', title: 'Fire the confetti', hint: 'Mimi on the Heinz Hopper floor needs help with the confetti cannon.' },
+      { id: 'spree', title: 'Sunrise on the Spree', hint: 'Press A facing the river from the wooden deck.' },
+      { id: 'floors', title: 'Dance on both floors', hint: 'Heinz Hopper and the Acid Arch.' },
+      { id: 'drink', title: 'Get a drink', hint: 'The bar shack in the garden.' }
+    ]
   }
 
 };

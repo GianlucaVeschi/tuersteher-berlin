@@ -2,6 +2,7 @@ import { rsoDance, rsoFloorsDanced } from './rso';
 import { hgDance } from './heide';
 import { cdvDance, cdvHint } from './cdv';
 import { MD_HINTS } from './mdma';
+import { kbDance, kbFloorsDanced } from './katerblau';
 import type { BottleType, Entity, QuestDef } from '../types';
 import { completeQuest } from './quests';
 import { say } from '../ui/dialog';
@@ -49,6 +50,7 @@ export function questHint(clubId: string, q: QuestDef): string {
   if (q.id === 'mdma' && MD_HINTS[state.mdStage]) return MD_HINTS[state.mdStage];
   if (q.id === 'pfand') { const p = state.pfand; return `Returned ${p.returned}/${PFAND_GOAL} · in hands ${p.carry}/${CARRY_MAX} · ${euro(p.cents)} earned. Any bar takes them back.`; }
   if (q.id === 'stories') return `${Object.keys(state.heard).length}/3 heard. ` + q.hint;
+  if (q.id === 'floors' && clubId === 'katerblau') return `${kbFloorsDanced()}/2 floors. ` + q.hint;
   if (q.id === 'floors') return `${rsoFloorsDanced()}/3 floors. ` + q.hint;
   if (q.id === 'b2b') return hgHint(q.hint);
   if (q.id === 'hopper') return `${roomsDanced(clubId)}/4 rooms. ` + q.hint;
@@ -67,6 +69,7 @@ export const DANCE_HOOKS: Record<string, (fl: string) => Promise<void>> = {
   rso: rsoDance,
   heidegluehen: hgDance,
   cdv: cdvDance,
+  katerblau: kbDance,
   async sisyphos(fl) {
     await say(SISY_DANCE[fl] || '(You dance. Nobody is in a hurry here.)');
     if (!state.danced['sisyphos:' + fl]) { state.danced['sisyphos:' + fl] = true; save(); renderCard(); }

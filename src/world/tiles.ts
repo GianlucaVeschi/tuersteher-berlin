@@ -17,9 +17,11 @@ export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43,
   'E': 107, 'r': 108, 'd': 109,
   // Tresor
   's': 110, 'j': 111,
+  // Kater Blau
+  '*': 112,
   '1': 81, '2': 82, '3': 83, '4': 84, '5': 85, '6': 86, '7': 87, '8': 88, '9': 89 };
 export const ICHAR: Record<number, string> = Object.fromEntries(Object.entries(ICH).map(([k, v]) => [v, k]));
-[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111].forEach(c => SOLID.add(c));
+[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112].forEach(c => SOLID.add(c));
 export const COUNTERS = new Set([53, 54, 55, 56, 59]);
 export const WALLISH = new Set([40, 50, 51, 52, 60, 62, 68, 69, 74, 78, 79, 90, 107]);
 export const DANCES = new Set([42, 63, 75, 77, 91, 109]); // concrete, sand, red tunnel floor, wooden floor, pole stage, salon checkers

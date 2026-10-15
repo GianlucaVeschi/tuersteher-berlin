@@ -28,7 +28,7 @@ Side quests (tracked on the stamp card):
 | Take someone to the darkroom | Find Sascha at Panorama Bar, ask first, then lead them down to the ground floor |
 | Dance when the blinds open | After three other quests, go to Panorama Bar |
 
-Leave through the exit on the ground floor. Other clubs still show the short "inside" scene.
+Leave through the exit on the ground floor.
 
 ## Inside Sisyphos
 
@@ -88,6 +88,19 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 | The Keller | Downstairs from ROBUS. Ask first |
 
 People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it.
+
+## Inside Kater Blau
+
+Kater Blau sits on the Spree at Holzmarkt 25, where Bar25 used to be. Bar25 (2003/04 to September 2010) was a wooden village famous for costume and confetti parties; it closed with a five-day party when the land was sold for the Mediaspree development. The crew moved across the river to Kater Holzig in an old soap factory (2011 to early 2014) and came back as Kater Blau in 2014, part of the Holzmarkt cooperative (the area was a timber market 300 years ago). Parties run Friday to Monday; the floors are Heinz Hopper (classic techno) and the Acid Arch (stranger sounds and live sets), and colour and glitter are welcome at the door. In the game: the garden on the river with wooden shacks, a circus tent and a deck, Heinz Hopper and the Acid Arch. (The game's old "boat" is gone: no source mentions one.)
+
+| Quest | Where |
+| --- | --- |
+| The Bar25 story | Hanne on the deck by the river |
+| Get glittered | The glitter booth in the garden |
+| Fire the confetti | Mimi on Heinz Hopper. Wait for the drop |
+| Sunrise on the Spree | Press A facing the river from the deck |
+| Dance on both floors | Heinz Hopper and the Acid Arch |
+| Get a drink | The bar shack in the garden |
 
 ## Inside Tresor
 

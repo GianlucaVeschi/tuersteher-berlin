@@ -113,6 +113,14 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 103: // karaoke machine: a TV on a stand with a mic
         P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
         P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
+      // ---- Kater Blau ----
+      case 112: { // circus tent: red and white stripes, a pointed roof on the top row
+        P(X, Y, 16, 16, '#3f7a3a');
+        const top = at(x, y - 1) !== 112;
+        for (let i = 0; i < 16; i += 4) P(X + i, top ? Y + 6 : Y, 2, top ? 10 : 16, '#d6453d'), P(X + i + 2, top ? Y + 6 : Y, 2, top ? 10 : 16, '#f3eee3');
+        if (top) { P(X, Y + 4, 16, 2, '#d6453d'); P(X + 2, Y + 2, 12, 2, '#f3eee3'); P(X + 5, Y, 6, 2, '#d6453d'); if (at(x - 1, y) === 112 && at(x + 1, y) === 112) P(X + 7, Y - 5, 2, 6, '#ffd23f'); }
+        break;
+      }
       // ---- Tresor ----
       case 110: // the old Wertheim safe-deposit boxes: a wall of little steel doors with keyholes
         P(X, Y, 16, 16, '#2a2c32');

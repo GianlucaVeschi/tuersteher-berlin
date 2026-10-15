@@ -3,6 +3,7 @@ import { fire, hgDj, karaoke, woody } from './heide';
 import { cdvBar, ines, jazz, planks, willow } from './cdv';
 import { poolHat, ronny } from './mdma';
 import { boxes, detroit, sticker } from './tresor';
+import { bar25, confetti, glitter, spree } from './katerblau';
 import { antonio, salonChair, salonEnter } from '../places/salon';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
@@ -29,6 +30,8 @@ export const ACTS: Record<string, Act> = {
   ronny, poolHat,
   // Tresor (quests/tresor.ts)
   boxes, detroit, sticker,
+  // Kater Blau (quests/katerblau.ts)
+  bar25, glitter, confetti, spree,
   // Antonio's salon (places/salon.ts)
   antonio, salonChair, salonEnter,
   async pile(e, clubId) {
