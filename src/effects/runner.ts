@@ -51,7 +51,7 @@ export function playRunner(): Promise<boolean> {
   return new Promise(resolve => {
     const r = root.parentElement!.getBoundingClientRect();
     W = 240; H = Math.max(140, Math.min(420, Math.round(W * r.height / Math.max(1, r.width))));
-    cv.width = W; cv.height = H; F = Math.max(W * 0.62, H * 0.42);
+    cv.width = W; cv.height = H; g.imageSmoothingEnabled = false; F = Math.max(W * 0.62, H * 0.42);
     // tall phone screens: lower the horizon so you run near the bottom, Temple Run style
     HOR = Math.round(Math.max(H * 0.3, H * 0.7 - CAM_H * F / PLAYER_Z));
     const me = sprite(lookOf(state.outfit), 'up');

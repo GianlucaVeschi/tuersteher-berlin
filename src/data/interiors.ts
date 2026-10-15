@@ -823,10 +823,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
         spots: ['rgba(255,180,90,.16)', 'rgba(255,120,80,.12)', 'rgba(255,230,160,.12)'],
         people: [
           { x: 10, y: 2, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
-          { x: 20, y: 8, act: 'woody', name: 'Woody', dir: 'left', look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
+          { x: 20, y: 8, act: 'woody', name: 'Woody', dir: 'left', movedWhen: 'woody', movedTo: [21, 17], look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
           { x: 29, y: 16, act: 'bar', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#7a5a3a', legs: '#2b3f6b', long: true } },
           { x: 27, y: 10, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#d9733a', legs: '#3a3a4a' }, lines: ['Raver: No lineup online, ever. You just come and trust the music.'] },
-          { x: 10, y: 18, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Bald, always by the fire, knows everyone.'] }
+          { x: 10, y: 18, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Never leaves the dancefloor. Well, except when someone is passing round a really big joint.'] }
         ]
       },
       klo: {
@@ -870,8 +870,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       extras: ['#ffd23f', '#ff8c42', '#fff2b0', '#ff5e7a']
     },
     quests: [
-      { id: 'b2b', title: 'Back to back at 5am', hint: 'Ask the DJ under the glass roof if you can play with him.' },
-      { id: 'woody', title: "Get Woody's yes", hint: 'Woody is the booker. Bald, been around forever.' },
+      { id: 'b2b', title: 'Steal the decks', hint: 'Ask the DJ under the glass roof if you can play a few tracks.' },
+      { id: 'woody', title: 'Get Woody off the dancefloor', hint: 'Woody the booker never leaves the floor. Unless someone offers him something big.' },
       { id: 'karaoke', title: 'Karaoke in the toilets', hint: 'The toilets have a karaoke machine. Of course they do.' },
       { id: 'fire', title: 'Warm up by the fire', hint: 'Press A facing a fire pit.' },
       { id: 'drink', title: 'Get a drink', hint: 'The bar by the fence.' }

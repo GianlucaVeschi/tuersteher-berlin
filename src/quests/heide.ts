@@ -4,24 +4,23 @@ import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { fade, toast } from '../interiors/transitions';
 import { player, state } from '../core/state';
-import { reduceMotion, shuffle, wait } from '../util';
+import { reduceMotion, wait } from '../util';
+import { playDjSet } from '../effects/djgame';
 import type { Entity } from '../types';
 
-/* ---- Heideglühen: the 5am back to back, Woody the booker, karaoke in the toilets, fire pits ---- */
+/* ---- Heideglühen: sneak onto the DJ's decks while Woody the booker is away, karaoke in the toilets, fire pits ---- */
 // The night runs on its own clock: it starts at 03:30 and moves on as you dance, sing and sit by the fire.
-export const HG_FIVE = 5 * 60;
 const HG_LAST = 11 * 60;
 const anyOf = <V>(a: V[]) => a[Math.floor(Math.random() * a.length)];
 
 export const hgClock = (m = state.hgTime) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
-/** Time passes. Announces five o'clock once Woody has said yes. */
+/** Time passes (dancing, singing, sitting by the fire). */
 export function hgTick(minutes: number) {
   const before = state.hgTime;
   state.hgTime = Math.min(before + minutes, HG_LAST);
   save(); renderCard();
-  const five = before < HG_FIVE && state.hgTime >= HG_FIVE && state.hgStage === 2;
-  toast(five ? `${hgClock()} · FIVE O'CLOCK. FIND THE DJ` : hgClock());
+  toast(hgClock());
 }
 
 /** Dancing at Heideglühen passes the time. */
@@ -38,58 +37,36 @@ export async function hgDance() {
 const BOOTH: [number, number] = [11, 2];
 const AFTER: [number, number] = [10, 4];
 
-/** The resident DJ. Main quest: get Woody's yes, then play back to back at 5am. */
+/** The resident DJ. Main quest: he'd let you play, but only if Woody isn't watching. */
 export async function hgDj(e: Entity | null, clubId: string) {
-  if (state.hgStage === 3) { await say('DJ: Look who it is. My favourite back-to-back partner.'); return; }
+  if (state.hgStage === 3) { await say('DJ: Look who it is. Woody still thinks it was me playing.'); return; }
   if (state.hgStage === 0) {
     await say('DJ: (one ear in the headphones) Hm?');
-    const a = await ask('', ['Can I play back to back with you?', 'Great set!']);
+    const a = await ask('', ['Can I play a few tracks?', 'Great set!']);
     if (a === 1) { await say('DJ: Danke! Long way to go still.'); return; }
-    await say('DJ: Ha. Bold. I like bold.');
-    await say("DJ: But I don't decide who touches these decks. Woody does. He's the booker.");
-    await say('DJ: Bald guy, been around forever. Usually by the fire.');
+    await say('DJ: Ha. Bold. I like bold. Honestly? Yes.');
+    await say("DJ: But see the bald guy by the dancefloor? Woody. The booker. If he sees a stranger on my decks, I'm done here.");
+    await say('DJ: Get him off the dancefloor for a bit. Then come back, quick.');
     state.hgStage = 1; save(); renderCard();
     return;
   }
-  if (state.hgStage === 1) { await say('DJ: Talked to Woody yet? No Woody, no decks.'); return; }
-  if (state.hgTime < HG_FIVE) {
-    await say(`DJ: Woody said yes? Then five o'clock. Not a minute earlier. It's ${hgClock()}.`);
-    await say("DJ: Go dance, sing something in the toilets, sit by the fire. I'm not going anywhere.");
-    return;
-  }
-  await backToBack(e, clubId);
-}
-
-const ROUNDS = [
-  { q: 'Your first record. The floor is warm, the sky still dark:', a: ['Mr. Fingers – Can You Feel It', 'Scooter – Hyper Hyper', 'Rammstein – Du hast'],
-    good: '(A deep bassline rolls in. Heads start nodding.)' },
-  { q: 'The DJ nods at you. Something with vocals now:', a: ['Robin S – Show Me Love', 'Helene Fischer – Atemlos durch die Nacht', 'Nickelback – How You Remind Me'],
-    good: '(The whole floor sings the hook. Someone climbs on a bench.)' },
-  { q: 'First light over the harbour. Bring it home:', a: ['Crystal Waters – Gypsy Woman', 'Darude – Sandstorm', 'Nena – 99 Luftballons'],
-    good: '(Even the bar staff are dancing.)' }
-];
-const MISSES = ['(The floor goes quiet. Somebody checks their phone.)', '(The DJ winces and quietly cues the next record, just in case.)', '(A man by the fire shouts: "WHAT IS THIS?")'];
-
-async function backToBack(e: Entity | null, clubId: string) {
-  await say("DJ: Five o'clock. Get up here, partner.");
+  if (state.hgStage === 1) { await say("DJ: Woody's still watching. Get him away from the floor first."); return; }
+  await say("DJ: Woody's gone? Go, go, go. Thirty seconds, then he's back.");
   closeBox();
   await fade(true);
   [player.x, player.y] = BOOTH; player.tx = player.x; player.ty = player.y; player.dir = 'down'; player.moving = false;
-  if (e) e.dir = 'down';
+  if (e) e.dir = 'right';
   await fade(false);
-  let hits = 0;
-  for (const r of ROUNDS) {
-    const opts = shuffle(r.a.map((t, i) => ({ t, ok: i === 0 })));
-    const c = await ask(r.q, opts.map(o => o.t));
-    if (opts[c].ok) { hits++; await say(r.good); } else await say(anyOf(MISSES));
-  }
-  if (hits >= 2) {
-    await say('(The sun comes up over the Westhafen. The crowd cheers for both of you.)');
-    await say("DJ: Not bad at all. Woody was right about you.");
+  const won = await playDjSet();
+  if (won) {
+    await say('(The sun comes up over the Westhafen. The whole floor screams. The DJ hugs you.)');
+    await say('Woody: (back from the fire, smelling of smoke) That last half hour was the best of the night. Who was that?');
+    await say("DJ: (straight face) Me, Woody. Always me.");
     state.hgStage = 3; save();
     await completeQuest(clubId, 'b2b');
   } else {
-    await say("DJ: Hm. Maybe stick to dancing tonight. Come back and try again.");
+    await say('(The floor drifts off to the bar. And Woody is walking back from the fire.)');
+    await say('DJ: Headphones! Now! ...Try again when he goes for a smoke.');
   }
   closeBox();
   await fade(true);
@@ -98,34 +75,32 @@ async function backToBack(e: Entity | null, clubId: string) {
   await fade(false);
 }
 
-/** Woody, the booker: bald, in the scene for decades. His yes opens the decks. */
-export async function woody(_e: Entity | null, clubId: string) {
+/** Woody, the booker: bald, in the scene for decades, never leaves the dancefloor. Almost never. */
+export async function woody(e: Entity | null, clubId: string) {
   if (state.hgStage >= 2) {
     await say(anyOf([
+      "Woody: (by the fire) Where's this joint, then? ...Never mind. Someone's sharing. Lucky me.",
       'Woody: First party I ever booked had one speaker and a diesel generator. Best night of my life.',
-      'Woody: How do I stay up? Water, a nap behind the bar, and loving the music. In that order.',
       'Woody: This place started in a potato garden on Heidestraße. Sometimes I still miss the potatoes.',
       "Woody: Thirty years of dancefloors and I still get goosebumps when the first chord hits."
     ]));
     return;
   }
-  await say("Woody: Woody. I do the booking here.");
-  await say("Woody: Been in this scene longer than some of these kids have been alive. Warehouses, fields, boats. I've seen it all.");
+  await say('Woody: Woody. I do the booking here.');
+  await say("Woody: Been in this scene longer than some of these kids have been alive. I keep an eye on the floor. And on the booth.");
   if (state.hgStage === 0) { await say('Woody: Grab a spot by the fire. The good stuff starts around sunrise.'); hgTick(10); return; }
-  await say('Woody: So you want to play with our resident. At five. Everyone wants five.');
-  const a = await ask("Woody: What's your first record at five in the morning?", ['Something deep and warm, a house classic', 'The hardest techno I have', 'A Schlager remix', 'My own SoundCloud demo']);
-  if (a !== 0) {
-    await say(['', 'Woody: At a house club. At sunrise. No.', 'Woody: (stares at you for a very long time)', 'Woody: Everybody has a SoundCloud demo.'][a]);
-    await say('Woody: Come back when you know what this place is about.');
-    return;
-  }
-  const b = await ask('Woody: And when the floor goes quiet?', ['Read the room, play something they know', 'Turn it up louder', 'Blame the sound system', 'Play my demo again']);
-  if (b !== 0) { await say('Woody: Wrong answer. The floor is always right. Think about it.'); return; }
-  await say("Woody: (runs a hand over his bald head) Alright. Five o'clock. Tell him Woody says yes.");
+  const a = await ask('', ['Someone by the fire wants to share a huge joint with you', 'They need you at the door', 'Nice party!']);
+  if (a === 1) { await say('Woody: The door can look after itself. I am watching this floor.'); return; }
+  if (a === 2) { await say('Woody: It is. Enjoy it.'); return; }
+  await say('Woody: (eyebrows up) A big one? For me?');
+  await say("Woody: ...Five minutes. Nobody touches anything.");
+  closeBox();
+  await fade(true);
+  if (e && e.movedTo) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; }
   state.hgStage = 2; save();
+  await fade(false);
   await completeQuest(clubId, 'woody');
-  if (state.hgTime >= HG_FIVE) await say("Woody: Oh, and it's already past five. Go!");
-  else hgTick(15);
+  hgTick(10);
 }
 
 /** The karaoke machine between the sinks. */

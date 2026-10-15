@@ -123,8 +123,8 @@ The night has its own clock: it starts at 03:30 and moves on as you dance, sing 
 
 | Quest | Where |
 | --- | --- |
-| Back to back at 5am (main quest) | Ask the DJ under the glass roof. He sends you to Woody; once Woody says yes, come back at 05:00 and pick the right records for a three-track set |
-| Get Woody's yes | Woody, the booker: bald, in the scene for decades, usually by the fire |
+| Steal the decks (main quest, mini game) | The DJ under the glass roof would let you play, but Woody is watching. Get Woody off the floor, then play a 30-second rhythm set: records slide down three lanes, hit them on the line (left / A or up / right, or tap the screen) and keep the crowd meter above half |
+| Get Woody off the dancefloor | Woody, the booker, never leaves it. Tell him someone by the fire wants to share a huge joint |
 | Karaoke in the toilets | The karaoke machine between the sinks |
 | Warm up by the fire | Press A facing a fire pit |
 | Get a drink | The bar by the fence |

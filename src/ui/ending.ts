@@ -90,7 +90,7 @@ function roast(): string[] {
     `You got into all ${CLUBS.length} clubs. Your bank account never got in anywhere.`
   ];
   if (state.pfand.cents > 0) lines.push(`Your biggest income in seven years: ${euro(state.pfand.cents)} in Pfand bottles.`);
-  if (state.hgStage === 3) lines.push('You did play one back to back. At five in the morning. Woody says it was "fine".');
+  if (state.hgStage === 3) lines.push('You did play one set at Heideglühen, while Woody was off for a joint. He still thinks it was the resident.');
   lines.push(
     "Your German is still 'Einen Club-Mate, bitte'.",
     "You're broke, you're back at your mum's, and she just asked what 'Heute nicht' means.",
