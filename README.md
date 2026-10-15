@@ -87,6 +87,8 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 | A drink in the old brewery | Any bar |
 | The Keller | Downstairs from ROBUS. Ask first |
 
+People inside clubs with a side quest for you have a red **!** over their head; it disappears once that quest is done.
+
 ## Inside Club der Visionäre
 
 CDV is a former boathouse on the Flutgraben, a flood channel off the Spree where Kreuzberg meets Alt-Treptow, started around 2001 by Gregor Kraemer (who comes from jazz). One small wooden dancefloor on the water, partly roofed, under a big weeping willow; the Sonnenraum is the little indoor room. It's a home of minimal (Ricardo Villalobos, Zip, Sonja Moonear, Sammy Dee have all played), the bar is cash only, on busy summer weekends it can run from Friday to Monday, and in winter the parties move to the Hoppetosse, its sister ship nearby (a steamer from 1928). A fire took part of the wooden outdoor area on 15 June 2019, and the regulars helped save the club with the Save CDV crowdfunding in 2020.

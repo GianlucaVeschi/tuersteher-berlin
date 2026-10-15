@@ -2,6 +2,7 @@ import type { ClubScene, Entity } from '../types';
 import { get } from '../world/grid';
 import { drawPile } from '../quests/kitkat';
 import { drawBottle } from '../quests/sisyphos';
+import { hasQuest } from '../quests/markers';
 import { lookOf } from '../render/looks';
 import { person } from '../render/sprites';
 import { player, state } from '../core/state';
@@ -64,7 +65,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     const X = e.x * T - camX + Math.round(e.ox || 0), Y = e.y * T - camY + Math.round(e.oy || 0);
     if (X < -16 || Y < -24 || X > RT.VW || Y > RT.VH + 8) return;
     if (e.kind === 'bottle') { if (e.bid && e.type && !state.pfand.taken[e.bid]) drawBottle(X, Y, e.type, now); return; }
-    if (e.kind === 'pile') { drawPile(e, X, Y, now, lights); return; }
+    if (e.kind === 'pile') { drawPile(e, X, Y, now, lights); if (hasQuest(e, sc.club)) questMark(X, Y - 8, now); return; }
     if (!e.look) return;
     if (e.dance && lights) {
       const phase = e.phase ?? 0;
@@ -76,6 +77,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0);
       person(ctx, X, Y - 3, e.dir ?? 'down', off ? (Math.floor(off / 8) % 2) + 1 : 0, e.look);
     }
+    if (hasQuest(e, sc.club)) questMark(X, Y - 3, now);
   });
   // main floor: the light bar along the top wall and a short strobe now and then
   if (sc.floor === 'mf') {
@@ -182,4 +184,13 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,.94)');
     ctx.fillStyle = gr; ctx.fillRect(0, 0, RT.VW, RT.VH);
   }
+}
+
+/** A red exclamation mark bobbing over someone who has a side quest for you. */
+function questMark(X: number, Y: number, now: number) {
+  const bob = reduceMotion ? 0 : Math.round(Math.sin(now / 220) * 1.5);
+  const x = X + 5, y = Y - 13 + bob;
+  ctx.fillStyle = INK; ctx.fillRect(x, y, 6, 11);
+  ctx.fillStyle = '#e8263c'; ctx.fillRect(x + 1, y + 1, 4, 9);
+  ctx.fillStyle = '#fff'; ctx.fillRect(x + 2, y + 2, 2, 4); ctx.fillRect(x + 2, y + 7, 2, 2);
 }
