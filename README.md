@@ -24,7 +24,7 @@ Side quests (tracked on the stamp card):
 | Order a drink | Any bar |
 | Get ice cream | Eisbar, main floor mezzanine |
 | Dance on the main floor | Press A on the dancefloor |
-| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: 10 seconds of melting, blurry, colour-shifting slow motion |
+| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: 30 seconds of melting, blurry, colour-shifting slow motion |
 | Take someone to the darkroom | Find Sascha at Panorama Bar, ask first, then lead them down to the ground floor |
 | Dance when the blinds open | After three other quests, go to Panorama Bar |
 
@@ -87,7 +87,7 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 | A drink in the old brewery | Any bar |
 | The Keller | Downstairs from ROBUS. Ask first |
 
-People inside clubs with a side quest for you have a red **!** over their head; it disappears once that quest is done.
+People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it.
 
 ## Inside Tresor
 

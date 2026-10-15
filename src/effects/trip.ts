@@ -4,18 +4,20 @@ import { RT } from '../core/runtime';
 // Hint shown on the stamp card for each step of the toilet chain.
 export const K_HINTS: Record<number, string> = { 1: 'Find Mila on the main dancefloor: pink hair, sunglasses, left speakers.', 2: 'You have the bag. Back to the guy at the toilet door.' };
 
-/* ---- the 10-second K hit: melting rows and columns, ghost trails, blur, colour drift, slow motion ---- */
-export const K_MS = 10000;
+/* ---- the 30-second K hit: melting rows and columns, ghost trails, blur, colour drift, slow motion ---- */
+export const K_MS = 30000;
+/** how long it takes to kick in, and to wear off at the end */
+const K_IN = 1700, K_OUT = 3300;
 export const kBuf = document.createElement('canvas'), kBufCtx = kBuf.getContext('2d')!;
 export const kTrail = document.createElement('canvas'), kTrailCtx = kTrail.getContext('2d')!;
 export function startK() { RT.kStart = performance.now(); RT.kUntil = RT.kStart + K_MS; kTrailCtx.clearRect(0, 0, kTrail.width, kTrail.height); }
 export function endK() { RT.kUntil = 0; cvs.style.filter = ''; }
-// 0..1: rises quickly, holds, fades out over the last seconds
+// 0..1: kicks in quickly, holds, wears off over the last seconds
 export function kLevel(now: number) {
   if (!RT.kUntil) return 0;
-  const p = (now - RT.kStart) / K_MS;
-  if (p >= 1) return 0;
-  return Math.min(1, p * 6) * Math.min(1, (1 - p) * 3);
+  const e = now - RT.kStart;
+  if (e >= K_MS) return 0;
+  return Math.min(1, e / K_IN) * Math.min(1, (K_MS - e) / K_OUT);
 }
 export const timeScale = (now: number) => 1 - 0.6 * kLevel(now);
 export function applyK(now: number) {
