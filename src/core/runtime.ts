@@ -18,6 +18,8 @@ export const RT = {
   clock: 0,
   // input and flow
   runKey: false, runBtn: false,
+  /** joystick pushed past its rim: run */
+  runStick: false,
   /** true while a script, menu or transition has control */
   busy: true,
   titleOn: true,

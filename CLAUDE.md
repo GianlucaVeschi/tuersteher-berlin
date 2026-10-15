@@ -52,6 +52,8 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 ### Rendering
 
 - Tiles are 16 px. The desktop view is 384×256 (24×16 tiles); on phones `fitCanvas()` picks an integer scale and a view size that fits the screen.
+- The canvas backing store is in **device pixels**: `PX` (render/canvas.ts) device pixels per game pixel, an integer, so pixels stay sharp on 2×/3× screens. `draw()` sets `ctx.setTransform(PX * zoom, …)` for the world and `PX` for the screen-space labels; all drawing code works in game pixels (`RT.VW/VH`). Never reset the main canvas transform to identity inside drawing code (the K effect in effects/trip.ts is the one exception and works in device pixels).
+- Map labels: on phones (`MOBILE`) club/shop names only show in the MAP view, otherwise they cover the screen.
 - Each scene's static tiles are drawn **once** into its own canvas (`RT.mc`): the street by `prerender()` in `render/cityTiles.ts`, club floors by `drawInteriorTiles()` in `interiors/tiles.ts`. Each frame copies the visible part, then draws animated things and people on top (`render/draw.ts` for the street, `interiors/fx.ts` for club floors).
 - People are drawn by `person()` in `render/sprites.ts` from a `Look` (colours plus flags like `long`, `glasses`, `harness`). The player's look is `lookOf(state.outfit)` (`render/looks.ts`): character body + outfit.
 - Zoom: `draw()` scales the whole world pass with `setTransform` and temporarily sets `RT.VW/VH` to the visible world size, so everything inside draws in world pixels. Map labels and the YOU marker are drawn afterwards in screen space.
@@ -68,7 +70,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 ### Game data (`src/data/`)
 
 - `clubs.ts`: `CLUB_DEFS` (bouncer lines, question pools; the **first** answer is correct, shuffled in game) → `CLUBS` with computed door positions (`dx`, `doorY`, `by`). Also `INTRO`, `FINALE`.
-- `outfits.ts`: `OUTFITS` (with `tags`), `CHARACTERS` (man/woman × 4; `body` survives clothes changes), `DRESS` (per-club `ok`/`no` tag rules, see `dressOK`), `SHOP_DEFS` → `SHOPS`.
+- `outfits.ts`: `OUTFITS` (with `tags`), `CHARACTERS` (man/woman/non-binary × 4, step 1 options in `GENDERS`; `body` survives clothes changes), `DRESS` (per-club `ok`/`no` tag rules, see `dressOK`), `SHOP_DEFS` → `SHOPS`.
 - `interiors.ts`: `INTERIORS: Record<clubId, InteriorDef>`. Floors are ASCII maps with spawn points, stairs/door links (`up`, `down`, `doors`, `exit`), `people` (`lines` for chat or `act` for a handler), dancer count, bottles, decoration flags (`fairy`, `lanterns`, `uv`, `red`, `steam`, `daylight`). Also `examine` text per tile char, `examineActs`, `dancerLines`, `dancerPalette`, `quests`, `welcome`, `stories`. The data is type-checked against `InteriorDef` in `src/types.ts`. There are three legends in the file (Berghain at the top, extra ones for Sisyphos and KitKat further down).
 
 ### Street people (`src/data/npcs.ts`, `src/world/street.ts`)
@@ -127,7 +129,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 ### Input
 
-`pressA` / `pressB` / `pressDir` in `input.ts` route to whatever is open, in this order: title → character creator → photo strip → club entrance scene → shop → dialog → world. Arrows/WASD move, Z/Enter/Space = A, X/Esc = B, Tab/Shift (or holding B on touch) = run, +/−/wheel = zoom, M = map, N = sound, G = guest list. On touch, dragging on the map is a joystick and a tap is A.
+`pressA` / `pressB` / `pressDir` in `input.ts` route to whatever is open, in this order: title → character creator → photo strip → club entrance scene → shop → dialog → world. Arrows/WASD move, Z/Enter/Space = A, X/Esc = B, Tab/Shift (or holding B, or the joystick past its rim, on touch) = run, +/−/wheel = zoom, M = map, N = sound, G = guest list. On touch, dragging on the map is a joystick and a tap is A; the on-screen joystick (`initStick()`) presses one direction at a time and switches without lifting.
 
 ## Conventions
 

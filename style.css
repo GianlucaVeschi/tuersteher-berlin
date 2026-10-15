@@ -85,7 +85,7 @@ body {
   overflow: hidden;
   border-radius: 2px;
 }
-.screen canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+.screen canvas { display: block; width: 100%; height: 100%; image-rendering: crisp-edges; image-rendering: pixelated; }
 
 .hud {
   position: absolute; left: 2.5cqw; top: 2.5cqw;
@@ -221,6 +221,7 @@ body {
   grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
 }
 .cr-list[data-n="2"] { --cols: 2; padding-inline: 14cqw; }
+.cr-list[data-n="3"] { --cols: 3; padding-inline: 6cqw; }
 .cr-list li {
   background: var(--paper); color: var(--ink); border: .6cqw solid var(--ink);
   display: grid; justify-items: center; gap: 1.2cqw; padding: 1.6cqw 1cqw 1.8cqw;
@@ -264,7 +265,8 @@ body {
 .cr-name { display: grid; gap: 1.6cqw; justify-items: center; align-content: center; }
 .cr-name label { font-size: 2cqw; letter-spacing: .1em; text-transform: uppercase; color: #ff8cc4; }
 .cr-name input {
-  width: min(70cqw, 100%); font-family: var(--font-pixel); font-size: 3.4cqw; text-align: center;
+  width: min(70cqw, 100%); font-family: var(--font-pixel); text-align: center;
+  font-size: max(16px, 3.4cqw); /* iOS zooms into a focused input with smaller text */
   background: var(--paper); color: var(--ink); border: .6cqw solid var(--ink); padding: 1.8cqw 2cqw;
   box-shadow: .8cqw .8cqw 0 var(--magenta);
 }
@@ -380,20 +382,34 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px; margin-top: 18px; padding: 0 6px;
 }
-.dpad {
-  display: grid; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px);
-  filter: drop-shadow(0 4px 0 rgba(0,0,0,.25));
+.stick {
+  /* joystick: hold and slide your thumb, no need to lift it to change direction */
+  --size: 120px;
+  position: relative; width: var(--size); height: var(--size); flex: none;
+  border-radius: 50%; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+  background: radial-gradient(circle at 50% 45%, #2e2b38, #1c1a23 70%);
+  box-shadow: 0 4px 0 rgba(0,0,0,.25), inset 0 2px 6px rgba(0,0,0,.5);
 }
-.dpad button {
-  border: 0; background: #23212b; color: #5d5a68; padding: 0; cursor: pointer;
-  font: 12px/1 var(--font-pixel); touch-action: none;
+/* the old D-pad cross, engraved in the base */
+.stick::before, .stick::after {
+  content: ''; position: absolute; left: 50%; top: 50%; background: rgba(255,255,255,.05); border-radius: 4px;
 }
-.dpad .u { grid-area: 1 / 2; border-radius: 6px 6px 0 0; }
-.dpad .l { grid-area: 2 / 1; border-radius: 6px 0 0 6px; }
-.dpad .c { grid-area: 2 / 2; background: #23212b; pointer-events: none; }
-.dpad .r { grid-area: 2 / 3; border-radius: 0 6px 6px 0; }
-.dpad .d { grid-area: 3 / 2; border-radius: 0 0 6px 6px; }
-.dpad button.on, .dpad button:active { background: #3a3746; }
+.stick::before { width: 30%; height: 84%; transform: translate(-50%, -50%); }
+.stick::after { width: 84%; height: 30%; transform: translate(-50%, -50%); }
+.stick-arrows { position: absolute; inset: 0; pointer-events: none; font: 10px/1 var(--font-pixel); color: #5d5a68; }
+.stick-arrows span { position: absolute; }
+.stick-arrows .u { top: 7%; left: 50%; transform: translateX(-50%); }
+.stick-arrows .d { bottom: 7%; left: 50%; transform: translateX(-50%); }
+.stick-arrows .l { left: 7%; top: 50%; transform: translateY(-50%); }
+.stick-arrows .r { right: 7%; top: 50%; transform: translateY(-50%); }
+.stick-knob {
+  position: absolute; left: 30%; top: 30%; width: 40%; height: 40%; z-index: 1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 38% 32%, #5a5668, #3a3746 60%, #2a2833);
+  box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -2px 0 rgba(0,0,0,.25);
+  transition: transform .12s ease;
+}
+.stick.on { cursor: grabbing; }
+.stick.on .stick-knob { transition: none; }
 .ab { display: flex; gap: 18px; transform: rotate(-22deg); padding: 10px 4px 0 0; }
 .ab div { display: grid; justify-items: center; gap: 6px; font-family: var(--font-pixel); font-size: 9px; color: #2c2a6b; }
 .ab div:first-child { margin-top: 26px; }
@@ -416,7 +432,7 @@ body {
 @media (max-width: 420px) {
   .device { padding: 14px 14px 18px; border-radius: 12px 12px 44px 12px; }
   .bezel { padding: 10px 12px 12px; }
-  .dpad { grid-template-columns: repeat(3, 36px); grid-template-rows: repeat(3, 36px); }
+  .stick { --size: 108px; }
   .ab button { width: 48px; height: 48px; }
   .ab { gap: 12px; }
 }
@@ -552,9 +568,12 @@ html { -webkit-tap-highlight-color: transparent; }
   .cr-q { font-size: clamp(14px, 5cqw, 20px); }
   .cr-list { gap: 10px; }
   .cr-list[data-n="4"] { --cols: 2; }
-  .cr-list[data-n="2"] { padding-inline: 0; }
-  .cr-list li { font-size: clamp(9px, 3cqw, 12px); padding: 8px 6px 10px; gap: 6px; border-width: 3px; }
-  .cr-list li canvas { width: min(70%, 96px); }
+  .cr-list[data-n="2"], .cr-list[data-n="3"] { padding-inline: 0; }
+  .cr-list li { font-size: clamp(9px, 3cqw, 12px); padding: 8px 6px 10px; gap: 6px; border-width: 3px; grid-template-rows: auto auto; align-content: start; }
+  /* fixed square size: WebKit stretches a %-width aspect-ratio canvas over the name below it */
+  .cr-list li canvas { width: clamp(44px, 20vw, 96px); height: clamp(44px, 20vw, 96px); aspect-ratio: auto; }
+  .cr-list[data-n="3"] li canvas { width: clamp(40px, 17vw, 80px); height: clamp(40px, 17vw, 80px); }
+  .cr-list li span { text-align: center; overflow-wrap: anywhere; }
   .cr-list li.sel { transform: translateY(-3px); box-shadow: 0 3px 0 var(--magenta); }
   .cr-desc { font-size: clamp(15px, 4.4cqw, 19px); }
   .shop { padding: 10px; gap: 8px; }
@@ -571,8 +590,7 @@ html { -webkit-tap-highlight-color: transparent; }
   .shop-msg { font-size: clamp(9px, 3cqw, 12px); padding: 8px 10px; border-width: 3px; min-height: 0; }
 
   .controls { margin: 0; padding: 14px 22px 16px; }
-  .dpad { grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); }
-  .dpad button { font-size: 14px; }
+  .stick { --size: 150px; }
   .ab { gap: 16px; }
   .ab button { width: 64px; height: 64px; }
   .ab div:first-child { margin-top: 30px; }
@@ -605,7 +623,7 @@ html { -webkit-tap-highlight-color: transparent; }
   .mbar-card { min-height: 34px; }
   .bezel { grid-area: screen; margin: 0 0 8px; }
   .controls { display: contents; }
-  .dpad { grid-area: pad; align-self: center; margin: 0 16px; }
+  .stick { grid-area: pad; align-self: center; margin: 0 16px; --size: 128px; }
   .ab { grid-area: ab; align-self: center; margin: 0 18px 0 10px; }
 }
 

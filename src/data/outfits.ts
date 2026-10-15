@@ -1,5 +1,5 @@
 import { CLUBS } from './clubs';
-import type { Character, DressCode, Look, Outfit, Shop, ShopDef, Tag } from '../types';
+import type { Character, DressCode, Gender, Look, Outfit, Shop, ShopDef, Tag } from '../types';
 /* ================= OUTFITS & SHOPS ================= */
 export const TAG_LABEL: Record<Tag, string> = { black: 'ALL BLACK', latex: 'FETISH', colorful: 'COLORFUL', vintage: 'VINTAGE', tourist: 'TOURIST', suit: 'FANCY', tech: 'TECH' };
 export const BASE_LOOK: Pick<Look, 'skin' | 'hair'> = { skin: '#f0c7a0', hair: '#2b1f1a' };
@@ -25,7 +25,7 @@ export const OUTFITS: Record<string, Outfit> = {
 };
 
 // Starting characters. `body` is kept when you change clothes; `outfit` is what they start in.
-export const CHARACTERS: Record<'man' | 'woman', Character[]> = {
+export const CHARACTERS: Record<Gender, Character[]> = {
   man: [
     { id: 'tourist_m', name: 'The Tourist', desc: 'First night in Berlin. Very excited, very visible.', body: { skin: '#f3c9a8', hair: '#c9a24a' }, outfit: 'tourist' },
     { id: 'hipster_m', name: 'The Hipster', desc: 'Moved to Neukölln in 2014. Has opinions about coffee.', body: { skin: '#e2b08c', hair: '#5a3a22', beard: '#5a3a22' }, outfit: 'flannel' },
@@ -37,9 +37,17 @@ export const CHARACTERS: Record<'man' | 'woman', Character[]> = {
     { id: 'hipster_f', name: 'The Hipster', desc: 'Runs a vintage stall at the Mauerpark flea market on Sundays.', body: { skin: '#f0c7a0', hair: '#b04a2a', glasses: '#9fc7e6' }, outfit: 'knit' },
     { id: 'tech_f', name: 'The Tech Girl', desc: 'Product manager. Has a roadmap for tonight.', body: { skin: '#c98d6a', hair: '#2a1a14', long: true }, outfit: 'techvest' },
     { id: 'artist_f', name: 'The Art Student', desc: 'Second year at art school. Paint on everything.', body: { skin: '#e2b08c', hair: '#7a3fd1', long: true }, outfit: 'painter' }
+  ],
+  nb: [
+    { id: 'tourist_n', name: 'The Tourist', desc: 'Came for one weekend. Already looking at flats.', body: { skin: '#f0c7a0', hair: '#2bb3a3' }, outfit: 'nineties' },
+    { id: 'hipster_n', name: 'The Hipster', desc: 'Makes a queer zine in a Neukölln back room. Bikes everywhere.', body: { skin: '#c98d6a', hair: '#d94a8a', glasses: '#9fc7e6' }, outfit: 'seventies' },
+    { id: 'tech_n', name: 'The Engineer', desc: 'Writes Rust by day, dances techno by night, declines all meetings.', body: { skin: '#8d5a3b', hair: '#111111', long: true }, outfit: 'techvest' },
+    { id: 'local_n', name: 'The Local', desc: 'Grew up in Wedding. Knows half the bouncers by first name.', body: { skin: '#e2b08c', hair: '#9a9a9a' }, outfit: 'mesh' }
   ]
 };
-export const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman);
+/** Step 1 of the character creator. */
+export const GENDERS: { id: Gender; label: string }[] = [{ id: 'man', label: 'Man' }, { id: 'woman', label: 'Woman' }, { id: 'nb', label: 'Non-binary' }];
+export const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman, CHARACTERS.nb);
 export const charById = (id: string | null): Character | null => ALL_CHARS.find(c => c.id === id) || null;
 // Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
 export const DRESS: Record<string, DressCode> = {

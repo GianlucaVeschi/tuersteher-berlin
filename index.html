@@ -102,12 +102,9 @@
     </div>
     <div class="brand">Türsteher <span>Berlin</span> · Friday 23:47</div>
     <div class="controls">
-      <div class="dpad" role="group" aria-label="Direction pad">
-        <button class="u" data-dir="up" aria-label="Up" id="padUp">▲</button>
-        <button class="l" data-dir="left" aria-label="Left" id="padLeft">◀</button>
-        <span class="c"></span>
-        <button class="r" data-dir="right" aria-label="Right" id="padRight">▶</button>
-        <button class="d" data-dir="down" aria-label="Down" id="padDown">▼</button>
+      <div class="stick" id="stick" role="group" aria-label="Joystick: hold and slide to walk, slide to the edge to run">
+        <div class="stick-arrows" aria-hidden="true"><span class="u">▲</span><span class="d">▼</span><span class="l">◀</span><span class="r">▶</span></div>
+        <div class="stick-knob" id="stickKnob"></div>
       </div>
       <div class="ab">
         <div><button id="btnB" aria-label="B button">B</button>B</div>

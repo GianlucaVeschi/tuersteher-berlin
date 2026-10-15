@@ -1,7 +1,7 @@
 import { PIXEL_H, pixelText, pixelTextWidth } from './pixelFont';
 import type { Entity } from '../types';
 import { SHOPS } from '../data/outfits';
-import { CLUB_SHORT, zoomLevel } from './zoom';
+import { CLUB_SHORT, zoom, zoomLevel } from './zoom';
 import { towerC } from './cityTiles';
 import { TOWER } from '../world/city';
 import { lookOf } from './looks';
@@ -10,7 +10,7 @@ import { INK, reduceMotion } from '../util';
 import { CLUBS } from '../data/clubs';
 import { drawInteriorFx } from '../interiors/fx';
 import { inClub } from '../world/scenes';
-import { ctx } from './canvas';
+import { MOBILE, PX, ctx } from './canvas';
 import { RT } from '../core/runtime';
 import { T, W } from '../world/tiles';
 import { player, state } from '../core/state';
@@ -142,21 +142,23 @@ export function draw(now: number) {
   const realW = RT.VW, realH = RT.VH;
   // draw the world at scale z: everything inside treats VW/VH as the visible world size
   RT.VW = realW / z; RT.VH = realH / z;
-  ctx.setTransform(z, 0, 0, z, 0, 0);
-  ctx.imageSmoothingEnabled = z < 1;
+  ctx.setTransform(PX * z, 0, 0, PX * z, 0, 0);
+  ctx.imageSmoothingEnabled = PX * z < 1;
   let cam;
   try { cam = drawWorld(now); } finally {
     RT.VW = realW; RT.VH = realH;
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.setTransform(PX, 0, 0, PX, 0, 0);
     ctx.imageSmoothingEnabled = false;
   }
   if (z >= 0.9) return;
+  // on phones the labels would cover half the screen: only the MAP view shows them
+  const labels = zoom.fit || !MOBILE.matches;
   // zoomed out: label clubs and shops, and mark the player
   const [camX, camY, ppx, ppy] = cam;
   const sx = (wx: number) => (wx - camX) * z, sy = (wy: number) => (wy - camY) * z;
   const size = RT.VW < 260 ? 6 : 8;
   chipRects = [];
-  if (!inClub()) {
+  if (!inClub() && labels) {
     // clubs on the roof, shops at the shopfront (smaller), so neighbours don't collide
     CLUBS.forEach(c => chip((state.stamps[c.id] ? '✓ ' : '') + CLUB_SHORT[c.id], sx((c.x + c.w / 2) * T), sy(c.y * T + 4), c.glow, INK, size));
     SHOPS.forEach(sh => chip(sh.label, sx((sh.x + sh.w / 2) * T), sy((sh.y + sh.h) * T) + PIXEL_H + 4, '#f3eee3', INK, 'small'));
@@ -166,5 +168,5 @@ export function draw(now: number) {
   const pulse = reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(now / 180);
   ctx.strokeStyle = `rgba(255,77,109,${pulse})`; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.arc(px, sy(ppy + 8), Math.max(6, 10 * z) + 3 * pulse, 0, Math.PI * 2); ctx.stroke();
-  chip('YOU', px, py - 6, '#ff4d6d', '#fff', size);
+  if (labels) chip('YOU', px, py - 6, '#ff4d6d', '#fff', size);
 }
