@@ -7,7 +7,6 @@ import type { Dir } from '../types';
 import { prerender } from '../render/cityTiles';
 import { zoom, zoomUI } from '../render/zoom';
 import { renderCard } from '../ui/card';
-import { applyK, timeScale } from '../effects/trip';
 import { draw, train } from '../render/draw';
 import { applySave, loadSave, save } from '../core/save';
 import { openShop } from '../ui/shop';
@@ -88,7 +87,7 @@ export function update(dt: number) {
 let last = performance.now();
 export function frame(now: number) {
   const raw = Math.min(50, now - last); last = now;
-  const dt = raw * timeScale(now);
+  const dt = raw;
   RT.clock += dt;
   update(dt);
   updateMusic();
@@ -96,7 +95,7 @@ export function frame(now: number) {
   if (!RT.titleOn && state.name && document.visibilityState === 'visible' && document.hasFocus()) state.playMs += raw;
   syncTick();
   // keep the loop alive even if one frame fails to draw
-  try { draw(RT.clock); if (RT.kUntil) applyK(now); } catch (err) { console.error(err); }
+  try { draw(RT.clock); } catch (err) { console.error(err); }
   requestAnimationFrame(frame);
 }
 

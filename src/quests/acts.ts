@@ -9,7 +9,7 @@ import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
 import { INTERIORS } from '../data/interiors';
-import { startK } from '../effects/trip';
+import { playKHole } from '../effects/khole';
 import { RT } from '../core/runtime';
 import { CARRY_MAX, PFAND_GOAL, euro } from './sisyphos';
 import { renderCard } from '../ui/card';
@@ -199,7 +199,7 @@ export const ACTS: Record<string, Act> = {
       await say('Toilet guy: A small one. Then water. Deal?');
       await say('(Back in the stall. Another line. The floor tilts again.)');
       closeBox();
-      startK();
+      await playKHole();
       return;
     }
     if (state.kStage === 0) {
@@ -220,8 +220,9 @@ export const ACTS: Record<string, Act> = {
     await say('(You squeeze into a stall together. He racks up two lines on the back of his phone.)');
     await say('(You take one. It burns. Then the floor tilts.)');
     closeBox();
+    await playKHole();
+    await say('(You come round somewhere on the main floor. How long was that? Thirty seconds? Three hours?)');
     state.kStage = 3;
-    startK();
     await completeQuest(clubId, 'toilet');
   },
   async mila(e) {
