@@ -11,6 +11,7 @@ import { initMusic } from './audio/music';
 import { initCreator } from './ui/creator';
 import { initSync } from './online/sync';
 import { initPlayers } from './ui/players';
+import { initMissions } from './ui/missions';
 
 initMonitoring();
 buildCity();
@@ -22,5 +23,6 @@ initMusic();
 initCreator();
 initSync();
 initPlayers();
+initMissions();
 initStation();
 start();

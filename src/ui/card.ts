@@ -7,6 +7,7 @@ import { updateFloorTag } from '../interiors/transitions';
 import { SCENES, inClub, useScene } from '../world/scenes';
 import { releaseFollower } from '../interiors/follower';
 import { questHint } from '../quests/sisyphos';
+import { updateQuestsBtn } from './missions';
 import { QUEST_LIST, questCount, questDone } from '../quests/quests';
 import { INTERIORS } from '../data/interiors';
 import { drawMini, shopEl } from './shop';
@@ -65,6 +66,7 @@ export function renderCard() {
     }));
     $('#questCount').textContent = `${doneAll}/${total}`;
   }
+  updateQuestsBtn();
 }
 const resetBtn = $<HTMLButtonElement>('#reset');
 let armTimer: ReturnType<typeof setTimeout> | undefined;

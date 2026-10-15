@@ -27,6 +27,13 @@
       <div class="screen" id="screen">
         <canvas id="game" width="384" height="256" aria-label="Map of Berlin at night"></canvas>
         <div class="hud" id="hud">STEMPEL 0/8</div>
+        <button class="quests-btn" id="questsBtn" type="button" hidden>QUESTS</button>
+        <div class="missions" id="missions" hidden>
+          <div class="missions-panel" role="dialog" aria-modal="true" aria-labelledby="missionsTitle">
+            <header><h2 id="missionsTitle">Side quests</h2><button type="button" id="missionsClose" aria-label="Close">✕</button></header>
+            <ol class="missions-list" id="missionsList"></ol>
+          </div>
+        </div>
         <div class="floor-tag" id="floorTag" hidden></div>
         <div class="zoom" role="group" aria-label="Zoom">
           <button type="button" id="soundBtn" aria-label="Sound off" aria-pressed="true">♪</button>
