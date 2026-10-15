@@ -1,6 +1,7 @@
 import { rsoDance, rsoFloorsDanced } from './rso';
 import { HG_FIVE, hgClock, hgDance } from './heide';
 import { cdvDance, cdvHint } from './cdv';
+import { MD_HINTS } from './mdma';
 import type { BottleType, Entity, QuestDef } from '../types';
 import { completeQuest } from './quests';
 import { say } from '../ui/dialog';
@@ -45,6 +46,7 @@ export function drawBottle(X: number, Y: number, type: BottleType, now: number) 
 export function questHint(clubId: string, q: QuestDef): string {
   if (clubId === 'berghain' && q.id === 'toilet' && K_HINTS[state.kStage]) return K_HINTS[state.kStage];
   if (clubId === 'cdv') return cdvHint(q.id, q.hint);
+  if (q.id === 'mdma' && MD_HINTS[state.mdStage]) return MD_HINTS[state.mdStage];
   if (q.id === 'pfand') { const p = state.pfand; return `Returned ${p.returned}/${PFAND_GOAL} · in hands ${p.carry}/${CARRY_MAX} · ${euro(p.cents)} earned. Any bar takes them back.`; }
   if (q.id === 'stories') return `${Object.keys(state.heard).length}/3 heard. ` + q.hint;
   if (q.id === 'floors') return `${rsoFloorsDanced()}/3 floors. ` + q.hint;

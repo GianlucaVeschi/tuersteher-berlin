@@ -89,6 +89,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 
 - Handlers are in `ACTS` (`src/quests/acts.ts`), typed `Act = (e: Entity | null, clubId) => Promise<void>`. `e` is the person talked to, or `null` when a tile's `examineActs` triggers it. Handlers that need a person guard with `if (!e) return;`.
 - RSO, Heideglühen and Club der Visionäre handlers live in `quests/rso.ts`, `quests/heide.ts` and `quests/cdv.ts` and are listed by name at the top of `ACTS` (function declarations, so the import cycle is safe). CDV's dance hook moves the weekend on a day per dance on the deck (`state.danced['cdv:sat|sun|mon']`) and the bar is cash only (`state.cdvCash`: 0 not tried, 1 card refused, 2 borrowed from Ines, 3 spent). Heideglühen has its own night clock (`state.hgTime`, minutes after midnight, advanced by `hgTick()`) and quest stage (`state.hgStage`).
+- Sisyphos MDMA chain (`quests/mdma.ts`, `state.mdStage` 0–4): Ronny → the pool raver's hat → Ronny's pill → `playRunner()` (`effects/runner.ts`), a 30-second pseudo-3D S-Bahn runner on its own canvas (`#runner`, 240 px wide, height from the screen's aspect, perspective via `sx()/sy()`). While it runs, `RT.runner` takes `pressA`/`pressDir` and the music plays the `runner` style. It resolves true on a win; losing just lets you ask Ronny again.
 - Dancing on a `DANCES` tile runs `danceHere()` (`quests/dance.ts`); clubs can override via `DANCE_HOOKS` (`quests/sisyphos.ts`).
 - Progress: `completeQuest(clubId, id)` sets `state.quests['club:id']`, shows a toast, re-renders the stamp card and saves. Live hints for counting quests come from `questHint()` (`quests/sisyphos.ts`).
 - To give another club an interior: add an `INTERIORS` entry keyed by the club id, add handlers to `ACTS`, add quests to its `quests` list. `enterDoor()` automatically uses the interior instead of the short "inside" scene.
@@ -118,7 +119,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 ### Monitoring (`src/core/monitoring.ts`)
 
 - Datadog RUM (org Cuadog, US1): sessions, errors, Session Replay and game events. Only production builds report; the live site is `env:prod`, `npm run preview` is `env:local`. Sample rates and privacy can also be changed in Datadog's remote configuration without a deploy.
-- Game events go through `track('snake_case', { … })`, never `datadogRum` directly. Current events: `character_selected`, `outfit_changed`, `door_rejected`, `door_accepted`, `club_entered`, `quest_completed`, `npc_talked`, `game_finished`.
+- Game events go through `track('snake_case', { … })`, never `datadogRum` directly. Current events: `character_selected`, `outfit_changed`, `door_rejected`, `door_accepted`, `club_entered`, `quest_completed`, `npc_talked`, `game_finished`, `runner_finished` (`won`).
 - Session Replay records the DOM, so the canvas (the map) shows black; dialogs, menus and the stamp card are visible.
 
 ### Saving (`src/core/save.ts`)
