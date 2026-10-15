@@ -87,7 +87,7 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 | A drink in the old brewery | Any bar |
 | The Keller | Downstairs from ROBUS. Ask first |
 
-People inside clubs with a side quest for you have a red **!** over their head; it disappears once that quest is done.
+People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it.
 
 ## Inside Club der Visionäre
 
