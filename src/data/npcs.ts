@@ -22,6 +22,10 @@ export const NPCS: NpcDef[] = [
     lines: ['Old raver: I danced at Bar25 for three days straight in 2009.', 'Old raver: Kater Blau is the same crew. New spot, same spirit.'] },
   { id: 'monday', x: 70, y: 21, dir: 'left', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#9a4ad1', legs: '#2a2a35', shades: true },
     lines: ['Raver: What day is it?', 'Raver: I came in on Friday. Sisyphos does that to you.'] },
+  // Taski rides the streets for Wolt all night (world/taski.ts moves him; conversation in STREET_ACTS.taski)
+  { id: 'taski', x: 30, y: 21, act: 'taski', look: { skin: '#c98d6a', hair: '#1a1a1a', top: '#00c2e8', legs: '#26242e', hat: '#00c2e8', beard: '#1a1a1a', box: '#00c2e8', bike: true } },
+  // outside Heideglühen, at the left corner of the building, as close as he's allowed (conversation in STREET_ACTS.jesus)
+  { id: 'jesus', x: 63, y: 39, act: 'jesus', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#e9e4d6', legs: '#7a6a4a' } },
   // in front of his Imbiss on the green west of Humana (conversation in STREET_ACTS.mustafa)
   { id: 'mustafa', x: 5, y: 6, act: 'mustafa', look: { skin: '#d9a27c', hair: '#1a1a1a', beard: '#1a1a1a', top: '#f3eee3', legs: '#2a2a35' } },
   // just off the S-Bahn, on the grass by the tracks
@@ -140,13 +144,13 @@ function canalCrowds(): NpcDef[] {
   ];
   const ANKER_LINES = [
     'Regular: Inside is full. The terrace is full. You can stand by the water, if you like.',
-    'Regular: A Pils from the Ankerklause and the sunset over the canal. Every single night.',
-    '(They are singing along to the jukebox through the open window.)',
-    'Regular: Want to get in? Squeeze. Everybody squeezes.',
-    'Tourist: Is it always like this? ...Every night? Wow.',
-    'Regular: Mind the bike. And the dog. And my beer.',
-    'Regular: Kreuzberg or Neukölln? We are standing exactly on the border. Cheers to both.',
-    "(Someone is balancing four beers through the crowd. Respect.)"
+    'Regular: I have been waiting for a terrace table since the sun came up. Look at the sun now. It is gone.',
+    '(They sing along to the jukebox through the open window, guarding their table with both elbows.)',
+    'Regular: Want a table? There are no tables. There is only squeezing.',
+    'Tourist: Is it always like this? ...Every night? So when does anybody get a table?',
+    'Regular: Mind the bike. And the dog. And my chair. ESPECIALLY my chair.',
+    'Regular: Kreuzberg or Neukölln? We are on the border. Neither side has a free table.',
+    "(Someone balances four beers through the crowd to a table that does not exist.)"
   ];
   const spots = (ids: string, list: [number, number, NpcDef['dir']][], lines: string[], off: number) =>
     list.map(([x, y, dir], i) => ({ id: `${ids}-${i}`, x, y, dir, look: CROWD_LOOKS[(i + off) % CROWD_LOOKS.length], lines: [lines[(i * 3 + off) % lines.length]] }));

@@ -51,6 +51,13 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
   list.sort((a, b) => a.y - b.y);
   list.forEach(({ e }) => {
     if (!e) {
+      if (RT.lying) {
+        // flat on your back: the standing sprite turned on its side
+        ctx.save(); ctx.translate(ppx - camX + 8, ppy - camY + 9); ctx.rotate(-Math.PI / 2);
+        person(ctx, -8, -8, 'down', 0, lookOf(state.outfit));
+        ctx.restore();
+        return;
+      }
       const step = player.moving ? (player.t < player.dur / 2 ? (player.n % 2) + 1 : 0) : 0;
       person(ctx, ppx - camX, ppy - camY - 3, player.dir, step, lookOf(state.outfit));
       return;
@@ -195,6 +202,13 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     const gr = ctx.createRadialGradient(cx, cy, 8, cx, cy, 44);
     gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,.94)');
     ctx.fillStyle = gr; ctx.fillRect(0, 0, RT.VW, RT.VH);
+  } else {
+    // from outside a darkroom looks dark: whoever is in there (and the club lights) disappears into it
+    ctx.fillStyle = 'rgba(4,3,8,.9)';
+    const x0 = Math.max(0, Math.floor(camX / T)), y0 = Math.max(0, Math.floor(camY / T));
+    for (let y = y0; y <= y0 + RT.VH / T + 1 && y < sc.h; y++) for (let x = x0; x <= x0 + RT.VW / T + 1 && x < sc.w; x++) {
+      if (sc.map[y][x] === DARK) ctx.fillRect(x * T - camX, y * T - camY, T, T);
+    }
   }
 }
 

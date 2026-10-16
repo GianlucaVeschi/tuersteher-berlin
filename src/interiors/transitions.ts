@@ -38,10 +38,12 @@ export function toast(text: string) {
 }
 export function updateFloorTag() {
   updateQuestsBtn();
-  if (!inClub()) { floorTag.hidden = true; return; }
-  const fl = INTERIORS[sceneClub()].floors[sceneFloor()];
-  floorTag.textContent = INTERIORS[sceneClub()].name.toUpperCase() + ' · ' + fl.short;
-  floorTag.hidden = false;
+  // the room goes into the HUD box after the stamps ("STEMPEL 6/8 · ROBUS"), on desktop and phones
+  const hudRoom = $('#hudRoom');
+  floorTag.hidden = true;
+  if (!inClub()) { hudRoom.hidden = true; return; }
+  hudRoom.textContent = INTERIORS[sceneClub()].floors[sceneFloor()].short;
+  hudRoom.hidden = false;
 }
 /** Move to another floor of a club, arriving at the given spawn point. */
 export async function goFloor(clubId: string, floorId: string, spawnKey: string) {

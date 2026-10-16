@@ -16,6 +16,8 @@ import { RT } from '../core/runtime';
 import { GRL, T, W } from '../world/tiles';
 import { player, state } from '../core/state';
 /** The S-Bahn: x position, ms until the next one comes, ms left standing at the station, stopped there yet this run. */
+/** The player's position on screen: 0..1 across and down the visible view. */
+export const playerOnScreen = { x: 0.5, y: 0.5 };
 export const train = { x: -400, wait: 2500, dwell: 0, served: false };
 
 /** Player position in pixels, including the walk in progress. */
@@ -193,6 +195,9 @@ export function draw(now: number) {
     ctx.setTransform(PX, 0, 0, PX, 0, 0);
     ctx.imageSmoothingEnabled = false;
   }
+  // where the player is on screen, as a fraction of the view (ui/hud.ts fades the HUD when you walk under it)
+  playerOnScreen.x = (cam[2] + 8 - cam[0]) * z / realW;
+  playerOnScreen.y = (cam[3] + 8 - cam[1]) * z / realH;
   if (z >= 0.9) return;
   // on phones the labels would cover half the screen: only the MAP view shows them
   const labels = zoom.fit || !MOBILE.matches;

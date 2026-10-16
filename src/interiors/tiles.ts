@@ -128,6 +128,25 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X + 4, Y + 2, 8, 3, '#ffd23f'); P(X + 3, Y + 5, 1, 9, '#ff5e7a'); P(X + 12, Y + 5, 1, 9, '#ff5e7a');
         P(X + 5, Y + 6, 6, 4, '#2a2420'); P(X + 6, Y + 7, 4, 1, '#c9a24a'); P(X + 5, Y + 11, 6, 2, '#5ec8ff');
         break;
+      case 115: // the veranda window over the canal: blue frame, glass, white railing, a box of geraniums
+        P(X, Y, 16, 16, '#1f4f9a'); P(X + 1, Y + 1, 14, 7, '#8fc4d8'); P(X + 2, Y + 2, 3, 1, '#d9f0f6'); P(X + 2, Y + 3, 1, 2, '#d9f0f6');
+        P(X, Y + 8, 16, 1, '#f3eee3'); for (let i = 1; i < 16; i += 3) P(X + i, Y + 8, 1, 4, '#f3eee3');
+        P(X, Y + 12, 16, 3, '#6b4a2e'); P(X, Y + 15, 16, 1, '#163a72');
+        for (let i = 0; i < 6; i++) { const fx = Math.floor(rnd() * 14), fy = 9 + Math.floor(rnd() * 3); P(X + fx, Y + fy, 2, 2, pick(['#ff5e7a', '#e8304a', '#ff8cc4', '#c4162a'])); P(X + fx, Y + fy + 2, 1, 1, '#3f7a3a'); }
+        break;
+      case 116: // old wood covered in graffiti and stickers
+        if (frontFace) {
+          P(X, Y, 16, 16, '#7a5432'); for (let i = 3; i < 16; i += 4) P(X + i, Y, 1, 16, '#5a3e26'); P(X, Y + 13, 16, 3, '#4a3020');
+          for (let i = 0; i < 3; i++) { const c = pick(['#ff5e7a', '#b6f36b', '#5ec8ff', '#ffd23f', '#f3eee3', '#14121c']), tx = Math.floor(rnd() * 10), ty = 1 + Math.floor(rnd() * 9); P(X + tx, Y + ty, 4 + Math.floor(rnd() * 3), 1, c); P(X + tx + 1, Y + ty + 1, 1, 2, c); P(X + tx + 3, Y + ty - 1, 1, 3, c); }
+          if (rnd() < 0.5) { const sx = Math.floor(rnd() * 11); P(X + sx, Y + 9, 4, 3, pick(['#f3eee3', '#ffd23f', '#e8304a'])); }
+        } else P(X, Y, 16, 16, '#3a2616');
+        break;
+      case 117: // an old armchair, the red velvet worn through
+        P(X, Y, 16, 16, '#6b4a2e'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#563a22');
+        P(X + 2, Y + 2, 12, 12, INK); P(X + 3, Y + 3, 10, 4, '#5a1a2a'); P(X + 3, Y + 7, 10, 6, '#7a2a3a');
+        P(X + 2, Y + 6, 2, 7, '#5a1a2a'); P(X + 12, Y + 6, 2, 7, '#5a1a2a'); P(X + 6, Y + 9, 3, 2, '#a85a5a'); P(X + 9, Y + 4, 2, 1, '#c9a24a');
+        P(X + 3, Y + 14, 2, 2, '#3a2616'); P(X + 11, Y + 14, 2, 2, '#3a2616');
+        break;
       // ---- Kater Blau ----
       case 112: { // circus tent: red and white stripes, a pointed roof on the top row
         P(X, Y, 16, 16, '#3f7a3a');

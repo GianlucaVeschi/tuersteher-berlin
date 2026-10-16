@@ -1,10 +1,16 @@
 import { completeQuest, questDone } from './quests';
-import { ask, say } from '../ui/dialog';
+import { ask, closeBox, say } from '../ui/dialog';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
-import { toast } from '../interiors/transitions';
-import { state } from '../core/state';
-import type { Entity } from '../types';
+import { fade, leaveClub, toast } from '../interiors/transitions';
+import { playLsd } from '../effects/lsd';
+import { RT } from '../core/runtime';
+import { DIRS, MOVE, player, state } from '../core/state';
+import { get } from '../world/grid';
+import { blocked } from '../world/collision';
+import { ICH } from '../world/tiles';
+import { $, reduceMotion, wait } from '../util';
+import type { Dir, Entity } from '../types';
 
 /* ---- Club der Visionäre: the deck under the willow, cash only, a weekend that ends on Monday ---- */
 // Researched: a former boathouse on the Flutgraben (Am Flutgraben 1, Alt-Treptow), started around 2001
@@ -109,4 +115,129 @@ export function cdvHint(id: string, base: string): string {
   if (id === 'drink' && state.cdvCash === 2) return 'You have 10 € in cash. Back to the bar.';
   if (id === 'monday') return `${cdvDays()}/3 days. ` + base;
   return base;
+}
+
+/* ---- The LSD dive: Flo by the water, a "jump" into the Flutgraben, waking up on the dancefloor ---- */
+// Dramatised: nobody at CDV is known for handing out acid. The joke is that you never left the deck.
+
+/** Flo, by the water near the willow. Has a little tin of paper squares. */
+export async function flo(e: Entity | null, clubId: string) {
+  if (!e) return;
+  if (questDone(clubId, 'lsd')) {
+    await say('Flo: You again? Security has a photo of you now. Behind the bar, next to the CASH ONLY sign.');
+    const a = await ask('Flo: ...Another half?', ['One more dive', 'Water, please']);
+    if (a === 1) { await say('Flo: Wise. The unicorns will wait.'); return; }
+    await trip(clubId, true);
+    return;
+  }
+  await say('Flo: Psst. Hey. You look like someone who needs to see some colours.');
+  await say('(He opens a little tin. Tiny squares of paper, each with a smiley on it.)');
+  await say('Flo: Pappe. Half a tab. Start low, go slow. And whatever happens: stay away from the water.');
+  const a = await ask('', ['Take it', 'No thanks']);
+  if (a === 1) { await say('Flo: Respect. Get a Club-Mate instead. Cash only, though.'); return; }
+  await trip(clubId, false);
+}
+
+const FLOOR = new Set([ICH['w'], ICH['e']]), WATER = ICH['q'];
+const STEPS = Object.entries(DIRS) as [Dir, [number, number]][];
+const nextToWater = (x: number, y: number) => STEPS.some(([, [dx, dy]]) => get(x + dx, y + dy) === WATER);
+const walkable = (x: number, y: number) => FLOOR.has(get(x, y)) && !blocked(x, y);
+
+/** One slow, wobbly step (the frame loop moves the player while a script has control). */
+async function stagger(dir: Dir) {
+  const [dx, dy] = DIRS[dir];
+  player.dir = dir;
+  if (!walkable(player.x + dx, player.y + dy)) { await wait(200); return; }
+  player.tx = player.x + dx; player.ty = player.y + dy; player.moving = true; player.t = 0; player.n++; player.dur = MOVE * 2.2;
+  while (player.moving) await wait(30);
+}
+
+/** Shortest way over the deck to a plank at the edge of the water (breadth-first). */
+function pathToWater(): Dir[] {
+  const key = (x: number, y: number) => x + ',' + y;
+  const from = new Map<string, [string, Dir] | null>([[key(player.x, player.y), null]]);
+  const queue: [number, number][] = [[player.x, player.y]];
+  while (queue.length) {
+    const [x, y] = queue.shift()!;
+    if (nextToWater(x, y)) {
+      const path: Dir[] = [];
+      for (let k = key(x, y), f = from.get(k); f; k = f[0], f = from.get(k)) path.unshift(f[1]);
+      return path;
+    }
+    for (const [d, [dx, dy]] of STEPS) {
+      const nx = x + dx, ny = y + dy;
+      if (from.has(key(nx, ny)) || !walkable(nx, ny)) continue;
+      from.set(key(nx, ny), [key(x, y), d]);
+      queue.push([nx, ny]);
+    }
+  }
+  return [];
+}
+
+/** The colours on the game screen while it kicks in. */
+function tripFilter(on: boolean) {
+  const cv = $<HTMLCanvasElement>('#game');
+  if (!on) { cv.style.filter = ''; return; }
+  cv.style.filter = reduceMotion ? 'saturate(1.8)' : 'saturate(2.2) hue-rotate(0deg)';
+  if (reduceMotion) return;
+  const t0 = performance.now();
+  const spin = () => { if (!cv.style.filter) return; cv.style.filter = `saturate(2.2) hue-rotate(${Math.round((performance.now() - t0) / 8) % 360}deg)`; requestAnimationFrame(spin); };
+  requestAnimationFrame(spin);
+}
+
+/** The middle of the dancefloor, or the nearest free spot to it. */
+function floorMiddle(): [number, number] {
+  for (let r = 0; r < 6; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+    const x = 16 + dx, y = 7 + dy;
+    if (get(x, y) === ICH['e'] && !blocked(x, y)) return [x, y];
+  }
+  return [player.x, player.y];
+}
+
+/** Take the tab: lose control, "jump" into the canal, dive, wake up, get thrown out. A replay doesn't change the quest. */
+async function trip(clubId: string, replay: boolean) {
+  await say('(You put it on your tongue. It tastes like paper. For an hour, nothing happens.)');
+  await say('(Then the willow starts breathing. The planks ripple. The kick drum has a colour, and the colour is warm.)');
+  closeBox();
+  tripFilter(true);
+  // a few steps that aren't really yours, then straight for the water
+  for (let i = 0; i < 3; i++) await stagger(STEPS[Math.floor(Math.random() * 4)][0]);
+  await say('(The Flutgraben is glittering. It looks like a warm bed. It looks SO soft.)');
+  closeBox();
+  for (const d of pathToWater()) await stagger(d);
+  const water = STEPS.find(([, [dx, dy]]) => get(player.x + dx, player.y + dy) === WATER);
+  if (water) player.dir = water[0];
+  await say('(You climb onto the edge of the deck, spread your arms and JUMP.)');
+  closeBox();
+  toast('SPLASH!');
+  await fade(true);
+  tripFilter(false);
+  const colours = await playLsd();
+  // you never left the deck
+  [player.x, player.y] = floorMiddle(); player.tx = player.x; player.ty = player.y; player.moving = false;
+  RT.lying = true;
+  await fade(false);
+  await say('(You open your eyes. You are lying flat on your back in the middle of the dancefloor.)');
+  await say(`(Bone dry. You never left the deck. You caught ${colours} colours. Your hands are empty.)`);
+  // security comes over from the entrance
+  const sec: Entity = { kind: 'npc', name: 'Security', x: 14, y: 13, dir: 'up', look: { skin: '#c98d6a', hair: '#111111', top: '#111111', legs: '#1b1b22', bald: true, beard: '#111111' } };
+  RT.ents.push(sec);
+  for (let i = 0; i < 16 && Math.abs(sec.x - player.x) + Math.abs(sec.y - (player.y + 1)) > 0; i++) {
+    const sx = Math.sign(player.x - sec.x), sy = Math.sign(player.y + 1 - sec.y);
+    if (sy && !blocked(sec.x, sec.y + sy)) { sec.y += sy; sec.oy = -16 * sy; sec.dir = sy > 0 ? 'down' : 'up'; }
+    else if (sx && !blocked(sec.x + sx, sec.y)) { sec.x += sx; sec.ox = -16 * sx; sec.dir = sx > 0 ? 'right' : 'left'; }
+    else break;
+    await wait(reduceMotion ? 0 : 260);
+  }
+  sec.dir = 'up';
+  await say('Security: Okay, mermaid. Up you get.');
+  await say('Security: Twenty minutes of breaststroke on the dancefloor. You kicked the DJ. Twice.');
+  RT.lying = false; player.dir = 'down';
+  await say('Security: Out. Fresh air, some water. Come back next weekend.');
+  if (!replay) await completeQuest(clubId, 'lsd');
+  closeBox();
+  RT.ents.splice(RT.ents.indexOf(sec), 1);
+  await leaveClub(clubId);
+  RT.busy = true; // leaveClub hands control back; the last line is still ours
+  await say('(The door of CDV closes behind you. Somewhere under the water, a unicorn waves goodbye.)');
 }
