@@ -1,3 +1,4 @@
+import { updateHud } from '../ui/hud';
 import { updateTrain } from '../world/station';
 import { STREET_ACTS, streetTrigger } from '../world/street';
 import { closeBox } from '../ui/dialog';
@@ -95,7 +96,7 @@ export function frame(now: number) {
   if (!RT.titleOn && state.name && document.visibilityState === 'visible' && document.hasFocus()) state.playMs += raw;
   syncTick();
   // keep the loop alive even if one frame fails to draw
-  try { draw(RT.clock); } catch (err) { console.error(err); }
+  try { draw(RT.clock); updateHud(); } catch (err) { console.error(err); }
   requestAnimationFrame(frame);
 }
 

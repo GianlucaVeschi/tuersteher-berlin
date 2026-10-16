@@ -112,13 +112,20 @@ body {
 .mq.done .mq-mark { color: #3d8f6b; }
 .mq-empty { padding: 14px 0; font-size: 18px; color: #4c4757; }
 
+/* One small box in the corner: STEMPEL n/8, plus the room inside clubs ("STEMPEL 6/8 · ROBUS").
+   On desktop it fades while you walk under it (ui/hud.ts), so it never hides a door or stairs. */
 .hud {
-  position: absolute; left: 2.5cqw; top: 2.5cqw;
-  font-family: var(--font-pixel); font-size: 2.6cqw; line-height: 1;
+  position: absolute; left: 1.6cqw; top: 1.6cqw;
+  display: flex; align-items: center; gap: 1cqw;
+  font-family: var(--font-pixel); font-size: 2cqw; line-height: 1;
   background: var(--paper); color: var(--ink);
-  padding: 1.4cqw 1.8cqw;
-  border: .6cqw solid var(--ink);
+  padding: .9cqw 1.3cqw;
+  border: .45cqw solid var(--ink);
+  pointer-events: none; transition: opacity .25s;
 }
+.hud-room { color: #8a2a4a; }
+.hud-room::before { content: "· "; color: #6e6878; }
+.hud.dim { opacity: .15; }
 .dialog {
   position: absolute; left: 1.6cqw; right: 1.6cqw; bottom: 1.6cqw;
   background: var(--paper); color: var(--ink);

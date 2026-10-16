@@ -14,6 +14,12 @@ export interface Look {
   hat?: string;
   shades?: boolean;
   glasses?: string;
+  /** crying: tears running down the cheeks */
+  tears?: boolean;
+  /** riding a bike (Taski) */
+  bike?: boolean;
+  /** a delivery box on the back, in this colour (Taski's Wolt box) */
+  box?: string;
   beard?: string;
   tattoo?: boolean;
   stripes?: string;

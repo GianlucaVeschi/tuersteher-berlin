@@ -9,11 +9,27 @@ import { RT } from '../core/runtime';
 import { CITY_H } from './tiles';
 import { farm, gorli, gorliGrill, hoops, kick, kuhle, railway, skate } from '../places/goerli';
 import { ask, closeBox, say } from '../ui/dialog';
+import { taskiTalk } from './taski';
 
 /** Custom behaviour for street NPCs, by the `act` name in data/npcs.ts. Club quests live in quests/acts.ts. */
 export const STREET_ACTS: Record<string, Act> = {
   // Görlitzer Park (places/goerli.ts)
   gorli, railway, farm, hoops, kick, skate, gorliGrill, kuhle,
+  // Jesus outside Heideglühen: went behind the decks once, Hausverbot ever since. Starts crying.
+  async jesus(e) {
+    await say("Jesus: Hey. Yes, Jesus is my real name. My mum is from Sevilla.");
+    await say("Jesus: Going in? Listen to me. Whatever you do, don't go behind the decks.");
+    await say('Jesus: I did, once. Ten minutes before closing. The DJ went for a pee and I thought: now or never.');
+    await say('Jesus: I jumped behind the decks and quickly played a few of my own tracks. Three of them. The crowd loved it. I swear they loved it.');
+    await say('Jesus: Then the DJ came back. Two guys carried me out by the elbows.');
+    await say('Jesus: Hausverbot. For life.');
+    await say('Jesus: Every weekend I come and stand here. I can hear the fire crackling in there. I can smell the wood...');
+    if (e?.look) e.look.tears = true;
+    await say('(Jesus starts crying.)');
+    await say('Jesus: *sniff* Say hi to the fire for me.');
+  },
+  // Taski, the Wolt rider (world/taski.ts)
+  taski: taskiTalk,
   // the busker on the Admiralbrücke
   async busker() {
     await say('Busker: Any requests? I know three songs. Well. Two and a half.');

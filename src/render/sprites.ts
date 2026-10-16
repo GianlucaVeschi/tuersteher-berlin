@@ -19,6 +19,7 @@ export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: D
   g.translate(X, Y);
   if (flip) { g.translate(16, 0); g.scale(-1, 1); }
   g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(3, 14, 10, 2);
+  if (L.bike) bike(g, d);
   if (step) g.translate(0, -1);
   const parts: Part[] = [];
   if (d === 'left') parts.push([step ? 5 : 6, 11, 2, step === 1 ? 3 : 4, L.legs], [step ? 9 : 8, 11, 2, step === 2 ? 3 : 4, L.legs]);
@@ -67,6 +68,7 @@ export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: D
     if (L.glasses) det.push([5, 4, 2, 2, L.glasses], [9, 4, 2, 2, L.glasses], [7, 4, 2, 1, INK], [6, 5, 1, 1, INK], [9, 5, 1, 1, INK]);
     if (L.shades) det.push([5, 4, 6, 1, INK], [5, 5, 2, 1, INK], [9, 5, 2, 1, INK]);
     if (L.beard) det.push([5, 6, 6, 2, L.beard]);
+    if (L.tears) det.push([6, 6, 1, 2, '#9fd6ff'], [9, 6, 1, 2, '#9fd6ff']);
     if (L.tattoo) det.push([5, 6, 1, 1, '#3b3a5c'], [10, 6, 1, 1, '#3b3a5c'], [7, 2, 2, 1, '#3b3a5c'], [11, 4, 1, 1, '#c0c0d0']);
   } else if (d === 'left') {
     det.push([5, 4, 1, 2, INK]);
@@ -74,8 +76,28 @@ export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: D
     if (L.glasses) det.push([4, 4, 2, 2, L.glasses], [5, 5, 1, 1, INK], [6, 4, 3, 1, INK]);
     if (L.shades) det.push([4, 4, 3, 1, INK]);
     if (L.beard) det.push([4, 6, 4, 2, L.beard]);
+    if (L.tears) det.push([5, 6, 1, 2, '#9fd6ff']);
     if (L.tattoo) det.push([7, 5, 1, 1, '#3b3a5c'], [6, 3, 1, 1, '#3b3a5c']);
   }
+  if (L.box) {
+    // a square delivery bag on the back, with a white W on it from behind
+    if (d === 'up') det.push([2, 4, 12, 9, INK], [3, 5, 10, 7, L.box], [5, 7, 1, 3, '#ffffff'], [7, 8, 2, 1, '#ffffff'], [10, 7, 1, 3, '#ffffff'], [6, 9, 1, 1, '#ffffff'], [9, 9, 1, 1, '#ffffff']);
+    else if (d === 'left') det.push([10, 4, 6, 8, INK], [11, 5, 4, 6, L.box]);
+    else det.push([2, 5, 1, 5, L.box], [13, 5, 1, 5, L.box], [2, 4, 12, 1, INK]);
+  }
+  if (L.bike && d !== 'left') det.push([2, 9, 12, 1, INK], [2, 8, 2, 1, '#c0c4cc'], [12, 8, 2, 1, '#c0c4cc']); // handlebars
   det.forEach(p => { if (p[4] !== undefined) g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
   g.restore();
+}
+
+/** A bike under the rider: from the side two wheels and a frame, from the front or back one wheel. */
+function bike(g: CanvasRenderingContext2D, d: Dir) {
+  g.fillStyle = INK;
+  if (d === 'left') {
+    for (const cx of [3, 13]) { g.fillRect(cx - 3, 11, 6, 5); g.fillStyle = '#5a5f66'; g.fillRect(cx - 2, 12, 4, 3); g.fillStyle = INK; g.fillRect(cx - 1, 13, 2, 1); }
+    g.fillStyle = '#00c2e8'; g.fillRect(3, 12, 10, 1); g.fillRect(7, 10, 1, 3); g.fillRect(3, 9, 1, 4);
+    g.fillStyle = INK; g.fillRect(2, 8, 3, 1); g.fillRect(6, 9, 3, 1);
+  } else {
+    g.fillRect(6, 10, 4, 7); g.fillStyle = '#5a5f66'; g.fillRect(7, 11, 2, 5);
+  }
 }

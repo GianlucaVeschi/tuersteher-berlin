@@ -31,6 +31,8 @@ export const RT = {
   photoResolve: null as null | (() => void),
   /** the MDMA runner minigame (effects/runner.ts) */
   runner: null as RunnerHooks | null,
+  /** the player is drawn lying flat on the floor (after the LSD dive at CDV) */
+  lying: false,
   /** club whose short entrance scene is showing (picks the music) */
   overlayClub: null as string | null,
   /** the wake-up-at-home ending is playing */

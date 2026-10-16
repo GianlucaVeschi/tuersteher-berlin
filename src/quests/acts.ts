@@ -1,11 +1,11 @@
 import { griess, rsoBar } from './rso';
 import { fire, hgDj, karaoke, woody } from './heide';
-import { cdvBar, ines, jazz, planks, willow } from './cdv';
+import { cdvBar, flo, ines, jazz, planks, willow } from './cdv';
 import { poolHat, ronny } from './mdma';
 import { boxes, detroit, sticker } from './tresor';
 import { bar25, confetti, glitter, spree } from './katerblau';
 import { antonio, salonChair, salonEnter } from '../places/salon';
-import { ankerBar, jukebox, maison } from '../places/canal';
+import { ankerBar, ankerTable, jukebox, maison } from '../places/canal';
 import { golf, golfDesk } from '../places/goerli';
 import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
@@ -27,7 +27,7 @@ export const ACTS: Record<string, Act> = {
   // RSO and Heideglühen (quests/rso.ts, quests/heide.ts)
   griess, rsoBar, hgDj, woody, karaoke, fire,
   // Club der Visionäre (quests/cdv.ts)
-  cdvBar, ines, planks, willow, jazz,
+  cdvBar, ines, planks, willow, jazz, flo,
   // Sisyphos MDMA chain (quests/mdma.ts)
   ronny, poolHat,
   // Tresor (quests/tresor.ts)
@@ -37,7 +37,7 @@ export const ACTS: Record<string, Act> = {
   // Antonio's salon (places/salon.ts)
   antonio, salonChair, salonEnter,
   // the Landwehrkanal places (places/canal.ts)
-  maison, ankerBar, jukebox,
+  maison, ankerBar, ankerTable, jukebox,
   // the black-light minigolf in Görli (places/goerli.ts)
   golfDesk, golf,
   async pile(e, clubId) {
@@ -179,9 +179,16 @@ export const ACTS: Record<string, Act> = {
     await say('(A stamp on the back of your hand. Now you can step out and come back in.)');
   },
   async bar(e, clubId) {
-    const a = await ask('Bar: What can I get you?', ['Club-Mate', 'A beer', 'Vodka-Mate', 'Just water']);
-    const replies = ['(Ice cold and very caffeinated. Berlin in a bottle.)', '(A cold Pils. Now you are officially out.)', '(Vodka and Club-Mate. A dangerous combination.)', 'Bar: Good call. Tap water is free.'];
-    await say(replies[a]);
+    const drinks: [string, string][] = [
+      ['Club-Mate', '(Ice cold and very caffeinated. Berlin in a bottle.)'],
+      ['A beer', '(A cold Pils. Now you are officially out.)'],
+      ['Vodka-Mate', '(Vodka and Club-Mate. A dangerous combination.)'],
+      ['Just water', 'Bar: Good call. Tap water is free.']
+    ];
+    // upstairs at Panorama Bar it gets a bit fancier
+    if (clubId === 'berghain' && sceneFloor() === 'pb') drinks.splice(3, 0, ['Espresso Martini', '(Vodka, coffee liqueur and a fresh espresso, three beans on top. You will see the sunrise. And the next one.)']);
+    const a = await ask('Bar: What can I get you?', drinks.map(d => d[0]));
+    await say(drinks[a][1]);
     await completeQuest(clubId, 'drink');
   },
   async ice(e, clubId) {

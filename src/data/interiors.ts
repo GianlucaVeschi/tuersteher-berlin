@@ -59,7 +59,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       mf: {
-        label: 'Berghain · main floor', short: '1. OG',
+        label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
       '###############################^^^##',
@@ -107,7 +107,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       pb: {
-        label: 'Panorama Bar', short: '2. OG',
+        label: 'Panorama Bar', short: 'PANO',
         map: [
       '############################',
       '##AAAAA##WWWWWWWWWWWWWWWW###',
@@ -923,7 +923,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 7, y: 7, dir: 'left', act: 'ines', name: 'Ines', look: { skin: '#e8b896', hair: '#c9c9c9', top: '#8a5a8a', legs: '#3a3a4a', long: true, glasses: '#c9a24a' } },
           { x: 23, y: 3, dir: 'right', act: 'planks', name: 'Tom', look: { skin: '#c98d6a', hair: '#2a2420', top: '#d9733a', legs: '#2b3f6b', beard: '#2a2420' } },
           { x: 25, y: 8, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#e9e4d6', legs: '#5a7aa8' }, lines: ['Raver: See the old ship down the river? The Hoppetosse. Same crew as here.', 'Raver: Built in 1928 as an excursion steamer, bombed in 1944, raised again, cut in two and towed to Berlin in the nineties. In winter the party moves over there.'] },
-          { x: 19, y: 11, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#3a3a4a' }, lines: ['Raver: Nearest cash machine? Somewhere in Kreuzberg. Bring cash next time.'] }
+          { x: 19, y: 11, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#3a3a4a' }, lines: ['Raver: Nearest cash machine? Somewhere in Kreuzberg. Bring cash next time.'] },
+          { x: 4, y: 9, dir: 'right', act: 'flo', name: 'Flo', look: { skin: '#f3c9a8', hair: '#c9a24a', top: '#c28cff', legs: '#5a7aa8', long: true, beard: '#c9a24a', glasses: '#ff8c42' } }
         ]
       },
       sonnen: {
@@ -976,7 +977,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'monday', title: 'See you Monday', hint: 'Dance on the deck from Saturday through to Monday morning.' },
       { id: 'planks', title: 'The new planks', hint: 'Some deck boards look newer than the rest. Ask Tom why.' },
       { id: 'ines', title: 'The early days', hint: 'Ines on the bench has been coming since the start.' },
-      { id: 'jazz', title: 'Jazz in the Sonnenraum', hint: 'Sit in with the trio in the little wooden house.' }
+      { id: 'jazz', title: 'Jazz in the Sonnenraum', hint: 'Sit in with the trio in the little wooden house.' },
+      { id: 'lsd', title: 'Deep trip', hint: 'Flo, by the water near the willow, has little squares of paper. Stay away from the canal.' }
     ]
   },
 
@@ -1353,15 +1355,17 @@ export const INTERIORS: Record<string, InteriorDef> = {
   },
 
   /* Ankerklause: sailors' pub at Kottbusser Brücke, in an old steamer landing on the Landwehrkanal
-     (a place, not a club). Wood panelling, portholes, nets, the jukebox.
-     Extra legend: %  the jukebox */
+     (a place, not a club). Wood panelling, portholes, nets, the jukebox, and a glass veranda over the canal.
+     Everything here is about how hard it is to get a table (dramatised, but only a little).
+     Extra legend: %  the jukebox   [  veranda window over the canal (blue frame, geraniums)
+                   !  wood wall covered in graffiti   (  old velvet armchair */
   anker: {
     name: 'Ankerklause',
     floors: {
       main: {
         label: 'Ankerklause · the harbour bar with no harbour', short: 'BAR',
         map: [
-          'HHoHHoHHoHHoHHHH',
+          'HHoHHoH1oHHoHHHH',
           'H%wwwwwwww=wwwwH',
           'Hwwwwwwwww=wwwwH',
           'Hwwwwwwwww=wwwwH',
@@ -1371,51 +1375,79 @@ export const INTERIORS: Record<string, InteriorDef> = {
           'HwwwwwwwwwwwwwwH',
           'HHHHHHHxxHHHHHHH'
         ],
-        spawn: { street: [7, 7, 'up'] },
+        spawn: { street: [7, 7, 'up'], fromVeranda: [7, 1, 'down'] },
+        doors: { '1': { to: 'veranda', at: 'fromBar' } },
         exit: true,
         fairy: [[1, 1, 9, 1], [1, 5, 14, 5]],
         spots: ['rgba(255,90,60,.14)', 'rgba(255,214,120,.12)', 'rgba(80,140,255,.10)'],
         people: [
           { x: 11, y: 2, dir: 'left', act: 'ankerBar', name: 'Barkeeper', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#1f2f4d', legs: '#26242e', beard: '#9a9a9a', stripes: '#f3eee3', hat: '#1f2f4d' } },
-          { x: 8, y: 3, dir: 'right', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#2b4c7a', legs: '#26242e', beard: '#c9c9c9', hat: '#f3eee3' }, lines: ['Old sailor: Excursion boats used to leave from right outside. You bought your ticket where I am sitting now.', 'Old sailor: Now it is a pub. Best thing that ever happened to this building.'] },
-          { x: 4, y: 7, dir: 'up', look: { skin: '#c98d6a', hair: '#111111', top: '#14121c', legs: '#3a3a4a', glasses: '#1a1a1a' }, lines: ['Regular: Kreuzberg or Neukölln? Depends who you ask. The post office says Kreuzberg.'] },
-          { x: 13, y: 7, dir: 'left', look: { skin: '#f3c9a8', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#7a1a22' }, lines: ['Regular: Put something loud on the jukebox. That is the house rule. The only one.'] },
+          { x: 8, y: 3, dir: 'right', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#2b4c7a', legs: '#26242e', beard: '#c9c9c9', hat: '#f3eee3' }, lines: ['Old sailor: Excursion boats used to leave from right outside. You bought your ticket where I am sitting now.', 'Old sailor: That is how I got this stool. I bought a ticket in 1994 and never got up again.'] },
+          { x: 4, y: 7, dir: 'up', look: { skin: '#c98d6a', hair: '#111111', top: '#14121c', legs: '#3a3a4a', glasses: '#1a1a1a' }, lines: ['Regular: Kreuzberg or Neukölln? Depends who you ask. Either way: no table.'] },
+          { x: 13, y: 6, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#7a1a22' }, lines: ['Regular: House rule: whoever gets up loses their seat. I have not been to the toilet since nine.'] },
           // packed: one free path from the door to the bar (column 8, then 9) and along the top row to the jukebox
-          { x: 2, y: 2, dir: 'right', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
-          { x: 3, y: 2, dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
-          { x: 5, y: 2, dir: 'right', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
-          { x: 6, y: 2, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
-          { x: 1, y: 3, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
-          { x: 3, y: 3, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
-          { x: 4, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
-          { x: 6, y: 3, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
-          { x: 2, y: 4, dir: 'up', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
-          { x: 5, y: 4, dir: 'right', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
-          { x: 6, y: 4, dir: 'left', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
-          { x: 1, y: 5, dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
-          { x: 3, y: 5, dir: 'right', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
-          { x: 5, y: 5, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
-          { x: 6, y: 5, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
-          { x: 1, y: 6, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
-          { x: 4, y: 6, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
-          { x: 5, y: 6, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
-          { x: 9, y: 6, dir: 'up', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
-          { x: 11, y: 6, dir: 'left', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
-          { x: 12, y: 6, dir: 'up', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] },
-          { x: 14, y: 6, dir: 'left', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: Jukebox, Korn, more jukebox. That is the Ankerklause.'] },
-          { x: 2, y: 7, dir: 'up', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: Squeeze in. There is always room for one more. There is not.'] },
-          { x: 10, y: 7, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: I have been standing on this exact spot since 1998.'] },
-          { x: 11, y: 7, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: Is that a ship\'s wheel on the ceiling? Is that a whole fish?'] },
-          { x: 14, y: 7, dir: 'up', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder at the bar, everybody shouting their order at once.)'] }
+          // and the veranda door
+          { x: 2, y: 2, dir: 'right', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder, everybody holding a drink and watching the tables like hawks.)'] },
+          { x: 3, y: 2, dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: I put my name on the table list in spring. Nobody has called.'] },
+          { x: 5, y: 2, dir: 'right', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: The trick is to stand next to a table and look sad. I have been looking sad for two hours.'] },
+          { x: 6, y: 2, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: Someone stood up! ...No. He was only getting another Pils.'] },
+          { x: 1, y: 3, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: At home you ask for a table. Here you ask for a table and everybody laughs.'] },
+          { x: 3, y: 3, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder, everybody holding a drink and watching the tables like hawks.)'] },
+          { x: 4, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Regular: I put my name on the table list in spring. Nobody has called.'] },
+          { x: 6, y: 3, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['Regular: The trick is to stand next to a table and look sad. I have been looking sad for two hours.'] },
+          { x: 2, y: 4, dir: 'up', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Regular: Someone stood up! ...No. He was only getting another Pils.'] },
+          { x: 5, y: 4, dir: 'right', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Tourist: At home you ask for a table. Here you ask for a table and everybody laughs.'] },
+          { x: 6, y: 4, dir: 'left', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder, everybody holding a drink and watching the tables like hawks.)'] },
+          { x: 1, y: 5, dir: 'up', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: I put my name on the table list in spring. Nobody has called.'] },
+          { x: 3, y: 5, dir: 'right', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: The trick is to stand next to a table and look sad. I have been looking sad for two hours.'] },
+          { x: 5, y: 5, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a', long: true }, lines: ['Regular: Someone stood up! ...No. He was only getting another Pils.'] },
+          { x: 6, y: 5, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#26242e' }, lines: ['Tourist: At home you ask for a table. Here you ask for a table and everybody laughs.'] },
+          { x: 1, y: 6, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['(Shoulder to shoulder, everybody holding a drink and watching the tables like hawks.)'] },
+          { x: 4, y: 6, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c94a3a', legs: '#2b3f6b', long: true, glasses: '#1a1a1a' }, lines: ['Regular: I put my name on the table list in spring. Nobody has called.'] },
+          { x: 5, y: 6, dir: 'right', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3d5f94', legs: '#7a6a4a', hat: '#c9b28a' }, lines: ['Regular: The trick is to stand next to a table and look sad. I have been looking sad for two hours.'] },
+          { x: 9, y: 6, dir: 'up', look: { skin: '#f3c9a8', hair: '#c9c9c9', top: '#c28cff', legs: '#3a3a4a' }, lines: ['Regular: Someone stood up! ...No. He was only getting another Pils.'] },
+          { x: 11, y: 6, dir: 'left', look: { skin: '#d9a27c', hair: '#111111', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Tourist: At home you ask for a table. Here you ask for a table and everybody laughs.'] },
+          { x: 12, y: 6, dir: 'up', look: { skin: '#f0c7a0', hair: '#ff8cc4', top: '#ffd23f', legs: '#5ec8ff', long: true }, lines: ['(Shoulder to shoulder, everybody holding a drink and watching the tables like hawks.)'] },
+          { x: 14, y: 6, dir: 'left', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3' }, lines: ['Regular: I put my name on the table list in spring. Nobody has called.'] },
+          { x: 2, y: 7, dir: 'up', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', long: true }, lines: ['Regular: The trick is to stand next to a table and look sad. I have been looking sad for two hours.'] }
+        ]
+      },
+      // the glass veranda hanging over the canal (like the real one, all blue frames and geraniums outside);
+      // inside old wood, old armchairs, graffiti. Every seat taken.
+      veranda: {
+        label: 'Ankerklause · the veranda over the canal', short: 'VERANDA',
+        map: [
+          'qqqqqqqqqqqqq',
+          'qqqqqqqqqqqqq',
+          '[[[[[[[[[[[[[',
+          '!(b(w(b(w(b(!',
+          '!wwwwwwwwwww!',
+          '!(b(w(b(w(b(!',
+          '!!H!1!H!!!H!!'
+        ],
+        spawn: { fromBar: [4, 5, 'up'] },
+        doors: { '1': { to: 'main', at: 'fromVeranda' } },
+        fairy: [[1, 3, 11, 3]],
+        spots: ['rgba(255,214,120,.14)', 'rgba(80,140,255,.10)'],
+        people: [
+          { x: 11, y: 4, dir: 'left', act: 'ankerTable', name: 'Waiter', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#f3eee3', legs: '#26242e', beard: '#2a2420', stripes: '#1f2f4d' } },
+          { x: 4, y: 3, dir: 'down', look: { skin: '#e2b08c', hair: '#c9a24a', long: true, top: '#ff8c42', legs: '#3a3a4a', glasses: '#1a1a1a' }, lines: ['Guest: We booked this table for my 30th birthday. I booked it on my 18th.'] },
+          { x: 8, y: 3, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#c94a3a', legs: '#26242e', beard: '#111111' }, lines: ['Guest: Do not even look at my chair. I can feel you looking at my chair.'] },
+          { x: 1, y: 4, dir: 'right', look: { skin: '#f3c9a8', hair: '#b04a2a', long: true, top: '#58b368', legs: '#f3eee3' }, lines: ['Guest: We came for breakfast. Leaving now would be a waste of a table.'] },
+          { x: 8, y: 5, dir: 'up', look: { skin: '#c98d6a', hair: '#9a9a9a', top: '#2b4c7a', legs: '#26242e', stripes: '#f3eee3', hat: '#1f2f4d' }, lines: ['Old sailor: The swans out there have the best table in Kreuzberg. On the water. No waiting list.'] }
         ]
       }
     },
     examineActs: { '%': 'jukebox' },
     examine: {
-      o: ['A porthole window. Outside: the Landwehrkanal, the Kottbusser Brücke, a swan.'],
-      H: ['Dark wood panelling, covered in life rings, anchors and postcards from ports nobody here has been to.'],
-      '=': ['A sticky wooden bar. A bell hangs above it. Nobody knows what it is for.'],
-      b: ['A wobbly table with a candle in a bottle.']
+      o: ['A porthole window. Outside: the Landwehrkanal, the terrace, and fifty people waiting for a table on it.'],
+      H: ['Dark wood panelling, life rings, anchors and postcards. One says: "Greetings from table 4. Still here."'],
+      '=': ['A sticky wooden bar. A bell hangs above it. Legend says it rings when a table comes free. Nobody has ever heard it.'],
+      b: ['A wobbly table with a candle in a bottle. Every seat is taken. Every seat has always been taken.'],
+      '[': ['The glass veranda, hanging right over the Landwehrkanal. Geraniums in the window boxes, swans below, the Kottbusser Brücke to the side.'],
+      '!': ['Old wood, covered in graffiti and stickers. Someone scratched in: "WAITED 3 HOURS FOR THIS TABLE. WORTH IT."'],
+      '(': ['An old armchair, the velvet worn through to the springs. Occupied. Of course it is occupied.'],
+      q: ['The Landwehrkanal, right under the window. A swan glides past. Even the swan has a better seat than you.']
     },
     dancerLines: [],
     quests: []

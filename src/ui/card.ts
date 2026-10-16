@@ -40,7 +40,7 @@ export function renderCard() {
   drawMini($<HTMLCanvasElement>('#mbarMini').getContext('2d')!, state.outfit);
   $('#wearing').textContent = OUTFITS[state.outfit].name;
   drawMini($<HTMLCanvasElement>('#wearingMini').getContext('2d')!, state.outfit);
-  $('#hud').textContent = `STEMPEL ${n}/${CLUBS.length}`;
+  $('#hudStamps').textContent = `STEMPEL ${n}/${CLUBS.length}`;
   // side quests for every club you have been inside
   const qs = $('#quests'), ql = $('#questList');
   const clubsIn = Object.keys(INTERIORS).filter(id => state.visited[id]);

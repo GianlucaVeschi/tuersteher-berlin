@@ -248,6 +248,16 @@ export const STYLES: Record<string, Style> = {
     pad: { cutoff: 1600, level: 0.04, octave: 1 }
   },
 
+  // the LSD dive at CDV: slow, dubby and underwater (the whole track through a lowpass)
+  lsd: {
+    bpm: 100, swing: 0.06, root: 40, space: 0.6, delay: 0.5, cutoff: 1900,
+    chords: [[0, 4, 7, 11], [5, 9, 12, 16], [2, 5, 9, 14], [7, 11, 14, 18]],
+    kick: 'x.......x.......', hat: '..x...x...x...x.', perc: 'x..o..x...o.x...',
+    bass: { steps: [0, null, null, 7, null, null, 12, null, 0, null, null, 7, null, 10, null, null], wave: 'sine', cutoff: 600, level: 0.25 },
+    arp: { steps: 'x.x.x.x.x.x.x.x.', level: 0.08, octave: 2, marimba: true },
+    pad: { cutoff: 2200, level: 0.07, octave: 1 }
+  },
+
   // Heideglühen: warm classic house with piano chords around the fire
   heide: {
     bpm: 122, swing: 0.1, root: 36, space: 0.3,
