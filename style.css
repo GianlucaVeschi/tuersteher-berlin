@@ -257,10 +257,12 @@ body {
 .cr-list li {
   background: var(--paper); color: var(--ink); border: .6cqw solid var(--ink);
   display: grid; justify-items: center; gap: 1.2cqw; padding: 1.6cqw 1cqw 1.8cqw;
-  font-size: 1.9cqw; line-height: 1.4; cursor: pointer;
+  font-size: 1.6cqw; line-height: 1.4; cursor: pointer; min-width: 0;
   transition: transform .12s ease;
 }
 .cr-list li canvas { width: 70%; aspect-ratio: 1; image-rendering: pixelated; background: var(--paper-2); }
+/* names centred under the picture; small enough that the longest word ("Alternative") fits the card */
+.cr-list li span { text-align: center; max-width: 100%; }
 .cr-list li.sel { background: var(--lamp); transform: translateY(-.8cqw); box-shadow: 0 .8cqw 0 var(--magenta); }
 .cr-desc { margin: 0 auto; max-width: 80cqw; font-family: var(--font-term); font-size: 3.2cqw; line-height: 1.1; color: #e3dcf0; min-height: 2.2em; }
 .cr-hint { margin: 0; font-size: 1.6cqw; color: #9d97ad; }

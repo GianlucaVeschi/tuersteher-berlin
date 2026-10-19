@@ -4,7 +4,7 @@ A tiny Pokémon-style pixel game about getting into Berlin clubs. Walk around a 
 
 Berghain · Tresor · KitKatClub · RSO · Kater Blau · Sisyphos · Club der Visionäre · Heideglühen
 
-A new game starts with a short intro: choose man, woman or non-binary, then one of four starting characters (the Tourist, the Hipster, the Tech Guy/Girl/Engineer, the Local or the Art Student). Each starts in different clothes, so each has a different first route through the clubs.
+A new game starts with a short intro: choose man, woman or non-binary, then one of the same four starting characters for everyone: the Trendy, the Local Legend, the Alternative or the Tourist. Each starts in different clothes, so each has a different first route through the clubs.
 
 Every bouncer checks your outfit first, then asks questions about the club. Get every question right and you're in. One wrong answer and it's *Heute nicht.*
 
