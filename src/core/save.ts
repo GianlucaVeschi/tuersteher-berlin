@@ -33,7 +33,7 @@ export function applySave(s: SaveData | null) {
   state.intro = !!s.intro;
   state.finale = !!s.finale;
   state.outfit = s.outfit && OUTFITS[s.outfit] ? s.outfit : 'tourist';
-  state.char = s.char && charById(s.char) ? s.char : null;
+  state.char = charById(s.char ?? null)?.id ?? null; // old character ids map to the new ones
   if (s.zoom && ZOOMS[s.zoom.i]) { zoom.i = s.zoom.i; zoom.fit = !!s.zoom.fit; }
   state.quests = s.quests || {}; state.visited = s.visited || {}; state.sunrise = s.sunrise || {}; state.coatNo = s.coatNo || 0; state.kStage = s.kStage || 0; state.mdStage = s.mdStage || 0;
   state.pfand = Object.assign(newPfand(), s.pfand || {}); state.heard = s.heard || {}; state.danced = s.danced || {}; state.kkStripped = !!s.kkStripped; state.gone = s.gone || {};

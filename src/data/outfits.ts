@@ -21,34 +21,51 @@ export const OUTFITS: Record<string, Outfit> = {
   rainbow:     { name: 'Neon mesh & shiny pants', tags: ['colorful'],           look: { top: '#4ea8de', legs: '#c0c0d8', stripes: '#f2c14e' } },
   nineties:    { name: '90s windbreaker',        tags: ['colorful', 'vintage'], look: { top: '#2bb3a3', legs: '#3a3a8a', stripes: '#f2c14e' } },
   mesh:        { name: 'Black mesh & cargos',    tags: ['black'],               look: { top: '#2a2a33', legs: '#1a1920', stripes: '#14121c' } },
-  sailor:      { name: 'Sailor stripes',         tags: ['colorful', 'vintage'], look: { top: '#f3eee3', legs: '#2b3f6b', stripes: '#2b4c7a', hat: '#f3eee3' } }
+  sailor:      { name: 'Sailor stripes',         tags: ['colorful', 'vintage'], look: { top: '#f3eee3', legs: '#2b3f6b', stripes: '#2b4c7a', hat: '#f3eee3' } },
+  // starting clothes of the characters below (flannel, knit, techvest and painter were the old ones; kept for old saves)
+  puffer:      { name: 'Lilac puffer & wide jeans', tags: ['colorful'],         look: { top: '#c28cff', legs: '#5a7aa8', stripes: '#a46ee0' } },
+  chrome:      { name: 'Chrome top & baggy cargos', tags: ['colorful'],         look: { top: '#c9ced8', legs: '#4a5a3a', shine: '#ffffff' } },
+  pinkvest:    { name: 'Pink knit vest & flares',  tags: ['colorful'],          look: { top: '#ff8cc4', legs: '#2a2a33', stripes: '#ffd23f' } },
+  leather:     { name: 'Old leather jacket, all black', tags: ['black'],        look: { top: '#14121c', legs: '#1a1920', shine: '#4a4a5a' } },
+  turtleneck:  { name: 'Black turtleneck & leather trousers', tags: ['black'],  look: { top: '#1a1920', legs: '#0c0c12', shine: '#3a3a4a' } },
+  bandtee:     { name: 'Band tee & ripped jeans',  tags: ['vintage'],           look: { top: '#2a2a33', legs: '#5a7aa8', stripes: '#c94a3a' } },
+  slipdress:   { name: 'Thrifted slip dress & Docs', tags: ['vintage'],         look: { top: '#5a2a4a', legs: '#5a2a4a', stripes: '#14121c' } },
+  patches:     { name: 'Patched denim vest & plaid', tags: ['vintage'],         look: { top: '#3b4a6b', legs: '#26242e', stripes: '#8a2f2f' } },
+  raincoat:    { name: 'Rain jacket & bum bag',    tags: ['tourist'],           look: { top: '#ff8c42', legs: '#4a4a58', hat: '#2b4c7a' } }
 };
 
 // Starting characters. `body` is kept when you change clothes; `outfit` is what they start in.
+// The same four for everyone, each with clothes they'd really wear, and skin tones from light to dark.
 export const CHARACTERS: Record<Gender, Character[]> = {
   man: [
-    { id: 'tourist_m', name: 'The Tourist', desc: 'First night in Berlin. Very excited, very visible.', body: { skin: '#f3c9a8', hair: '#c9a24a' }, outfit: 'tourist' },
-    { id: 'hipster_m', name: 'The Hipster', desc: 'Moved to Neukölln in 2014. Has opinions about coffee.', body: { skin: '#e2b08c', hair: '#5a3a22', beard: '#5a3a22' }, outfit: 'flannel' },
-    { id: 'tech_m', name: 'The Tech Guy', desc: "Works at a scale-up. Says 'synergy' without irony.", body: { skin: '#d9a27c', hair: '#1a1a1a', glasses: '#9fc7e6' }, outfit: 'techvest' },
-    { id: 'local_m', name: 'The Local', desc: 'Born in Friedrichshain. Already dressed in black.', body: { skin: '#8d5a3b', hair: '#111111' }, outfit: 'thriftblack' }
+    { id: 'trendy_m', name: 'The Trendy', desc: 'Possibly cooler than you. Works in fashion PR. Shirt from Voo, sneakers from Tokyo, opinions from Instagram.', body: { skin: '#5c3a26', hair: '#111111', beard: '#111111' }, outfit: 'puffer' },
+    { id: 'legend_m', name: 'The Local Legend', desc: 'Danced at the first Tresor in 1991. The bouncers call him by his first name.', body: { skin: '#f0c7a0', hair: '#9a9a9a', bald: true, beard: '#9a9a9a' }, outfit: 'leather' },
+    { id: 'alt_m', name: 'The Alternative', desc: 'Lives in a Friedrichshain house project. Punk band on Tuesdays, techno on weekends.', body: { skin: '#c98d6a', hair: '#2bb3a3', mohawk: true, tattoo: true }, outfit: 'bandtee' },
+    { id: 'tourist_m', name: 'The Tourist', desc: 'First night in Berlin. Very excited, very visible.', body: { skin: '#f3c9a8', hair: '#c9a24a' }, outfit: 'tourist' }
   ],
   woman: [
-    { id: 'tourist_f', name: 'The Tourist', desc: 'Interrailing through Europe. Berlin is stop four.', body: { skin: '#f3c9a8', hair: '#d9b25c', long: true }, outfit: 'sunhat' },
-    { id: 'hipster_f', name: 'The Hipster', desc: 'Runs a vintage stall at the Mauerpark flea market on Sundays.', body: { skin: '#f0c7a0', hair: '#b04a2a', glasses: '#9fc7e6' }, outfit: 'knit' },
-    { id: 'tech_f', name: 'The Tech Girl', desc: 'Product manager. Has a roadmap for tonight.', body: { skin: '#c98d6a', hair: '#2a1a14', long: true }, outfit: 'techvest' },
-    { id: 'artist_f', name: 'The Art Student', desc: 'Second year at art school. Paint on everything.', body: { skin: '#e2b08c', hair: '#7a3fd1', long: true }, outfit: 'painter' }
+    { id: 'trendy_f', name: 'The Trendy', desc: 'Possibly cooler than you. Has a moodboard for tonight. Knows every new bar before it opens.', body: { skin: '#d9a27c', hair: '#2a1a14', long: true, shades: true }, outfit: 'chrome' },
+    { id: 'legend_f', name: 'The Local Legend', desc: 'Thirty years of Sundays at Panorama Bar. Has seen every sunrise there.', body: { skin: '#6b4329', hair: '#c9c9c9', long: true }, outfit: 'turtleneck' },
+    { id: 'alt_f', name: 'The Alternative', desc: 'Goth on weekdays, goth on weekends. Bought her boots at Humana in 2009.', body: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, tattoo: true }, outfit: 'slipdress' },
+    { id: 'tourist_f', name: 'The Tourist', desc: 'Interrailing through Europe. Berlin is stop four.', body: { skin: '#8d5a3b', hair: '#111111', long: true }, outfit: 'sunhat' }
   ],
   nb: [
-    { id: 'tourist_n', name: 'The Tourist', desc: 'Came for one weekend. Already looking at flats.', body: { skin: '#f0c7a0', hair: '#2bb3a3' }, outfit: 'nineties' },
-    { id: 'hipster_n', name: 'The Hipster', desc: 'Makes a queer zine in a Neukölln back room. Bikes everywhere.', body: { skin: '#c98d6a', hair: '#d94a8a', glasses: '#9fc7e6' }, outfit: 'seventies' },
-    { id: 'tech_n', name: 'The Engineer', desc: 'Writes Rust by day, dances techno by night, declines all meetings.', body: { skin: '#8d5a3b', hair: '#111111', long: true }, outfit: 'techvest' },
-    { id: 'local_n', name: 'The Local', desc: 'Grew up in Wedding. Knows half the bouncers by first name.', body: { skin: '#e2b08c', hair: '#9a9a9a' }, outfit: 'mesh' }
+    { id: 'trendy_n', name: 'The Trendy', desc: 'Possibly cooler than you. A model scout found them at Kotti. Now they decide what Kotti wears.', body: { skin: '#f3c9a8', hair: '#ff8cc4' }, outfit: 'pinkvest' },
+    { id: 'legend_n', name: 'The Local Legend', desc: 'Grew up in Wedding. Knows half the bouncers and all the toilets.', body: { skin: '#8d5a3b', hair: '#111111', glasses: '#c9a24a' }, outfit: 'mesh' },
+    { id: 'alt_n', name: 'The Alternative', desc: 'Makes a queer zine in a Neukölln back room. Bikes everywhere.', body: { skin: '#5c3a26', hair: '#b6f36b', long: true }, outfit: 'patches' },
+    { id: 'tourist_n', name: 'The Tourist', desc: 'Came for one weekend. Already looking at flats.', body: { skin: '#e2b08c', hair: '#5a3a22', glasses: '#9fc7e6' }, outfit: 'raincoat' }
   ]
+};
+/** Old character ids (before the four types above) → the new one that's closest, so old saves keep a body. */
+const OLD_CHARS: Record<string, string> = {
+  hipster_m: 'alt_m', tech_m: 'trendy_m', local_m: 'legend_m',
+  hipster_f: 'alt_f', tech_f: 'trendy_f', artist_f: 'alt_f',
+  hipster_n: 'alt_n', tech_n: 'trendy_n', local_n: 'legend_n'
 };
 /** Step 1 of the character creator. */
 export const GENDERS: { id: Gender; label: string }[] = [{ id: 'man', label: 'Man' }, { id: 'woman', label: 'Woman' }, { id: 'nb', label: 'Non-binary' }];
 export const ALL_CHARS = CHARACTERS.man.concat(CHARACTERS.woman, CHARACTERS.nb);
-export const charById = (id: string | null): Character | null => ALL_CHARS.find(c => c.id === id) || null;
+export const charById = (id: string | null): Character | null => { const k = id && (OLD_CHARS[id] ?? id); return ALL_CHARS.find(c => c.id === k) || null; };
 // Dress codes: `ok` = at least one of these tags required; `no` = none of these tags allowed.
 export const DRESS: Record<string, DressCode> = {
   berghain:   { ok: ['black'],               hint: 'All black. Nothing flashy.',            no_line: 'Sven: … Nein.' },

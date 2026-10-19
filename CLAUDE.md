@@ -73,7 +73,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 ### Game data (`src/data/`)
 
 - `clubs.ts`: `CLUB_DEFS` (bouncer lines, question pools; the **first** answer is correct, shuffled in game) → `CLUBS` with computed door positions (`dx`, `doorY`, `by`). Also `INTRO`, `FINALE`.
-- `outfits.ts`: `OUTFITS` (with `tags`), `CHARACTERS` (man/woman/non-binary × 4, step 1 options in `GENDERS`; `body` survives clothes changes), `DRESS` (per-club `ok`/`no` tag rules, see `dressOK`), `SHOP_DEFS` → `SHOPS`.
+- `outfits.ts`: `OUTFITS` (with `tags`), `CHARACTERS` (man/woman/non-binary × the same four types: Trendy, Local Legend, Alternative, Tourist; step 1 options in `GENDERS`; `body` survives clothes changes; `OLD_CHARS` maps ids from older saves), `DRESS` (per-club `ok`/`no` tag rules, see `dressOK`), `SHOP_DEFS` → `SHOPS`.
 - `interiors.ts`: `INTERIORS: Record<clubId, InteriorDef>`. Floors are ASCII maps with spawn points, stairs/door links (`up`, `down`, `doors`, `exit`), `people` (`lines` for chat or `act` for a handler), dancer count, bottles, decoration flags (`fairy`, `lanterns`, `uv`, `red`, `steam`, `fog`, `strobe`, `daylight`). `onFloorEnter()` (quests/quests.ts) runs floor-arrival events: the Panorama Bar sunrise and Tresor's tunnel quest. Also `examine` text per tile char, `examineActs`, `dancerLines`, `dancerPalette`, `quests`, `welcome`, `stories`. The data is type-checked against `InteriorDef` in `src/types.ts`. There are three legends in the file (Berghain at the top, extra ones for Sisyphos and KitKat further down).
 
 ### Street people (`src/data/npcs.ts`, `src/world/street.ts`)

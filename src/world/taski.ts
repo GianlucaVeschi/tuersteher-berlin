@@ -57,41 +57,33 @@ async function ride() {
 }
 
 const STORIES = [
-  'Taski: Last week I delivered a pizza to a man in a bathtub. On the street. Just a bathtub, on Warschauer Straße. He tipped me in Ritter Sport.',
-  'Taski: Did you know the pigeons in Kreuzberg have a union? I saw a meeting on a roof at Kotti. They voted against me.',
-  'Taski: I once delivered sushi to the Berghain bouncer. He looked at the sushi for ten seconds and said "not tonight". To the sushi.',
-  'Taski: My cousin swapped his car for a goat in Brandenburg. The goat is doing better than the car ever did. It has Instagram now.',
-  'Taski: Yesterday somebody ordered one single ice cube. Delivery fee 3,99. I brought it. It was water when I arrived. Five stars.',
-  'Taski: The Späti guy on the corner is a wizard. He knows what I want before I walk in. ...Okay, it is always a Sterni. Maybe not a wizard.',
-  'Taski: I rode the whole Ringbahn once. With the bike. Inside the train. Three laps. Nobody said anything. Berlin, man.',
-  'Taski: My flatmate is a DJ. He has played one gig, in 2017. For a dog. The dog loved it. They still text.',
-  'Taski: I found a whole sofa floating in the Landwehrkanal. I sat on it. It kept floating. Best hour of my year.',
-  'Taski: A tourist asked me where the Wall is. I said: everywhere, bro. In our hearts. He gave me ten euros. Best investment of his life.',
-  'Taski: I delivered a kebab to a wedding in Görli. The groom ate it. The bride married me instead. Just kidding. She married the kebab.',
-  'Taski: There is a swan at the Admiralbrücke that hates me personally. Every night it waits for me. I do not know what I did. I have a feeling it knows.'
+  'Taski: I delivered a pizza to a man in a bathtub. On Warschauer Straße. He tipped in Ritter Sport.',
+  'Taski: The pigeons at Kotti have a union. They voted against me.',
+  'Taski: I brought sushi to the Berghain bouncer. He looked at it and said "not tonight". To the sushi.',
+  'Taski: Someone ordered one ice cube. I delivered water. Five stars.',
+  'Taski: I rode the Ringbahn three laps. With the bike. Inside the train.',
+  'Taski: My flatmate is a DJ. One gig, in 2017. For a dog.',
+  'Taski: I found a sofa floating in the Landwehrkanal. Sat on it for an hour. Best hour of my year.',
+  'Taski: A swan at the Admiralbrücke hates me. Personally. Every night.'
 ];
 const pickStory = (not?: string) => { let s: string; do s = STORIES[Math.floor(Math.random() * STORIES.length)]; while (s === not && STORIES.length > 1); return s; };
 let told = false;
 
 /** Talking to Taski: a random story, the accident, and could you spare 5 euros (or a bit of weed)? */
 export async function taskiTalk(e: Entity | null) {
-  await say('Taski: YO! Taski. Wolt. Can\'t stop long, three orders are getting cold. ...Okay, I can stop.');
   let story = pickStory();
-  await say(story);
+  await say('Taski: YO! Taski, Wolt. ' + story.replace('Taski: ', ''));
   if (!told) {
-    await say('Taski: You know why I do this? Twenty hours at Sisyphos. TWENTY. Then I walked out and opened a Miles.');
-    await say('Taski: I thought: shortcut. Straight over the train tracks. How hard can it be?');
-    await say('Taski: Very hard. The car got stuck on the rails, both front wheels gone, the bottom ripped open. Totally broken. I walked home.');
-    await say('Taski: Miles sent me the bill. Now I pay it off, one delivery at a time. And it is only the 12th. I am NOT making it to the end of the month.');
+    await say('Taski: After 20 hours at Sisyphos I took a Miles and drove it over the train tracks. Car: dead.');
+    await say('Taski: Now I pay it off with deliveries. I will NOT make it to the end of the month.');
     told = true;
-  } else await say('Taski: Still paying off that Miles, by the way. Pro tip: they are not made for train tracks. Nothing is made for train tracks. Except trains.');
+  }
   for (let i = 0; i < 3; i++) {
-    const a = await ask('Taski: So... you got 5 euros? Or a bit of weed? Either works. Both works better.', ['Here, 5 euros', 'No weed, sorry', 'Tell me another story']);
-    if (a === 0) { await say('Taski: BRO. You saved my month. Well. My day. Well. The next ten minutes.'); break; }
-    if (a === 1) { await say('Taski: All good, all good. Month ends in 19 days. I can do 19 days.'); await say('(He can not do 19 days.)'); break; }
+    const a = await ask('Taski: Got 5 euros? Or a bit of weed?', ['Here, 5 euros', 'Sorry, no', 'Another story']);
+    if (a === 0) { await say('Taski: BRO. You saved my month. Well, my day.'); break; }
+    if (a === 1) { await say('Taski: All good. Only 19 days left. ...I can do 19 days.'); break; }
     story = pickStory(story);
     await say(story);
   }
-  await say('Taski: Okay, gotta go! If you see a swan at the Admiralbrücke: you never saw me.');
   if (e) ignoreUntil = performance.now() + 6000;
 }
