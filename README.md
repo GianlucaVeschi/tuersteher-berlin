@@ -12,7 +12,7 @@ Every bouncer checks your outfit first, then asks questions about the club. Get 
 
 Once the bouncer lets you in, you can walk around inside Berghain. It has three floors connected by steel stairs, following the real layout:
 
-- **Erdgeschoss (ground floor):** ticket desk, coat check, the Piotr Nathan wall installation, a bar and a darkroom.
+- **Säule (ground floor):** in through the vertical entrance corridor, left into the bag check, round the squared C to the Kasse at the top, then the changing space and the Garderobe, and the Säule itself: a bar along the top, a DJ on the left, the big concrete pillar in the middle of the dancefloor, seats along the bottom, the stairs up on the right and a darkroom behind the DJ.
 - **Main floor (old turbine hall):** dancefloor, seven Funktion-One stacks, DJ booth, two bars, the Eisbar on the mezzanine and the toilets.
 - **Panorama Bar:** wrap-around bar, raised DJ booth, a Wolfgang Tillmans print and tall windows with metal blinds.
 
@@ -171,7 +171,7 @@ All music is generated in the browser while you play (Web Audio, no audio files)
 | Where | Style |
 | --- | --- |
 | The street | Soft ambient pads, a few bells, a little wind |
-| Berghain main floor | Dark, hypnotic techno with a rumbling kick (heard through the concrete on the ground floor) |
+| Berghain main floor | Dark, hypnotic techno with a rumbling kick; the Säule downstairs has its own deeper, hypnotic techno |
 | Panorama Bar | House with piano stabs and a shuffle |
 | Tresor | Detroit-rooted techno with minor-chord stabs |
 | KitKat | Disco-tinged electro; disco house by the pool; EBM-style techno in the dungeon |

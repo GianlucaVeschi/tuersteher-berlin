@@ -269,7 +269,7 @@ export const ACTS: Record<string, Act> = {
     if (a === 1) { await say('Sascha: Hi back.'); return; }
     const b = await ask('Sascha: Maybe. How do you ask?', ['Only if you want to', 'Grab their hand and go']);
     if (b === 1) { await say('Sascha: Whoa. Ask first.'); return; }
-    await say('Sascha: I do. Lead the way. The darkroom is on the ground floor.');
+    await say('Sascha: I do. Lead the way. The darkroom is down in the Säule, behind the DJ.');
     RT.ents.splice(RT.ents.indexOf(e), 1);
     if (!e.look) return;
     RT.follower = { name: 'Sascha', look: e.look, quest: 'darkroom', ent: e, homeScene: RT.scene, x: e.x, y: e.y, px: e.x, py: e.y, dir: 'down' };
