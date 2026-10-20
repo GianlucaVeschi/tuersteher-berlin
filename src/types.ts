@@ -220,6 +220,8 @@ export interface Entity {
   story?: string;
   movedWhen?: string;
   movedTo?: [number, number];
+  /** only there once this quest is done (Woody by the fire, after he leaves the dancefloor) */
+  onlyAfter?: string;
   pile?: boolean;
   join?: 'yes' | 'no' | 'busy';
   looks?: Look[];

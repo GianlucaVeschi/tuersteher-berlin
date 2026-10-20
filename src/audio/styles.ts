@@ -271,7 +271,8 @@ export const STYLES: Record<string, Style> = {
 /** Floors that sound like another style heard through a wall or a door. */
 const MUFFLED: Record<string, [string, number]> = {
   'rso:keller': ['rso_robus', 360],        // ROBUS, through the ceiling
-  'heidegluehen:klo': ['heide', 650],      // the toilets: the dancefloor through the door
+  'heidegluehen:hof': ['heide', 1500],     // the yard: the dance house through its open door
+  'heidegluehen:hinten': ['heide', 650],   // out the back: the dancefloor through the back door
   'tresor:tunnel': ['tresor', 700]         // the tunnel: the vault getting louder ahead
 };
 
@@ -281,7 +282,7 @@ const FLOOR_STYLE: Record<string, string> = {
   'sisyphos:strand': 'sisy_strand', 'sisyphos:wg': 'sisy_wg', 'sisyphos:hh': 'sisy_hh', 'sisyphos:df': 'sisy_df', 'sisyphos:tn': 'sisy_tn', 'sisyphos:sa': 'sauna',
   'kitkat:main': 'kitkat', 'kitkat:pool': 'kitkat_pool', 'kitkat:dungeon': 'kitkat_dungeon',
   'rso:opan': 'rso_opan', 'rso:robus': 'rso_robus', 'rso:summe': 'rso_summe',
-  'heidegluehen:heide': 'heide',
+  'heidegluehen:haus': 'heide', 'heidegluehen:galerie': 'heide',
   'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen',
   'tresor:globus': 'globus', 'tresor:vault': 'tresor',
   'katerblau:garden': 'katerblau', 'katerblau:hopper': 'rso_robus', 'katerblau:arch': 'sisy_tn',

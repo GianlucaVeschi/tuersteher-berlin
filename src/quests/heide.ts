@@ -3,12 +3,16 @@ import { ask, closeBox, say } from '../ui/dialog';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { fade, toast } from '../interiors/transitions';
-import { player, state } from '../core/state';
+import { DIRS, player, state } from '../core/state';
 import { reduceMotion, wait } from '../util';
 import { playDjSet } from '../minigames';
+import { RT } from '../core/runtime';
+import { ICH } from '../world/tiles';
+import { SCENES } from '../world/scenes';
 import type { Entity } from '../types';
 
-/* ---- Heideglühen: sneak onto the DJ's decks while Woody the booker is away, karaoke in the toilets, fire pits ---- */
+/* ---- Heideglühen: sneak onto the DJ's decks while Woody the booker is away, karaoke behind the toilets, the fire,
+        the rotating seats ---- */
 // The night runs on its own clock: it starts at 03:30 and moves on as you dance, sing and sit by the fire.
 const HG_LAST = 11 * 60;
 const anyOf = <V>(a: V[]) => a[Math.floor(Math.random() * a.length)];
@@ -33,9 +37,9 @@ export async function hgDance() {
   hgTick(20);
 }
 
-// where the player stands in the DJ booth during the set, and where they go after
-const BOOTH: [number, number] = [11, 2];
-const AFTER: [number, number] = [10, 4];
+// where the player stands in the DJ booth in the wooden house during the set, and where they go after
+const BOOTH: [number, number] = [6, 1];
+const AFTER: [number, number] = [6, 3];
 
 /** The resident DJ. Main quest: he'd let you play, but only if Woody isn't watching. */
 export async function hgDj(e: Entity | null, clubId: string) {
@@ -111,6 +115,8 @@ export async function woody(e: Entity | null, clubId: string) {
   closeBox();
   await fade(true);
   if (e && e.movedTo) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; }
+  // ...and out in the yard, by the fire
+  SCENES['heidegluehen:hof']?.ents.forEach(w => { if (w.onlyAfter === 'woody' && w.home) { w.x = w.home.x; w.y = w.home.y; } });
   state.hgStage = 2; save();
   await fade(false);
   await completeQuest(clubId, 'woody');
@@ -119,11 +125,11 @@ export async function woody(e: Entity | null, clubId: string) {
 
 /** The karaoke machine between the sinks. */
 export async function karaoke(_e: Entity | null, clubId: string) {
-  await say('(A karaoke machine between the sinks. Of course there is one. A small queue is waiting for the mic.)');
+  await say('(A karaoke machine in a little wooden room behind the toilets. Of course there is one. A small queue is waiting for the mic.)');
   const a = await ask('Pick a song:', ['Robin S – Show Me Love', 'Whitney Houston – I Wanna Dance with Somebody', 'Haddaway – What Is Love', 'Hand the mic on']);
   if (a === 3) { await say('(Someone grabs the mic and goes straight for a power ballad.)'); return; }
   await say([
-    '(You belt it out. The tiles give you free reverb.)',
+    '(You belt it out. The wooden walls give you free reverb.)',
     '(You hit the high notes. Mostly. The queue starts a conga line.)',
     '(You do the head bob. Everyone does the head bob.)'
   ][a]);
@@ -142,4 +148,36 @@ export async function fire(_e: Entity | null, clubId: string) {
   ]));
   await completeQuest(clubId, 'fire');
   hgTick(20);
+}
+
+/** The rotating seats in the yard: you squeeze in with the people already on it and go round for a while. */
+export async function spin(_e: Entity | null, _clubId: string) {
+  // the seat is the 2×2 block you're facing; find its top-left tile
+  const [dx, dy] = DIRS[player.dir], SEAT = ICH['ß'];
+  let x = player.x + dx, y = player.y + dy;
+  if (RT.map[y]?.[x] !== SEAT) return;
+  while (RT.map[y]?.[x - 1] === SEAT) x--;
+  while (RT.map[y - 1]?.[x] === SEAT) y--;
+  RT.spin = { x, y };
+  try {
+    await say('(You squeeze in between two strangers. The seat starts to turn, slowly.)');
+    await say(anyOf([
+      'Raver: Welcome aboard. Lighter? No? Sit, then. It goes round, that is all it does.',
+      'Raver: First time on the carousel? Hold your drink. Hold it.',
+      'Raver: I have been going round for an hour. I think. Time works differently on here.'
+    ]));
+    await say('(The yard slides past: the stage, the big tribune, the wooden house. And again. And again.)');
+    hgTick(10);
+  } finally { RT.spin = null; }
+}
+
+/** The jacuzzi out the back: you climb in for a while. */
+export async function jacuzzi(_e: Entity | null, _clubId: string) {
+  await say('(You climb into the jacuzzi. It is hot. Very hot. Two strangers make room without opening their eyes.)');
+  await say(anyOf([
+    'Raver: Clothes? Clothes are optional. Mostly.',
+    'Raver: Five more minutes. I have been saying that since four.',
+    'Raver: Listen. You can hear the bass through the water.'
+  ]));
+  hgTick(15);
 }

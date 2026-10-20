@@ -1,5 +1,5 @@
 import { griess, rsoBar } from './rso';
-import { fire, hgDj, karaoke, woody } from './heide';
+import { fire, hgDj, jacuzzi, karaoke, spin, woody } from './heide';
 import { cdvBar, flo, ines, jazz, planks, willow } from './cdv';
 import { poolHat, ronny } from './mdma';
 import { boxes, detroit, sticker } from './tresor';
@@ -26,7 +26,7 @@ import { PILE_LINES, showPhotoStrip, spankFx } from './kitkat';
 /** Quest handlers, looked up by the `act` name on people and tiles in data/interiors.ts. */
 export const ACTS: Record<string, Act> = {
   // RSO and Heideglühen (quests/rso.ts, quests/heide.ts)
-  griess, rsoBar, hgDj, woody, karaoke, fire,
+  griess, rsoBar, hgDj, woody, karaoke, fire, spin, jacuzzi,
   // Club der Visionäre (quests/cdv.ts)
   cdvBar, ines, planks, willow, jazz, flo,
   // Sisyphos MDMA chain (quests/mdma.ts)

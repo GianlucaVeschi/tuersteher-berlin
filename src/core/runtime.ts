@@ -35,6 +35,8 @@ export const RT = {
   runner: null as RunnerHooks | null,
   /** the player is drawn lying flat on the floor (after the LSD dive at CDV) */
   lying: false,
+  /** sitting on one of Heideglühen's rotating seats: the top-left tile of the seat (interiors/fx.ts draws you on it) */
+  spin: null as { x: number; y: number } | null,
   /** club whose short entrance scene is showing (picks the music) */
   overlayClub: null as string | null,
   /** the wake-up-at-home ending is playing */

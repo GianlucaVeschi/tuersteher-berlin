@@ -901,95 +901,193 @@ export const INTERIORS: Record<string, InteriorDef> = {
   },
 
   /* Heideglühen: open-air house club at Westhafen since 2012 (it began in 2011 in a potato garden on Heidestraße).
-     Real: fire pits, light installations, a wooden dancefloor under a glass roof, seating along wooden walls, house music.
-     Woody, the DJ and the karaoke in the toilets are for the game.
-     Extra legend: f fire pit, m karaoke machine. Also uses e (wooden dancefloor), H (wooden wall), w (wooden path),
-     g grass, T tree, F fence, R light installation, t / | toilets, 1 doorway. */
+     Woody, the DJ and the karaoke are for the game.
+     Heideglühen, rebuilt from the owner's description (2026). You come in through a covered wooden
+     corridor (door staff, the ticket booth on the right, then the till and the stamp) into the yard:
+     everything wood. The entrance is on the far left; the small tribune stands along the left wall, the
+     little bar right in front; a step up on the right is the main yard with the dance house, the stage,
+     four rotating seats, sofas up high and the big tribune along the right wall. Downstairs in the house
+     the dancefloor, a spiral staircase up to a gallery round the open middle; out the back the jacuzzi,
+     and the toilets running straight north into the karaoke room with a second bar.
+     Extra legend: ä wooden tribune   ö steps up   ü stage   ß rotating seat (2×2, turns; press A to sit)   ç couch
+                   ° sofa platform up high   ± its stairs   ¶ the open middle of the gallery   ® ticket booth   é jacuzzi (2×2) */
   heidegluehen: {
     name: 'Heideglühen',
-    welcome: [
-      'Door: Wrist, please.',
-      '(A stamp shaped like a little flame.)',
-      'Door: Fire pits on the left, dancefloor under the roof. No lineup, just trust us.',
-      '(Side quests unlocked. Check your stamp card.)'
-    ],
+    welcome: ['(Side quests unlocked. Check your stamp card.)'],
     floors: {
-      heide: {
-        label: 'Heideglühen · fire pits and the glass roof', short: 'HEIDE',
+      hof: {
+        label: 'Heideglühen · the yard', short: 'HOF',
         map: [
-          'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
-          'FgHHHHHHHHHHHHHHHHgggHHHHHHHHggggF',
-          'FgHeeeeH.....HeeeegggHHHHHHHHggggF',
-          'FgHeeeeeDDDDDeeeeegggHHHH1HHHggRgF',
-          'FgHeeeeeeeeeeeeeeeggggggwwgggggggF',
-          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
-          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
-          'FgHbeeeeeeeeeeeeeegggfggwwgggggggF',
-          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
-          'FgHbeeeeeeeeeeeeeeggggggwwggfggggF',
-          'FgHbeeeeeeeeeeeeeeggggggwwgggggggF',
-          'FgHeeeeeeeeeeeeeeeggggggwwggggggTF',
-          'FgHwwwwwwwwwwwwwwwwwwwwwwwwwwwwggF',
-          'FggwwwwwwwwwwwwwwwwwwwwwwwwwwwwggF',
-          'FgggggggggggggggwwggggggggggHHHHHF',
-          'FTggggggggggggggwwgggggggggg=...HF',
-          'Fgggggggggggggggwwgggggggggg=...HF',
-          'Fggggggggfggggggwwggfggggggg=...HF',
-          'Fgggggggggggggggwwgggggggggg=...HF',
-          'FTggggggggggggggwwggggggggRgHHHHHF',
-          'FgggggggggggRgggwwgggggggggggggggF',
-          'FgggTgggggggggggwwggggggggggggggTF',
-          'FgggggggggggggggwwgggggggggggggggF',
-          'FFFFFFFFFFFFFFFFxxFFFFFFFFFFFFFFFF'
+          'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
+          'FHHHHHHHwHHHHHHHHw°°°°wwwwwwwF',
+          'FHHHwwwHwHHHHHHHHw°°°°wwwwwwwF',
+          'FHHH===HwHHHHHHHHww±wwwwwääääF',
+          'FäääwwwwwHHHHHHHHwwwwwwwwääääF',
+          'FäääwwwwwHHHHHHHHwwwwwwwwääääF',
+          'FäääwwwwwHHHHHHHHwwwßßwwwääääF',
+          'FäääwwwwwHHHH1HHHwwwßßwwwääääF',
+          'FäääwwwwwHwwwwwwwwwwwwwwwääääF',
+          'FäääwwwwwHwwwwwwwwwwwwwwwääääF',
+          'FäääwwwwwHwwßßwwßßwwwwwwwääääF',
+          'FäääwwwwwHwwßßwwßßwwwwwwwääääF',
+          'FäääwwwwwöwwwwwwwwwwwwwwwääääF',
+          'FwwwwwwwwöwwwwwwwwwwwwwwwääääF',
+          'FHHHwwwHHHwwßßwwwwwwwwwwwääääF',
+          'FHHHwwwHHHwwßßwwwwwwwwwwwääääF',
+          'FHHHwww=wHwwwwwwwwwwwwwwwääääF',
+          'FHHHwwwHHHwwwwwwwwwDDDwwwwwwwF',
+          'FHHHwwwHHHwwwwwfwwwwwwwwwwwwwF',
+          'FHHHwww®wHwwwwwwwwüüüüüwwwwwwF',
+          'FHHHwwwHHHwwwwwwwSüüüüüSwwwwwF',
+          'FFFFxxFFFFFFFFFFFFFFFFFFFFFFFF'
         ],
-        spawn: { street: [16, 22, 'up'], fromKlo: [25, 4, 'down'] },
-        doors: { '1': { to: 'klo', at: 'fromHeide' } },
+        spawn: { street: [5, 20, 'up'], fromHaus: [13, 8, 'down'] },
+        doors: { '1': { to: 'haus', at: 'fromHof' } },
         exit: true,
-        dancers: 18,
-        roof: [3, 2, 17, 11],
-        fairy: [[18, 4, 32, 4], [18, 11, 31, 11], [3, 13, 30, 13], [18, 20, 31, 20]],
+        dancers: 0,
+        roof: [4, 14, 6, 20],
+        fairy: [[10, 9, 24, 9], [10, 13, 24, 13], [4, 8, 8, 8], [17, 3, 24, 3]],
         spots: ['rgba(255,180,90,.16)', 'rgba(255,120,80,.12)', 'rgba(255,230,160,.12)'],
         people: [
-          { x: 10, y: 2, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
-          { x: 20, y: 8, act: 'woody', name: 'Woody', dir: 'left', movedWhen: 'woody', movedTo: [21, 17], look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
-          { x: 29, y: 16, act: 'bar', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#7a5a3a', legs: '#2b3f6b', long: true } },
-          { x: 27, y: 10, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#d9733a', legs: '#3a3a4a' }, lines: ['Raver: No lineup online, ever. You just come and trust the music.'] },
-          { x: 10, y: 18, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Never leaves the dancefloor. Well, except when someone is passing round a really big joint.'] }
+          // the entrance: door staff, the ticket window on the right, then the till
+          { x: 4, y: 19, dir: 'right', name: 'Door', look: { skin: '#c98d6a', hair: '#111111', top: '#1a1920', legs: '#26242e', beard: '#111111', big: true }, lines: ['Door: Evening. Quick look in the bag, please.', '(He pats your pockets, finds a lighter and some gum.) Door: All good. Viel Spaß.'] },
+          { x: 8, y: 19, dir: 'left', name: 'Tickets', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#7a5a3a', legs: '#2b3f6b', glasses: '#c9a24a' }, lines: ['Tickets: On the list? ...You are now. Pay at the till, a bit further in.'] },
+          { x: 8, y: 16, dir: 'left', name: 'Kasse', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#c94a3a', legs: '#2b3f6b', long: true }, lines: ['Kasse: Wrist, please.', '(A stamp shaped like a little flame.)', 'Kasse: Dancefloor in the wooden house, the fire by the sofas. No lineup, just trust us.'] },
+          // the little bar at the north end of the small tribune
+          { x: 5, y: 2, dir: 'down', act: 'bar', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#7a5a3a', legs: '#2b3f6b', long: true } },
+          // the small tribune on the left wall
+          { x: 1, y: 5, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#d9733a', legs: '#3a3a4a' }, lines: ['Raver: No lineup online, ever. You just come and trust the music.'] },
+          { x: 2, y: 8, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#2bb3a3', legs: '#3a3a8a', long: true }, lines: ['Raver: Woody? He booked my first ever gig. Never leaves the dancefloor. Well, except when someone is passing round a really big joint.'] },
+          { x: 3, y: 11, dir: 'right', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#f2c14e', legs: '#26242e', beard: '#5a3a22' }, lines: ['(Sitting on the tribune steps, sharing a beer and watching people come in.)'] },
+          // the stage, the sofas up high, the big tribune on the right wall
+          { x: 20, y: 18, dir: 'up', look: { skin: '#c98d6a', hair: '#2a2420', top: '#e9e4d6', legs: '#2b3f6b', long: true, hat: '#2a2420' }, lines: ['(Tonight the DJ plays down in front of the stage. The band\'s drums are still up there, waiting for tomorrow.)'] },
+          { x: 18, y: 1, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff8cc4', top: '#58b368', legs: '#3a3a4a', long: true }, lines: ['Raver: (from the sofas up high) Come up! You can see the whole yard from here. And the sky.'] },
+          { x: 21, y: 2, dir: 'down', look: { skin: '#6b4430', hair: '#111111', top: '#c28cff', legs: '#26242e' }, lines: ['(Lying on the sofa three metres up, eyes closed, smiling at the stars.)'] },
+          { x: 28, y: 4, dir: 'left', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#3d5f94', legs: '#26242e', beard: '#9a9a9a' }, lines: ['Regular: Big tribune, back row. Best seat in the house since forever.'] },
+          { x: 26, y: 9, dir: 'left', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#d9733a', legs: '#5a7aa8', long: true }, lines: ['Raver: Everything here turns. The seats, the sofas, your head after the third Mate-Vodka.'] },
+          { x: 27, y: 14, dir: 'left', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#e9e4d6', legs: '#2b3f6b' }, lines: ['(Wrapped in a blanket on the top row, watching the sun come up behind the harbour cranes.)'] },
+          { x: 25, y: 5, dir: 'left', look: { skin: '#f3c9a8', hair: '#c9a24a', top: '#ff8cc4', legs: '#26242e', long: true, shades: true }, lines: ['Raver: Everyone on my Instagram is here tonight. When did Heideglühen get this trendy?'] },
+          { x: 27, y: 7, dir: 'left', look: { skin: '#6b4430', hair: '#111111', top: '#2bb3a3', legs: '#3a3a4a', beard: '#111111' }, lines: ['Regular: The music is still the best house in Berlin. That never changed.', 'Regular: The prices did. A Club-Mate used to cost two euros here.'] },
+          { x: 28, y: 11, dir: 'left', look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#7a5a3a', legs: '#26242e', glasses: '#c9a24a' }, lines: ['Regular: I remember when it was a potato garden and the entry was a donation. Now look at the ticket price.'] },
+          { x: 25, y: 13, dir: 'left', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#c28cff', legs: '#5a7aa8', long: true }, lines: ['Raver: That bassline from the house just now? Goosebumps. Worth every euro. Almost.'] },
+          { x: 26, y: 16, dir: 'left', look: { skin: '#c98d6a', hair: '#2a2420', top: '#f2c14e', legs: '#2b3f6b' }, lines: ["Raver: Rotating seats, a jacuzzi, sofas in the air. It's the trendiest place in town. My wallet is crying."] },
+          // Woody by the fire, once you got him off the dancefloor (he stands in the dance house until then)
+          { x: 14, y: 18, act: 'woody', name: 'Woody', dir: 'right', onlyAfter: 'woody', look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } },
+          { x: 16, y: 18, dir: 'left', look: { skin: '#c98d6a', hair: '#2a2420', top: '#7a5a3a', legs: '#3a3a4a', long: true }, lines: ['Raver: (passing round a huge joint) Fire, friends, sunrise. That is the whole plan.'] }
         ]
       },
-      klo: {
-        label: 'Toilets · with karaoke', short: 'KLO',
+      haus: {
+        label: 'Heideglühen · the wooden house', short: 'HAUS',
         map: [
-          '################',
-          '################',
-          '#tt|tt|tt|ttttt#',
-          '#tt|tt|tt|ttttt#',
-          '#tttttttttttttt#',
-          '#tttttttttttttm#',
-          '#tttttttttttttt#',
-          '#tttttttttttttt#',
-          '#tttttttttttttt#',
-          '########1#######'
+          'HHHHHHHHHHHH2HHH',
+          'HwwwwwwwwwwwwwwH',
+          'HwwSDDDSwwwwwwwH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'HweeeeeeeeeeeewH',
+          'Hweeeeeeeeeee^^H',
+          'Hwwwwwwwwwwww^^H',
+          'HHHHHHH1HHHHHHHH'
         ],
-        spawn: { fromHeide: [8, 8, 'up'] },
-        doors: { '1': { to: 'heide', at: 'fromKlo' } },
+        spawn: { fromHof: [7, 12, 'up'], fromGalerie: [12, 12, 'left'], fromHinten: [12, 1, 'down'] },
+        doors: { '1': { to: 'hof', at: 'fromHaus' }, '2': { to: 'hinten', at: 'fromHaus' } },
+        up: { to: 'galerie', at: 'fromHaus' },
+        dancers: 18,
+        fairy: [[1, 1, 14, 1]],
+        spots: ['rgba(255,180,90,.16)', 'rgba(255,120,80,.12)', 'rgba(255,230,160,.12)'],
         people: [
-          { x: 11, y: 4, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8cc4', legs: '#2b3f6b', long: true }, lines: ['Raver: Queue for the mic is longer than the queue for the toilets.'] },
-          { x: 10, y: 7, dir: 'up', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Raver: I came in for the toilet. I stayed for the Whitney.'] }
+          { x: 5, y: 1, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
+          { x: 9, y: 6, act: 'woody', name: 'Woody', dir: 'left', movedWhen: 'woody', movedTo: [-50, -50], look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } }
+        ]
+      },
+      galerie: {
+        label: 'Heideglühen · the gallery', short: 'GALERIE',
+        map: [
+          'HHHHHHHHHHHHHHHH',
+          'HwwçççwwwwçççwwH',
+          'HwwwwwwwwwwwwwwH',
+          'Hww¶¶¶¶¶¶¶¶¶¶wwH',
+          'Hww¶¶¶¶¶¶¶¶¶¶wwH',
+          'Hçw¶¶¶¶¶¶¶¶¶¶wçH',
+          'Hçw¶¶¶¶¶¶¶¶¶¶wçH',
+          'Hçw¶¶¶¶¶¶¶¶¶¶wçH',
+          'Hww¶¶¶¶¶¶¶¶¶¶wwH',
+          'Hww¶¶¶¶¶¶¶¶¶¶wwH',
+          'Hww¶¶¶¶¶¶¶¶¶¶wwH',
+          'HwwwwwwwwwwwwvvH',
+          'HwwwççççwwwwwvvH',
+          'HHHHHHHHHHHHHHHH'
+        ],
+        spawn: { fromHaus: [12, 12, 'left'] },
+        down: { to: 'haus', at: 'fromGalerie' },
+        fairy: [[1, 2, 14, 2], [1, 11, 14, 11]],
+        spots: ['rgba(255,180,90,.12)', 'rgba(255,120,80,.10)'],
+        people: [
+          { x: 2, y: 4, dir: 'right', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#2bb3a3', legs: '#26242e', long: true }, lines: ['Raver: (next to the sofas, leaning on the railing) Look at them down there. One big happy animal.'] },
+          { x: 11, y: 2, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#f2c14e', legs: '#3a3a4a' }, lines: ['Raver: From up here you can see what the DJ is doing. He is mostly smiling.'] },
+          { x: 13, y: 7, dir: 'left', look: { skin: '#e2b08c', hair: '#c9a24a', top: '#c94a3a', legs: '#2b3f6b', beard: '#c9a24a' }, lines: ['(Dancing on the walkway with his eyes closed, one hand on the railing.)'] }
+        ]
+      },
+      hinten: {
+        label: 'Heideglühen · out the back', short: 'HINTEN',
+        map: [
+          'HHHHHHHHHHHHHH',
+          'HwwmwwwwwwwwwH',
+          'Hwwwwwwwww=wwH',
+          'Hwwwwwwwww=wwH',
+          'Hwwwwwwwww=wwH',
+          'HwwwwwwwwwwwwH',
+          'HHHHHttHHHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HHHH|tt|HHHHHH',
+          'HwwwwwwwwééwwH',
+          'HwwwwwwwwééwwH',
+          'HwwwwwwwwwwwwH',
+          'HHHHH2HHHHHHHH'
+        ],
+        spawn: { fromHaus: [5, 18, 'up'] },
+        doors: { '2': { to: 'haus', at: 'fromHinten' } },
+        spots: ['rgba(255,180,90,.12)', 'rgba(120,200,255,.10)'],
+        fairy: [[1, 2, 12, 2], [1, 16, 12, 16]],
+        people: [
+          { x: 11, y: 18, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#5ec8ff', legs: '#5a7aa8', long: true }, lines: ['Raver: (next to the jacuzzi, dripping) I said five minutes. That was two hours ago.'] },
+          { x: 5, y: 9, dir: 'down', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#58b368', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Raver: The queue for the toilets is the best place to make friends.'] },
+          { x: 6, y: 12, dir: 'up', look: { skin: '#f3c9a8', hair: '#ff8cc4', top: '#c28cff', legs: '#2b3f6b', long: true }, lines: ['Raver: Karaoke is straight ahead, at the very end. You will hear it before you see it.'] },
+          { x: 5, y: 3, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8cc4', legs: '#2b3f6b', long: true }, lines: ['Raver: Queue for the mic is longer than the queue for the toilets.'] },
+          { x: 11, y: 3, dir: 'left', act: 'bar', look: { skin: '#c98d6a', hair: '#2a2420', top: '#3a4a3a', legs: '#26242e', beard: '#2a2420' } }
         ]
       }
     },
-    examineActs: { f: 'fire', m: 'karaoke' },
+    examineActs: { f: 'fire', m: 'karaoke', 'ß': 'spin', 'é': 'jacuzzi' },
     examine: {
-      R: ['A light installation, slowly changing colour against the night sky.'],
-      H: ['A wooden wall. People sit along it, warming their hands.'],
+      H: ['Wooden planks, warm under your hand.'],
       F: ['A wooden fence. Behind it: the harbour.'],
       T: ['A tree full of fairy lights.'],
-      '|': ['A stall door covered in stickers.']
+      '|': ['A stall door covered in stickers.'],
+      'ä': ['A wooden tribune. People sit on the steps, smoke and watch the yard.'],
+      'ö': ['A few wooden steps up to the main yard.'],
+      'ü': ['The stage. Sometimes a band, sometimes the DJ sets up right in front of it.'],
+      '°': ['Sofas on a platform three metres up. People lie there and look at the sky.'],
+      '±': ['Stairs up to the sofa platform. Someone is asleep on the third step.'],
+      '¶': ['The open middle: below you the whole dancefloor, the DJ and the lights.'],
+      'ç': ['An old couch against the wall, still warm from whoever just got up to dance.'],
+      '®': ['The ticket booth. A little window, a lot of stickers.']
     },
     dancerLines: [
       'Raver: This bassline!', 'Raver: House music is a feeling.', "Raver: I don't even know who's playing. Doesn't matter.",
-      'Raver: The fire pits are the best chill-out in Berlin.', '(They are dancing with their eyes closed.)', 'Raver: Have you tried the karaoke in the toilets?'
+      'Raver: Have you sat on the turning seats yet?', '(They are dancing with their eyes closed.)', 'Raver: Have you tried the karaoke behind the toilets?'
     ],
     dancerPalette: {
       hair: ['#2a2420', '#5a3a22', '#c9a24a', '#b04a2a', '#111111', '#9a9a9a'],
@@ -998,11 +1096,11 @@ export const INTERIORS: Record<string, InteriorDef> = {
       extras: ['#ffd23f', '#ff8c42', '#fff2b0', '#ff5e7a']
     },
     quests: [
-      { id: 'b2b', title: 'Steal the decks', hint: 'Ask the DJ under the glass roof if you can play a few tracks.' },
+      { id: 'b2b', title: 'Steal the decks', hint: 'Ask the DJ in the wooden house if you can play a few tracks.' },
       { id: 'woody', title: 'Get Woody off the dancefloor', hint: 'Woody the booker never leaves the floor. Unless someone offers him something big.' },
-      { id: 'karaoke', title: 'Karaoke in the toilets', hint: 'The toilets have a karaoke machine. Of course they do.' },
-      { id: 'fire', title: 'Warm up by the fire', hint: 'Press A facing a fire pit.' },
-      { id: 'drink', title: 'Get a drink', hint: 'The bar by the fence.' }
+      { id: 'karaoke', title: 'Karaoke behind the toilets', hint: 'Out the back of the wooden house, past the toilets, there is a karaoke room.' },
+      { id: 'fire', title: 'Warm up by the fire', hint: 'Press A facing the fire pit by the big tribune.' },
+      { id: 'drink', title: 'Get a drink', hint: 'The little bar in the yard, or the one in the karaoke room.' }
     ]
   },
 

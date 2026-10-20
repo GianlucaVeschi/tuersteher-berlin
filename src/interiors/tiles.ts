@@ -57,11 +57,11 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
   RT.seed = 777 + sc.id.length;
   for (let y = 0; y < sc.h; y++) for (let x = 0; x < sc.w; x++) {
     const t = sc.map[y][x], X = x * T, Y = y * T;
-    // a wall shows its front face when there's floor below it; a doorway in a side wall counts as wall here,
-    // so the wall above it doesn't turn into a front face
+    // a wall shows its front face when there's floor below it; a doorway counts as wall here, so the wall
+    // above a doorway (a side wall, or a thick wall like a house) doesn't turn into a front face
     const below = at(x, y + 1);
-    const sideDoorBelow = below >= 81 && below <= 89 && !!doorStyleAt(sc.id, below) && ['left', 'right'].includes(doorSide(sc.map, x, y + 1));
-    const frontFace = !WALLISH.has(below) && !sideDoorBelow;
+    const doorBelow = below >= 81 && below <= 89 && !!doorStyleAt(sc.id, below);
+    const frontFace = !WALLISH.has(below) && !doorBelow;
     switch (t) {
       case 40: if (frontFace) face(X, Y); else { P(X, Y, 16, 16, '#141318'); if (!WALLISH.has(at(x, y - 1)) && y > 0) P(X, Y, 16, 1, '#26252c'); } break;
       case 41: floorBase(X, Y); break;
@@ -71,6 +71,38 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 46: P(X, Y, 16, 16, '#07060a'); if (rnd() < 0.2) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, '#121117'); break;
       case 43: case 44: case 130: {
         const up = t !== 44;
+        if (sc.id.startsWith('heidegluehen:')) {
+          // Heideglühen's spiral staircase, drawn once over the whole block of stair tiles: wooden steps running
+          // up the left side, across the top and down the right round a dark stairwell, a brass handrail on both
+          // edges. You step on at the bottom left. Going up the steps get lighter, going down darker.
+          let bx = x, by = y; while (at(bx - 1, y) === t) bx--; while (at(x, by - 1) === t) by--;
+          let bw = 1, bh = 1; while (at(bx + bw, by) === t) bw++; while (at(bx, by + bh) === t) bh++;
+          const ox = bx * T, oy = by * T, W = bw * T, H2 = bh * T, ring = Math.max(5, Math.round(Math.min(W, H2) * 0.32));
+          g.save(); g.beginPath(); g.rect(X, Y, 16, 16); g.clip();
+          P(ox, oy, W, H2, INK);
+          P(ox + ring, oy + ring, W - 2 * ring, H2 - ring, up ? '#1c140e' : '#07050a'); // the stairwell in the middle
+          // the steps, in walking order: up the left side, along the top, down the right
+          const steps: [number, number, number, number][] = [];
+          for (let sy = H2 - 3; sy >= ring; sy -= 3) steps.push([ox + 1, oy + sy, ring - 1, 3]);
+          steps.push([ox + 1, oy + 1, ring - 1, ring - 1]);
+          for (let sx = ring; sx < W - ring; sx += 3) steps.push([ox + sx, oy + 1, 3, ring - 1]);
+          steps.push([ox + W - ring, oy + 1, ring - 1, ring - 1]);
+          for (let sy = ring; sy <= H2 - 3; sy += 3) steps.push([ox + W - ring, oy + sy, ring - 1, 3]);
+          steps.forEach(([sx, sy, w, h], i) => {
+            const k = i / Math.max(1, steps.length - 1);
+            const lit = up ? 0.55 + 0.45 * k : 1 - 0.75 * k;
+            const c = (base: number) => Math.round(base * lit);
+            g.fillStyle = `rgb(${c(232)},${c(184)},${c(120)})`; g.fillRect(sx, sy, w, h);
+            g.fillStyle = `rgb(${c(120)},${c(80)},${c(44)})`;  // the edge of each step
+            if (w >= h) g.fillRect(sx, sy + h - 1, w, 1); else g.fillRect(sx + w - 1, sy, 1, h);
+          });
+          // brass handrails: round the outside and along the stairwell
+          g.fillStyle = '#e0b040';
+          g.fillRect(ox, oy, W, 1); g.fillRect(ox, oy, 1, H2); g.fillRect(ox + W - 1, oy, 1, H2);
+          g.fillRect(ox + ring - 1, oy + ring - 1, 1, H2 - ring + 1); g.fillRect(ox + W - ring, oy + ring - 1, 1, H2 - ring + 1); g.fillRect(ox + ring - 1, oy + ring - 1, W - 2 * ring + 2, 1);
+          g.restore();
+          break;
+        }
         for (let i = 0; i < 4; i++) {
           const shade = up ? ['#5d5d68', '#6d6d78', '#7d7d88', '#8d8d98'][3 - i] : ['#4a4a54', '#3e3e47', '#33333b', '#282830'][i];
           P(X, Y + i * 4, 16, 4, shade); P(X, Y + i * 4, 16, 1, '#c9b25a');
@@ -280,6 +312,85 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X, Y + 8, 16, 1, '#f3eee3'); for (let i = 1; i < 16; i += 3) P(X + i, Y + 8, 1, 4, '#f3eee3');
         P(X, Y + 12, 16, 3, '#6b4a2e'); P(X, Y + 15, 16, 1, '#163a72');
         for (let i = 0; i < 6; i++) { const fx = Math.floor(rnd() * 14), fy = 9 + Math.floor(rnd() * 3); P(X + fx, Y + fy, 2, 2, pick(['#ff5e7a', '#e8304a', '#ff8cc4', '#c4162a'])); P(X + fx, Y + fy + 2, 1, 1, '#3f7a3a'); }
+        break;
+      // ---- Heideglühen ----
+      case 136: { // a wooden tribune: rows of seats, the back rows (higher up, against the wall) a little lighter
+        const run = (dx: number, dy: number) => { let n = 0; while (at(x + dx * (n + 1), y + dy * (n + 1)) === 136) n++; return n; };
+        const l = run(-1, 0), r = run(1, 0), u = run(0, -1), dn = run(0, 1);
+        const shades = ['#8a5a34', '#9a6a3e', '#a87a4a', '#b88a58'];
+        if (u + dn > l + r) {
+          // standing along a side wall: the rows run up and down, the back row against the wall
+          const wallLeft = SOLID.has(at(x - l - 1, y)) || WALLISH.has(at(x - l - 1, y));
+          const row = wallLeft ? r : l, wood = shades[Math.min(3, row)];
+          P(X, Y, 16, 16, wood);
+          if (wallLeft) { P(X, Y, 1, 16, '#c9a070'); P(X + 6, Y, 1, 16, '#4a3020'); P(X + 13, Y, 3, 16, '#5a3e26'); }
+          else { P(X + 15, Y, 1, 16, '#c9a070'); P(X + 9, Y, 1, 16, '#4a3020'); P(X, Y, 3, 16, '#5a3e26'); }
+          if (y % 3 === 0) P(wallLeft ? X + 7 : X + 3, Y + 7, 6, 1, '#5a3e26');
+        } else {
+          // along the back wall: the rows run left to right, the back row at the top
+          const wood = shades[Math.min(3, dn)];
+          P(X, Y, 16, 16, wood); P(X, Y, 16, 1, '#c9a070'); P(X, Y + 6, 16, 1, '#4a3020'); P(X, Y + 13, 16, 3, '#5a3e26');
+          if (x % 3 === 0) P(X + 7, Y + 7, 1, 6, '#5a3e26');
+        }
+        break;
+      }
+      case 145: { // a long couch against the wall: one piece over the whole run of couch tiles, armrests at
+        // the two ends, the backrest on the wall side, red cushions facing the room
+        P(X, Y, 16, 16, '#6b4a2e');
+        const C = 145, wallAt = (dx: number, dy: number) => WALLISH.has(at(x + dx, y + dy));
+        const side = wallAt(0, -1) ? 'up' : wallAt(0, 1) ? 'down' : wallAt(-1, 0) ? 'left' : 'right';
+        const along = side === 'up' || side === 'down';
+        const prev = along ? at(x - 1, y) === C : at(x, y - 1) === C, next = along ? at(x + 1, y) === C : at(x, y + 1) === C;
+        // in the couch's own frame: u runs along it, v from the wall (0) into the room (16)
+        const R = (u: number, v: number, w: number, h: number, c: string) => {
+          if (side === 'up') P(X + u, Y + v, w, h, c); else if (side === 'down') P(X + u, Y + 16 - v - h, w, h, c);
+          else if (side === 'left') P(X + v, Y + u, h, w, c); else P(X + 16 - v - h, Y + u, h, w, c);
+        };
+        const u0 = prev ? 0 : 1, u1 = next ? 16 : 15;
+        R(u0, 1, u1 - u0, 14, INK);                                  // outline
+        R(u0 + (prev ? 0 : 1), 2, u1 - u0 - (prev ? 0 : 1) - (next ? 0 : 1), 12, '#a3242c'); // seat
+        R(u0 + (prev ? 0 : 1), 2, u1 - u0 - (prev ? 0 : 1) - (next ? 0 : 1), 4, '#6e1820');  // backrest
+        if (!prev) R(2, 2, 3, 12, '#7a1a22');                       // armrests
+        if (!next) R(11, 2, 3, 12, '#7a1a22');
+        if (prev && x % 2 === 0) R(0, 6, 1, 8, '#7a1a22');           // a seam between cushions
+        R(prev ? 2 : 6, 7, 3, 1, '#c94a3a');
+        break;
+      }
+      case 144: // under the jacuzzi: a wooden deck (the tub, the water and the steam are drawn in fx.ts)
+        P(X, Y, 16, 16, '#7a5432'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#6b4a2e');
+        break;
+      case 137: // a few wooden steps up to the raised yard
+        P(X, Y, 16, 16, '#8a5a34'); P(X, Y, 16, 5, '#a87a4a'); P(X, Y + 5, 16, 1, '#4a3020'); P(X, Y + 6, 16, 5, '#9a6e40'); P(X, Y + 11, 16, 1, '#4a3020');
+        break;
+      case 138: // the stage: dark boards, a bright front edge
+        P(X, Y, 16, 16, '#2e2218'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#241a12');
+        // the front edge on the side the crowd stands (a stage against the south wall faces north)
+        if (at(x, y + 1) !== 138 && !SOLID.has(at(x, y + 1))) { P(X, Y + 12, 16, 4, '#5a3e26'); P(X, Y + 12, 16, 1, '#c9a24a'); }
+        else if (at(x, y - 1) !== 138 && !SOLID.has(at(x, y - 1))) { P(X, Y, 16, 4, '#5a3e26'); P(X, Y + 3, 16, 1, '#c9a24a'); }
+        if ((x + y) % 4 === 0) { P(X + 7, Y + 2, 1, 9, '#8a9098'); P(X + 6, Y + 1, 3, 2, INK); } // a mic stand
+        break;
+      case 139: // under a rotating seat: a wooden base (the turning disc and the people on it are drawn in fx.ts)
+        P(X, Y, 16, 16, '#6b4a2e'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#563a22');
+        break;
+      case 140: // the sofa platform up high: a deck on posts, with sofas
+        P(X, Y, 16, 16, '#7a5432'); for (let r = 3; r < 12; r += 4) P(X, Y + r, 16, 1, '#6b4a2e');
+        if (at(x, y + 1) !== 140) { P(X, Y + 12, 16, 4, '#2a1a10'); P(X + 2, Y + 12, 2, 4, '#6b4a2e'); P(X + 12, Y + 12, 2, 4, '#6b4a2e'); } // posts underneath
+        if ((x + y) % 2 === 0) { P(X + 2, Y + 2, 12, 7, INK); P(X + 3, Y + 3, 10, 5, '#a3242c'); P(X + 3, Y + 3, 10, 2, '#c94a3a'); }
+        break;
+      case 141: // its stairs: a steep wooden stair going up
+        P(X, Y, 16, 16, '#6b4a2e'); P(X + 3, Y, 2, 16, '#3a2616'); P(X + 11, Y, 2, 16, '#3a2616');
+        for (let r = 1; r < 16; r += 3) P(X + 5, Y + r, 6, 2, '#a87a4a');
+        break;
+      case 142: // the open middle of the gallery: the dancefloor far below, a railing along the edge
+        P(X, Y, 16, 16, '#1c140e'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#241a12');
+        if (at(x, y - 1) !== 142) P(X, Y, 16, 3, '#8a5a34');
+        if (at(x, y + 1) !== 142) P(X, Y + 13, 16, 3, '#8a5a34');
+        if (at(x - 1, y) !== 142) P(X, Y, 3, 16, '#8a5a34');
+        if (at(x + 1, y) !== 142) P(X + 13, Y, 3, 16, '#8a5a34');
+        break;
+      case 143: // the ticket booth window in the corridor wall
+        P(X, Y, 16, 16, '#7a5432'); P(X + 2, Y + 2, 12, 9, INK); P(X + 3, Y + 3, 10, 7, '#2a3a4a'); P(X + 4, Y + 4, 3, 2, '#5a7aa8');
+        P(X, Y + 11, 16, 2, '#a87a4a'); for (let i = 0; i < 3; i++) P(X + 3 + i * 4, Y + 13, 2, 2, pick(['#ff5e7a', '#ffd23f', '#5ec8ff']));
         break;
       // ---- Erkahn's Späti ----
       case 118: // a beer fridge: steel frame, lit glass door, shelves of bottles and cans

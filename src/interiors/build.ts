@@ -7,6 +7,8 @@ import { questDone } from '../quests/quests';
 import { DANCES, ICH } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 /* ================= CLUB INTERIORS ================= */
+/** Where people wait who aren't on a floor yet (`onlyAfter`): far left of the map, never drawn. */
+export const OFF_FLOOR = -50;
 export const DANCER_TOPS = ['#0c0c12', '#16151c', '#1a1920', '#2a2a33', '#0c0c12', '#e8e8f0', '#3a1f2a'];
 export const DANCER_SKINS = ['#f3c9a8', '#f0c7a0', '#e2b08c', '#d9a27c', '#c98d6a', '#8d5a3b', '#6b4430'];
 export const DANCER_HAIR = ['#111111', '#2a2420', '#5a3a22', '#c9a24a', '#b04a2a', '#c0c0c0', '#e83f8f', '#7ec8ff'];
@@ -20,6 +22,7 @@ export function buildInteriors() {
       const list: Entity[] = fl.people.map(p => ({ kind: 'npc', dir: p.dir || 'down', lines: [], ...p, home: { x: p.x, y: p.y } }));
       list.forEach((e, i) => { if (e.pile) { e.kind = 'pile'; e.act = 'pile'; e.phase = i * 1.37; } });
       list.forEach(e => { if (e.movedWhen && e.movedTo && questDone(clubId, e.movedWhen)) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; } });
+      list.forEach(e => { if (e.onlyAfter && !questDone(clubId, e.onlyAfter)) e.x = OFF_FLOOR; });
       // scatter dancers on the dancefloor, away from staff and stairs
       RT.seed = 4242 + id.length * 31;
       const busyTile = (x: number, y: number) => list.some(e => Math.abs(e.x - x) + Math.abs(e.y - y) <= 2);

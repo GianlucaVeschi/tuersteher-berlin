@@ -1,4 +1,5 @@
 import { forgetPlayer } from '../online/api';
+import { OFF_FLOOR } from '../interiors/build';
 import { closeBox } from './dialog';
 import { inside } from './inside';
 import { creatorEl } from './creator';
@@ -102,7 +103,7 @@ export function resetGame() {
   // a new game is a new entry on the guest list
   state.name = null; state.playMs = 0; state.finishPlayMs = null; state.onlineFinished = false; forgetPlayer();
   releaseFollower();
-  Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } })); if (inClub()) useScene('city'); updateFloorTag();
+  Object.values(SCENES).forEach(sc => sc.ents.forEach(e => { if (e.home && e.movedWhen) { e.x = e.home.x; e.y = e.home.y; } if (e.onlyAfter) e.x = OFF_FLOOR; })); if (inClub()) useScene('city'); updateFloorTag();
   if (RT.creator) { RT.creator = null; creatorEl.hidden = true; }
   if (RT.shopUI) { RT.shopUI = null; shopEl.hidden = true; }
   RT.ents.forEach(e => { if (e.club) { e.x = e.club.dx; e.ox = 0; e.dir = 'down'; } });
