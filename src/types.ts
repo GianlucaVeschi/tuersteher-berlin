@@ -34,6 +34,8 @@ export interface Look {
   blush?: boolean;
   /** colour of a ₿ printed on the front of the top */
   btc?: string;
+  /** a lit cigarette in the mouth (the smoke rises in interiors/fx.ts) */
+  cig?: boolean;
   /** hair as a mohawk: a strip down the middle, shaved sides */
   mohawk?: boolean;
 }

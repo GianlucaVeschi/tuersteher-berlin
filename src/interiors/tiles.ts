@@ -51,6 +51,19 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
         break;
       }
+      case 134: { // the same church window, with red glass (Berghain's smoking area)
+        P(X, Y, 16, 16, '#2a2928'); P(X, Y + 13, 16, 3, '#1d1c22');
+        P(X + 3, Y + 4, 10, 10, INK); P(X + 4, Y + 2, 8, 3, INK); P(X + 6, Y + 1, 4, 2, INK);
+        P(X + 4, Y + 5, 8, 8, '#a8142a'); P(X + 5, Y + 3, 6, 2, '#c81e34'); P(X + 7, Y + 2, 2, 1, '#e02a40');
+        P(X + 4, Y + 5, 3, 3, '#ff4a5e'); P(X + 9, Y + 8, 3, 2, '#7a0a1c'); P(X + 5, Y + 10, 2, 3, '#ff7a86');
+        P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
+        break;
+      }
+      case 135: // heavy chains hanging from the ceiling down to the floor
+        floorBase(X, Y);
+        for (const cx of [4, 10]) for (let ly = -12; ly < 14; ly += 4) { P(X + cx - 1, Y + ly, 3, 4, INK); P(X + cx, Y + ly + 1, 1, 2, ly % 8 ? '#8a8e98' : '#5a5e68'); }
+        P(X + 2, Y + 13, 12, 2, '#1d1c22');
+        break;
       case 60: face(X, Y); P(X + 3, Y + 2, 10, 14, INK); P(X + 4, Y + 3, 8, 13, '#1a1820'); P(X + 5, Y + 5, 6, 2, '#c9b25a'); break;
       case 49: floorBase(X, Y); P(X + 3, Y - 9, 10, 25, INK); P(X + 4, Y - 8, 8, 23, '#6a6e78'); P(X + 4, Y - 8, 2, 23, '#8a8e98'); P(X + 10, Y - 8, 2, 23, '#4e525a'); break;
       case 58: floorBase(X, Y); P(X + 1, Y, 14, 16, INK); P(X + 2, Y + 1, 12, 14, '#1b1a20'); circle(g, X + 8, Y + 9, 4, '#34333b'); circle(g, X + 8, Y + 9, 2, '#0c0c12'); P(X + 4, Y + 2, 8, 2, '#2c2b33'); break;
@@ -315,6 +328,12 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         break;
       case 101: P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y + 8, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2'); P(X + 8, Y, 1, 16, '#7fc8d2'); break;
       case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: {
+        if (sc.id.startsWith('berghain')) {
+          // Berghain: a heavy steel door in the concrete, open a crack, red light behind it
+          P(X, Y, 16, 16, '#5c5a56'); P(X + 1, Y + 1, 14, 15, INK); P(X + 2, Y + 2, 12, 14, '#3a3c42');
+          P(X + 2, Y + 2, 12, 1, '#5a5e68'); P(X + 11, Y + 8, 2, 2, '#a7a7b3'); P(X + 2, Y + 2, 2, 14, '#7a0a1c');
+          break;
+        }
         // a doorway with a bead curtain
         P(X, Y, 16, 16, '#1a1018'); P(X, Y, 16, 2, '#c9a24a'); P(X, Y, 2, 16, '#c9a24a'); P(X + 14, Y, 2, 16, '#c9a24a');
         const beads = ['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b', '#c28cff'];

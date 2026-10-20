@@ -96,16 +96,17 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // (railing over the dancefloor, the lighting desk, then the stairs to Panorama Bar) and the
         // darkrooms along the top, the empty space overlooking the Säule behind a railing on
         // the left, the dancefloor with its columns, the DJ on the right, the bar along the bottom, and
-        // in the bottom left the stairs down to the Säule and the stairs up to the Eisbar.
+        // in the bottom left the stairs down to the Säule and the stairs up to the Eisbar. Between the
+        // bathroom and the overlook a corridor runs up to the door of the smoking area.
         label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
-      '#########tt|t|t|ttt#########^^^#kkk#',
-      '#########tt|t|t|ttt########___D#kkk#',
-      '#########tttttttttt#...}}}}___D#kkk#',
-      '#########tttttttttt#...}}}}____#kkk#',
-      '#############t######...}}}}))))##k##',
-      '#;;;;;;;...........................#',
+      '######11#tt|t|t|ttt#########^^^#kkk#',
+      '######..#tt|t|t|ttt########___D#kkk#',
+      '######..#tttttttttt#...}}}}___D#kkk#',
+      '######..#tttttttttt#...}}}}____#kkk#',
+      '######..#####t######...}}}}))))##k##',
+      '#;;;;;.............................#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.S..#',
       '#;;;;;;;.S,,,,,,,,,,,,,,,,,,,,,.D..#',
@@ -124,10 +125,11 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#vvvv..#########..................##',
       '####################################'
         ],
-        spawn: { fromDown: [3, 19, 'up'], fromUp: [28, 2, 'down'], fromEis: [11, 20, 'right'] },
+        spawn: { fromDown: [3, 19, 'up'], fromUp: [28, 2, 'down'], fromEis: [11, 20, 'right'], fromSmoke: [6, 2, 'down'] },
         down: { to: 'eg', at: 'fromUp' },
         up: { to: 'pb', at: 'fromDown' },
         up2: { to: 'eis', at: 'fromDown' },
+        doors: { 1: { to: 'smoke', at: 'fromMain' } },
         dancers: 26,
         beams: true,
         people: [
@@ -163,7 +165,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#tttttttt#..D,,,,,,==========.&#',
       '#tttttttt#..D,,,,,,=........=..#',
       '#####t####..,,,,,,,=........=..#',
-      '#...........,,,,,,,=........=.&#',
+      '2...........,,,,,,,=........=.&#',
       '#####k####...,,,,,,=........=.&#',
       '#kkkkkkkk#...,,,,,,=........=.&#',
       '#kkkkkkkk#...,,,,,,=........=.&#',
@@ -174,7 +176,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#kkkkkkkk#...............vv....#',
       '################################'
         ],
-        spawn: { fromDown: [25, 14, 'up'] },
+        spawn: { fromDown: [25, 14, 'up'], fromSmoke: [1, 8, 'right'] },
+        doors: { 2: { to: 'smoke', at: 'fromPano' } },
         down: { to: 'mf', at: 'fromUp' },
         dancers: 16,
         violet: true,
@@ -220,6 +223,43 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 11, y: 6, dir: 'right', look: { skin: '#8d5a3b', hair: '#ff5fa2', long: true, top: '#16151c', legs: '#16151c' }, lines: ['Raver: Nobody dances up here. That is the whole point.', 'Raver: Downstairs is church. Up here is Sunday brunch.'] },
           { x: 3, y: 6, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (dunking a chocolate-chip muffin into an affogato) We met in the darkroom. This is our second date.'] },
           { x: 8, y: 4, dir: 'down', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: Two scoops of chocolate. Trust me. Best thing in the building.'] }
+        ]
+      },
+      smoke: {
+        // The smoking area, between the main floor and Panorama Bar: a dark industrial room, raw concrete
+        // and steel pillars, chains hanging from the ceiling, red light through church windows like the
+        // ones upstairs (but red), smoke in the air. A corridor from the main floor (door 1, bottom) and
+        // the corridor between Panorama Bar's bathrooms and darkrooms (door 2, right).
+        // Extra legend: ¤  church window, red glass   §  chains hanging from the ceiling
+        label: 'Berghain · smoking area', short: 'SMOKE',
+        map: [
+      '####################',
+      '##¤¤¤¤¤¤¤¤¤¤¤¤¤¤####',
+      '#..................#',
+      '#.§....P.....§.....#',
+      '#..................#',
+      '#b.......§.........2',
+      '#b.................#',
+      '#..§.....P....§....#',
+      '#..................#',
+      '#bbb..........bbb..#',
+      '#..................#',
+      '#################11#'
+        ],
+        spawn: { fromMain: [17, 10, 'up'], fromPano: [18, 5, 'left'] },
+        doors: { 1: { to: 'mf', at: 'fromSmoke' }, 2: { to: 'pb', at: 'fromSmoke' } },
+        fog: true,
+        red: true,
+        people: [
+          { x: 3, y: 4, dir: 'down', look: { skin: '#f3c9a8', hair: '#111', top: '#0c0c12', legs: '#0c0c12', harness: true, cig: true }, lines: ['Raver: (blowing smoke at the red windows) Best light in the building. Everyone looks like a sin in here.'] },
+          { x: 5, y: 3, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#16151c', legs: '#16151c', shades: true, cig: true }, lines: ['Raver: Got a lighter? No? Then what are you doing in the smoking area?'] },
+          { x: 11, y: 4, dir: 'left', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['(He leans back into the hanging chains like they are a hammock. Eyes closed. Jaw going.)'] },
+          { x: 2, y: 5, dir: 'right', look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, top: '#16151c', legs: '#16151c', cig: true }, lines: ['Raver: (on the bench, pupils like saucers) I came out for one cigarette. That was two hours ago.'] },
+          { x: 12, y: 8, dir: 'up', look: { skin: '#c98d6a', hair: '#3a2a20', top: '#2b2b38', legs: '#16151c', beard: '#3a2a20' }, lines: ['(Two people huddle over a house key, sniffing. They look up, see you, and very slowly turn to face the wall.)'] },
+          { x: 13, y: 8, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (wiping her nose) Allergies. Very bad allergies.'] },
+          { x: 15, y: 10, dir: 'left', look: { skin: '#e2b08c', hair: '#c0c0c0', top: '#0c0c12', legs: '#0c0c12', beard: '#c0c0c0', cig: true }, lines: ['Regular: Twenty years I have been coming here. The smoking area is still the best room. Do not tell the DJs.'] },
+          { x: 7, y: 9, dir: 'down', look: { skin: '#8d5a3b', hair: '#7ec8ff', top: '#0c0c12', legs: '#0c0c12', cig: true }, lines: ['Raver: Red light, chains, smoke. My mum thinks I am at a yoga retreat.'] },
+          { x: 16, y: 6, dir: 'down', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#16151c', legs: '#16151c', glasses: '#9fc7e6', cig: true }, lines: ['Raver: Pano is that way. Main floor is down that corridor. Or you stay here forever. Many do.'] }
         ]
       }
     },
