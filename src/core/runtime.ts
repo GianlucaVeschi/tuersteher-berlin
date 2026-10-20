@@ -31,7 +31,7 @@ export const RT = {
   photoResolve: null as null | (() => void),
   /** the lighting guy's show on Berghain's main floor: what he switched on, and when */
   lightShow: null as null | { mode: 'strobe' | 'red' | 'dark'; start: number; until: number },
-  /** the MDMA runner minigame (effects/runner.ts) */
+  /** the mini game that is running, if any (src/minigames/) */
   runner: null as RunnerHooks | null,
   /** the player is drawn lying flat on the floor (after the LSD dive at CDV) */
   lying: false,

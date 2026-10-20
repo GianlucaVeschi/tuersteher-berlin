@@ -3,7 +3,7 @@ import { ask, closeBox, say } from '../ui/dialog';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { fade, toast } from '../interiors/transitions';
-import { playRunner } from '../effects/runner';
+import { playRunner } from '../minigames';
 import { track } from '../core/monitoring';
 import { state } from '../core/state';
 import type { Entity } from '../types';

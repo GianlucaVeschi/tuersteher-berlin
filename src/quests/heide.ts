@@ -5,7 +5,7 @@ import { save } from '../core/save';
 import { fade, toast } from '../interiors/transitions';
 import { player, state } from '../core/state';
 import { reduceMotion, wait } from '../util';
-import { playDjSet } from '../effects/djgame';
+import { playDjSet } from '../minigames';
 import type { Entity } from '../types';
 
 /* ---- Heideglühen: sneak onto the DJ's decks while Woody the booker is away, karaoke in the toilets, fire pits ---- */

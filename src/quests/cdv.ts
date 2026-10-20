@@ -3,7 +3,7 @@ import { ask, closeBox, say } from '../ui/dialog';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { fade, leaveClub, toast } from '../interiors/transitions';
-import { playLsd } from '../effects/lsd';
+import { playLsd } from '../minigames';
 import { RT } from '../core/runtime';
 import { DIRS, MOVE, player, state } from '../core/state';
 import { get } from '../world/grid';

@@ -2,7 +2,7 @@ import type { ClubScene, Entity } from '../types';
 import { get } from '../world/grid';
 import { drawPile } from '../quests/kitkat';
 import { drawBottle } from '../quests/sisyphos';
-import { hasQuest } from '../quests/markers';
+import { hasQuest } from '../minigames';
 import { lookOf } from '../render/looks';
 import { person } from '../render/sprites';
 import { player, state } from '../core/state';

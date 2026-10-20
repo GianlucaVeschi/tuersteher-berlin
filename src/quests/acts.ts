@@ -12,7 +12,7 @@ import type { Act } from '../types';
 import { releaseFollower } from '../interiors/follower';
 import { sceneClub, sceneFloor } from '../world/scenes';
 import { INTERIORS } from '../data/interiors';
-import { playKHole } from '../effects/khole';
+import { playKHole } from '../minigames';
 import { RT } from '../core/runtime';
 import { CARRY_MAX, PFAND_GOAL, euro } from './sisyphos';
 import { renderCard } from '../ui/card';
