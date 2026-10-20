@@ -1453,6 +1453,40 @@ export const INTERIORS: Record<string, InteriorDef> = {
     quests: []
   },
 
+  /* Erkahn's Späti (a place, not a club: data/places.ts). Handlers in places/spati.ts.
+     Extra legend: <  beer fridge   >  chips shelf   ?  tobacco wall   :  lino floor   +  the counter */
+  spati: {
+    name: 'Späti',
+    floors: {
+      main: {
+        label: "Erkahn's Späti · open till late. Very late.", short: 'SPÄTI',
+        map: [
+          'H<<<<<<???H',
+          'H::::::H::H',
+          'H:>>:>>+++H',
+          'H:>>:>>:::H',
+          'H:::::::::H',
+          'HHHHxxHHHHH'
+        ],
+        spawn: { street: [4, 4, 'up'] },
+        exit: true,
+        daylight: true,
+        people: [
+          // behind the counter, in front of the tobacco: talk to him across it
+          { x: 8, y: 1, dir: 'down', act: 'erkahn', name: 'Erkahn', look: { skin: '#c98d6a', hair: '#1a1a1a', top: '#e0a83a', legs: '#2a2a35', beard: '#1a1a1a' } }
+        ]
+      }
+    },
+    examineActs: { '<': 'spatiFridge', '>': 'spatiChips' },
+    examine: {
+      '?': ['Tobacco, papers, lighters. Behind the counter: ask Erkahn.'],
+      '+': ['The counter: chewing gum, lighters and a till older than you.'],
+      H: ['Posters of Berlin bands nobody has heard of, and a faded Hertha scarf.']
+    },
+    dancerLines: [],
+    quests: []
+  },
+
   /* Black-light minigolf in Görlitzer Park (a place, not a club: data/places.ts): neon walls,
      glowing lanes under UV. Extra legend: @  a neon minigolf lane (press A to putt) */
   minigolf: {

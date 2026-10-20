@@ -115,7 +115,6 @@ export function buildCity() {
     building(p.x, p.y, p.w, p.h, 'altbau', { v: p.v, shop: { label: p.label, band: p.band, ink: p.ink, door: true, awning: p.awning } });
     set(p.dx, p.doorY, D);
   });
-  building(42, 36, 2, 3, 'altbau', { v: 0, shop: { label: 'SPÄTI', band: '#1f6b4a', ink: '#ffe58a', door: false } });
   // Mustafa's Gemüse Kebap: the famous Imbiss (the real one is on Mehringdamm), on the green west of Humana
   building(3, 3, 5, 3, 'altbau', { v: 2, shop: { label: "MUSTAFA'S", band: '#c4162a', ink: '#fff6a8', door: false } });
   // Oberbaumbrücke towers

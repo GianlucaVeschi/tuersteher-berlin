@@ -134,6 +134,35 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X, Y + 12, 16, 3, '#6b4a2e'); P(X, Y + 15, 16, 1, '#163a72');
         for (let i = 0; i < 6; i++) { const fx = Math.floor(rnd() * 14), fy = 9 + Math.floor(rnd() * 3); P(X + fx, Y + fy, 2, 2, pick(['#ff5e7a', '#e8304a', '#ff8cc4', '#c4162a'])); P(X + fx, Y + fy + 2, 1, 1, '#3f7a3a'); }
         break;
+      // ---- Erkahn's Späti ----
+      case 118: // a beer fridge: steel frame, lit glass door, shelves of bottles and cans
+        if (frontFace) {
+          P(X, Y, 16, 16, '#9aa0aa'); P(X + 1, Y + 1, 14, 13, INK); P(X + 2, Y + 2, 12, 11, '#cfe8f2'); P(X + 2, Y + 2, 12, 1, '#ffffff');
+          for (const sy of [3, 7, 11]) {
+            P(X + 2, Y + sy + 2, 12, 1, '#8a9098');
+            for (let i = 0; i < 4; i++) { const c = pick(['#6b3a1a', '#2f7a3a', '#c9a227', '#7a1a22', '#e8e4d8', '#2b4c7a']); P(X + 3 + i * 3, Y + sy - 1, 2, 3, c); P(X + 3 + i * 3, Y + sy - 2, 2, 1, pick(['#c0c4cc', '#ffd23f', '#e04f5f'])); }
+          }
+          P(X, Y + 14, 16, 2, '#5a5f66'); P(X + 13, Y + 6, 1, 3, '#c0c4cc');
+        } else P(X, Y, 16, 16, '#5a5f66');
+        break;
+      case 119: // the chips shelf: two rows of crinkly bags in every colour
+        P(X, Y, 16, 16, '#d9d4c8'); P(X + 1, Y + 1, 14, 14, INK); P(X + 2, Y + 2, 12, 12, '#8a9098');
+        for (const sy of [3, 9]) for (let i = 0; i < 3; i++) { const c = pick(['#e04f5f', '#f2c14e', '#4ea8de', '#58b368', '#ff8c42', '#c28cff']); P(X + 3 + i * 4, Y + sy, 3, 4, c); P(X + 3 + i * 4, Y + sy, 3, 1, '#f3eee3'); }
+        break;
+      case 120: // tobacco behind the counter: rows of little packs, papers and lighters
+        if (frontFace) {
+          P(X, Y, 16, 16, '#3a2616'); P(X, Y + 13, 16, 3, '#24180e');
+          for (const sy of [1, 5, 9]) { P(X, Y + sy + 3, 16, 1, '#5a3e26'); for (let i = 0; i < 5; i++) P(X + 1 + i * 3, Y + sy, 2, 3, pick(['#f3eee3', '#c4162a', '#2b4c7a', '#c9a24a', '#14121c', '#3d8f6b'])); }
+        } else P(X, Y, 16, 16, '#24180e');
+        break;
+      case 121: // Späti lino: big pale tiles
+        P(X, Y, 16, 16, (x + y) % 2 ? '#c9c4b6' : '#bdb7a8'); P(X, Y, 16, 1, '#aaa496'); P(X, Y, 1, 16, '#aaa496');
+        break;
+      case 122: // the counter: chewing gum, lighters and a till on a worn wooden top
+        P(X, Y, 16, 16, '#c9c4b6'); P(X, Y + 2, 16, 14, INK); P(X + 1, Y + 3, 14, 4, '#a87a4a'); P(X + 1, Y + 7, 14, 8, '#7a5432');
+        if (x % 2) { P(X + 3, Y, 8, 5, INK); P(X + 4, Y + 1, 6, 3, '#3a3a4a'); P(X + 5, Y + 2, 3, 1, '#b6f36b'); }
+        else for (let i = 0; i < 4; i++) P(X + 2 + i * 3, Y + 4, 2, 2, pick(['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b']));
+        break;
       case 116: // old wood covered in graffiti and stickers
         if (frontFace) {
           P(X, Y, 16, 16, '#7a5432'); for (let i = 3; i < 16; i += 4) P(X + i, Y, 1, 16, '#5a3e26'); P(X, Y + 13, 16, 3, '#4a3020');
