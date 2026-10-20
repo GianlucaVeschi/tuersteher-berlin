@@ -207,17 +207,17 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#.ø....ø....&#',
       '#...........&#',
       '#.ø....ø....&#',
-      '#vv.........&#',
-      '#vv..........#',
+      '#..........vv#',
+      '#..........vv#',
       '##############'
         ],
-        spawn: { fromDown: [3, 9, 'right'] },
+        spawn: { fromDown: [10, 9, 'left'] },
         down: { to: 'mf', at: 'fromEis' },
         people: [
           // the barista behind the ice case
           { x: 4, y: 2, act: 'ice', name: 'Barista', dir: 'down', look: { skin: '#c98d6a', hair: '#6a4a2a', long: true, beard: '#7a5a3a', top: '#4b5a2e', legs: '#26242e' } },
           { x: 11, y: 5, dir: 'right', look: { skin: '#f3c9a8', hair: '#111', top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['Raver: (licking rainbow sprinkles off a plastic spoon, in a full leather harness) What? It is a balanced breakfast.'] },
-          { x: 11, y: 7, dir: 'right', look: { skin: '#8d5a3b', hair: '#ff5fa2', long: true, top: '#16151c', legs: '#16151c' }, lines: ['Raver: Nobody dances up here. That is the whole point.', 'Raver: Downstairs is church. Up here is Sunday brunch.'] },
+          { x: 11, y: 6, dir: 'right', look: { skin: '#8d5a3b', hair: '#ff5fa2', long: true, top: '#16151c', legs: '#16151c' }, lines: ['Raver: Nobody dances up here. That is the whole point.', 'Raver: Downstairs is church. Up here is Sunday brunch.'] },
           { x: 3, y: 6, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (dunking a chocolate-chip muffin into an affogato) We met in the darkroom. This is our second date.'] },
           { x: 8, y: 4, dir: 'down', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: Two scoops of chocolate. Trust me. Best thing in the building.'] }
         ]
