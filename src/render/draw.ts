@@ -5,6 +5,7 @@ import { SHOPS } from '../data/outfits';
 import { CLUB_SHORT, zoom, zoomLevel } from './zoom';
 import { towerC } from './cityTiles';
 import { GORLI, TOWER } from '../world/city';
+import { drawArrow } from './arrow';
 import { lookOf } from './looks';
 import { person } from './sprites';
 import { INK, reduceMotion } from '../util';
@@ -59,6 +60,8 @@ export function drawWorld(now: number): [number, number, number, number] {
     } else if (Math.floor(now / 1200 + c.dx) % 3 !== 0) {
       ctx.fillStyle = c.glow; ctx.fillRect(dx + 4, dy + 15, 8, 1);
     }
+    // yellow arrow on the pavement in front of the bouncer, pointing up at the door (stays after you got in)
+    drawArrow(dx, (c.by + 1) * T - camY, 'up', now);
   });
   // S-Bahn
   if (train.wait <= 0) {

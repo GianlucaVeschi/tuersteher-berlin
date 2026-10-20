@@ -14,7 +14,7 @@ export const NPCS: NpcDef[] = [
     lines: ["Local: I'm wearing all black. I rehearsed my answers.", "Local: I'm terrified."] },
   { id: 'queue4', x: 29, y: 13, dir: 'right', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#58b368', legs: '#3a3a4a' },
     lines: ['Tourist: Two hours in the queue. Worth it, right?'] },
-  { id: 'raver', x: 19, y: 39, look: { skin: '#8d5a3b', hair: '#b36bd1', top: '#222', legs: '#222', shades: true },
+  { id: 'raver', x: 19, y: 69, look: { skin: '#8d5a3b', hair: '#b36bd1', top: '#222', legs: '#222', shades: true },
     lines: ['Raver: Tresor and KitKat are both on Köpenicker Straße.', 'Raver: Coexist and Voo Store sell clubwear right here. Sisyphos wants color, Berghain wants black.', 'Raver: Read the signs. Bouncers love people who know the place.'] },
   { id: 'oldraver', x: 14, y: 20, look: { skin: '#f0c7a0', hair: '#c0c0c0', top: '#d9733a', legs: '#3a3a4a', beard: '#c0c0c0' },
     lines: ['Old raver: I danced at Bar25 for three days straight in 2009.', 'Old raver: Kater Blau is the same crew. New spot, same spirit.'] },
@@ -23,7 +23,7 @@ export const NPCS: NpcDef[] = [
   // Taski rides the streets for Wolt all night (world/taski.ts moves him; conversation in STREET_ACTS.taski)
   { id: 'taski', x: 30, y: 21, act: 'taski', look: { skin: '#c98d6a', hair: '#1a1a1a', top: '#00c2e8', legs: '#26242e', hat: '#00c2e8', beard: '#1a1a1a', box: '#00c2e8', bike: true } },
   // outside Heideglühen, at the left corner of the building, as close as he's allowed (conversation in STREET_ACTS.jesus)
-  { id: 'jesus', x: 63, y: 39, act: 'jesus', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#e9e4d6', legs: '#7a6a4a' } },
+  { id: 'jesus', x: 63, y: 69, act: 'jesus', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#e9e4d6', legs: '#7a6a4a' } },
   // in front of his Imbiss on the green west of Humana (conversation in STREET_ACTS.mustafa)
   { id: 'mustafa', x: 5, y: 6, act: 'mustafa', look: { skin: '#d9a27c', hair: '#1a1a1a', beard: '#1a1a1a', top: '#f3eee3', legs: '#2a2a35' } },
   // just off the S-Bahn, on the grass by the tracks
@@ -38,40 +38,40 @@ export const NPCS: NpcDef[] = [
   ...mustafaQueue(),
   ...canalCrowds(),
   // Görlitzer Park (researched; handlers in places/goerli.ts)
-  { id: 'gorli-activist', x: 36, y: 56, dir: 'down', act: 'gorli', look: { skin: '#f0c7a0', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#3a3a4a', paint: '#ffd23f' } },
-  { id: 'gorli-activist2', x: 41, y: 57, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#c94a3a', legs: '#26242e' }, lines: ['Activist: GÖRLI BLEIBT AUF! GÖRLI BLEIBT AUF!', '(He is holding a cardboard sign: "ZAUN WEG". Fence gone.)'] },
-  { id: 'gorli-neighbour', x: 34, y: 54, dir: 'down', look: { skin: '#e2b08c', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a', glasses: '#9fc7e6' }, lines: ['Neighbour: Forty years I have walked my dog through Görli at night. A fence will not change that. Görli bleibt auf.'] },
-  { id: 'gorli-rails', x: 25, y: 65, dir: 'up', act: 'railway', look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#2b3f6b', legs: '#26242e', hat: '#2b3f6b', beard: '#9a9a9a' } },
-  { id: 'gorli-farm', x: 19, y: 63, dir: 'down', act: 'farm', look: { skin: '#c98d6a', hair: '#5a3a22', long: true, top: '#58b368', legs: '#5a7aa8', hat: '#c9a24a' } },
-  { id: 'gorli-hoops1', x: 44, y: 58, dir: 'right', act: 'hoops', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#c94a3a' } },
-  { id: 'gorli-hoops2', x: 46, y: 59, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ffd23f', legs: '#26242e' }, lines: ['Player: Winners stay on. We have been winning since lunch.'] },
-  { id: 'gorli-kick1', x: 52, y: 58, dir: 'left', act: 'kick', look: { skin: '#e2b08c', hair: '#2a2420', top: '#c94a3a', legs: '#f3eee3' } },
-  { id: 'gorli-kick2', x: 55, y: 60, dir: 'left', look: { skin: '#c98d6a', hair: '#111111', top: '#3d5f94', legs: '#f3eee3' }, lines: ['Kid: Jumpers for goalposts. Well, rucksacks.'] },
-  { id: 'gorli-kick3', x: 50, y: 60, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#58b368', legs: '#26242e' }, lines: ['Kid: I am the goalkeeper because I am the smallest. That is the rule.'] },
-  { id: 'gorli-skate1', x: 44, y: 65, dir: 'right', act: 'skate', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#14121c', legs: '#ff8c42' } },
-  { id: 'gorli-skate2', x: 47, y: 67, dir: 'left', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', hat: '#c94a3a' }, lines: ['Skater: Best bowl in Kreuzberg. Do not tell anyone. Everyone knows.'] },
+  { id: 'gorli-activist', x: 36, y: 42, dir: 'down', act: 'gorli', look: { skin: '#f0c7a0', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#3a3a4a', paint: '#ffd23f' } },
+  { id: 'gorli-activist2', x: 41, y: 43, dir: 'left', look: { skin: '#8d5a3b', hair: '#111111', top: '#c94a3a', legs: '#26242e' }, lines: ['Activist: GÖRLI BLEIBT AUF! GÖRLI BLEIBT AUF!', '(He is holding a cardboard sign: "ZAUN WEG". Fence gone.)'] },
+  { id: 'gorli-neighbour', x: 34, y: 40, dir: 'down', look: { skin: '#e2b08c', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a', glasses: '#9fc7e6' }, lines: ['Neighbour: Forty years I have walked my dog through Görli at night. A fence will not change that. Görli bleibt auf.'] },
+  { id: 'gorli-rails', x: 25, y: 51, dir: 'up', act: 'railway', look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#2b3f6b', legs: '#26242e', hat: '#2b3f6b', beard: '#9a9a9a' } },
+  { id: 'gorli-farm', x: 19, y: 49, dir: 'down', act: 'farm', look: { skin: '#c98d6a', hair: '#5a3a22', long: true, top: '#58b368', legs: '#5a7aa8', hat: '#c9a24a' } },
+  { id: 'gorli-hoops1', x: 44, y: 44, dir: 'right', act: 'hoops', look: { skin: '#8d5a3b', hair: '#111111', top: '#f3eee3', legs: '#c94a3a' } },
+  { id: 'gorli-hoops2', x: 46, y: 45, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ffd23f', legs: '#26242e' }, lines: ['Player: Winners stay on. We have been winning since lunch.'] },
+  { id: 'gorli-kick1', x: 52, y: 44, dir: 'left', act: 'kick', look: { skin: '#e2b08c', hair: '#2a2420', top: '#c94a3a', legs: '#f3eee3' } },
+  { id: 'gorli-kick2', x: 55, y: 46, dir: 'left', look: { skin: '#c98d6a', hair: '#111111', top: '#3d5f94', legs: '#f3eee3' }, lines: ['Kid: Jumpers for goalposts. Well, rucksacks.'] },
+  { id: 'gorli-kick3', x: 50, y: 46, dir: 'right', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#58b368', legs: '#26242e' }, lines: ['Kid: I am the goalkeeper because I am the smallest. That is the rule.'] },
+  { id: 'gorli-skate1', x: 44, y: 51, dir: 'right', act: 'skate', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#14121c', legs: '#ff8c42' } },
+  { id: 'gorli-skate2', x: 47, y: 53, dir: 'left', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#b6f36b', legs: '#26242e', hat: '#c94a3a' }, lines: ['Skater: Best bowl in Kreuzberg. Do not tell anyone. Everyone knows.'] },
   // grill groups round the four grills, smoke rising (render/draw.ts → drawSmoke)
-  { id: 'gorli-grill', x: 26, y: 66, dir: 'right', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#2a2420', top: '#ff8c42', legs: '#3a3a4a', beard: '#2a2420' } },
-  { id: 'gorli-grill1b', x: 27, y: 65, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#f3eee3', legs: '#2b3f6b' }, lines: ['Griller: Twelve people, one grill, and a cool box from the Späti. Perfect Sunday.'] },
-  { id: 'gorli-grill2a', x: 29, y: 67, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#26242e' }, lines: ['Griller: My uncle says you need charcoal from Turkey. My uncle says a lot of things.'] },
-  { id: 'gorli-grill2b', x: 31, y: 67, dir: 'left', look: { skin: '#c98d6a', hair: '#5a3a22', long: true, top: '#c94a3a', legs: '#26242e' }, lines: ['Griller: (fanning the smoke away with a paper plate) It is fine! It is fine! It is a lot of smoke.'] },
-  { id: 'gorli-grill2c', x: 30, y: 68, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a' }, lines: ['Griller: Corn on the cob, aubergine, and Köfte. Sit down, there is enough for the whole park.'] },
-  { id: 'gorli-grill3a', x: 34, y: 66, dir: 'left', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#ffd23f', legs: '#2b3f6b' } },
-  { id: 'gorli-grill3b', x: 33, y: 65, dir: 'down', look: { skin: '#8d5a3b', hair: '#2a2420', top: '#f3eee3', legs: '#c94a3a', shades: true }, lines: ['Griller: We came at ten to get this spot. Worth it.'] },
-  { id: 'gorli-grill4a', x: 34, y: 68, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#b6f36b', legs: '#3a3a4a' }, lines: ['Griller: Halloumi first, then the sausages, then whatever falls through the grill. That is the order.'] },
-  { id: 'gorli-grill4b', x: 36, y: 68, dir: 'left', look: { skin: '#c98d6a', hair: '#111111', long: true, top: '#7a3fd1', legs: '#26242e' }, lines: ['Griller: The smoke is how your friends find you. Better than any group chat.'] },
-  { id: 'gorli-kuhle', x: 26, y: 58, dir: 'down', act: 'kuhle', look: { skin: '#f0c7a0', hair: '#c9a24a', long: true, top: '#c28cff', legs: '#5ec8ff' } },
-  { id: 'gorli-kuhle2', x: 29, y: 59, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#ffd23f', legs: '#26242e', shades: true }, lines: ['Sunbather: Lie in the Kuhle and you only see sky. Best spot in Kreuzberg.'] },
-  { id: 'gorli-kuhle3', x: 31, y: 58, dir: 'left', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, top: '#7a5a3a', legs: '#26242e', beard: '#5a3a22' }, lines: ['(He is playing Wonderwall on a guitar with five strings.)'] },
-  { id: 'gorli-cyclist', x: 30, y: 63, dir: 'right', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#3d5f94', legs: '#26242e', hat: '#ffd23f' }, lines: ['Cyclist: Through Görli is the shortcut to everywhere. At night too, now. Görli bleibt auf!'] },
+  { id: 'gorli-grill', x: 26, y: 52, dir: 'right', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#2a2420', top: '#ff8c42', legs: '#3a3a4a', beard: '#2a2420' } },
+  { id: 'gorli-grill1b', x: 27, y: 51, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#f3eee3', legs: '#2b3f6b' }, lines: ['Griller: Twelve people, one grill, and a cool box from the Späti. Perfect Sunday.'] },
+  { id: 'gorli-grill2a', x: 29, y: 53, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#26242e' }, lines: ['Griller: My uncle says you need charcoal from Turkey. My uncle says a lot of things.'] },
+  { id: 'gorli-grill2b', x: 31, y: 53, dir: 'left', look: { skin: '#c98d6a', hair: '#5a3a22', long: true, top: '#c94a3a', legs: '#26242e' }, lines: ['Griller: (fanning the smoke away with a paper plate) It is fine! It is fine! It is a lot of smoke.'] },
+  { id: 'gorli-grill2c', x: 30, y: 54, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a' }, lines: ['Griller: Corn on the cob, aubergine, and Köfte. Sit down, there is enough for the whole park.'] },
+  { id: 'gorli-grill3a', x: 34, y: 52, dir: 'left', act: 'gorliGrill', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#ffd23f', legs: '#2b3f6b' } },
+  { id: 'gorli-grill3b', x: 33, y: 51, dir: 'down', look: { skin: '#8d5a3b', hair: '#2a2420', top: '#f3eee3', legs: '#c94a3a', shades: true }, lines: ['Griller: We came at ten to get this spot. Worth it.'] },
+  { id: 'gorli-grill4a', x: 34, y: 54, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#b6f36b', legs: '#3a3a4a' }, lines: ['Griller: Halloumi first, then the sausages, then whatever falls through the grill. That is the order.'] },
+  { id: 'gorli-grill4b', x: 36, y: 54, dir: 'left', look: { skin: '#c98d6a', hair: '#111111', long: true, top: '#7a3fd1', legs: '#26242e' }, lines: ['Griller: The smoke is how your friends find you. Better than any group chat.'] },
+  { id: 'gorli-kuhle', x: 26, y: 44, dir: 'down', act: 'kuhle', look: { skin: '#f0c7a0', hair: '#c9a24a', long: true, top: '#c28cff', legs: '#5ec8ff' } },
+  { id: 'gorli-kuhle2', x: 29, y: 45, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#ffd23f', legs: '#26242e', shades: true }, lines: ['Sunbather: Lie in the Kuhle and you only see sky. Best spot in Kreuzberg.'] },
+  { id: 'gorli-kuhle3', x: 31, y: 44, dir: 'left', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, top: '#7a5a3a', legs: '#26242e', beard: '#5a3a22' }, lines: ['(He is playing Wonderwall on a guitar with five strings.)'] },
+  { id: 'gorli-cyclist', x: 30, y: 49, dir: 'right', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#3d5f94', legs: '#26242e', hat: '#ffd23f' }, lines: ['Cyclist: Through Görli is the shortcut to everywhere. At night too, now. Görli bleibt auf!'] },
   // Admiralbrücke on a summer evening: a busker and people on the bollards (researched: the bridge is
   // the classic Kreuzberg sunset hangout, and gets cleared at 10pm after residents complained)
-  { id: 'busker', x: 12, y: 49, dir: 'left', act: 'busker', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#7a5a3a', legs: '#3a3a4a', hat: '#2a2420' } },
-  { id: 'bollard1', x: 9, y: 48, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a' },
+  { id: 'busker', x: 12, y: 35, dir: 'left', act: 'busker', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#7a5a3a', legs: '#3a3a4a', hat: '#2a2420' } },
+  { id: 'bollard1', x: 9, y: 34, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#ff8c42', legs: '#3a5a8a' },
     lines: ['Tourist: Is this the bridge everyone talks about? It is just a bridge. With a beer it is the best bridge.'] },
-  { id: 'bollard2', x: 9, y: 50, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#2a2a35' },
+  { id: 'bollard2', x: 9, y: 36, dir: 'right', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#2a2a35' },
     lines: ['Local: Sunset on the Admiralbrücke, a Sterni from the Späti, a guitar somewhere. That is the whole plan.', 'Local: At ten the neighbours want their sleep. Fair. They were here first.'] },
-  { id: 'resident', x: 14, y: 46, dir: 'down', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a', glasses: '#9fc7e6' },
+  { id: 'resident', x: 14, y: 32, dir: 'down', look: { skin: '#f0c7a0', hair: '#c9c9c9', top: '#3d5f94', legs: '#3a3a4a', glasses: '#9fc7e6' },
     lines: ['Resident: I live right there. Every summer night: guitars, bottles, Wonderwall.', "Resident: Ten o'clock and it is quiet. That was the deal. It mostly works."] }
 ];
 
@@ -152,13 +152,13 @@ function canalCrowds(): NpcDef[] {
   ];
   const spots = (ids: string, list: [number, number, NpcDef['dir']][], lines: string[], off: number) =>
     list.map(([x, y, dir], i) => ({ id: `${ids}-${i}`, x, y, dir, look: CROWD_LOOKS[(i + off) % CROWD_LOOKS.length], lines: [lines[(i * 3 + off) % lines.length]] }));
-  // La Maison's terrace (door at 65,45): guests at the bistro tables; the way in along row 46 stays free
+  // La Maison's terrace (door at 65,31): guests at the bistro tables; the way in along row 32 stays free
   const maison: [number, number, NpcDef['dir']][] = [
-    [63, 47, 'right'], [65, 47, 'left'], [66, 47, 'right'], [68, 47, 'left'], [68, 46, 'right'], [70, 46, 'left'], [66, 46, 'down'], [70, 47, 'up']
+    [63, 33, 'right'], [65, 33, 'left'], [66, 33, 'right'], [68, 33, 'left'], [68, 32, 'right'], [70, 32, 'left'], [66, 32, 'down'], [70, 33, 'up']
   ];
-  // the Ankerklause terrace (door at 43,51): guests round the polka-dot tables; row 52 from the bridge stays free
+  // the Ankerklause terrace (door at 43,37): guests round the polka-dot tables; row 38 from the bridge stays free
   const anker: [number, number, NpcDef['dir']][] = [
-    [40, 53, 'right'], [42, 53, 'left'], [44, 53, 'right'], [46, 53, 'left'], [47, 53, 'right'], [49, 53, 'left'], [45, 52, 'down'], [48, 52, 'down']
+    [40, 39, 'right'], [42, 39, 'left'], [44, 39, 'right'], [46, 39, 'left'], [47, 39, 'right'], [49, 39, 'left'], [45, 38, 'down'], [48, 38, 'down']
   ];
   return [...spots('maison-crowd', maison, MAISON_LINES, 0), ...spots('anker-crowd', anker, ANKER_LINES, 4)];
 }

@@ -386,6 +386,8 @@ export interface SaveData extends Partial<GameState> {
   zoom?: { i: number; fit: boolean };
   x?: number;
   y?: number;
+  /** street map layout the position was saved on (missing: the first layout) */
+  map?: number;
   dir?: Dir;
 }
 

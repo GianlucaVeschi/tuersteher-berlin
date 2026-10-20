@@ -1,5 +1,5 @@
 /* ================= MAP ================= */
-export const T = 16, CITY_W = 72, CITY_H = 74;
+export const T = 16, CITY_W = 72, CITY_H = 76;
 export const G = 0, R = 1, S = 2, W = 3, B = 4, TR = 5, BR = 6, C = 7, D = 8, F = 9, SA = 10, RL = 11, DK = 12, PL = 13;
 // Görlitzer Park: wire fence, grill, towel, the Kuhle (the bowl lawn), basketball court, football pitch, skate bowl, old rails in the grass
 export const FN = 14, GRL = 15, TW = 16, KU = 17, BK = 18, FB = 19, SK = 20, OT = 21;
