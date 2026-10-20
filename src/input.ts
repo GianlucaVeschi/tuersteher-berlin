@@ -1,3 +1,4 @@
+import { showCardQuests } from './ui/card';
 import { closeMissions, missionsOpen } from './ui/missions';
 import { openPlayers } from './ui/players';
 import { playEnding } from './ui/ending';
@@ -139,13 +140,24 @@ const cardEl = $('#card');
 function setCard(open: boolean) {
   cardEl.classList.toggle('open', open);
   $('#cardBtn').setAttribute('aria-expanded', String(open));
-  if (open) held.length = 0;
+  if (open) { held.length = 0; showCardQuests(); }
 }
 
 let wheelAt = 0;
 
+/** iPhones zoom the whole page on a pinch (say a thumb on the joystick and another finger on the
+ *  screen) or a double tap, and Safari ignores user-scalable=no. Block both: Safari's own gesture
+ *  events and any two-finger move (the card sheet still scrolls with one finger). Double taps are
+ *  handled in CSS: touch-action none on the handheld, manipulation everywhere else. */
+function blockPageZoom() {
+  const stop = (ev: Event) => ev.preventDefault();
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, stop, { passive: false }));
+  document.addEventListener('touchmove', ev => { if (ev.touches.length > 1) ev.preventDefault(); }, { passive: false });
+}
+
 /** Wires up keyboard, touch, mouse wheel and on-screen buttons. */
 export function initInput() {
+  blockPageZoom();
   window.addEventListener('keydown', onKeyDown);
   window.addEventListener('keyup', ev => {
     if (isRunKey(ev.code)) RT.runKey = false;

@@ -13,7 +13,7 @@ import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
 import { RT } from '../core/runtime';
 import { SCENES } from '../world/scenes';
-import { DOOR_STYLE, doorRect, doorSide } from './tiles';
+import { doorRect, doorSide, doorStyleAt } from './tiles';
 import { CLUBS } from '../data/clubs';
 /** Everything on a club floor that moves: lights, people, steam, darkness. */
 export function drawInteriorFx(now: number, camX: number, camY: number, ppx: number, ppy: number) {
@@ -87,6 +87,15 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0);
       person(ctx, X, Y - 3, e.dir ?? 'down', off ? (Math.floor(off / 8) % 2) + 1 : 0, e.look);
     }
+    if (e.look.cig) {
+      // smoke curling up from the cigarette
+      const tipX = X + (e.dir === 'left' ? 1 : e.dir === 'right' ? 14 : 13), tipY = Y + 3;
+      for (let i = 0; i < 3; i++) {
+        const p = lights ? ((now / 1400 + i / 3 + (e.phase ?? e.x * 0.37)) % 1) : i / 3;
+        ctx.fillStyle = `rgba(200,200,210,${(0.45 * (1 - p)).toFixed(2)})`;
+        ctx.fillRect(Math.round(tipX + Math.sin(p * 6 + i) * 2), Math.round(tipY - p * 14), 2, 2);
+      }
+    }
     if (hasQuest(e, sc.club)) questMark(X, Y - 3, now);
   });
   // main floor: the light bar along the top wall and a short strobe now and then
@@ -111,19 +120,10 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(wx0, wy); ctx.lineTo(wx1, wy); ctx.lineTo(wx1 - 5 * T, wy + 10 * T); ctx.lineTo(wx0 - 6 * T, wy + 10 * T); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
-  // Panorama Bar before sunrise: violet light falling through the church windows onto the floor
-  if (fl.violet && !state.sunrise[sc.club]) {
-    const [x0, x1] = windowSpan(sc);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter';
-    for (let x = x0; x <= x1; x += 2) {
-      const sway = lights ? Math.sin(now / 1800 + x) * 6 : 0, X = x * T + 8 - camX, Y = 2 * T - camY;
-      const gr = ctx.createLinearGradient(0, Y, 0, Y + 8 * T);
-      gr.addColorStop(0, 'rgba(150,80,255,.26)'); gr.addColorStop(1, 'rgba(150,80,255,0)');
-      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(X - 5, Y); ctx.lineTo(X + 5, Y);
-      ctx.lineTo(X - 3 * T + 10 + sway, Y + 8 * T); ctx.lineTo(X - 3 * T - 14 + sway, Y + 8 * T); ctx.closePath(); ctx.fill();
-    }
-    ctx.restore();
-  }
+  // Panorama Bar before sunrise: violet light falling through the church windows onto the floor;
+  // the smoking area's red windows (tile 134) throw red light the same way, all night
+  if (fl.violet && !state.sunrise[sc.club]) windowShafts(sc, 50, '150,80,255', now, camX, camY, lights);
+  windowShafts(sc, 134, '255,30,50', now, camX, camY, lights);
   // Heideglühen: fire pits and the karaoke screen
   sc.map.forEach((row, y) => row.forEach((t, x) => {
     if (t !== 102 && t !== 103) return;
@@ -270,10 +270,10 @@ function questMark(X: number, Y: number, now: number) {
   ctx.fillStyle = '#fff'; ctx.fillRect(x + 2, y + 2, 2, 4); ctx.fillRect(x + 2, y + 7, 2, 2);
 }
 
-/** The first and last column of the windows (`W`, tile 50) on a floor. */
-function windowSpan(sc: ClubScene): [number, number] {
+/** The first and last column of the windows (`W`, tile 50, or another window tile) on a floor. */
+function windowSpan(sc: ClubScene, tile = 50): [number, number] {
   let x0 = sc.w, x1 = 0;
-  sc.map.forEach(row => row.forEach((t, x) => { if (t === 50) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
+  sc.map.forEach(row => row.forEach((t, x) => { if (t === tile) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
   return x0 <= x1 ? [x0, x1] : [0, 0];
 }
 
@@ -282,17 +282,17 @@ const LEDS: Record<string, string[]> = { heidegluehen: ['#ffd23f', '#ff8c42', '#
 /** Strip colours per club; clubs not listed get dark see-through strips. */
 const STRIPS: Record<string, string[]> = { katerblau: ['#ff5e7a', '#5ec8ff', '#ffd23f', '#b6f36b', '#c28cff'] };
 
-/** The new doorways (see DOOR_STYLE in interiors/tiles.ts), animated each frame.
+/** The new doorways (see DOOR_STYLE and ROOM_STYLE in interiors/tiles.ts), animated each frame.
  *  'strips': light from the next room behind a strip curtain, five strips swaying a little, a glint
  *  running down them, and a bit of light on the floor in front.
  *  'haze': grey haze in the opening, thicker at the top, and now and then a silhouette walks past inside. */
 function drawDoorways(sc: ClubScene, now: number, camX: number, camY: number) {
-  const style = DOOR_STYLE[sc.club];
-  if (!style) return;
   const cols = STRIPS[sc.club];
   const glow = reduceMotion ? 0.27 : 0.25 + 0.08 * Math.sin(now / 800);
   sc.map.forEach((row, y) => row.forEach((t, x) => {
     if (t < 81 || t > 89) return;
+    const style = doorStyleAt(sc.id, t);
+    if (!style) return;
     const X = x * T - camX, Y = y * T - camY;
     if (X < -16 || Y < -16 || X > RT.VW || Y > RT.VH) return;
     // everything below is designed for a doorway opening downwards; R turns it to the real side
@@ -386,4 +386,19 @@ function neonColour(sc: ClubScene, t: number): string {
   const spot = to ? club.floors[to]?.spots?.[0] : undefined;
   const m = spot?.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
   return m ? `rgb(${m[1]},${m[2]},${m[3]})` : CLUBS.find(c => c.id === sc.club)?.glow ?? '#e8eaff';
+}
+
+/** Coloured light falling through a row of windows in the top wall (row 1) onto the floor below. */
+function windowShafts(sc: ClubScene, tile: number, rgb: string, now: number, camX: number, camY: number, lights: boolean) {
+  const [x0, x1] = windowSpan(sc, tile);
+  if (x1 < x0 || sc.map[1][x0] !== tile) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let x = x0; x <= x1; x += 2) {
+    const sway = lights ? Math.sin(now / 1800 + x) * 6 : 0, X = x * T + 8 - camX, Y = 2 * T - camY;
+    const gr = ctx.createLinearGradient(0, Y, 0, Y + 8 * T);
+    gr.addColorStop(0, `rgba(${rgb},.26)`); gr.addColorStop(1, `rgba(${rgb},0)`);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(X - 5, Y); ctx.lineTo(X + 5, Y);
+    ctx.lineTo(X - 3 * T + 10 + sway, Y + 8 * T); ctx.lineTo(X - 3 * T - 14 + sway, Y + 8 * T); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
 }

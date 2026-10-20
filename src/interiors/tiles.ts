@@ -1,7 +1,8 @@
 import type { Scene } from '../types';
 import { RT } from '../core/runtime';
 import { INK, circle, pick, rnd } from '../util';
-import { SOLID, T, WALLISH } from '../world/tiles';
+import { ICHAR, SOLID, T, WALLISH } from '../world/tiles';
+import { INTERIORS } from '../data/interiors';
 /** Clubs trying out the new doorway looks (doorway digits 1–9); the rest keep the bead curtain.
  *  'strips': a strip curtain with light behind it. 'haze': grey fog in the opening, someone walking past.
  *  'fog': coloured fog slowly changing colour, wisps drifting out onto the floor.
@@ -10,8 +11,17 @@ import { SOLID, T, WALLISH } from '../world/tiles';
  *  'floor': a light strip on the threshold and two low lights at the sides, glowing on the floor.
  *  'runway': a light strip on the threshold and two rows of lights on the floor that light up one after
  *  another, leading you in. */
-export const DOOR_STYLE: Record<string, 'strips' | 'haze' | 'fog' | 'neon' | 'leds' | 'floor' | 'runway'> = { katerblau: 'strips', rso: 'fog', sisyphos: 'neon', heidegluehen: 'leds', cdv: 'floor', kitkat: 'runway' };
-const doorStyle = (sc: Scene) => DOOR_STYLE[sc.id.split(':')[0]];
+export type DoorStyle = 'strips' | 'haze' | 'fog' | 'neon' | 'leds' | 'floor' | 'runway';
+export const DOOR_STYLE: Record<string, DoorStyle> = { katerblau: 'strips', rso: 'fog', sisyphos: 'neon', heidegluehen: 'leds', cdv: 'floor', kitkat: 'runway' };
+/** Single rooms with their own doorway look, overriding the club's: every doorway into the room and every
+ *  doorway in it. Berghain's smoking area is full of smoke, so its doorways are fog. */
+const ROOM_STYLE: Record<string, DoorStyle> = { 'berghain:smoke': 'fog' };
+/** The look of the doorway tile `t` on scene `sceneId` ('club:floor'), or undefined for the club's old door. */
+export function doorStyleAt(sceneId: string, t: number): DoorStyle | undefined {
+  const [club, floor] = sceneId.split(':');
+  const to = INTERIORS[club]?.floors[floor]?.doors?.[ICHAR[t]]?.to;
+  return (to && ROOM_STYLE[club + ':' + to]) || ROOM_STYLE[sceneId] || DOOR_STYLE[club];
+}
 
 /** Which way a doorway opens: towards the floor next to it. 'down' means the room is below it (a doorway
  *  in a wall in front of you), 'up' a doorway in the wall behind you, 'left'/'right' one in a side wall. */
@@ -50,7 +60,7 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
     // a wall shows its front face when there's floor below it; a doorway in a side wall counts as wall here,
     // so the wall above it doesn't turn into a front face
     const below = at(x, y + 1);
-    const sideDoorBelow = !!doorStyle(sc) && below >= 81 && below <= 89 && ['left', 'right'].includes(doorSide(sc.map, x, y + 1));
+    const sideDoorBelow = below >= 81 && below <= 89 && !!doorStyleAt(sc.id, below) && ['left', 'right'].includes(doorSide(sc.map, x, y + 1));
     const frontFace = !WALLISH.has(below) && !sideDoorBelow;
     switch (t) {
       case 40: if (frontFace) face(X, Y); else { P(X, Y, 16, 16, '#141318'); if (!WALLISH.has(at(x, y - 1)) && y > 0) P(X, Y, 16, 1, '#26252c'); } break;
@@ -59,8 +69,8 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 61: P(X, Y, 16, 16, '#3a3a43'); for (let a = 1; a < 16; a += 3) for (let b = 1; b < 16; b += 3) P(X + a, Y + b, 1, 1, '#2c2c34'); break;
       case 47: P(X, Y, 16, 16, '#40454c'); P(X, Y, 16, 1, '#353940'); P(X, Y + 8, 16, 1, '#353940'); P(X, Y, 1, 16, '#353940'); P(X + 8, Y, 1, 16, '#353940'); break;
       case 46: P(X, Y, 16, 16, '#07060a'); if (rnd() < 0.2) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, '#121117'); break;
-      case 43: case 44: {
-        const up = t === 43;
+      case 43: case 44: case 130: {
+        const up = t !== 44;
         for (let i = 0; i < 4; i++) {
           const shade = up ? ['#5d5d68', '#6d6d78', '#7d7d88', '#8d8d98'][3 - i] : ['#4a4a54', '#3e3e47', '#33333b', '#282830'][i];
           P(X, Y + i * 4, 16, 4, shade); P(X, Y + i * 4, 16, 1, '#c9b25a');
@@ -84,6 +94,19 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
         break;
       }
+      case 134: { // the same church window, with red glass (Berghain's smoking area)
+        P(X, Y, 16, 16, '#2a2928'); P(X, Y + 13, 16, 3, '#1d1c22');
+        P(X + 3, Y + 4, 10, 10, INK); P(X + 4, Y + 2, 8, 3, INK); P(X + 6, Y + 1, 4, 2, INK);
+        P(X + 4, Y + 5, 8, 8, '#a8142a'); P(X + 5, Y + 3, 6, 2, '#c81e34'); P(X + 7, Y + 2, 2, 1, '#e02a40');
+        P(X + 4, Y + 5, 3, 3, '#ff4a5e'); P(X + 9, Y + 8, 3, 2, '#7a0a1c'); P(X + 5, Y + 10, 2, 3, '#ff7a86');
+        P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
+        break;
+      }
+      case 135: // heavy chains hanging from the ceiling down to the floor
+        floorBase(X, Y);
+        for (const cx of [4, 10]) for (let ly = -12; ly < 14; ly += 4) { P(X + cx - 1, Y + ly, 3, 4, INK); P(X + cx, Y + ly + 1, 1, 2, ly % 8 ? '#8a8e98' : '#5a5e68'); }
+        P(X + 2, Y + 13, 12, 2, '#1d1c22');
+        break;
       case 60: face(X, Y); P(X + 3, Y + 2, 10, 14, INK); P(X + 4, Y + 3, 8, 13, '#1a1820'); P(X + 5, Y + 5, 6, 2, '#c9b25a'); break;
       case 49: floorBase(X, Y); P(X + 3, Y - 9, 10, 25, INK); P(X + 4, Y - 8, 8, 23, '#6a6e78'); P(X + 4, Y - 8, 2, 23, '#8a8e98'); P(X + 10, Y - 8, 2, 23, '#4e525a'); break;
       case 58: floorBase(X, Y); P(X + 1, Y, 14, 16, INK); P(X + 2, Y + 1, 12, 14, '#1b1a20'); circle(g, X + 8, Y + 9, 4, '#34333b'); circle(g, X + 8, Y + 9, 2, '#0c0c12'); P(X + 4, Y + 2, 8, 2, '#2c2b33'); break;
@@ -208,6 +231,20 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X - 3, Y - 34, 22, 2, '#9a968c');
         break;
       }
+      case 131: // the Eisbar's chrome-tiled bar: little steel tiles, sprinkles and sugar shakers on top
+        floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 5, '#e8eaee');
+        for (let a = 1; a < 15; a += 3) for (let b = 7; b < 15; b += 3) P(X + a, Y + b, 2, 2, (a + b) % 2 ? '#b9bec7' : '#d6dae1');
+        if (rnd() < 0.6) { P(X + 3, Y + 1, 3, 4, '#f3eee3'); P(X + 3, Y + 1, 3, 1, '#9aa0aa'); P(X + 9, Y + 2, 4, 2, pick(['#ff5fa2', '#ffd23f', '#5ec8ff', '#7a4a2e'])); }
+        break;
+      case 132: // the glass ice case: tubs of ice cream, a pink neon tube glowing over them
+        floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 9, '#d9e6e0'); P(X + 1, Y + 10, 14, 5, '#b9bec7');
+        P(X + 2, Y + 4, 5, 4, '#5a3424'); P(X + 9, Y + 4, 5, 4, pick(['#f7c6d9', '#f2e2a0', '#5a3424']));
+        P(X, Y + 1, 16, 2, '#ff6fb5'); P(X, Y + 1, 16, 1, '#ffd6ec');
+        break;
+      case 133: // a small round table with two pink paper cups
+        floorBase(X, Y); circle(g, X + 8, Y + 9, 6, INK); circle(g, X + 8, Y + 9, 5, '#d6dae1'); P(X + 7, Y + 13, 2, 3, INK);
+        P(X + 5, Y + 6, 3, 3, '#ff8cc4'); P(X + 9, Y + 8, 3, 3, '#ff8cc4');
+        break;
       case 129: { // a black leather sofa, backrest against the right wall, seat facing the room
         floorBase(X, Y);
         const top = at(x, y - 1) !== 129, bot = at(x, y + 1) !== 129;
@@ -334,10 +371,10 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         break;
       case 101: P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y + 8, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2'); P(X + 8, Y, 1, 16, '#7fc8d2'); break;
       case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: {
-        if (doorStyle(sc)) {
+        if (doorStyleAt(sc.id, t)) {
           // the opening of a doorway; what's in it (curtain, fog, neon) is drawn each frame in interiors/fx.ts.
           // Around it the wall carries on: copy the wall tile next to it along the wall, if it's drawn already.
-          const st = doorStyle(sc), side = doorSide(sc.map, x, y);
+          const st = doorStyleAt(sc.id, t), side = doorSide(sc.map, x, y);
           const [wx, wy] = side === 'down' || side === 'up' ? [x - 1, y] : [x, y - 1];
           if (wx >= 0 && wy >= 0 && (WALLISH.has(at(wx, wy)) || SOLID.has(at(wx, wy)))) g.drawImage(cv, wx * T, wy * T, T, T, X, Y, T, T);
           else P(X, Y, 16, 16, INK);
@@ -351,6 +388,12 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
             ['#1e1d27', '#25232f', '#2d2b39', '#363346'].forEach((c, i) => R(3, 1 + i * 3, 10, i < 3 ? 3 : 5, c));
             R(2, 0, 1, 16, '#5a5870'); R(13, 0, 1, 16, '#5a5870'); R(2, 0, 12, 1, '#4a4860');
           }
+          break;
+        }
+        if (sc.id.startsWith('berghain')) {
+          // Berghain: a heavy steel door in the concrete, open a crack, red light behind it
+          P(X, Y, 16, 16, '#5c5a56'); P(X + 1, Y + 1, 14, 15, INK); P(X + 2, Y + 2, 12, 14, '#3a3c42');
+          P(X + 2, Y + 2, 12, 1, '#5a5e68'); P(X + 11, Y + 8, 2, 2, '#a7a7b3'); P(X + 2, Y + 2, 2, 14, '#7a0a1c');
           break;
         }
         // a doorway with a bead curtain

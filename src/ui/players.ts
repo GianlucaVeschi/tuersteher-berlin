@@ -54,7 +54,7 @@ function row(p: PlayerRow, me: string | null): HTMLElement {
   const stats = document.createElement('div');
   stats.className = 'pl-stats';
   const clubs = document.createElement('span'); clubs.textContent = `${p.stamps}/${CLUBS.length} clubs`;
-  const quests = document.createElement('span'); quests.textContent = `${p.quests}/${TOTAL_QUESTS} quests`;
+  const quests = document.createElement('span'); quests.textContent = `${Math.min(p.quests, TOTAL_QUESTS)}/${TOTAL_QUESTS} quests`; // old entries counted stray keys
   stats.append(clubs, quests);
   const st = document.createElement('div');
   st.className = 'pl-status';

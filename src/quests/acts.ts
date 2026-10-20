@@ -193,10 +193,17 @@ export const ACTS: Record<string, Act> = {
     await say(drinks[a][1]);
     await completeQuest(clubId, 'drink');
   },
+  // the Eisbar upstairs (researched): espresso, affogato, and the famous plain chocolate in a pink paper cup
   async ice(e, clubId) {
-    await say('Eisbar: Two scoops?');
-    await ask('Pick a flavour', ['Vanilla', 'Chocolate', "Whatever's coldest"]);
-    await say('(Best ice cream you have ever had at 6am.)');
+    await say('Barista: Morning. Ice cream, espresso, affogato?');
+    const a = await ask('What will it be?', ['Two scoops of chocolate', 'Affogato', 'An espresso', 'A banana']);
+    await say([
+      'Barista: Good choice. Two scoops, pink paper cup. 2.40.',
+      'Barista: Ice cream drowned in espresso. The Berghain breakfast.',
+      '(A tiny espresso in a white porcelain cup. Your heart says thank you. Then it says faster.)',
+      '(A banana. Somehow the healthiest thing anyone has done in this building tonight.)'
+    ][a]);
+    if (a === 0) await say('(Smooth, not too sweet. Best ice cream you have ever had at 6am.)');
     await completeQuest(clubId, 'ice');
   },
   async dj(e, clubId) {
