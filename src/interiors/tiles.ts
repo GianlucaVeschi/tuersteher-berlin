@@ -9,6 +9,7 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
   const g = cv.getContext('2d')!;
   const P = (x: number, y: number, w: number, h: number, c: string) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
   const at = (x: number, y: number) => (x < 0 || y < 0 || x >= sc.w || y >= sc.h) ? 62 : sc.map[y][x];
+  const up = (t: number) => t === 124;
   const floorBase = (X: number, Y: number) => { P(X, Y, 16, 16, '#2f2e35'); for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#37363e', '#28272d'])); };
   const face = (X: number, Y: number) => { // raw concrete wall seen from the front, with formwork tie holes
     P(X, Y, 16, 16, '#5c5a56'); P(X, Y, 1, 16, '#4e4c48'); P(X, Y, 16, 2, '#6e6c67'); P(X, Y + 13, 16, 3, '#2a2928');
@@ -42,7 +43,14 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (let i = 0; i < 14; i++) { const gx = X + 1 + i, wy = Math.round(7 + 3 * Math.sin((gx) / 6)); P(gx, Y + wy, 1, 1, '#9fd6c0'); P(gx, Y + wy + 1, 1, 1, '#4a7a6a'); if (i % 3 === 0) P(gx, Y + 12 - Math.round(2 * Math.cos(gx / 5)), 1, 1, '#f0b8d0'); }
         break;
       }
-      case 50: P(X, Y, 16, 16, '#1d1c22'); P(X + 1, Y + 1, 14, 12, '#2a2a32'); for (let i = 2; i < 13; i += 2) P(X + 1, Y + i, 14, 1, '#4c4c56'); P(X, Y + 13, 16, 3, '#2a2928'); break;
+      case 50: { // a tall church-like window: stone frame, pointed arch, violet stained glass with lead lines
+        P(X, Y, 16, 16, '#2a2928'); P(X, Y + 13, 16, 3, '#1d1c22');
+        P(X + 3, Y + 4, 10, 10, INK); P(X + 4, Y + 2, 8, 3, INK); P(X + 6, Y + 1, 4, 2, INK);
+        P(X + 4, Y + 5, 8, 8, '#6a3fb0'); P(X + 5, Y + 3, 6, 2, '#7a4fc8'); P(X + 7, Y + 2, 2, 1, '#8a5fd8');
+        P(X + 4, Y + 5, 3, 3, '#9a6fe8'); P(X + 9, Y + 8, 3, 2, '#5a2f90'); P(X + 5, Y + 10, 2, 3, '#b08cf0');
+        P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
+        break;
+      }
       case 60: face(X, Y); P(X + 3, Y + 2, 10, 14, INK); P(X + 4, Y + 3, 8, 13, '#1a1820'); P(X + 5, Y + 5, 6, 2, '#c9b25a'); break;
       case 49: floorBase(X, Y); P(X + 3, Y - 9, 10, 25, INK); P(X + 4, Y - 8, 8, 23, '#6a6e78'); P(X + 4, Y - 8, 2, 23, '#8a8e98'); P(X + 10, Y - 8, 2, 23, '#4e525a'); break;
       case 58: floorBase(X, Y); P(X + 1, Y, 14, 16, INK); P(X + 2, Y + 1, 12, 14, '#1b1a20'); circle(g, X + 8, Y + 9, 4, '#34333b'); circle(g, X + 8, Y + 9, 2, '#0c0c12'); P(X + 4, Y + 2, 8, 2, '#2c2b33'); break;
@@ -113,6 +121,75 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 103: // karaoke machine: a TV on a stand with a mic
         P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
         P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
+      // ---- Berghain ----
+      case 123: { // the drop to the Säule: darkness with lights far below; a railing where the floor ends
+        P(X, Y, 16, 16, '#07060a');
+        if (rnd() < 0.5) P(X + 2 + Math.floor(rnd() * 12), Y + 2 + Math.floor(rnd() * 12), 1, 1, pick(['#3a2a4a', '#4a2030', '#2a3a4a', '#c9c5d4']));
+        if (at(x + 1, y) !== 123) { P(X + 13, Y, 3, 16, INK); P(X + 14, Y, 1, 16, '#8a8e98'); for (let i = 1; i < 16; i += 5) P(X + 12, Y + i, 4, 1, '#6a6e78'); }
+        if (at(x, y + 1) !== 123) { P(X, Y + 13, 16, 3, INK); P(X, Y + 14, 16, 1, '#8a8e98'); }
+        break;
+      }
+      case 124: case 127: { // a side staircase, Pokémon style: the whole block is one diagonal flight rising
+        // to the right (small treads and risers), a row of posts along the front and a handrail on the diagonal
+        let bx0 = x, bx1 = x, by0 = y, by1 = y;
+        while (at(bx0 - 1, y) === t) bx0--; while (at(bx1 + 1, y) === t) bx1++;
+        while (at(x, by0 - 1) === t) by0--; while (at(x, by1 + 1) === t) by1++;
+        const BW = (bx1 - bx0 + 1) * 16, BH = (by1 - by0 + 1) * 16, band = Math.max(28, Math.round(BH * 0.62));
+        const n = Math.max(3, Math.round(BW / 7)), stepW = BW / n, rise = (BH - band) / n;
+        const ox = (x - bx0) * 16, oy = (y - by0) * 16;
+        floorBase(X, Y);
+        const col = (c: number, gy0: number, h: number, colour: string) => {
+          const y0 = Math.max(0, gy0 - oy), y1 = Math.min(16, gy0 + h - oy);
+          if (y1 > y0) P(X + c, Y + y0, 1, y1 - y0, colour);
+        };
+        const railC = up(t) ? '#c9b25a' : '#d6d2e0';
+        for (let c = 0; c < 16; c++) {
+          const gx = ox + c, si = Math.min(n - 1, Math.floor(gx / stepW));
+          const tread = Math.round(BH - band - si * rise);                 // top of this step (stepped)
+          const line = BH - band - (gx / BW) * (n - 1) * rise;             // the smooth diagonal
+          const rail = Math.round(line + band * 0.62);
+          col(c, tread, rail + 6 - tread, '#6a6a74');                      // the flight behind the posts
+          col(c, tread, 3, '#c9c5d4');                                     // tread
+          if (gx - si * stepW < 1.2) col(c, tread, rail + 6 - tread, '#4a4a54'); // riser shadow where a step begins
+          if (gx % 4 === 1) { col(c, rail - 10, 10, '#9a9eaa'); col(c, rail - 11, 2, '#e8e4f0'); } // posts with caps
+          if (gx % 4 === 2) col(c, rail - 10, 10, '#5a5e68');
+          col(c, rail, 3, railC); col(c, rail + 3, 1, INK);                // handrail
+          col(c, rail + 4, 2, '#18171d');                                  // shadow under it
+        }
+        break;
+      }
+      case 125: // the mezzanine railing: steel posts and a top rail, the floor below shows through
+        P(X, Y, 16, 16, '#3a3a43'); for (let a = 1; a < 16; a += 3) for (let b = 1; b < 16; b += 3) P(X + a, Y + b, 1, 1, '#2c2c34');
+        P(X, Y + 3, 16, 2, INK); P(X, Y + 3, 16, 1, '#b9b5c6');
+        for (let i = 1; i < 16; i += 5) P(X + i, Y + 4, 2, 10, '#6a6e78');
+        P(X, Y + 13, 16, 1, '#6a6e78');
+        break;
+      case 128: { // a column like on a Greek temple, three tiles tall: drawn once from its bottom tile
+        floorBase(X, Y);
+        if (at(x, y + 1) === 128) break;
+        P(X - 2, Y + 10, 20, 6, INK); P(X - 1, Y + 11, 18, 4, '#9a968c'); P(X - 1, Y + 11, 18, 1, '#b8b4a8');   // base
+        P(X, Y - 26, 16, 37, INK); P(X + 1, Y - 25, 14, 36, '#b8b4a8');                                       // shaft
+        for (let f = 2; f < 15; f += 3) { P(X + f, Y - 25, 1, 36, '#8a867c'); P(X + f + 1, Y - 25, 1, 36, '#cfcbc0'); } // flutes
+        P(X - 3, Y - 32, 22, 7, INK); P(X - 2, Y - 31, 20, 5, '#cfcbc0'); P(X - 2, Y - 27, 20, 1, '#8a867c');     // capital
+        circle(g, X - 2, Y - 28, 3, '#8a867c'); circle(g, X + 18, Y - 28, 3, '#8a867c');                         // volutes
+        P(X - 3, Y - 34, 22, 2, '#9a968c');
+        break;
+      }
+      case 129: { // a black leather sofa, backrest against the right wall, seat facing the room
+        floorBase(X, Y);
+        const top = at(x, y - 1) !== 129, bot = at(x, y + 1) !== 129;
+        P(X + 1, Y + (top ? 1 : 0), 15, 16 - (top ? 1 : 0) - (bot ? 1 : 0), INK);
+        P(X + 10, Y + (top ? 2 : 0), 5, 16 - (top ? 2 : 0) - (bot ? 2 : 0), '#1c1b22');    // backrest
+        P(X + 2, Y + (top ? 2 : 0), 8, 16 - (top ? 2 : 0) - (bot ? 2 : 0), '#2a2930');     // seat
+        P(X + 3, Y + (top ? 3 : 1), 6, 1, '#4a4952');                                       // shine
+        if (!bot) P(X + 2, Y + 15, 8, 1, '#141318');                                        // seam between cushions
+        if (top) P(X + 1, Y + 2, 2, 5, '#141318'); if (bot) P(X + 1, Y + 9, 2, 5, '#141318'); // armrests
+        break;
+      }
+      case 126: // a Garderobe rack: a rail full of jackets, hoodies and bags
+        P(X, Y, 16, 16, '#1c1b22'); P(X, Y + 2, 16, 1, '#8a8e98');
+        for (let i = 0; i < 5; i++) { const c = pick(['#0c0c12', '#2a2a33', '#3a2a20', '#5a5a66', '#1f2f4d', '#4a1a1a']); P(X + 1 + i * 3, Y + 3, 3, 10 + (i % 2) * 2, c); P(X + 2 + i * 3, Y + 3, 1, 1, '#c9c5d4'); }
+        break;
       // ---- black-light minigolf ----
       case 114: { // a glowing lane: dark felt, neon rails, a hole with a flag
         P(X, Y, 16, 16, '#0c0b14'); P(X + 1, Y + 1, 14, 14, '#123a24');

@@ -11,6 +11,7 @@ import type { InteriorDef } from '../types';
    c  ticket desk            b  bench              _  mezzanine grating
    N  Piotr Nathan wall installation               A  Wolfgang Tillmans print
    W  tall windows with metal blinds               L  Lab.oratory door (closed)
+   ;  the empty space overlooking the Säule, behind a railing
 
    Staff stand behind counters; you talk to them across the counter.
    `people` entries: { x, y, look, lines } or { x, y, look, act } where `act`
@@ -21,130 +22,185 @@ export const INTERIORS: Record<string, InteriorDef> = {
     name: 'Berghain',
     floors: {
       eg: {
-        label: 'Erdgeschoss', short: 'EG',
+        // The ground floor, Säule (after its big concrete pillar), laid out from the owner's sketch:
+        // in through the vertical corridor, left into the bag check, round the squared C to the Kasse
+        // at the top, into the changing space and the Garderobe, then the Säule with the bar along the
+        // top, the DJ on the left, seats along the bottom and the staircase up in the top right. Going
+        // out you skip the C: the corridor is open at the top.
+        // Extra legend: ]  staircase up (rising to the right)   $  coat rack
+        label: 'Säule', short: 'SÄULE',
         map: [
-      '##############################',
-      '#NNNNNNNNNN##^^^^##kkkkkkkkkk#',
-      '#............^^^^.#kkkkkkkkkk#',
-      '#.................#kkkkkkkkkk#',
-      '#.................#kkkkkkkkkk#',
-      '####..............##k#########',
-      '#..C....................######',
-      '#..C....................=....#',
-      '#..C....P......P........=....#',
-      '#..C....................=....#',
-      '#..C....................=....#',
-      '#..C....................=....#',
-      '####....................######',
-      '#.......P..........P.........#',
-      '#............................#',
-      '#............................#',
-      '#.bbbb....ccc................#',
-      '#............................#',
-      '#............................#',
-      '####L#########xx##############'
+      '##################################',
+      '#kkkk#....#............##]]]]]]]]#',
+      '#kkkk#.....============..]]]]]]]]#',
+      '#kkkk#.S.................]]]]]]]]#',
+      '#kkkk#.D..,,,,,,,,,,,,,..]]]]]]]]#',
+      '#kkkk#.D..,,,,,,,,,,,,,..........#',
+      '#kkkk#.D..,,,,,,,,P,,,,..........#',
+      '#kkkk#.S..,,,,,,,,,,,,,..........#',
+      '#kkkkk....,,,,,,,,,,,,,..........#',
+      '######...bbbbb...bbbbb...........#',
+      '##############..########..########',
+      '#................................#',
+      '#.bbbb....................bbbb...#',
+      '#................................#',
+      '#.bbbb..bbb......................#',
+      '#.............#.#................#',
+      '#####L#########c#.#..#...........#',
+      '############......#..##CCCCCCCCC##',
+      '############..#####..##.........##',
+      '############..#####..##$$$$$$$$$##',
+      '############......#..#############',
+      '############.........#############',
+      '###################..#############',
+      '###################..#############',
+      '###################xx#############'
         ],
-        spawn: { street: [14, 18, 'up'], fromUp: [14, 3, 'down'] },
+        spawn: { street: [19, 23, 'up'], fromUp: [24, 3, 'left'] },
         up: { to: 'mf', at: 'fromDown' },
         exit: true,
-        dancers: 0,
+        dancers: 10,
         people: [
-          { x: 2, y: 8, act: 'coat', look: { skin: '#e2b08c', hair: '#2a2420', top: '#16151c', legs: '#16151c', long: true } },
-          { x: 25, y: 9, act: 'bar', look: { skin: '#c98d6a', bald: true, top: '#16151c', legs: '#16151c', beard: '#2a1a14' } },
-          { x: 11, y: 15, act: 'cashier', look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#16151c', legs: '#16151c', glasses: '#9fc7e6' } },
-          { x: 17, y: 17, dir: 'left', look: { skin: '#d9a27c', bald: true, top: '#111016', legs: '#111016', big: true }, lines: ['Security: Stickers stay on your cameras. All night.', 'Security: No photos. Have fun.'] },
-          { x: 6, y: 14, dir: 'right', look: { skin: '#f0c7a0', hair: '#111', top: '#2a2a33', legs: '#1a1920' }, lines: ['Raver: First time? The stairs take you up to the main floor.', 'Raver: Panorama Bar is above that. Wait for the blinds.'] },
-          { x: 24, y: 2, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12' }, lines: ['…', '(Someone in the dark. They just nod.)'] },
-          { x: 27, y: 4, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['(A shape in the dark. You leave them to it.)'] }
+          { x: 14, y: 21, dir: 'left', look: { skin: '#d9a27c', bald: true, top: '#111016', legs: '#111016', big: true }, lines: ['Security: Bag open, please. Phone.', '(A sticker goes over each camera.)', 'Security: Stickers stay on. All night. Have fun.'] },
+          { x: 12, y: 19, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#16151c', legs: '#16151c' }, lines: ['Raver: Round the corner, up, round again. Then the Kasse. Then freedom.'] },
+          { x: 16, y: 20, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: They checked my bag twice. I brought only gum.'] },
+          { x: 15, y: 15, dir: 'down', act: 'cashier', look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#16151c', legs: '#16151c', glasses: '#9fc7e6' } },
+          { x: 21, y: 15, dir: 'left', look: { skin: '#c98d6a', bald: true, top: '#111016', legs: '#111016', big: true }, lines: ['Security: The way out is down the corridor.', 'Security: Coming back in? Show the stamp on your hand at the door.'] },
+          // the Garderobe: two staff, racks full of jackets, a queue handing over their clothes
+          { x: 27, y: 18, dir: 'up', act: 'coat', look: { skin: '#e2b08c', hair: '#2a2420', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 24, y: 18, dir: 'up', look: { skin: '#c98d6a', hair: '#111', top: '#16151c', legs: '#16151c' }, lines: ['Garderobe: Next! Jacket, bag, all of it. Number 412.'] },
+          { x: 23, y: 16, dir: 'down', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#5a4a3a', legs: '#16151c' }, lines: ['Raver: Coat, scarf, hoodie and a second hoodie. It was cold in the queue.'] },
+          { x: 24, y: 16, dir: 'down', look: { skin: '#8d5a3b', hair: '#111', top: '#1f2f4d', legs: '#16151c' }, lines: ['Raver: (stuffing a jacket into a tote bag) One euro for a bag, one euro for a jacket. Bag it is.'] },
+          { x: 29, y: 16, dir: 'down', look: { skin: '#e2b08c', hair: '#5a3a22', top: '#3a2a20', legs: '#16151c', beard: '#5a3a22' }, lines: ['Raver: I always lose my ticket. Then it is three hours of describing a black jacket.'] },
+          { x: 30, y: 16, dir: 'down', look: { skin: '#f0c7a0', hair: '#b04a2a', long: true, top: '#4a1a1a', legs: '#16151c' }, lines: ['Raver: Do not give them your phone. Do not give them your keys. Do give them the jacket.'] },
+          { x: 31, y: 16, dir: 'left', look: { skin: '#c98d6a', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['Raver: (already down to a harness) Garderobe first, then I am a new person.'] },
+          { x: 26, y: 14, dir: 'down', look: { skin: '#f3c9a8', hair: '#111', top: '#5a5a66', legs: '#16151c' }, lines: ['Raver: The queue for the Garderobe is the second queue of the night.'] },
+          // the changing space
+          { x: 8, y: 11, dir: 'down', look: { skin: '#f0c7a0', hair: '#111', top: '#2a2a33', legs: '#1a1920' }, lines: ['(Someone is swapping a hoodie for a harness. Nobody looks twice.)'] },
+          { x: 3, y: 13, dir: 'down', look: { skin: '#e2b08c', hair: '#c9a24a', long: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: Boots on, sneakers in the bag, bag to the Garderobe. Ready.'] },
+          { x: 9, y: 13, dir: 'down', look: { skin: '#8d5a3b', hair: '#111', top: '#16151c', legs: '#16151c', shades: true }, lines: ['Raver: Sunglasses on. Yes, inside. Yes, at night.'] },
+          { x: 20, y: 12, dir: 'down', look: { skin: '#c98d6a', hair: '#5a3a22', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: Jacket off, shirt off, phone away. Now I am ready.'] },
+          { x: 27, y: 11, dir: 'down', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['Raver: First time? Change here, Garderobe over there, Säule through there. Main floor is up the stairs.'] },
+          // the Säule
+          { x: 13, y: 1, dir: 'down', act: 'bar', look: { skin: '#c98d6a', bald: true, top: '#16151c', legs: '#16151c', beard: '#2a1a14' } },
+          { x: 19, y: 1, dir: 'down', act: 'bar', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 6, y: 5, dir: 'right', act: 'dj', look: { skin: '#e2b08c', hair: '#2a2420', top: '#0c0c12', legs: '#0c0c12', shades: true } },
+          { x: 17, y: 7, dir: 'up', look: { skin: '#f0c7a0', hair: '#111', top: '#2a2a33', legs: '#1a1920' }, lines: ['Raver: This floor is the Säule. "Pillar". Because of that one in the middle.', 'Raver: The main floor is up the stairs on the right. Panorama Bar is above that.'] },
+          { x: 2, y: 3, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12' }, lines: ['…', '(Someone in the dark. They just nod.)'] },
+          { x: 3, y: 6, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['(A shape in the dark. You leave them to it.)'] }
         ]
       },
       mf: {
+        // The main floor, laid out from the owner's sketch: the bathroom, the steps up to the mezzanine
+        // (railing over the dancefloor, the lighting desk, then the stairs to Panorama Bar) and the
+        // darkrooms along the top, the empty space overlooking the Säule behind a railing on
+        // the left, the dancefloor with its columns, the DJ on the right, the bar along the bottom, and
+        // in the bottom left the stairs down to the Säule and a few steps up to the ice cream.
         label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
-      '###############################^^^##',
-      '#.....#......#......#..........^^^.#',
-      '#IIIII#......#......#..............#',
-      '#________.....DDDDDD...............#',
-      '#________.S.............S...S..S...#',
-      '#________.S.P.........P.S...S..S...#',
+      '#########tt|t|t|ttt#########^^^#kkk#',
+      '#########tt|t|t|ttt########___D#kkk#',
+      '#########tttttttttt#...}}}}___D#kkk#',
+      '#########tttttttttt#...}}}}____#kkk#',
+      '#############t######...}}}}))))##k##',
+      '#;;;;;;;...........................#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.S..#',
+      '#;;;;;;;.S,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.S,,,,{,,,,,{,,,,,,{,,,.S..#',
+      '#;;;;;;;.,,,,,{,,,,,{,,,,,,{,,,....#',
+      '#;;;;;;;.,,,,,{#####{######{,,,....#',
+      '#;;;;;;;...........................#',
+      '#;;;;;;;...........................#',
       '#..................................#',
-      '#.......,,,,,,,,,,,,,,,,,,,........#',
-      '#.......,,,,,,,,,,,,,,,,,,,........#',
-      '#.......,,,,,,,,,,,,,,,,,,,........#',
-      '#...S...,,,,,,,,,,,,,,,,,,,...S....#',
-      '#...S...,,,,,,,,,,,,,,,,,,,...S....#',
-      '####....,,,,,,,,,,,,,,,,,,,.....####',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '####......................###t######',
-      '#......P.................P#tttttttt#',
-      '#................S........#tttttttt#',
-      '#.vvv.....bbbbbb..........#t|t|t|tt#',
-      '#.vvv.....................#t|t|t|tt#',
+      '#.......______.....................#',
+      '#vvvv...______.....................#',
+      '#vvvv...#IIII###==================##',
+      '#vvvv..#......##..................##',
       '####################################'
         ],
-        spawn: { fromDown: [3, 22, 'up'], fromUp: [32, 3, 'down'] },
+        spawn: { fromDown: [3, 19, 'up'], fromUp: [28, 2, 'down'] },
         down: { to: 'eg', at: 'fromUp' },
         up: { to: 'pb', at: 'fromDown' },
         dancers: 26,
+        beams: true,
         people: [
-          { x: 16, y: 3, act: 'dj', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', shades: true } },
-          { x: 3, y: 2, act: 'ice', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#f3eee3', legs: '#16151c', long: true } },
-          { x: 2, y: 16, act: 'bar', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#16151c', legs: '#16151c', beard: '#5a3a22' } },
-          { x: 33, y: 16, act: 'bar', look: { skin: '#8d5a3b', hair: '#111', top: '#16151c', legs: '#16151c', long: true } },
-          { x: 33, y: 22, dir: 'left', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (splashing water on their face) Ugh. Better.'] },
-          // blocks the toilet door until you bring K; after the quest he waits inside the toilets
-          { x: 29, y: 19, act: 'toiletGuy', dir: 'up', movedWhen: 'toilet', movedTo: [30, 22], look: { skin: '#e2b08c', hair: '#111', top: '#16151c', legs: '#16151c', shades: true } },
-          // Mila: dances by the left speakers, has what the toilet guy wants
-          { x: 9, y: 11, act: 'mila', dance: true, phase: 3, look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, shades: true, top: '#0c0c12', legs: '#121116' } },
-          { x: 28, y: 18, act: 'awareness', dir: 'left', look: { skin: '#c98d6a', hair: '#7ec8ff', top: '#5ec8ff', legs: '#26242e', long: true } },
-          { x: 12, y: 22, dir: 'down', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: Sitting down for five minutes. Then back in.'] }
+          { x: 33, y: 10, act: 'dj', dir: 'left', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', shades: true } },
+          { x: 10, y: 22, act: 'ice', dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#f3eee3', legs: '#16151c', long: true } },
+          { x: 20, y: 22, act: 'bar', dir: 'up', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#16151c', legs: '#16151c', beard: '#5a3a22' } },
+          { x: 28, y: 22, act: 'bar', dir: 'up', look: { skin: '#8d5a3b', hair: '#111', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 16, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (splashing water on their face) Ugh. Better.'] },
+          // blocks the bathroom door until you bring K; after the quest he waits inside
+          { x: 13, y: 5, act: 'toiletGuy', dir: 'down', movedWhen: 'toilet', movedTo: [14, 3], look: { skin: '#e2b08c', hair: '#111', top: '#16151c', legs: '#16151c', shades: true } },
+          // Mila: dances by the left speakers, by the railing over the Säule; has what the toilet guy wants
+          { x: 10, y: 11, act: 'mila', dance: true, phase: 3, look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, shades: true, top: '#0c0c12', legs: '#121116' } },
+          // the mezzanine: the lighting guy at his desk, people leaning on the railing
+          { x: 29, y: 3, dir: 'right', act: 'lights', name: 'Lights', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', glasses: '#9fc7e6' } },
+          { x: 28, y: 4, dir: 'down', look: { skin: '#f0c7a0', hair: '#b04a2a', long: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (leaning on the railing) From up here it looks like one animal breathing.'] },
+          { x: 31, y: 19, act: 'awareness', dir: 'left', look: { skin: '#c98d6a', hair: '#7ec8ff', top: '#5ec8ff', legs: '#26242e', long: true } },
+          { x: 8, y: 14, dir: 'left', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (leaning on the railing) Look down. That is the Säule. Tiny people, big pillar.'] },
+          { x: 5, y: 19, dir: 'down', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: Sitting down for five minutes. Then back in.'] }
         ]
       },
       pb: {
+        // Panorama Bar, laid out from the owner's notes: the left third holds the bathrooms (top left)
+        // and the darkrooms (bottom left); the right two thirds the DJ, the dancefloor, one ring bar you
+        // can walk all the way round, black sofas on the far right, and tall church-like windows in the top
+        // right letting violet light in.
+        // Extra legend: &  black leather sofa
         label: 'Panorama Bar', short: 'PANO',
         map: [
-      '############################',
-      '##AAAAA##WWWWWWWWWWWWWWWW###',
-      '#..........................#',
-      '#.,,,,,,,,,,,,,,.......bbb.#',
-      '#.,,,,,,,,,,,,,,.......bbb.#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.#######,,,,,,,.======....#',
-      '#.#.....#,,,,,,,.=....=....#',
-      '#.#.....#,,,,,,,.=....=....#',
-      '#.,DDDDD,,,,,,,,.=....=....#',
-      '#.,,,,,,,,,,,,,,.======....#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.......................vv.#',
-      '#.......................vv.#',
-      '############################'
+      '################################',
+      '#tt|t|t|t##AAAAA##WWWWWWWWWWWW##',
+      '#tt|t|t|t#..S,,,,,,,,,,,,,,,,,&#',
+      '#tttttttt#..D,,,,,,,,,,,,,,,,,&#',
+      '#tttttttt#..D,,,,,,,,,,,,,,,,,&#',
+      '#tttttttt#..D,,,,,,==========.&#',
+      '#tttttttt#..D,,,,,,=........=..#',
+      '#####t####..,,,,,,,=........=..#',
+      '#...........,,,,,,,=........=.&#',
+      '#####k####...,,,,,,=........=.&#',
+      '#kkkkkkkk#...,,,,,,=........=.&#',
+      '#kkkkkkkk#...,,,,,,=........=.&#',
+      '#kkkkkkkk#...,,,,,,==========..#',
+      '#kkkkkkkk#...,,,,,,............#',
+      '#kkkkkkkk#...,,,,,,............#',
+      '#kkkkkkkk#...,,,,,,......vv....#',
+      '#kkkkkkkk#...............vv....#',
+      '################################'
         ],
-        spawn: { fromDown: [24, 14, 'up'] },
+        spawn: { fromDown: [25, 14, 'up'] },
         down: { to: 'mf', at: 'fromUp' },
-        dancers: 14,
+        dancers: 16,
+        violet: true,
         people: [
-          { x: 5, y: 9, act: 'dj', look: { skin: '#c98d6a', hair: '#e83f8f', top: '#16151c', legs: '#16151c', long: true } },
-          { x: 19, y: 10, act: 'bar', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#16151c', legs: '#16151c' } },
-          { x: 20, y: 8, act: 'bar', look: { skin: '#e2b08c', bald: true, top: '#16151c', legs: '#16151c' } },
-          { x: 16, y: 9, act: 'sascha', dir: 'left', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#0c0c12', legs: '#0c0c12', harness: true } },
-          { x: 24, y: 5, dir: 'down', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#16151c', legs: '#16151c', beard: '#c0c0c0' }, lines: ['Regular: When the blinds go up, the whole room screams.', "Regular: It only happens when the night's been good. Keep going."] }
+          { x: 11, y: 5, dir: 'right', act: 'dj', look: { skin: '#c98d6a', hair: '#e83f8f', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 20, y: 8, dir: 'left', act: 'bar', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#16151c', legs: '#16151c' } },
+          { x: 27, y: 9, dir: 'right', act: 'bar', look: { skin: '#e2b08c', bald: true, top: '#16151c', legs: '#16151c' } },
+          { x: 23, y: 6, dir: 'down', look: { skin: '#c98d6a', hair: '#111', top: '#16151c', legs: '#16151c', long: true }, lines: ['Bar: (polishing a glass) Espresso Martini? Everyone up here wants one.'] },
+          { x: 29, y: 2, dir: 'right', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['Raver: (sinking into the black sofa) I sat down at four. It is now... still Sunday?'] },
+          { x: 22, y: 13, act: 'sascha', dir: 'up', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#0c0c12', legs: '#0c0c12', harness: true } },
+          { x: 29, y: 3, dir: 'left', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#16151c', legs: '#16151c', beard: '#c0c0c0' }, lines: ['Regular: Look at the windows. Violet like a church. When the blinds go up, the whole room screams.', "Regular: It only happens when the night's been good. Keep going."] },
+          { x: 6, y: 4, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (at the mirror) Five more minutes. Then back to the floor.'] },
+          { x: 4, y: 8, dir: 'right', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: Bathrooms up there, darkrooms down there. Choose wisely.'] },
+          { x: 3, y: 12, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['(A shape in the dark. You leave them to it.)'] }
         ]
       }
     },
     examine: {
+      $: ['Rails of jackets, hoodies and tote bags, hundreds of them. Somewhere in there: yours.'],
+      ')': ['A railing. Below: the main floor, lights sweeping over a thousand heads.'],
+      '{': ['A huge column, fluted like on a Greek temple. Somebody is hugging it, eyes closed.'],
+      ';': ['A railing. Below you, the Säule: the bar, the pillar, tiny people dancing. The bass comes up through the floor.'],
       S: ['A Funktion-One speaker stack. Your trousers are vibrating.'],
       N: ['A huge wall installation by Piotr Nathan.', 'Hundreds of little panels. Nobody knows where to start looking.'],
       A: ['A huge Wolfgang Tillmans print from his Freischwimmer series.', 'Soft lines of light floating on black.'],
-      W: ['Tall windows with metal blinds. Closed. For now.'],
+      '&': ['A black leather sofa, warm and very slightly sticky. Somebody is asleep on the other end.'],
+      W: ['Tall arched windows like in a church. Violet light pours through the glass. The blinds behind them stay down. For now.'],
       L: ['Lab.oratory. Separate entrance, separate rules. Closed tonight.'],
       P: ['A steel pillar from the old power plant.'],
       '|': ['Two pairs of feet under the stall door. Classic.']
@@ -155,11 +211,11 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'Raver: Water is free at the bar, you know.', '(They are too deep in the music to answer.)'
     ],
     quests: [
-      { id: 'coat', title: 'Check your coat', hint: 'Garderobe, ground floor.' },
+      { id: 'coat', title: 'Check your coat', hint: 'Garderobe, on the ground floor (Säule), past the changing space.' },
       { id: 'drink', title: 'Order a drink', hint: 'Any bar.' },
       { id: 'ice', title: 'Get ice cream', hint: 'Eisbar on the mezzanine, main floor.' },
       { id: 'dance', title: 'Dance on the main floor', hint: 'Press A on the dancefloor.' },
-      { id: 'toilet', title: 'Get into the toilets', hint: 'Someone is blocking the toilet door, main floor.' },
+      { id: 'toilet', title: 'Get into the toilets', hint: 'Someone is blocking the bathroom door, top left of the main floor.' },
       { id: 'darkroom', title: 'Take someone to the darkroom', hint: 'Find Sascha at Panorama Bar.' },
       { id: 'sunrise', title: 'Dance when the blinds open', hint: 'Finish three quests, then go to Panorama Bar.' }
     ]

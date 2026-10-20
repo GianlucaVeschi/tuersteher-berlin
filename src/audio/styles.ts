@@ -270,7 +270,6 @@ export const STYLES: Record<string, Style> = {
 
 /** Floors that sound like another style heard through a wall or a door. */
 const MUFFLED: Record<string, [string, number]> = {
-  'berghain:eg': ['berghain', 420],        // the main floor, through the concrete above
   'rso:keller': ['rso_robus', 360],        // ROBUS, through the ceiling
   'heidegluehen:klo': ['heide', 650],      // the toilets: the dancefloor through the door
   'tresor:tunnel': ['tresor', 700]         // the tunnel: the vault getting louder ahead
@@ -278,7 +277,7 @@ const MUFFLED: Record<string, [string, number]> = {
 
 /** Which style plays on each club floor. */
 const FLOOR_STYLE: Record<string, string> = {
-  'berghain:mf': 'berghain', 'berghain:pb': 'panorama',
+  'berghain:eg': 'rso_robus', 'berghain:mf': 'berghain', 'berghain:pb': 'panorama',
   'sisyphos:strand': 'sisy_strand', 'sisyphos:wg': 'sisy_wg', 'sisyphos:hh': 'sisy_hh', 'sisyphos:df': 'sisy_df', 'sisyphos:tn': 'sisy_tn', 'sisyphos:sa': 'sauna',
   'kitkat:main': 'kitkat', 'kitkat:pool': 'kitkat_pool', 'kitkat:dungeon': 'kitkat_dungeon',
   'rso:opan': 'rso_opan', 'rso:robus': 'rso_robus', 'rso:summe': 'rso_summe',

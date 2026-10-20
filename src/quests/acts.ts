@@ -218,14 +218,14 @@ export const ACTS: Record<string, Act> = {
       return;
     }
     if (state.kStage === 0) {
-      await say('Toilet guy: Toilets are full. Everyone in there is waiting for the same thing.');
+      await say('Toilet guy: Bathroom is full. Every stall, and everyone in there is waiting for the same thing.');
       await say('Toilet guy: Bring some K and you can come in with me. Otherwise, queue.');
-      await say("Toilet guy: Ask Mila. Pink hair, sunglasses, dancing by the speakers on the left. Say I sent you.");
+      await say("Toilet guy: Ask Mila. Pink hair, sunglasses. She dances on the left of the floor, by the speakers next to the railing over the Säule. Say I sent you.");
       state.kStage = 1; save(); renderCard();
       return;
     }
-    if (state.kStage === 1) { await say('Toilet guy: Found Mila yet? Pink hair, sunglasses. Left side of the floor, by the speakers.'); return; }
-    await say('Toilet guy: You got it? Nice. Come on.');
+    if (state.kStage === 1) { await say('Toilet guy: Found Mila yet? Pink hair, sunglasses. Left side of the floor, by the speakers and the railing.'); return; }
+    await say('Toilet guy: You got it? Nice. Come on, the last stall on the right.');
     closeBox();
     await fade(true);
     if (e.movedTo) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; }
@@ -254,8 +254,22 @@ export const ACTS: Record<string, Act> = {
   async dancer(e, clubId) {
     if (!e) return;
     if (clubId === 'berghain' && state.kStage === 1 && Math.random() < 0.6) {
-      await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left.', "Raver: Mila? She's always dancing near the left speakers."]));
+      await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left, near the railing.', "Raver: Mila? She's always dancing on the left, by the railing over the Säule."]));
     } else if (e.lines) await say(e.lines[0]);
+  },
+  // the lighting guy on the main floor's mezzanine
+  async lights() {
+    await say('Lights: (headphones on, hands on forty faders) You want to see something?');
+    const a = await ask('', ['Hit the strobes', 'Everything deep red', 'Kill all the lights', 'Just watching, thanks']);
+    if (a === 3) { await say('Lights: Everybody just watches. Nobody notices me. That is the job.'); return; }
+    const now = performance.now();
+    RT.lightShow = { mode: (['strobe', 'red', 'dark'] as const)[a], start: now, until: now + 20000 };
+    await say([
+      reduceMotion ? '(He pushes the whites all the way up. The whole hall goes bright as day. A thousand people scream at once.)' : '(He slams three faders up. The whole floor flickers into slow motion. A thousand people scream at once.)',
+      '(The hall turns blood red. The beams sweep slower. Someone below you raises both arms like in church.)',
+      '(Total darkness for four bars. Only the kick drum. Then everything comes back at once and the floor explodes.)'
+    ][a]);
+    await say('Lights: (grinning) Fifteen years. Still the best feeling.');
   },
   async awareness() {
     await say("Awareness: We're the awareness team. If anything feels wrong, come find us.");
@@ -269,7 +283,7 @@ export const ACTS: Record<string, Act> = {
     if (a === 1) { await say('Sascha: Hi back.'); return; }
     const b = await ask('Sascha: Maybe. How do you ask?', ['Only if you want to', 'Grab their hand and go']);
     if (b === 1) { await say('Sascha: Whoa. Ask first.'); return; }
-    await say('Sascha: I do. Lead the way. The darkroom is on the ground floor.');
+    await say('Sascha: I do. Lead the way. The darkroom is down in the Säule, behind the DJ.');
     RT.ents.splice(RT.ents.indexOf(e), 1);
     if (!e.look) return;
     RT.follower = { name: 'Sascha', look: e.look, quest: 'darkroom', ent: e, homeScene: RT.scene, x: e.x, y: e.y, px: e.x, py: e.y, dir: 'down' };

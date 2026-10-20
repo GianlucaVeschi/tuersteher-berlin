@@ -97,15 +97,28 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     sc.map.forEach((row, y) => row.forEach((t, x) => {
       if (t !== 50) return;
       const X = x * T - camX, Y = y * T - camY;
-      ctx.fillStyle = '#ffe2a0'; ctx.fillRect(X + 1, Y + 1, 14, 12);
-      ctx.fillStyle = '#fff4d6'; ctx.fillRect(X + 1, Y + 1, 14, 3);
-      ctx.fillStyle = '#c9a26a'; ctx.fillRect(X + 1, Y + 1, 14, 1);
+      // the blinds are up: morning light fills the arched windows
+      ctx.fillStyle = '#ffe2a0'; ctx.fillRect(X + 4, Y + 5, 8, 8); ctx.fillRect(X + 5, Y + 3, 6, 2);
+      ctx.fillStyle = '#fff4d6'; ctx.fillRect(X + 5, Y + 5, 6, 3);
     }));
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
-    const wx0 = 9 * T - camX, wx1 = 25 * T - camX, wy = 2 * T - camY;
+    const wins = windowSpan(sc), wx0 = wins[0] * T - camX, wx1 = (wins[1] + 1) * T - camX, wy = 2 * T - camY;
     const gr = ctx.createLinearGradient(0, wy, 0, wy + 10 * T);
     gr.addColorStop(0, 'rgba(255,200,120,.30)'); gr.addColorStop(1, 'rgba(255,200,120,0)');
     ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(wx0, wy); ctx.lineTo(wx1, wy); ctx.lineTo(wx1 - 5 * T, wy + 10 * T); ctx.lineTo(wx0 - 6 * T, wy + 10 * T); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  // Panorama Bar before sunrise: violet light falling through the church windows onto the floor
+  if (fl.violet && !state.sunrise[sc.club]) {
+    const [x0, x1] = windowSpan(sc);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (let x = x0; x <= x1; x += 2) {
+      const sway = lights ? Math.sin(now / 1800 + x) * 6 : 0, X = x * T + 8 - camX, Y = 2 * T - camY;
+      const gr = ctx.createLinearGradient(0, Y, 0, Y + 8 * T);
+      gr.addColorStop(0, 'rgba(150,80,255,.26)'); gr.addColorStop(1, 'rgba(150,80,255,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(X - 5, Y); ctx.lineTo(X + 5, Y);
+      ctx.lineTo(X - 3 * T + 10 + sway, Y + 8 * T); ctx.lineTo(X - 3 * T - 14 + sway, Y + 8 * T); ctx.closePath(); ctx.fill();
+    }
     ctx.restore();
   }
   // Heideglühen: fire pits and the karaoke screen
@@ -184,6 +197,39 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       ctx.fillStyle = gr; ctx.fillRect(fx0 - r, fy0 - r, r * 2, r * 2);
     }
   }
+  // the lighting guy's show (RT.lightShow, set by his handler in quests/acts.ts), main floor only
+  let show = RT.lightShow && RT.lightShow.until > now && RT.scene === 'berghain:mf' ? RT.lightShow : null;
+  if (RT.lightShow && RT.lightShow.until <= now) RT.lightShow = null;
+  const showT = show ? now - show.start : 0;
+  if (show && show.mode === 'dark' && showT < 4000) {   // total darkness for a few bars, beams off
+    ctx.fillStyle = 'rgba(0,0,0,.9)'; ctx.fillRect(0, 0, RT.VW, RT.VH);
+    show = null;
+  }
+  // light beams: cones from the rig along the top, sweeping over the dancefloor
+  if (fl.beams && !(RT.lightShow && RT.lightShow.mode === 'dark' && RT.scene === 'berghain:mf' && now - RT.lightShow.start < 4000)) {
+    const red = show && show.mode === 'red', fast = show && show.mode === 'dark' ? 0.55 : red ? 1.8 : 1;
+    const cols = red ? ['255,30,40', '220,0,30', '255,60,60', '200,20,40', '255,40,30'] : ['255,60,90', '80,140,255', '255,200,80', '160,80,255', '60,220,200'];
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 5; i++) {
+      const ox = (sc.dance.x0 + (sc.dance.x1 - sc.dance.x0) * (i + 0.5) / 5) * T - camX, oy = (sc.dance.y0 - 1) * T - camY;
+      const a = lights ? Math.sin(now / ((1400 + i * 230) * fast) + i * 1.7) * 0.7 : (i - 2) * 0.25, len = (sc.dance.y1 - sc.dance.y0 + 2) * T;
+      const tx = ox + Math.sin(a) * len, ty = oy + Math.cos(a) * len, wd = 22;
+      const gr = ctx.createLinearGradient(ox, oy, tx, ty);
+      const c = cols[(i + (lights ? Math.floor(now / 2400) : 0)) % cols.length];
+      gr.addColorStop(0, `rgba(${c},.32)`); gr.addColorStop(1, `rgba(${c},0)`);
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(ox - 2, oy); ctx.lineTo(ox + 2, oy);
+      ctx.lineTo(tx + Math.cos(a) * wd, ty - Math.sin(a) * wd); ctx.lineTo(tx - Math.cos(a) * wd, ty + Math.sin(a) * wd); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+  if (show && show.mode === 'red') { ctx.fillStyle = 'rgba(170,0,20,.22)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
+  if (show && show.mode === 'strobe') {
+    if (lights) { if (now % 220 < 70) { ctx.fillStyle = 'rgba(255,255,255,.38)'; ctx.fillRect(0, 0, RT.VW, RT.VH); } }
+    else { ctx.fillStyle = 'rgba(255,255,255,.1)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }   // reduced motion: a steady wash, no flashing
+  }
+  if (show && show.mode === 'dark' && showT < 5200) {     // the lights slam back on
+    ctx.fillStyle = `rgba(255,255,255,${(0.35 * (1 - (showT - 4000) / 1200)).toFixed(3)})`; ctx.fillRect(0, 0, RT.VW, RT.VH);
+  }
   if (fl.strobe && lights && now % 2600 < 60) { ctx.fillStyle = 'rgba(255,255,255,.24)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
   // open air: warm afternoon light
   if (fl.daylight) { ctx.fillStyle = 'rgba(255,214,140,.10)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
@@ -219,4 +265,11 @@ function questMark(X: number, Y: number, now: number) {
   ctx.fillStyle = INK; ctx.fillRect(x, y, 6, 11);
   ctx.fillStyle = '#e8263c'; ctx.fillRect(x + 1, y + 1, 4, 9);
   ctx.fillStyle = '#fff'; ctx.fillRect(x + 2, y + 2, 2, 4); ctx.fillRect(x + 2, y + 7, 2, 2);
+}
+
+/** The first and last column of the windows (`W`, tile 50) on a floor. */
+function windowSpan(sc: ClubScene): [number, number] {
+  let x0 = sc.w, x1 = 0;
+  sc.map.forEach(row => row.forEach((t, x) => { if (t === 50) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
+  return x0 <= x1 ? [x0, x1] : [0, 0];
 }

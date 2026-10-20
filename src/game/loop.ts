@@ -14,7 +14,7 @@ import { openShop } from '../ui/shop';
 import { darkroomScene } from '../quests/acts';
 import { pickBottle } from '../quests/sisyphos';
 import { enterPlace, goFloor, leaveClub } from '../interiors/transitions';
-import { D, DARK, EXIT, ICHAR, STAIRS_DOWN, STAIRS_UP, T, isDoorTile } from '../world/tiles';
+import { D, DARK, EXIT, ICHAR, STAIRS_DOWN, STAIRS_UP, STAIRS_UP_SIDE, T, isDoorTile } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 import { get } from '../world/grid';
 import { inClub, sceneClub, sceneFloor } from '../world/scenes';
@@ -46,7 +46,7 @@ export function tryMove(dir: Dir) {
 export function arrive() {
   if (inClub()) {
     const t = get(player.x, player.y), clubId = sceneClub(), fl = INTERIORS[clubId].floors[sceneFloor()];
-    if (t === STAIRS_UP && fl.up) { goFloor(clubId, fl.up.to, fl.up.at); return; }
+    if ((t === STAIRS_UP || t === STAIRS_UP_SIDE) && fl.up) { goFloor(clubId, fl.up.to, fl.up.at); return; }
     if (t === STAIRS_DOWN && fl.down) { goFloor(clubId, fl.down.to, fl.down.at); return; }
     if (t === EXIT && fl.exit) { leaveClub(clubId); return; }
     if (isDoorTile(t) && fl.doors && fl.doors[ICHAR[t]]) { const d = fl.doors[ICHAR[t]]; goFloor(clubId, d.to, d.at); return; }
