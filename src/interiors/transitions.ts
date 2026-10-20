@@ -36,8 +36,12 @@ export function toast(text: string) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { toastEl.classList.add('out'); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 400); }, 2600);
 }
+let cardClub = '';
 export function updateFloorTag() {
   updateQuestsBtn();
+  // walked into or out of a club: the stamp card puts that club's quests first
+  const here = inClub() ? sceneClub() : '';
+  if (here !== cardClub) { cardClub = here; renderCard(); }
   // the room goes into the HUD box after the stamps ("STEMPEL 6/8 · ROBUS"), on desktop and phones
   const hudRoom = $('#hudRoom');
   floorTag.hidden = true;

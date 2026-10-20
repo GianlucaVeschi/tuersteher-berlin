@@ -1,3 +1,4 @@
+import { showCardQuests } from './ui/card';
 import { closeMissions, missionsOpen } from './ui/missions';
 import { openPlayers } from './ui/players';
 import { playEnding } from './ui/ending';
@@ -139,7 +140,7 @@ const cardEl = $('#card');
 function setCard(open: boolean) {
   cardEl.classList.toggle('open', open);
   $('#cardBtn').setAttribute('aria-expanded', String(open));
-  if (open) held.length = 0;
+  if (open) { held.length = 0; showCardQuests(); }
 }
 
 let wheelAt = 0;

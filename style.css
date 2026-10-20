@@ -673,6 +673,7 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 
 /* club header inside the side-quest list */
+.quests li.qclub.here::before { content: '▶ '; }
 .quests li.qclub { display: block; font-family: var(--font-pixel); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: #8a2a4a; padding: 8px 0 2px; }
 
 /* ---------- KitKat: SMACK and the photo booth strip ---------- */
