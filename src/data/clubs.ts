@@ -28,7 +28,7 @@ const CLUB_DEFS: ClubDef[] = [
     ]
   },
   {
-    id: 'tresor', name: 'Tresor', area: 'Köpenicker Str., Mitte', x: 20, y: 33, w: 9, h: 6, need: 2, signSide: -2,
+    id: 'tresor', name: 'Tresor', area: 'Köpenicker Str., Mitte', x: 20, y: 63, w: 9, h: 6, need: 2, signSide: -2,
     style: 'tresor', glow: '#6fb7ff', initials: 'TR',
     look: { skin: '#c98d6a', hair: '#2a2420', top: '#2a2b3a', legs: '#16151d', big: true, beard: '#3a2a20' },
     greet: ['Jens: Nabend. Tresor.', 'Jens: Two questions about the place, then you can go down.'],
@@ -46,7 +46,7 @@ const CLUB_DEFS: ClubDef[] = [
     ]
   },
   {
-    id: 'kitkat', name: 'KitKatClub', area: 'Köpenicker Str., Mitte', x: 2, y: 33, w: 7, h: 6, need: 2, signSide: -2,
+    id: 'kitkat', name: 'KitKatClub', area: 'Köpenicker Str., Mitte', x: 2, y: 63, w: 7, h: 6, need: 2, signSide: -2,
     style: 'kitkat', glow: '#ff7ab8', initials: 'KK',
     look: { skin: '#f0c7a0', hair: '#e83f8f', top: '#1a1118', legs: '#1a1118', big: true, shades: true },
     greet: ['Dee: Welcome to KitKat, darling.', 'Dee: Rules first. Two questions.'],
@@ -119,7 +119,7 @@ const CLUB_DEFS: ClubDef[] = [
     ]
   },
   {
-    id: 'cdv', name: 'Club der Visionäre', area: 'Kreuzberg / Treptow', x: 46, y: 34, w: 5, h: 5, need: 2, signSide: -2,
+    id: 'cdv', name: 'Club der Visionäre', area: 'Kreuzberg / Treptow', x: 46, y: 64, w: 5, h: 5, need: 2, signSide: -2,
     style: 'cdv', glow: '#a6e3a1', initials: 'CDV',
     look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#4a5a3a', legs: '#26242e', big: true, beard: '#9a9a9a' },
     greet: ['Uwe: Easy, easy.', "Uwe: Deck's full of good people. Answer me two things."],
@@ -141,7 +141,7 @@ const CLUB_DEFS: ClubDef[] = [
   {
     // Heideglühen: open-air house club at Westhafen (Seestraße), since 2012. Started 2011 in a potato garden on Heidestraße.
     // On the game map it sits in the park in the south-east.
-    id: 'heidegluehen', name: 'Heideglühen', area: 'Westhafen', x: 63, y: 33, w: 8, h: 6, need: 2, signSide: -2,
+    id: 'heidegluehen', name: 'Heideglühen', area: 'Westhafen', x: 63, y: 63, w: 8, h: 6, need: 2, signSide: -2,
     style: 'heidegluehen', glow: '#ffb347', initials: 'HG',
     look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#7a5a3a', legs: '#2b3f6b', big: true, long: true },
     greet: ['Lotte: Na? Heideglühen.', 'Lotte: Two questions, then you can warm up by the fire.'],

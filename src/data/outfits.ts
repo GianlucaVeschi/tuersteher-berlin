@@ -90,9 +90,9 @@ const SHOP_DEFS: ShopDef[] = [
     line: 'Humana: Second-hand, floor after floor of it. Try anything on.', items: ['thriftblack', 'seventies', 'gdr', 'suit', 'tourist'] },
   { id: 'blackstyle', name: 'Blackstyle', area: 'Prenzlauer Berg', x: 21, y: 10, w: 3, h: 3, v: 1, band: '#0c0c12', ink: '#e8e8f0', label: 'BLACKSTYLE',
     line: "Blackstyle: Latex made in Berlin since 1992. Fitting room's at the back.", items: ['latex', 'harness', 'redlatex'] },
-  { id: 'coexist', name: 'Coexist', area: 'Friedrichshain', x: 15, y: 36, w: 3, h: 3, v: 1, band: '#2bb3a3', ink: '#14121c', label: 'COEXIST',
+  { id: 'coexist', name: 'Coexist', area: 'Friedrichshain', x: 15, y: 66, w: 3, h: 3, v: 1, band: '#2bb3a3', ink: '#14121c', label: 'COEXIST',
     line: 'Coexist: 90s, 00s, black, neon. Something for every door.', items: ['nineties', 'mesh', 'sailor'] },
-  { id: 'voo', name: 'Voo Store', area: 'Oranienstraße, Kreuzberg', x: 32, y: 36, w: 3, h: 3, v: 2, band: '#d94bd1', ink: '#fff6a8', label: 'VOO STORE',
+  { id: 'voo', name: 'Voo Store', area: 'Oranienstraße, Kreuzberg', x: 32, y: 66, w: 3, h: 3, v: 2, band: '#d94bd1', ink: '#fff6a8', label: 'VOO STORE',
     line: 'Voo Store: Designer pieces in an old Kreuzberg backyard. Try the loud ones on.', items: ['glitter', 'rainbow'] }
 ];
 export const SHOPS: Shop[] = SHOP_DEFS.map(sh => ({ ...sh, dx: sh.x + Math.floor(sh.w / 2), doorY: sh.y + sh.h - 1, by: sh.y + sh.h }));

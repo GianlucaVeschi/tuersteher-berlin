@@ -87,9 +87,9 @@ export const STREET_TRIGGERS: { area: [number, number, number, number]; act: str
   // the road south, past the München sign: you're not leaving Berlin tonight
   { area: [9, CITY_H - 3, 12, CITY_H - 1], act: 'munich' },
   // the main street east, past the Cottbus sign
-  { area: [70, 39, 71, 42], act: 'cottbus' },
+  { area: [70, 69, 71, 72], act: 'cottbus' },
   // the street west, past the Hannover sign
-  { area: [0, 29, 1, 32], act: 'hannover' }
+  { area: [0, 59, 1, 62], act: 'hannover' }
 ];
 /** The trigger at (x, y), if any. */
 export const streetTrigger = (x: number, y: number) =>
