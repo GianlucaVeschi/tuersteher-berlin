@@ -127,7 +127,7 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         let bx0 = x, bx1 = x, by0 = y, by1 = y;
         while (at(bx0 - 1, y) === t) bx0--; while (at(bx1 + 1, y) === t) bx1++;
         while (at(x, by0 - 1) === t) by0--; while (at(x, by1 + 1) === t) by1++;
-        const BW = (bx1 - bx0 + 1) * 16, BH = (by1 - by0 + 1) * 16, band = 26;
+        const BW = (bx1 - bx0 + 1) * 16, BH = (by1 - by0 + 1) * 16, band = Math.max(28, Math.round(BH * 0.62));
         const n = Math.max(3, Math.round(BW / 7)), stepW = BW / n, rise = (BH - band) / n;
         const ox = (x - bx0) * 16, oy = (y - by0) * 16;
         floorBase(X, Y);
@@ -140,12 +140,12 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
           const gx = ox + c, si = Math.min(n - 1, Math.floor(gx / stepW));
           const tread = Math.round(BH - band - si * rise);                 // top of this step (stepped)
           const line = BH - band - (gx / BW) * (n - 1) * rise;             // the smooth diagonal
-          const rail = Math.round(line + 16);
+          const rail = Math.round(line + band * 0.62);
           col(c, tread, rail + 6 - tread, '#6a6a74');                      // the flight behind the posts
           col(c, tread, 3, '#c9c5d4');                                     // tread
           if (gx - si * stepW < 1.2) col(c, tread, rail + 6 - tread, '#4a4a54'); // riser shadow where a step begins
-          if (gx % 4 === 1) { col(c, rail - 8, 8, '#9a9eaa'); col(c, rail - 9, 2, '#e8e4f0'); } // posts with caps
-          if (gx % 4 === 2) col(c, rail - 8, 8, '#5a5e68');
+          if (gx % 4 === 1) { col(c, rail - 10, 10, '#9a9eaa'); col(c, rail - 11, 2, '#e8e4f0'); } // posts with caps
+          if (gx % 4 === 2) col(c, rail - 10, 10, '#5a5e68');
           col(c, rail, 3, railC); col(c, rail + 3, 1, INK);                // handrail
           col(c, rail + 4, 2, '#18171d');                                  // shadow under it
         }
@@ -157,14 +157,15 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (let i = 1; i < 16; i += 5) P(X + i, Y + 4, 2, 10, '#6a6e78');
         P(X, Y + 13, 16, 1, '#6a6e78');
         break;
-      case 128: { // a column like on a Greek temple: wide base, fluted shaft, a carved capital, two tiles tall
+      case 128: { // a column like on a Greek temple, three tiles tall: drawn once from its bottom tile
         floorBase(X, Y);
-        P(X - 1, Y + 11, 18, 5, INK); P(X, Y + 12, 16, 3, '#9a968c'); P(X, Y + 12, 16, 1, '#b8b4a8');   // base
-        P(X + 1, Y - 22, 14, 34, INK); P(X + 2, Y - 21, 12, 33, '#b8b4a8');                               // shaft
-        for (let f = 3; f < 14; f += 3) { P(X + f, Y - 21, 1, 33, '#8a867c'); P(X + f + 1, Y - 21, 1, 33, '#cfcbc0'); } // flutes
-        P(X - 2, Y - 27, 20, 6, INK); P(X - 1, Y - 26, 18, 4, '#cfcbc0'); P(X - 1, Y - 23, 18, 1, '#8a867c');   // capital
-        circle(g, X - 1, Y - 24, 2, '#8a867c'); circle(g, X + 17, Y - 24, 2, '#8a867c');                       // volutes
-        P(X - 2, Y - 29, 20, 2, '#9a968c');
+        if (at(x, y + 1) === 128) break;
+        P(X - 2, Y + 10, 20, 6, INK); P(X - 1, Y + 11, 18, 4, '#9a968c'); P(X - 1, Y + 11, 18, 1, '#b8b4a8');   // base
+        P(X, Y - 26, 16, 37, INK); P(X + 1, Y - 25, 14, 36, '#b8b4a8');                                       // shaft
+        for (let f = 2; f < 15; f += 3) { P(X + f, Y - 25, 1, 36, '#8a867c'); P(X + f + 1, Y - 25, 1, 36, '#cfcbc0'); } // flutes
+        P(X - 3, Y - 32, 22, 7, INK); P(X - 2, Y - 31, 20, 5, '#cfcbc0'); P(X - 2, Y - 27, 20, 1, '#8a867c');     // capital
+        circle(g, X - 2, Y - 28, 3, '#8a867c'); circle(g, X + 18, Y - 28, 3, '#8a867c');                         // volutes
+        P(X - 3, Y - 34, 22, 2, '#9a968c');
         break;
       }
       case 126: // a Garderobe rack: a rail full of jackets, hoodies and bags
