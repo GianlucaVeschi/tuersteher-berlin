@@ -175,6 +175,17 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X - 3, Y - 34, 22, 2, '#9a968c');
         break;
       }
+      case 129: { // a black leather sofa, backrest against the right wall, seat facing the room
+        floorBase(X, Y);
+        const top = at(x, y - 1) !== 129, bot = at(x, y + 1) !== 129;
+        P(X + 1, Y + (top ? 1 : 0), 15, 16 - (top ? 1 : 0) - (bot ? 1 : 0), INK);
+        P(X + 10, Y + (top ? 2 : 0), 5, 16 - (top ? 2 : 0) - (bot ? 2 : 0), '#1c1b22');    // backrest
+        P(X + 2, Y + (top ? 2 : 0), 8, 16 - (top ? 2 : 0) - (bot ? 2 : 0), '#2a2930');     // seat
+        P(X + 3, Y + (top ? 3 : 1), 6, 1, '#4a4952');                                       // shine
+        if (!bot) P(X + 2, Y + 15, 8, 1, '#141318');                                        // seam between cushions
+        if (top) P(X + 1, Y + 2, 2, 5, '#141318'); if (bot) P(X + 1, Y + 9, 2, 5, '#141318'); // armrests
+        break;
+      }
       case 126: // a Garderobe rack: a rail full of jackets, hoodies and bags
         P(X, Y, 16, 16, '#1c1b22'); P(X, Y + 2, 16, 1, '#8a8e98');
         for (let i = 0; i < 5; i++) { const c = pick(['#0c0c12', '#2a2a33', '#3a2a20', '#5a5a66', '#1f2f4d', '#4a1a1a']); P(X + 1 + i * 3, Y + 3, 3, 10 + (i % 2) * 2, c); P(X + 2 + i * 3, Y + 3, 1, 1, '#c9c5d4'); }
