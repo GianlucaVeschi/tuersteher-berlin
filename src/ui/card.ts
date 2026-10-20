@@ -4,7 +4,7 @@ import { inside } from './inside';
 import { creatorEl } from './creator';
 import { RT } from '../core/runtime';
 import { updateFloorTag } from '../interiors/transitions';
-import { SCENES, inClub, useScene } from '../world/scenes';
+import { SCENES, inClub, sceneClub, useScene } from '../world/scenes';
 import { releaseFollower } from '../interiors/follower';
 import { questHint } from '../quests/sisyphos';
 import { updateQuestsBtn } from './missions';
@@ -43,7 +43,9 @@ export function renderCard() {
   $('#hudStamps').textContent = `STEMPEL ${n}/${CLUBS.length}`;
   // side quests for every club you have been inside
   const qs = $('#quests'), ql = $('#questList');
-  const clubsIn = Object.keys(INTERIORS).filter(id => state.visited[id]);
+  // the club you're in first, so its quests are on top when you open the card
+  const here = inClub() ? sceneClub() : '';
+  const clubsIn = Object.keys(INTERIORS).filter(id => state.visited[id]).sort((a, b) => Number(b === here) - Number(a === here));
   qs.hidden = !clubsIn.length;
   if (!qs.hidden) {
     ql.innerHTML = '';
@@ -51,7 +53,7 @@ export function renderCard() {
     clubsIn.forEach(clubId => QUEST_LIST(clubId).forEach((q, qi) => {
       total++; if (questDone(clubId, q.id)) doneAll++;
       if (qi === 0) {
-        const h = document.createElement('li'); h.className = 'qclub';
+        const h = document.createElement('li'); h.className = 'qclub' + (clubId === here ? ' here' : '');
         h.textContent = `${INTERIORS[clubId].name} · ${questCount(clubId)}/${QUEST_LIST(clubId).length}`;
         ql.appendChild(h);
       }
@@ -67,6 +69,14 @@ export function renderCard() {
     $('#questCount').textContent = `${doneAll}/${total}`;
   }
   updateQuestsBtn();
+}
+/** Opening the card: redraw it (the club you're in may have changed) and, inside a club with side
+ *  quests, scroll its quests into view. */
+export function showCardQuests() {
+  renderCard();
+  // the sheet is its own scroll box (scrollIntoView would also scroll the page behind it)
+  const card = $('#card'), h = card.querySelector<HTMLElement>('#questList .qclub.here');
+  card.scrollTop = h ? card.scrollTop + h.getBoundingClientRect().top - card.getBoundingClientRect().top - 12 : 0;
 }
 const resetBtn = $<HTMLButtonElement>('#reset');
 let armTimer: ReturnType<typeof setTimeout> | undefined;

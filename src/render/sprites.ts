@@ -85,6 +85,11 @@ export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: D
     else if (d === 'left') det.push([10, 4, 6, 8, INK], [11, 5, 4, 6, L.box]);
     else det.push([2, 5, 1, 5, L.box], [13, 5, 1, 5, L.box], [2, 4, 12, 1, INK]);
   }
+  if (L.cig) {
+    // a cigarette in the corner of the mouth, the tip glowing
+    if (d === 'down') det.push([10, 6, 3, 1, '#f3eee3'], [13, 6, 1, 1, '#ff5a2a']);
+    else if (d === 'left') det.push([2, 6, 3, 1, '#f3eee3'], [1, 6, 1, 1, '#ff5a2a']);
+  }
   if (L.bike && d !== 'left') det.push([2, 9, 12, 1, INK], [2, 8, 2, 1, '#c0c4cc'], [12, 8, 2, 1, '#c0c4cc']); // handlebars
   det.forEach(p => { if (p[4] !== undefined) g.fillStyle = p[4]; g.fillRect(p[0], p[1], p[2], p[3]); });
   g.restore();

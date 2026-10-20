@@ -88,6 +88,15 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0);
       person(ctx, X, Y - 3, e.dir ?? 'down', off ? (Math.floor(off / 8) % 2) + 1 : 0, e.look);
     }
+    if (e.look.cig) {
+      // smoke curling up from the cigarette
+      const tipX = X + (e.dir === 'left' ? 1 : e.dir === 'right' ? 14 : 13), tipY = Y + 3;
+      for (let i = 0; i < 3; i++) {
+        const p = lights ? ((now / 1400 + i / 3 + (e.phase ?? e.x * 0.37)) % 1) : i / 3;
+        ctx.fillStyle = `rgba(200,200,210,${(0.45 * (1 - p)).toFixed(2)})`;
+        ctx.fillRect(Math.round(tipX + Math.sin(p * 6 + i) * 2), Math.round(tipY - p * 14), 2, 2);
+      }
+    }
     if (hasQuest(e, sc.club)) questMark(X, Y - 3, now);
   });
   // main floor: the light bar along the top wall and a short strobe now and then
@@ -112,19 +121,10 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(wx0, wy); ctx.lineTo(wx1, wy); ctx.lineTo(wx1 - 5 * T, wy + 10 * T); ctx.lineTo(wx0 - 6 * T, wy + 10 * T); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
-  // Panorama Bar before sunrise: violet light falling through the church windows onto the floor
-  if (fl.violet && !state.sunrise[sc.club]) {
-    const [x0, x1] = windowSpan(sc);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter';
-    for (let x = x0; x <= x1; x += 2) {
-      const sway = lights ? Math.sin(now / 1800 + x) * 6 : 0, X = x * T + 8 - camX, Y = 2 * T - camY;
-      const gr = ctx.createLinearGradient(0, Y, 0, Y + 8 * T);
-      gr.addColorStop(0, 'rgba(150,80,255,.26)'); gr.addColorStop(1, 'rgba(150,80,255,0)');
-      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(X - 5, Y); ctx.lineTo(X + 5, Y);
-      ctx.lineTo(X - 3 * T + 10 + sway, Y + 8 * T); ctx.lineTo(X - 3 * T - 14 + sway, Y + 8 * T); ctx.closePath(); ctx.fill();
-    }
-    ctx.restore();
-  }
+  // Panorama Bar before sunrise: violet light falling through the church windows onto the floor;
+  // the smoking area's red windows (tile 134) throw red light the same way, all night
+  if (fl.violet && !state.sunrise[sc.club]) windowShafts(sc, 50, '150,80,255', now, camX, camY, lights);
+  windowShafts(sc, 134, '255,30,50', now, camX, camY, lights);
   // Heideglühen: fire pits and the karaoke screen
   sc.map.forEach((row, y) => row.forEach((t, x) => {
     if (t !== 102 && t !== 103) return;
@@ -271,9 +271,23 @@ function questMark(X: number, Y: number, now: number) {
   ctx.fillStyle = '#fff'; ctx.fillRect(x + 2, y + 2, 2, 4); ctx.fillRect(x + 2, y + 7, 2, 2);
 }
 
-/** The first and last column of the windows (`W`, tile 50) on a floor. */
-function windowSpan(sc: ClubScene): [number, number] {
+/** The first and last column of the windows (`W`, tile 50, or another window tile) on a floor. */
+function windowSpan(sc: ClubScene, tile = 50): [number, number] {
   let x0 = sc.w, x1 = 0;
-  sc.map.forEach(row => row.forEach((t, x) => { if (t === 50) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
+  sc.map.forEach(row => row.forEach((t, x) => { if (t === tile) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
   return x0 <= x1 ? [x0, x1] : [0, 0];
+}
+/** Coloured light falling through a row of windows in the top wall (row 1) onto the floor below. */
+function windowShafts(sc: ClubScene, tile: number, rgb: string, now: number, camX: number, camY: number, lights: boolean) {
+  const [x0, x1] = windowSpan(sc, tile);
+  if (x1 < x0 || sc.map[1][x0] !== tile) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let x = x0; x <= x1; x += 2) {
+    const sway = lights ? Math.sin(now / 1800 + x) * 6 : 0, X = x * T + 8 - camX, Y = 2 * T - camY;
+    const gr = ctx.createLinearGradient(0, Y, 0, Y + 8 * T);
+    gr.addColorStop(0, `rgba(${rgb},.26)`); gr.addColorStop(1, `rgba(${rgb},0)`);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(X - 5, Y); ctx.lineTo(X + 5, Y);
+    ctx.lineTo(X - 3 * T + 10 + sway, Y + 8 * T); ctx.lineTo(X - 3 * T - 14 + sway, Y + 8 * T); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
 }
