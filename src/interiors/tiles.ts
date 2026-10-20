@@ -9,6 +9,7 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
   const g = cv.getContext('2d')!;
   const P = (x: number, y: number, w: number, h: number, c: string) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
   const at = (x: number, y: number) => (x < 0 || y < 0 || x >= sc.w || y >= sc.h) ? 62 : sc.map[y][x];
+  const up = (t: number) => t === 124;
   const floorBase = (X: number, Y: number) => { P(X, Y, 16, 16, '#2f2e35'); for (let i = 0; i < 4; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#37363e', '#28272d'])); };
   const face = (X: number, Y: number) => { // raw concrete wall seen from the front, with formwork tie holes
     P(X, Y, 16, 16, '#5c5a56'); P(X, Y, 1, 16, '#4e4c48'); P(X, Y, 16, 2, '#6e6c67'); P(X, Y + 13, 16, 3, '#2a2928');
@@ -121,15 +122,33 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         if (at(x, y + 1) !== 123) { P(X, Y + 13, 16, 3, INK); P(X, Y + 14, 16, 1, '#8a8e98'); }
         break;
       }
-      case 124: case 127: { // a staircase rising to the right: every step a block, lighter the higher it is,
-        // with a lit nosing on top and a dark riser on the left wherever the next step down begins
-        const up = t === 124;
-        let h = 0; while (at(x, y + h + 1) === t) h++;   // how many steps sit below this one
-        const base = ['#4a4a54', '#5a5a64', '#6a6a74', '#7a7a84', '#8a8a94', '#9a9aa4'];
-        P(X, Y, 16, 16, base[Math.min(base.length - 1, Math.max(0, 5 - h))]);
-        if (at(x, y - 1) !== t) { P(X, Y, 16, 3, up ? '#c9b25a' : '#a7a7b3'); P(X, Y + 3, 16, 1, INK); }
-        if (at(x - 1, y) !== t) { P(X, Y, 3, 16, '#2a2a30'); P(X + 3, Y, 1, 16, INK); }
-        P(X, Y + 8, 16, 1, 'rgba(0,0,0,.2)');
+      case 124: case 127: { // a side staircase, Pokémon style: the whole block is one diagonal flight rising
+        // to the right (small treads and risers), a row of posts along the front and a handrail on the diagonal
+        let bx0 = x, bx1 = x, by0 = y, by1 = y;
+        while (at(bx0 - 1, y) === t) bx0--; while (at(bx1 + 1, y) === t) bx1++;
+        while (at(x, by0 - 1) === t) by0--; while (at(x, by1 + 1) === t) by1++;
+        const BW = (bx1 - bx0 + 1) * 16, BH = (by1 - by0 + 1) * 16, band = 26;
+        const n = Math.max(3, Math.round(BW / 7)), stepW = BW / n, rise = (BH - band) / n;
+        const ox = (x - bx0) * 16, oy = (y - by0) * 16;
+        floorBase(X, Y);
+        const col = (c: number, gy0: number, h: number, colour: string) => {
+          const y0 = Math.max(0, gy0 - oy), y1 = Math.min(16, gy0 + h - oy);
+          if (y1 > y0) P(X + c, Y + y0, 1, y1 - y0, colour);
+        };
+        const railC = up(t) ? '#c9b25a' : '#d6d2e0';
+        for (let c = 0; c < 16; c++) {
+          const gx = ox + c, si = Math.min(n - 1, Math.floor(gx / stepW));
+          const tread = Math.round(BH - band - si * rise);                 // top of this step (stepped)
+          const line = BH - band - (gx / BW) * (n - 1) * rise;             // the smooth diagonal
+          const rail = Math.round(line + 16);
+          col(c, tread, rail + 6 - tread, '#6a6a74');                      // the flight behind the posts
+          col(c, tread, 3, '#c9c5d4');                                     // tread
+          if (gx - si * stepW < 1.2) col(c, tread, rail + 6 - tread, '#4a4a54'); // riser shadow where a step begins
+          if (gx % 4 === 1) { col(c, rail - 8, 8, '#9a9eaa'); col(c, rail - 9, 2, '#e8e4f0'); } // posts with caps
+          if (gx % 4 === 2) col(c, rail - 8, 8, '#5a5e68');
+          col(c, rail, 3, railC); col(c, rail + 3, 1, INK);                // handrail
+          col(c, rail + 4, 2, '#18171d');                                  // shadow under it
+        }
         break;
       }
       case 125: // the mezzanine railing: steel posts and a top rail, the floor below shows through
