@@ -6,7 +6,7 @@ import { kbDance, kbFloorsDanced } from './katerblau';
 import type { BottleType, Entity, QuestDef } from '../types';
 import { completeQuest } from './quests';
 import { say } from '../ui/dialog';
-import { K_HINTS } from '../effects/trip';
+import { K_HINTS } from './kHints';
 import { INK } from '../util';
 import { ctx } from '../render/canvas';
 import { renderCard } from '../ui/card';

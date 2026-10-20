@@ -1,4 +1,4 @@
-import { questDone } from './quests';
+import { questDone } from '../quests/quests';
 import type { Entity } from '../types';
 
 /* ---- The red "!" over people in clubs who start a mini game you haven't finished ---- */

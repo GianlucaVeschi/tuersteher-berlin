@@ -272,7 +272,7 @@ src/
   render/             drawing: street tiles, sprites, camera, zoom, map labels
   interiors/          club floors: building them, drawing, effects, stairs, the follower
   quests/             quest handlers (ACTS), dancing, Sisyphos and KitKat specifics
-  effects/trip.ts     the drug effects
+  minigames/          the 30-second mini games: K-hole, Ringbahn runner, DJ set, LSD dive (index.ts lists them)
   ui/                 dialog box, shops, character select, stamp card, club entrance scene
   input.ts            keyboard, touch, mouse wheel, on-screen buttons
   audio/              generated music: synth voices, per-club styles, the player
