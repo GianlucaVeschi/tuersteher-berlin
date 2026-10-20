@@ -262,8 +262,10 @@ export const ACTS: Record<string, Act> = {
     await say('Lights: (headphones on, hands on forty faders) You want to see something?');
     const a = await ask('', ['Hit the strobes', 'Everything deep red', 'Kill all the lights', 'Just watching, thanks']);
     if (a === 3) { await say('Lights: Everybody just watches. Nobody notices me. That is the job.'); return; }
+    const now = performance.now();
+    RT.lightShow = { mode: (['strobe', 'red', 'dark'] as const)[a], start: now, until: now + 20000 };
     await say([
-      '(He slams three faders up. The whole floor flickers into slow motion. A thousand people scream at once.)',
+      reduceMotion ? '(He pushes the whites all the way up. The whole hall goes bright as day. A thousand people scream at once.)' : '(He slams three faders up. The whole floor flickers into slow motion. A thousand people scream at once.)',
       '(The hall turns blood red. The beams sweep slower. Someone below you raises both arms like in church.)',
       '(Total darkness for four bars. Only the kick drum. Then everything comes back at once and the floor explodes.)'
     ][a]);

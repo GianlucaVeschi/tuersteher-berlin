@@ -184,13 +184,22 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       ctx.fillStyle = gr; ctx.fillRect(fx0 - r, fy0 - r, r * 2, r * 2);
     }
   }
+  // the lighting guy's show (RT.lightShow, set by his handler in quests/acts.ts), main floor only
+  let show = RT.lightShow && RT.lightShow.until > now && RT.scene === 'berghain:mf' ? RT.lightShow : null;
+  if (RT.lightShow && RT.lightShow.until <= now) RT.lightShow = null;
+  const showT = show ? now - show.start : 0;
+  if (show && show.mode === 'dark' && showT < 4000) {   // total darkness for a few bars, beams off
+    ctx.fillStyle = 'rgba(0,0,0,.9)'; ctx.fillRect(0, 0, RT.VW, RT.VH);
+    show = null;
+  }
   // light beams: cones from the rig along the top, sweeping over the dancefloor
-  if (fl.beams) {
-    const cols = ['255,60,90', '80,140,255', '255,200,80', '160,80,255', '60,220,200'];
+  if (fl.beams && !(RT.lightShow && RT.lightShow.mode === 'dark' && RT.scene === 'berghain:mf' && now - RT.lightShow.start < 4000)) {
+    const red = show && show.mode === 'red', fast = show && show.mode === 'dark' ? 0.55 : red ? 1.8 : 1;
+    const cols = red ? ['255,30,40', '220,0,30', '255,60,60', '200,20,40', '255,40,30'] : ['255,60,90', '80,140,255', '255,200,80', '160,80,255', '60,220,200'];
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
     for (let i = 0; i < 5; i++) {
       const ox = (sc.dance.x0 + (sc.dance.x1 - sc.dance.x0) * (i + 0.5) / 5) * T - camX, oy = (sc.dance.y0 - 1) * T - camY;
-      const a = lights ? Math.sin(now / (1400 + i * 230) + i * 1.7) * 0.7 : (i - 2) * 0.25, len = (sc.dance.y1 - sc.dance.y0 + 2) * T;
+      const a = lights ? Math.sin(now / ((1400 + i * 230) * fast) + i * 1.7) * 0.7 : (i - 2) * 0.25, len = (sc.dance.y1 - sc.dance.y0 + 2) * T;
       const tx = ox + Math.sin(a) * len, ty = oy + Math.cos(a) * len, wd = 22;
       const gr = ctx.createLinearGradient(ox, oy, tx, ty);
       const c = cols[(i + (lights ? Math.floor(now / 2400) : 0)) % cols.length];
@@ -199,6 +208,14 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       ctx.lineTo(tx + Math.cos(a) * wd, ty - Math.sin(a) * wd); ctx.lineTo(tx - Math.cos(a) * wd, ty + Math.sin(a) * wd); ctx.closePath(); ctx.fill();
     }
     ctx.restore();
+  }
+  if (show && show.mode === 'red') { ctx.fillStyle = 'rgba(170,0,20,.22)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
+  if (show && show.mode === 'strobe') {
+    if (lights) { if (now % 220 < 70) { ctx.fillStyle = 'rgba(255,255,255,.38)'; ctx.fillRect(0, 0, RT.VW, RT.VH); } }
+    else { ctx.fillStyle = 'rgba(255,255,255,.1)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }   // reduced motion: a steady wash, no flashing
+  }
+  if (show && show.mode === 'dark' && showT < 5200) {     // the lights slam back on
+    ctx.fillStyle = `rgba(255,255,255,${(0.35 * (1 - (showT - 4000) / 1200)).toFixed(3)})`; ctx.fillRect(0, 0, RT.VW, RT.VH);
   }
   if (fl.strobe && lights && now % 2600 < 60) { ctx.fillStyle = 'rgba(255,255,255,.24)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
   // open air: warm afternoon light

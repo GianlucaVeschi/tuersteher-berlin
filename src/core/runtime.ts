@@ -29,6 +29,8 @@ export const RT = {
   typing: null as Typing | null,
   insideResolve: null as null | (() => void),
   photoResolve: null as null | (() => void),
+  /** the lighting guy's show on Berghain's main floor: what he switched on, and when */
+  lightShow: null as null | { mode: 'strobe' | 'red' | 'dark'; start: number; until: number },
   /** the MDMA runner minigame (effects/runner.ts) */
   runner: null as RunnerHooks | null,
   /** the player is drawn lying flat on the floor (after the LSD dive at CDV) */
