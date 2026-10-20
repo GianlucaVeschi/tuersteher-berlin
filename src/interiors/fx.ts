@@ -13,6 +13,8 @@ import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
 import { RT } from '../core/runtime';
 import { SCENES } from '../world/scenes';
+import { drawArrow } from '../render/arrow';
+import { wayArrows } from './arrows';
 /** Everything on a club floor that moves: lights, people, steam, darkness. */
 export function drawInteriorFx(now: number, camX: number, camY: number, ppx: number, ppy: number) {
   const sc = SCENES[RT.scene] as ClubScene;
@@ -44,6 +46,8 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     if (t !== 59) return;
     if ((Math.floor(now / 180) + x * 3) % 4 === 0) { ctx.fillStyle = ['#ff4d6d', '#6fb7ff', '#f2c45a'][(x + y) % 3]; ctx.fillRect(x * T - camX + 3 + (x * 5) % 9, y * T - camY + 4, 2, 2); }
   }));
+  // yellow arrows in front of the stairs, doorways and exit: where you can go from here
+  wayArrows(sc, fl).forEach(a => drawArrow(a.x * T - camX, a.y * T - camY, a.dir, now));
   // entities, follower and player, sorted by row
   const list: { e: Entity | null | 'follower'; y: number }[] = RT.ents.map(e => ({ e, y: e.y }));
   list.push({ e: null, y: ppy / T });

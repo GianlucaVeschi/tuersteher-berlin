@@ -5,6 +5,7 @@ import { SHOPS } from '../data/outfits';
 import { CLUB_SHORT, zoom, zoomLevel } from './zoom';
 import { towerC } from './cityTiles';
 import { GORLI, TOWER } from '../world/city';
+import { drawArrow } from './arrow';
 import { lookOf } from './looks';
 import { person } from './sprites';
 import { INK, reduceMotion } from '../util';
@@ -59,9 +60,8 @@ export function drawWorld(now: number): [number, number, number, number] {
     } else if (Math.floor(now / 1200 + c.dx) % 3 !== 0) {
       ctx.fillStyle = c.glow; ctx.fillRect(dx + 4, dy + 15, 8, 1);
     }
-    // yellow arrow on the pavement in front of the bouncer, pointing up at the door
-    const ay = (c.by + 1) * T - camY + 3 + (reduceMotion ? 0 : Math.round(Math.abs(Math.sin(now / 220)) * -2));
-    arrowUp(dx + 3, ay);
+    // yellow arrow on the pavement in front of the bouncer, pointing up at the door (stays after you got in)
+    drawArrow(dx, (c.by + 1) * T - camY, 'up', now);
   });
   // S-Bahn
   if (train.wait <= 0) {
@@ -127,16 +127,6 @@ export function drawWorld(now: number): [number, number, number, number] {
     if (Math.floor(now / 700) % 2 === 0) { ctx.fillStyle = '#ff3b3b'; ctx.fillRect(tX + towerC.width / 2 - 1, tY + 3, 2, 2); }
   }
   return [camX, camY, ppx, ppy];
-}
-/** A 10×9 yellow arrow pointing up, outlined in ink (the "go in here" marker in front of club doors). */
-function arrowUp(x: number, y: number) {
-  const rows: [number, number][] = [[4, 2], [3, 4], [2, 6], [1, 8], [0, 10]];
-  ctx.fillStyle = INK;
-  rows.forEach(([o, w], i) => ctx.fillRect(x + o - 1, y + i - 1, w + 2, 3));
-  ctx.fillRect(x + 2, y + 4, 6, 6);
-  ctx.fillStyle = '#ffd23f';
-  rows.forEach(([o, w], i) => ctx.fillRect(x + o, y + i, w, 1));
-  ctx.fillRect(x + 3, y + 5, 4, 4);
 }
 /** The animals at the Görli children's farm, facing left or right, nibbling now and then. */
 function drawAnimal(e: Entity, X: number, Y: number, now: number) {
