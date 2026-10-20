@@ -1,6 +1,7 @@
 import { state } from '../core/state';
 import { CLUBS } from '../data/clubs';
 import { writePlayer, type Plain } from './api';
+import { totalQuestsDone } from '../quests/quests';
 
 /* ================= ONLINE SYNC ================= */
 // Keeps your public entry on the guest list up to date: on joining, new stamps and quests,
@@ -25,7 +26,7 @@ function fields(): Record<string, Plain> {
     char: state.char || '',
     clubs,
     stamps: clubs.length,
-    quests: Math.min(100, Object.keys(state.quests).length),
+    quests: totalQuestsDone(),
     playMs: Math.round(state.playMs),
     finishPlayMs: state.finishPlayMs
   };
