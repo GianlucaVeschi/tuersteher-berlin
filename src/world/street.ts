@@ -26,7 +26,6 @@ export const STREET_ACTS: Record<string, Act> = {
     await say('Jesus: Every weekend I come and stand here. I can hear the fire crackling in there. I can smell the wood...');
     if (e?.look) e.look.tears = true;
     await say('(Jesus starts crying.)');
-    await say('Jesus: *sniff* Say hi to the fire for me.');
   },
   // Taski, the Wolt rider (world/taski.ts)
   taski: taskiTalk,

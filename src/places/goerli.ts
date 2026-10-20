@@ -24,9 +24,8 @@ export async function gorli(_e: Entity | null) {
 
 /** A railway fan by the old rails. */
 export async function railway(_e: Entity | null) {
-  await say('Railway fan: Right here stood the Görlitzer Bahnhof, a big terminus. Trains out to Görlitz and the south-east.');
-  await say('Railway fan: The last passenger train left in 1951. They started tearing the station down in 1962. Then coal, and freight trains until 1985.');
-  await say('Railway fan: The neighbours wanted a park instead. Look down: some of the old rails are still in the grass. And there is an old tunnel under the park.');
+  await say('Railway fan: This park was a train station, the Görlitzer Bahnhof. Last passenger train: 1951.');
+  await say('Railway fan: Look down: the old rails are still in the grass.');
 }
 
 /** The children's farm. */

@@ -23,11 +23,11 @@ export async function maison(_e: Entity | null) {
 
 /** The bar at the Ankerklause. */
 export async function ankerBar(_e: Entity | null) {
-  await say('Barkeeper: Ahoi. If it is about a table: no. If it is about a drink: what will it be, sailor?');
-  const a = await ask('', ['A Pils', 'A Korn, like a real sailor', 'Coffee, it is morning somewhere', 'Water']);
+  await say('Barkeeper: If it is about a table: no. If it is about a drink or food: what will it be?');
+  const a = await ask('', ['A Pils', 'Fish and chips', 'Coffee, it is morning somewhere', 'Water']);
   await say([
     '(A cold Pils. You drink it standing up, like everyone without a table. Which is everyone.)',
-    '(One Korn. The regular next to you salutes: "Twelve years I waited for a table. Then I became a regular at the bar instead.")',
+    '(Fish and chips in a paper basket. You eat it standing up, holding the basket over a stranger\'s shoulder. No table, of course.)',
     'Barkeeper: Coffee? The Sunday breakfast tables are booked by people who are not born yet.',
     'Barkeeper: Water is free. Tables are not. Tables are not even for sale.'
   ][a]);
