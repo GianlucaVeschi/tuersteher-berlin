@@ -26,8 +26,8 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 61: P(X, Y, 16, 16, '#3a3a43'); for (let a = 1; a < 16; a += 3) for (let b = 1; b < 16; b += 3) P(X + a, Y + b, 1, 1, '#2c2c34'); break;
       case 47: P(X, Y, 16, 16, '#40454c'); P(X, Y, 16, 1, '#353940'); P(X, Y + 8, 16, 1, '#353940'); P(X, Y, 1, 16, '#353940'); P(X + 8, Y, 1, 16, '#353940'); break;
       case 46: P(X, Y, 16, 16, '#07060a'); if (rnd() < 0.2) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, '#121117'); break;
-      case 43: case 44: {
-        const up = t === 43;
+      case 43: case 44: case 130: {
+        const up = t !== 44;
         for (let i = 0; i < 4; i++) {
           const shade = up ? ['#5d5d68', '#6d6d78', '#7d7d88', '#8d8d98'][3 - i] : ['#4a4a54', '#3e3e47', '#33333b', '#282830'][i];
           P(X, Y + i * 4, 16, 4, shade); P(X, Y + i * 4, 16, 1, '#c9b25a');
@@ -173,24 +173,6 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X - 3, Y - 32, 22, 7, INK); P(X - 2, Y - 31, 20, 5, '#cfcbc0'); P(X - 2, Y - 27, 20, 1, '#8a867c');     // capital
         circle(g, X - 2, Y - 28, 3, '#8a867c'); circle(g, X + 18, Y - 28, 3, '#8a867c');                         // volutes
         P(X - 3, Y - 34, 22, 2, '#9a968c');
-        break;
-      }
-      case 130: { // a spiral staircase, 2×2 tiles: drawn once from its bottom-right tile, seen from above
-        floorBase(X, Y);
-        if (at(x + 1, y) === 130 || at(x, y + 1) === 130) break;
-        const cx = X, cy = Y, r = 15;
-        g.fillStyle = INK; g.beginPath(); g.arc(cx, cy, r + 1, 0, Math.PI * 2); g.fill();
-        // wedge-shaped steps winding round the pole, lighter as they rise
-        for (let i = 0; i < 12; i++) {
-          const a0 = -Math.PI / 2 + i * Math.PI / 6, a1 = a0 + Math.PI / 6;
-          g.fillStyle = ['#3b3b44', '#46464f', '#51515a', '#5c5c66', '#676771', '#72727c'][Math.floor(i / 2)];
-          g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, r, a0, a1); g.closePath(); g.fill();
-          g.strokeStyle = '#c9b25a'; g.lineWidth = 1;
-          g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(a0) * r, cy + Math.sin(a0) * r); g.stroke();
-        }
-        // the handrail round the outside and the steel pole in the middle
-        g.strokeStyle = '#a7a7b3'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, r - 1, -Math.PI / 2, Math.PI * 1.25); g.stroke();
-        circle(g, cx, cy, 3, INK); circle(g, cx, cy, 2, '#a7a7b3');
         break;
       }
       case 131: // the Eisbar's chrome-tiled bar: little steel tiles, sprinkles and sugar shakers on top

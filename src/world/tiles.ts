@@ -34,8 +34,8 @@ export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43,
   ';': 123, ']': 124, ')': 125, '$': 126, '}': 127, '{': 128,
   // Panorama Bar: a black leather sofa against the right wall
   '&': 129,
-  // Berghain's Eisbar: the spiral staircase up to it (2×2), the chrome-tiled bar, the glass ice case
-  // under its neon tube, a small round table
+  // Berghain's Eisbar: the second staircase up (to it from the main floor), the chrome-tiled bar,
+  // the glass ice case under its neon tube, a small round table
   '/': 130, '"': 131, '`': 132, 'ø': 133,
   '1': 81, '2': 82, '3': 83, '4': 84, '5': 85, '6': 86, '7': 87, '8': 88, '9': 89 };
 export const ICHAR: Record<number, string> = Object.fromEntries(Object.entries(ICH).map(([k, v]) => [v, k]));
@@ -47,5 +47,5 @@ export const isDoorTile = (t: number) => t >= 81 && t <= 89;
 export const STAIRS_UP = 43, STAIRS_DOWN = 44, EXIT = 45, DARK = 46, DANCE = 42;
 /** a staircase up drawn as rising steps (climb it to the right) */
 export const STAIRS_UP_SIDE = 124;
-/** a spiral staircase (2×2 tiles) to the floor in the floor's `spiral` link (Berghain's Eisbar) */
-export const SPIRAL = 130;
+/** a second staircase up, to the floor in the floor's `up2` link (when `^` already goes somewhere else) */
+export const STAIRS_UP2 = 130;

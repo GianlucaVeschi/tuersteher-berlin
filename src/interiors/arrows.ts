@@ -1,4 +1,4 @@
-import { EXIT, ICHAR, SOLID, SPIRAL, STAIRS_DOWN, STAIRS_UP, STAIRS_UP_SIDE, isDoorTile } from '../world/tiles';
+import { EXIT, ICHAR, SOLID, STAIRS_DOWN, STAIRS_UP, STAIRS_UP2, STAIRS_UP_SIDE, isDoorTile } from '../world/tiles';
 import type { ClubScene, Dir, FloorDef } from '../types';
 
 export interface WayArrow { x: number; y: number; dir: Dir }
@@ -7,7 +7,7 @@ export interface WayArrow { x: number; y: number; dir: Dir }
 function wayOut(t: number, fl: FloorDef): string | null {
   if ((t === STAIRS_UP || t === STAIRS_UP_SIDE) && fl.up) return 'up';
   if (t === STAIRS_DOWN && fl.down) return 'down';
-  if (t === SPIRAL && fl.spiral) return 'spiral';
+  if (t === STAIRS_UP2 && fl.up2) return 'up2';
   if (t === EXIT && fl.exit) return 'exit';
   if (isDoorTile(t) && fl.doors && fl.doors[ICHAR[t]]) return 'door' + ICHAR[t];
   return null;
@@ -16,7 +16,7 @@ function wayOut(t: number, fl: FloorDef): string | null {
 const STEPS: [number, number, Dir][] = [[0, -1, 'down'], [0, 1, 'up'], [-1, 0, 'right'], [1, 0, 'left']];
 const cache = new Map<string, WayArrow[]>();
 
-/** One arrow per way out of the room (stairs, spiral staircase, doorway, exit): on the free tile in front of it closest
+/** One arrow per way out of the room (stairs, doorway, exit): on the free tile in front of it closest
  *  to its middle, pointing at it. Worked out once per floor. */
 export function wayArrows(sc: ClubScene, fl: FloorDef): WayArrow[] {
   const key = sc.club + ':' + sc.floor;

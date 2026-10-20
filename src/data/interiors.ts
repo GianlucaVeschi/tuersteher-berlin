@@ -12,7 +12,7 @@ import type { InteriorDef } from '../types';
    N  Piotr Nathan wall installation               A  Wolfgang Tillmans print
    W  tall windows with metal blinds               L  Lab.oratory door (closed)
    ;  the empty space overlooking the Säule, behind a railing
-   /  spiral staircase (2×2) to the floor in `spiral`
+   /  a second staircase up, to the floor in `up2`
 
    Staff stand behind counters; you talk to them across the counter.
    `people` entries: { x, y, look, lines } or { x, y, look, act } where `act`
@@ -96,7 +96,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // (railing over the dancefloor, the lighting desk, then the stairs to Panorama Bar) and the
         // darkrooms along the top, the empty space overlooking the Säule behind a railing on
         // the left, the dancefloor with its columns, the DJ on the right, the bar along the bottom, and
-        // in the bottom left the stairs down to the Säule and the spiral staircase up to the Eisbar.
+        // in the bottom left the stairs down to the Säule and the stairs up to the Eisbar.
         label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
@@ -127,7 +127,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         spawn: { fromDown: [3, 19, 'up'], fromUp: [28, 2, 'down'], fromEis: [11, 20, 'right'] },
         down: { to: 'eg', at: 'fromUp' },
         up: { to: 'pb', at: 'fromDown' },
-        spiral: { to: 'eis', at: 'fromDown' },
+        up2: { to: 'eis', at: 'fromDown' },
         dancers: 26,
         beams: true,
         people: [
@@ -207,12 +207,12 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#.ø....ø....&#',
       '#...........&#',
       '#.ø....ø....&#',
-      '#//.........&#',
-      '#//..........#',
+      '#vv.........&#',
+      '#vv..........#',
       '##############'
         ],
         spawn: { fromDown: [3, 9, 'right'] },
-        spiral: { to: 'mf', at: 'fromEis' },
+        down: { to: 'mf', at: 'fromEis' },
         people: [
           // the barista behind the ice case
           { x: 4, y: 2, act: 'ice', name: 'Barista', dir: 'down', look: { skin: '#c98d6a', hair: '#6a4a2a', long: true, beard: '#7a5a3a', top: '#4b5a2e', legs: '#26242e' } },
@@ -245,7 +245,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
     quests: [
       { id: 'coat', title: 'Check your coat', hint: 'Garderobe, on the ground floor (Säule), past the changing space.' },
       { id: 'drink', title: 'Order a drink', hint: 'Any bar.' },
-      { id: 'ice', title: 'Get ice cream', hint: 'Eisbar: up the spiral staircase, bottom left of the main floor.' },
+      { id: 'ice', title: 'Get ice cream', hint: 'Eisbar: up the stairs in the bottom left of the main floor.' },
       { id: 'dance', title: 'Dance on the main floor', hint: 'Press A on the dancefloor.' },
       { id: 'toilet', title: 'Get into the toilets', hint: 'Someone is blocking the bathroom door, top left of the main floor.' },
       { id: 'darkroom', title: 'Take someone to the darkroom', hint: 'Find Sascha at Panorama Bar.' },

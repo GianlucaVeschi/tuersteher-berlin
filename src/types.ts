@@ -275,8 +275,8 @@ export interface FloorDef {
   spawn: Record<string, [number, number, Dir]>;
   up?: FloorLink;
   down?: FloorLink;
-  /** where the spiral staircase (`/`) goes */
-  spiral?: FloorLink;
+  /** where the second staircase up (`/`) goes */
+  up2?: FloorLink;
   exit?: boolean;
   /** doorways: map digit -> floor */
   doors?: Record<string, FloorLink>;
