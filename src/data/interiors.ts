@@ -147,36 +147,43 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       pb: {
+        // Panorama Bar, laid out from the owner's notes: the left third holds the bathrooms (top left)
+        // and the darkrooms (bottom left); the right two thirds the DJ, the dancefloor, one ring bar you
+        // can walk all the way round, and tall church-like windows in the top right letting violet light in.
         label: 'Panorama Bar', short: 'PANO',
         map: [
-      '############################',
-      '##AAAAA##WWWWWWWWWWWWWWWW###',
-      '#..........................#',
-      '#.,,,,,,,,,,,,,,.......bbb.#',
-      '#.,,,,,,,,,,,,,,.......bbb.#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.#######,,,,,,,.======....#',
-      '#.#.....#,,,,,,,.=....=....#',
-      '#.#.....#,,,,,,,.=....=....#',
-      '#.,DDDDD,,,,,,,,.=....=....#',
-      '#.,,,,,,,,,,,,,,.======....#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.,,,,,,,,,,,,,,...........#',
-      '#.......................vv.#',
-      '#.......................vv.#',
-      '############################'
+      '################################',
+      '#tt|t|t|t##AAAAA##WWWWWWWWWWWW##',
+      '#tt|t|t|t#...,,,,,,,,,,,,,,,,,.#',
+      '#tttttttt#...,,,,,,,,,,,,,,,,,.#',
+      '#tttttttt#.S.,,,,,,,,,,,,,,,,,.#',
+      '#tttttttt#.D.,,,,,,,,,,,,,,,,,.#',
+      '#tttttttt#.D.,,,,,,,,,,,,,,,,,.#',
+      '#####t####.D.,,,,,,,,,.........#',
+      '#..........D.,,,,,,,,,.======..#',
+      '#####k####.D.,,,,,,,,,.=....=..#',
+      '#kkkkkkkk#.S.,,,,,,,,,.=....=..#',
+      '#kkkkkkkk#...,,,,,,,,,.=....=..#',
+      '#kkkkkkkk#...,,,,,,,,,.======..#',
+      '#kkkkkkkk#...,,,,,,,,,.........#',
+      '#kkkkkkkk#...,,,,,,,,,.......bb#',
+      '#kkkkkkkk#...,,,,,,,,,...vv..bb#',
+      '#kkkkkkkk#...............vv....#',
+      '################################'
         ],
-        spawn: { fromDown: [24, 14, 'up'] },
+        spawn: { fromDown: [25, 14, 'up'] },
         down: { to: 'mf', at: 'fromUp' },
-        dancers: 14,
+        dancers: 16,
+        violet: true,
         people: [
-          { x: 5, y: 9, act: 'dj', look: { skin: '#c98d6a', hair: '#e83f8f', top: '#16151c', legs: '#16151c', long: true } },
-          { x: 19, y: 10, act: 'bar', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#16151c', legs: '#16151c' } },
-          { x: 20, y: 8, act: 'bar', look: { skin: '#e2b08c', bald: true, top: '#16151c', legs: '#16151c' } },
-          { x: 16, y: 9, act: 'sascha', dir: 'left', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#0c0c12', legs: '#0c0c12', harness: true } },
-          { x: 24, y: 5, dir: 'down', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#16151c', legs: '#16151c', beard: '#c0c0c0' }, lines: ['Regular: When the blinds go up, the whole room screams.', "Regular: It only happens when the night's been good. Keep going."] }
+          { x: 10, y: 6, dir: 'right', act: 'dj', look: { skin: '#c98d6a', hair: '#e83f8f', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 24, y: 10, dir: 'left', act: 'bar', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#16151c', legs: '#16151c' } },
+          { x: 27, y: 10, dir: 'right', act: 'bar', look: { skin: '#e2b08c', bald: true, top: '#16151c', legs: '#16151c' } },
+          { x: 22, y: 13, act: 'sascha', dir: 'up', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#0c0c12', legs: '#0c0c12', harness: true } },
+          { x: 30, y: 4, dir: 'left', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#16151c', legs: '#16151c', beard: '#c0c0c0' }, lines: ['Regular: Look at the windows. Violet like a church. When the blinds go up, the whole room screams.', "Regular: It only happens when the night's been good. Keep going."] },
+          { x: 6, y: 4, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (at the mirror) Five more minutes. Then back to the floor.'] },
+          { x: 4, y: 8, dir: 'right', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: Bathrooms up there, darkrooms down there. Choose wisely.'] },
+          { x: 3, y: 12, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['(A shape in the dark. You leave them to it.)'] }
         ]
       }
     },
@@ -188,7 +195,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       S: ['A Funktion-One speaker stack. Your trousers are vibrating.'],
       N: ['A huge wall installation by Piotr Nathan.', 'Hundreds of little panels. Nobody knows where to start looking.'],
       A: ['A huge Wolfgang Tillmans print from his Freischwimmer series.', 'Soft lines of light floating on black.'],
-      W: ['Tall windows with metal blinds. Closed. For now.'],
+      W: ['Tall arched windows like in a church. Violet light pours through the glass. The blinds behind them stay down. For now.'],
       L: ['Lab.oratory. Separate entrance, separate rules. Closed tonight.'],
       P: ['A steel pillar from the old power plant.'],
       '|': ['Two pairs of feet under the stall door. Classic.']

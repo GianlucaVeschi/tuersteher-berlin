@@ -14,7 +14,7 @@ Once the bouncer lets you in, you can walk around inside Berghain. It has three 
 
 - **Säule (ground floor):** in through the vertical entrance corridor, left into the bag check, round the squared C to the Kasse at the top (going out you skip it: the corridor is open at the top), then the changing space and the Garderobe with its racks of jackets and its queue, and the Säule itself: a bar along the top, a DJ on the left, the big concrete pillar in the middle of the dancefloor, seats along the bottom, a staircase rising to the top right and a darkroom behind the DJ.
 - **Main floor (old turbine hall):** the bathroom, steps up to a mezzanine (a railing over the dancefloor, the lighting guy at his desk, then the stairs up to Panorama Bar) and the darkrooms along the top, a railing on the left looking down into the Säule, the dancefloor with coloured beams sweeping over it, a wall through a row of columns like on a Greek temple separating it from the bar, the DJ on the right, the bar along the bottom, and in the bottom left the stairs down to the Säule and a few steps up to the Eisbar.
-- **Panorama Bar:** wrap-around bar, raised DJ booth, a Wolfgang Tillmans print and tall windows with metal blinds.
+- **Panorama Bar (top floor):** split in two: the left third has the bathrooms (top left) and the darkrooms (bottom left), the right two thirds the DJ booth, the dancefloor and one ring bar you can walk all the way around. Tall church-like windows in the top right throw violet light onto the floor; at sunrise the blinds go up and morning light pours in.
 
 Side quests (tracked on the stamp card):
 

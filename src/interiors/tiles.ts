@@ -43,7 +43,14 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (let i = 0; i < 14; i++) { const gx = X + 1 + i, wy = Math.round(7 + 3 * Math.sin((gx) / 6)); P(gx, Y + wy, 1, 1, '#9fd6c0'); P(gx, Y + wy + 1, 1, 1, '#4a7a6a'); if (i % 3 === 0) P(gx, Y + 12 - Math.round(2 * Math.cos(gx / 5)), 1, 1, '#f0b8d0'); }
         break;
       }
-      case 50: P(X, Y, 16, 16, '#1d1c22'); P(X + 1, Y + 1, 14, 12, '#2a2a32'); for (let i = 2; i < 13; i += 2) P(X + 1, Y + i, 14, 1, '#4c4c56'); P(X, Y + 13, 16, 3, '#2a2928'); break;
+      case 50: { // a tall church-like window: stone frame, pointed arch, violet stained glass with lead lines
+        P(X, Y, 16, 16, '#2a2928'); P(X, Y + 13, 16, 3, '#1d1c22');
+        P(X + 3, Y + 4, 10, 10, INK); P(X + 4, Y + 2, 8, 3, INK); P(X + 6, Y + 1, 4, 2, INK);
+        P(X + 4, Y + 5, 8, 8, '#6a3fb0'); P(X + 5, Y + 3, 6, 2, '#7a4fc8'); P(X + 7, Y + 2, 2, 1, '#8a5fd8');
+        P(X + 4, Y + 5, 3, 3, '#9a6fe8'); P(X + 9, Y + 8, 3, 2, '#5a2f90'); P(X + 5, Y + 10, 2, 3, '#b08cf0');
+        P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
+        break;
+      }
       case 60: face(X, Y); P(X + 3, Y + 2, 10, 14, INK); P(X + 4, Y + 3, 8, 13, '#1a1820'); P(X + 5, Y + 5, 6, 2, '#c9b25a'); break;
       case 49: floorBase(X, Y); P(X + 3, Y - 9, 10, 25, INK); P(X + 4, Y - 8, 8, 23, '#6a6e78'); P(X + 4, Y - 8, 2, 23, '#8a8e98'); P(X + 10, Y - 8, 2, 23, '#4e525a'); break;
       case 58: floorBase(X, Y); P(X + 1, Y, 14, 16, INK); P(X + 2, Y + 1, 12, 14, '#1b1a20'); circle(g, X + 8, Y + 9, 4, '#34333b'); circle(g, X + 8, Y + 9, 2, '#0c0c12'); P(X + 4, Y + 2, 8, 2, '#2c2b33'); break;

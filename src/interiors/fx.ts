@@ -97,15 +97,28 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     sc.map.forEach((row, y) => row.forEach((t, x) => {
       if (t !== 50) return;
       const X = x * T - camX, Y = y * T - camY;
-      ctx.fillStyle = '#ffe2a0'; ctx.fillRect(X + 1, Y + 1, 14, 12);
-      ctx.fillStyle = '#fff4d6'; ctx.fillRect(X + 1, Y + 1, 14, 3);
-      ctx.fillStyle = '#c9a26a'; ctx.fillRect(X + 1, Y + 1, 14, 1);
+      // the blinds are up: morning light fills the arched windows
+      ctx.fillStyle = '#ffe2a0'; ctx.fillRect(X + 4, Y + 5, 8, 8); ctx.fillRect(X + 5, Y + 3, 6, 2);
+      ctx.fillStyle = '#fff4d6'; ctx.fillRect(X + 5, Y + 5, 6, 3);
     }));
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
-    const wx0 = 9 * T - camX, wx1 = 25 * T - camX, wy = 2 * T - camY;
+    const wins = windowSpan(sc), wx0 = wins[0] * T - camX, wx1 = (wins[1] + 1) * T - camX, wy = 2 * T - camY;
     const gr = ctx.createLinearGradient(0, wy, 0, wy + 10 * T);
     gr.addColorStop(0, 'rgba(255,200,120,.30)'); gr.addColorStop(1, 'rgba(255,200,120,0)');
     ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(wx0, wy); ctx.lineTo(wx1, wy); ctx.lineTo(wx1 - 5 * T, wy + 10 * T); ctx.lineTo(wx0 - 6 * T, wy + 10 * T); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  // Panorama Bar before sunrise: violet light falling through the church windows onto the floor
+  if (fl.violet && !state.sunrise[sc.club]) {
+    const [x0, x1] = windowSpan(sc);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (let x = x0; x <= x1; x += 2) {
+      const sway = lights ? Math.sin(now / 1800 + x) * 6 : 0, X = x * T + 8 - camX, Y = 2 * T - camY;
+      const gr = ctx.createLinearGradient(0, Y, 0, Y + 8 * T);
+      gr.addColorStop(0, 'rgba(150,80,255,.26)'); gr.addColorStop(1, 'rgba(150,80,255,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(X - 5, Y); ctx.lineTo(X + 5, Y);
+      ctx.lineTo(X - 3 * T + 10 + sway, Y + 8 * T); ctx.lineTo(X - 3 * T - 14 + sway, Y + 8 * T); ctx.closePath(); ctx.fill();
+    }
     ctx.restore();
   }
   // Heideglühen: fire pits and the karaoke screen
@@ -252,4 +265,11 @@ function questMark(X: number, Y: number, now: number) {
   ctx.fillStyle = INK; ctx.fillRect(x, y, 6, 11);
   ctx.fillStyle = '#e8263c'; ctx.fillRect(x + 1, y + 1, 4, 9);
   ctx.fillStyle = '#fff'; ctx.fillRect(x + 2, y + 2, 2, 4); ctx.fillRect(x + 2, y + 7, 2, 2);
+}
+
+/** The first and last column of the windows (`W`, tile 50) on a floor. */
+function windowSpan(sc: ClubScene): [number, number] {
+  let x0 = sc.w, x1 = 0;
+  sc.map.forEach(row => row.forEach((t, x) => { if (t === 50) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
+  return x0 <= x1 ? [x0, x1] : [0, 0];
 }

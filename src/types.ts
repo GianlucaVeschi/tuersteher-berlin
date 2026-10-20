@@ -291,6 +291,8 @@ export interface FloorDef {
   strobe?: boolean;
   /** coloured light beams sweeping across the floor from the rig above (Berghain main floor) */
   beams?: boolean;
+  /** violet light falling through the church-like windows (`W`) onto the floor (Panorama Bar) */
+  violet?: boolean;
   daylight?: boolean;
   uv?: boolean;
   red?: boolean;
