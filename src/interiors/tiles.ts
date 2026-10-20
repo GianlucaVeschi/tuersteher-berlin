@@ -121,6 +121,20 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         if (at(x, y + 1) !== 123) { P(X, Y + 13, 16, 3, INK); P(X, Y + 14, 16, 1, '#8a8e98'); }
         break;
       }
+      case 124: { // stairs climbing to the right: treads run top to bottom, lighter the higher you get
+        for (let i = 0; i < 4; i++) { P(X + i * 4, Y, 4, 16, ['#5d5d68', '#6d6d78', '#7d7d88', '#8d8d98'][i]); P(X + i * 4, Y, 1, 16, '#c9b25a'); }
+        if (at(x, y - 1) !== 124) { P(X, Y, 16, 2, '#a7a7b3'); P(X, Y + 2, 16, 1, INK); }
+        if (at(x, y + 1) !== 124) { P(X, Y + 14, 16, 2, '#a7a7b3'); P(X, Y + 13, 16, 1, INK); }
+        break;
+      }
+      case 125: // the exit turnstile: steel bars, an arrow pointing out
+        floorBase(X, Y); P(X + 1, Y + 6, 14, 2, '#8a8e98'); P(X + 7, Y + 2, 2, 12, '#6a6e78');
+        P(X + 6, Y + 10, 4, 1, '#3fbf6f'); P(X + 7, Y + 11, 2, 1, '#3fbf6f'); P(X + 7, Y + 8, 2, 2, '#3fbf6f');
+        break;
+      case 126: // a Garderobe rack: a rail full of jackets, hoodies and bags
+        P(X, Y, 16, 16, '#1c1b22'); P(X, Y + 2, 16, 1, '#8a8e98');
+        for (let i = 0; i < 5; i++) { const c = pick(['#0c0c12', '#2a2a33', '#3a2a20', '#5a5a66', '#1f2f4d', '#4a1a1a']); P(X + 1 + i * 3, Y + 3, 3, 10 + (i % 2) * 2, c); P(X + 2 + i * 3, Y + 3, 1, 1, '#c9c5d4'); }
+        break;
       // ---- black-light minigolf ----
       case 114: { // a glowing lane: dark felt, neon rails, a hole with a flag
         P(X, Y, 16, 16, '#0c0b14'); P(X + 1, Y + 1, 14, 14, '#123a24');
