@@ -13,7 +13,7 @@ Every bouncer checks your outfit first, then asks questions about the club. Get 
 Once the bouncer lets you in, you can walk around inside Berghain. It has three floors connected by steel stairs, following the real layout:
 
 - **Säule (ground floor):** in through the vertical entrance corridor, left into the bag check, round the squared C to the Kasse at the top (going out you skip it: the corridor is open at the top), then the changing space and the Garderobe with its racks of jackets and its queue, and the Säule itself: a bar along the top, a DJ on the left, the big concrete pillar in the middle of the dancefloor, seats along the bottom, a staircase rising to the top right and a darkroom behind the DJ.
-- **Main floor (old turbine hall):** the bathroom, steps up to a mezzanine (a railing over the dancefloor, the lighting guy at his desk, then the stairs up to Panorama Bar) and the darkrooms along the top, a railing on the left looking down into the Säule, the dancefloor with coloured beams sweeping over it and columns like on a Greek temple, the DJ on the right, the bar along the bottom, and in the bottom left the stairs down to the Säule and a few steps up to the Eisbar.
+- **Main floor (old turbine hall):** the bathroom, steps up to a mezzanine (a railing over the dancefloor, the lighting guy at his desk, then the stairs up to Panorama Bar) and the darkrooms along the top, a railing on the left looking down into the Säule, the dancefloor with coloured beams sweeping over it, a wall through a row of columns like on a Greek temple separating it from the bar, the DJ on the right, the bar along the bottom, and in the bottom left the stairs down to the Säule and a few steps up to the Eisbar.
 - **Panorama Bar:** wrap-around bar, raised DJ booth, a Wolfgang Tillmans print and tall windows with metal blinds.
 
 Side quests (tracked on the stamp card):
@@ -24,7 +24,7 @@ Side quests (tracked on the stamp card):
 | Order a drink | Any bar |
 | Get ice cream | Eisbar, main floor mezzanine |
 | Dance on the main floor | Press A on the dancefloor |
-| Get into the toilets | A guy blocks the toilet door and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers on the main dancefloor; say he sent you). Bring the bag back and you share a line in a stall: the club turns 3D for 30 seconds. Walk and turn freely through the main floor (up/down walk, left/right turn, or drag) while the walls melt, the room wobbles, everything leaves ghost trails and the colours drift. You come round wherever you walked to |
+| Get into the toilets | A guy blocks the bathroom door (top left of the main floor) and wants K. He sends you to Mila (pink hair, sunglasses, by the left speakers next to the railing over the Säule; say he sent you). Bring the bag back and you share a line in a stall: the club turns 3D for 30 seconds. Walk and turn freely through the main floor (up/down walk, left/right turn, or drag) while the walls melt, the room wobbles, everything leaves ghost trails and the colours drift. You come round wherever you walked to |
 | Take someone to the darkroom | Find Sascha at Panorama Bar, ask first, then lead them down to the ground floor |
 | Dance when the blinds open | After three other quests, go to Panorama Bar |
 

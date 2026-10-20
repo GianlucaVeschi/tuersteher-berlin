@@ -218,14 +218,14 @@ export const ACTS: Record<string, Act> = {
       return;
     }
     if (state.kStage === 0) {
-      await say('Toilet guy: Toilets are full. Everyone in there is waiting for the same thing.');
+      await say('Toilet guy: Bathroom is full. Every stall, and everyone in there is waiting for the same thing.');
       await say('Toilet guy: Bring some K and you can come in with me. Otherwise, queue.');
-      await say("Toilet guy: Ask Mila. Pink hair, sunglasses, dancing by the speakers on the left. Say I sent you.");
+      await say("Toilet guy: Ask Mila. Pink hair, sunglasses. She dances on the left of the floor, by the speakers next to the railing over the Säule. Say I sent you.");
       state.kStage = 1; save(); renderCard();
       return;
     }
-    if (state.kStage === 1) { await say('Toilet guy: Found Mila yet? Pink hair, sunglasses. Left side of the floor, by the speakers.'); return; }
-    await say('Toilet guy: You got it? Nice. Come on.');
+    if (state.kStage === 1) { await say('Toilet guy: Found Mila yet? Pink hair, sunglasses. Left side of the floor, by the speakers and the railing.'); return; }
+    await say('Toilet guy: You got it? Nice. Come on, the last stall on the right.');
     closeBox();
     await fade(true);
     if (e.movedTo) { e.x = e.movedTo[0]; e.y = e.movedTo[1]; }
@@ -254,7 +254,7 @@ export const ACTS: Record<string, Act> = {
   async dancer(e, clubId) {
     if (!e) return;
     if (clubId === 'berghain' && state.kStage === 1 && Math.random() < 0.6) {
-      await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left.', "Raver: Mila? She's always dancing near the left speakers."]));
+      await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left, near the railing.', "Raver: Mila? She's always dancing on the left, by the railing over the Säule."]));
     } else if (e.lines) await say(e.lines[0]);
   },
   // the lighting guy on the main floor's mezzanine

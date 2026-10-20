@@ -113,10 +113,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
       '#;;;;;;;.S,,,,{,,,,,{,,,,,{,,,,.S..#',
       '#;;;;;;;.,,,,,{,,,,,{,,,,,{,,,,....#',
-      '#;;;;;;;.,,,,,{,,,,,{,,,,,{,,,,....#',
-      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
-      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
-      '#........,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#;;;;;;;.,,,,,{#####{#####{,,,,....#',
+      '#;;;;;;;...........................#',
+      '#;;;;;;;...........................#',
+      '#..................................#',
       '#.......______.....................#',
       '#vvvv...______.....................#',
       '#vvvv...#IIII###==================##',
@@ -136,7 +136,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 16, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (splashing water on their face) Ugh. Better.'] },
           // blocks the bathroom door until you bring K; after the quest he waits inside
           { x: 13, y: 5, act: 'toiletGuy', dir: 'down', movedWhen: 'toilet', movedTo: [14, 3], look: { skin: '#e2b08c', hair: '#111', top: '#16151c', legs: '#16151c', shades: true } },
-          // Mila: dances by the left speakers, has what the toilet guy wants
+          // Mila: dances by the left speakers, by the railing over the Säule; has what the toilet guy wants
           { x: 10, y: 11, act: 'mila', dance: true, phase: 3, look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, shades: true, top: '#0c0c12', legs: '#121116' } },
           // the mezzanine: the lighting guy at his desk, people leaning on the railing
           { x: 29, y: 3, dir: 'right', act: 'lights', name: 'Lights', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', glasses: '#9fc7e6' } },
@@ -203,7 +203,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'drink', title: 'Order a drink', hint: 'Any bar.' },
       { id: 'ice', title: 'Get ice cream', hint: 'Eisbar on the mezzanine, main floor.' },
       { id: 'dance', title: 'Dance on the main floor', hint: 'Press A on the dancefloor.' },
-      { id: 'toilet', title: 'Get into the toilets', hint: 'Someone is blocking the toilet door, main floor.' },
+      { id: 'toilet', title: 'Get into the toilets', hint: 'Someone is blocking the bathroom door, top left of the main floor.' },
       { id: 'darkroom', title: 'Take someone to the darkroom', hint: 'Find Sascha at Panorama Bar.' },
       { id: 'sunrise', title: 'Dance when the blinds open', hint: 'Finish three quests, then go to Panorama Bar.' }
     ]
