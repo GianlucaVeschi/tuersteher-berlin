@@ -14,7 +14,7 @@ import { openShop } from '../ui/shop';
 import { darkroomScene } from '../quests/acts';
 import { pickBottle } from '../quests/sisyphos';
 import { enterPlace, goFloor, leaveClub } from '../interiors/transitions';
-import { D, DARK, EXIT, ICHAR, STAIRS_DOWN, STAIRS_UP, STAIRS_UP_SIDE, T, isDoorTile } from '../world/tiles';
+import { D, DARK, EXIT, ICHAR, SPIRAL, STAIRS_DOWN, STAIRS_UP, STAIRS_UP_SIDE, T, isDoorTile } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 import { get } from '../world/grid';
 import { inClub, sceneClub, sceneFloor } from '../world/scenes';
@@ -48,6 +48,7 @@ export function arrive() {
     const t = get(player.x, player.y), clubId = sceneClub(), fl = INTERIORS[clubId].floors[sceneFloor()];
     if ((t === STAIRS_UP || t === STAIRS_UP_SIDE) && fl.up) { goFloor(clubId, fl.up.to, fl.up.at); return; }
     if (t === STAIRS_DOWN && fl.down) { goFloor(clubId, fl.down.to, fl.down.at); return; }
+    if (t === SPIRAL && fl.spiral) { goFloor(clubId, fl.spiral.to, fl.spiral.at); return; }
     if (t === EXIT && fl.exit) { leaveClub(clubId); return; }
     if (isDoorTile(t) && fl.doors && fl.doors[ICHAR[t]]) { const d = fl.doors[ICHAR[t]]; goFloor(clubId, d.to, d.at); return; }
     const b = RT.ents.find(en => en.kind === 'bottle' && en.x === player.x && en.y === player.y && en.bid && !state.pfand.taken[en.bid]);

@@ -175,6 +175,38 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X - 3, Y - 34, 22, 2, '#9a968c');
         break;
       }
+      case 130: { // a spiral staircase, 2×2 tiles: drawn once from its bottom-right tile, seen from above
+        floorBase(X, Y);
+        if (at(x + 1, y) === 130 || at(x, y + 1) === 130) break;
+        const cx = X, cy = Y, r = 15;
+        g.fillStyle = INK; g.beginPath(); g.arc(cx, cy, r + 1, 0, Math.PI * 2); g.fill();
+        // wedge-shaped steps winding round the pole, lighter as they rise
+        for (let i = 0; i < 12; i++) {
+          const a0 = -Math.PI / 2 + i * Math.PI / 6, a1 = a0 + Math.PI / 6;
+          g.fillStyle = ['#3b3b44', '#46464f', '#51515a', '#5c5c66', '#676771', '#72727c'][Math.floor(i / 2)];
+          g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, r, a0, a1); g.closePath(); g.fill();
+          g.strokeStyle = '#c9b25a'; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(a0) * r, cy + Math.sin(a0) * r); g.stroke();
+        }
+        // the handrail round the outside and the steel pole in the middle
+        g.strokeStyle = '#a7a7b3'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, r - 1, -Math.PI / 2, Math.PI * 1.25); g.stroke();
+        circle(g, cx, cy, 3, INK); circle(g, cx, cy, 2, '#a7a7b3');
+        break;
+      }
+      case 131: // the Eisbar's chrome-tiled bar: little steel tiles, sprinkles and sugar shakers on top
+        floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 5, '#e8eaee');
+        for (let a = 1; a < 15; a += 3) for (let b = 7; b < 15; b += 3) P(X + a, Y + b, 2, 2, (a + b) % 2 ? '#b9bec7' : '#d6dae1');
+        if (rnd() < 0.6) { P(X + 3, Y + 1, 3, 4, '#f3eee3'); P(X + 3, Y + 1, 3, 1, '#9aa0aa'); P(X + 9, Y + 2, 4, 2, pick(['#ff5fa2', '#ffd23f', '#5ec8ff', '#7a4a2e'])); }
+        break;
+      case 132: // the glass ice case: tubs of ice cream, a pink neon tube glowing over them
+        floorBase(X, Y); P(X, Y, 16, 16, INK); P(X + 1, Y + 1, 14, 9, '#d9e6e0'); P(X + 1, Y + 10, 14, 5, '#b9bec7');
+        P(X + 2, Y + 4, 5, 4, '#5a3424'); P(X + 9, Y + 4, 5, 4, pick(['#f7c6d9', '#f2e2a0', '#5a3424']));
+        P(X, Y + 1, 16, 2, '#ff6fb5'); P(X, Y + 1, 16, 1, '#ffd6ec');
+        break;
+      case 133: // a small round table with two pink paper cups
+        floorBase(X, Y); circle(g, X + 8, Y + 9, 6, INK); circle(g, X + 8, Y + 9, 5, '#d6dae1'); P(X + 7, Y + 13, 2, 3, INK);
+        P(X + 5, Y + 6, 3, 3, '#ff8cc4'); P(X + 9, Y + 8, 3, 3, '#ff8cc4');
+        break;
       case 129: { // a black leather sofa, backrest against the right wall, seat facing the room
         floorBase(X, Y);
         const top = at(x, y - 1) !== 129, bot = at(x, y + 1) !== 129;

@@ -34,13 +34,18 @@ export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43,
   ';': 123, ']': 124, ')': 125, '$': 126, '}': 127, '{': 128,
   // Panorama Bar: a black leather sofa against the right wall
   '&': 129,
+  // Berghain's Eisbar: the spiral staircase up to it (2×2), the chrome-tiled bar, the glass ice case
+  // under its neon tube, a small round table
+  '/': 130, '"': 131, '`': 132, 'ø': 133,
   '1': 81, '2': 82, '3': 83, '4': 84, '5': 85, '6': 86, '7': 87, '8': 88, '9': 89 };
 export const ICHAR: Record<number, string> = Object.fromEntries(Object.entries(ICH).map(([k, v]) => [v, k]));
-[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 122, 123, 125, 126, 128, 129].forEach(c => SOLID.add(c));
-export const COUNTERS = new Set([53, 54, 55, 56, 59, 122]);
+[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 122, 123, 125, 126, 128, 129, 131, 132, 133].forEach(c => SOLID.add(c));
+export const COUNTERS = new Set([53, 54, 55, 56, 59, 122, 131, 132]);
 export const WALLISH = new Set([40, 50, 51, 52, 60, 62, 68, 69, 74, 78, 79, 90, 107, 115, 116, 118, 120]);
 export const DANCES = new Set([42, 63, 75, 77, 91, 109]); // concrete, sand, red tunnel floor, wooden floor, pole stage, salon checkers
 export const isDoorTile = (t: number) => t >= 81 && t <= 89;
 export const STAIRS_UP = 43, STAIRS_DOWN = 44, EXIT = 45, DARK = 46, DANCE = 42;
 /** a staircase up drawn as rising steps (climb it to the right) */
 export const STAIRS_UP_SIDE = 124;
+/** a spiral staircase (2×2 tiles) to the floor in the floor's `spiral` link (Berghain's Eisbar) */
+export const SPIRAL = 130;
