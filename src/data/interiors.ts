@@ -97,13 +97,13 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // darkrooms along the top, the empty space overlooking the Säule behind a railing on
         // the left, the dancefloor with its columns, the DJ on the right, the bar along the bottom, and
         // in the bottom left the stairs down to the Säule and the stairs up to the Eisbar. Between the
-        // bathroom and the overlook a corridor runs up to the door of the smoking area.
+        // bathroom and the overlook a corridor runs up to the door of the smoking area, on its left.
         label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
-      '######11#tt|t|t|ttt#########^^^#kkk#',
-      '######..#tt|t|t|ttt########___D#kkk#',
-      '######..#tttttttttt#...}}}}___D#kkk#',
+      '#########tt|t|t|ttt#########^^^#kkk#',
+      '#####1..#tt|t|t|ttt########___D#kkk#',
+      '#####1..#tttttttttt#...}}}}___D#kkk#',
       '######..#tttttttttt#...}}}}____#kkk#',
       '######..#####t######...}}}}))))##k##',
       '#;;;;;.............................#',
@@ -125,7 +125,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#vvvv..#########..................##',
       '####################################'
         ],
-        spawn: { fromDown: [3, 19, 'up'], fromUp: [28, 2, 'down'], fromEis: [11, 20, 'right'], fromSmoke: [6, 2, 'down'] },
+        spawn: { fromDown: [3, 19, 'up'], fromUp: [28, 2, 'down'], fromEis: [11, 20, 'right'], fromSmoke: [6, 3, 'right'] },
         down: { to: 'eg', at: 'fromUp' },
         up: { to: 'pb', at: 'fromDown' },
         up2: { to: 'eis', at: 'fromDown' },
