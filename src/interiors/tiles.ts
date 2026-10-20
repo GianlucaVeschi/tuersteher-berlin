@@ -113,6 +113,14 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 103: // karaoke machine: a TV on a stand with a mic
         P(X, Y, 16, 16, '#40454c'); P(X + 1, Y + 1, 14, 10, INK); P(X + 2, Y + 2, 12, 8, '#1a2a4a');
         P(X + 7, Y + 11, 2, 4, '#8a9098'); P(X + 4, Y + 14, 8, 2, '#5a5f66'); P(X + 13, Y + 9, 2, 5, '#c0c4cc'); P(X + 12, Y + 8, 4, 2, INK); break;
+      // ---- Berghain ----
+      case 123: { // the drop to the Säule: darkness with lights far below; a railing where the floor ends
+        P(X, Y, 16, 16, '#07060a');
+        if (rnd() < 0.5) P(X + 2 + Math.floor(rnd() * 12), Y + 2 + Math.floor(rnd() * 12), 1, 1, pick(['#3a2a4a', '#4a2030', '#2a3a4a', '#c9c5d4']));
+        if (at(x + 1, y) !== 123) { P(X + 13, Y, 3, 16, INK); P(X + 14, Y, 1, 16, '#8a8e98'); for (let i = 1; i < 16; i += 5) P(X + 12, Y + i, 4, 1, '#6a6e78'); }
+        if (at(x, y + 1) !== 123) { P(X, Y + 13, 16, 3, INK); P(X, Y + 14, 16, 1, '#8a8e98'); }
+        break;
+      }
       // ---- black-light minigolf ----
       case 114: { // a glowing lane: dark felt, neon rails, a hole with a flag
         P(X, Y, 16, 16, '#0c0b14'); P(X + 1, Y + 1, 14, 14, '#123a24');

@@ -11,6 +11,7 @@ import type { InteriorDef } from '../types';
    c  ticket desk            b  bench              _  mezzanine grating
    N  Piotr Nathan wall installation               A  Wolfgang Tillmans print
    W  tall windows with metal blinds               L  Lab.oratory door (closed)
+   ;  the empty space overlooking the Säule, behind a railing
 
    Staff stand behind counters; you talk to them across the counter.
    `people` entries: { x, y, look, lines } or { x, y, look, act } where `act`
@@ -75,51 +76,54 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       mf: {
+        // The main floor, laid out from the owner's sketch: the bathroom, the stairs to Panorama Bar
+        // and the darkrooms along the top, the empty space overlooking the Säule behind a railing on
+        // the left, the dancefloor with its columns, the DJ on the right, the bar along the bottom, and
+        // in the bottom left the stairs down to the Säule and a few steps up to the ice cream.
         label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
-      '###############################^^^##',
-      '#.....#......#......#..........^^^.#',
-      '#IIIII#......#......#..............#',
-      '#________.....DDDDDD...............#',
-      '#________.S.............S...S..S...#',
-      '#________.S.P.........P.S...S..S...#',
-      '#..................................#',
-      '#.......,,,,,,,,,,,,,,,,,,,........#',
-      '#.......,,,,,,,,,,,,,,,,,,,........#',
-      '#.......,,,,,,,,,,,,,,,,,,,........#',
-      '#...S...,,,,,,,,,,,,,,,,,,,...S....#',
-      '#...S...,,,,,,,,,,,,,,,,,,,...S....#',
-      '####....,,,,,,,,,,,,,,,,,,,.....####',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '#..=....,,,,,,,,,,,,,,,,,,,.....=..#',
-      '####......................###t######',
-      '#......P.................P#tttttttt#',
-      '#................S........#tttttttt#',
-      '#.vvv.....bbbbbb..........#t|t|t|tt#',
-      '#.vvv.....................#t|t|t|tt#',
+      '#########tt|t|t|ttt#.^^^^####kkkkkk#',
+      '#########tt|t|t|ttt#.^^^^####kkkkkk#',
+      '#########tttttttttt#.^^^^...#kkkkkk#',
+      '#########tttttttttt#........kkkkkkk#',
+      '#############t######........########',
+      '#;;;;;;;...........................#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.S..#',
+      '#;;;;;;;.S,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
+      '#;;;;;;;.S,,,,,,,,,,,,,,,,,,,,,.S..#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#;;;;;;;.,,,,,P,,,,,P,,,,,P,,,,....#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#........,,,,,,,,,,,,,,,,,,,,,,....#',
+      '#.......______.....................#',
+      '#vvvv...______.....................#',
+      '#vvvv...#IIII###==================##',
+      '#vvvv..#......##..................##',
       '####################################'
         ],
-        spawn: { fromDown: [3, 22, 'up'], fromUp: [32, 3, 'down'] },
+        spawn: { fromDown: [3, 19, 'up'], fromUp: [22, 4, 'down'] },
         down: { to: 'eg', at: 'fromUp' },
         up: { to: 'pb', at: 'fromDown' },
         dancers: 26,
         people: [
-          { x: 16, y: 3, act: 'dj', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', shades: true } },
-          { x: 3, y: 2, act: 'ice', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#f3eee3', legs: '#16151c', long: true } },
-          { x: 2, y: 16, act: 'bar', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#16151c', legs: '#16151c', beard: '#5a3a22' } },
-          { x: 33, y: 16, act: 'bar', look: { skin: '#8d5a3b', hair: '#111', top: '#16151c', legs: '#16151c', long: true } },
-          { x: 33, y: 22, dir: 'left', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (splashing water on their face) Ugh. Better.'] },
-          // blocks the toilet door until you bring K; after the quest he waits inside the toilets
-          { x: 29, y: 19, act: 'toiletGuy', dir: 'up', movedWhen: 'toilet', movedTo: [30, 22], look: { skin: '#e2b08c', hair: '#111', top: '#16151c', legs: '#16151c', shades: true } },
+          { x: 33, y: 10, act: 'dj', dir: 'left', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', shades: true } },
+          { x: 10, y: 22, act: 'ice', dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#f3eee3', legs: '#16151c', long: true } },
+          { x: 20, y: 22, act: 'bar', dir: 'up', look: { skin: '#d9a27c', hair: '#5a3a22', top: '#16151c', legs: '#16151c', beard: '#5a3a22' } },
+          { x: 28, y: 22, act: 'bar', dir: 'up', look: { skin: '#8d5a3b', hair: '#111', top: '#16151c', legs: '#16151c', long: true } },
+          { x: 16, y: 3, dir: 'left', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (splashing water on their face) Ugh. Better.'] },
+          // blocks the bathroom door until you bring K; after the quest he waits inside
+          { x: 13, y: 5, act: 'toiletGuy', dir: 'down', movedWhen: 'toilet', movedTo: [14, 3], look: { skin: '#e2b08c', hair: '#111', top: '#16151c', legs: '#16151c', shades: true } },
           // Mila: dances by the left speakers, has what the toilet guy wants
-          { x: 9, y: 11, act: 'mila', dance: true, phase: 3, look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, shades: true, top: '#0c0c12', legs: '#121116' } },
-          { x: 28, y: 18, act: 'awareness', dir: 'left', look: { skin: '#c98d6a', hair: '#7ec8ff', top: '#5ec8ff', legs: '#26242e', long: true } },
-          { x: 12, y: 22, dir: 'down', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: Sitting down for five minutes. Then back in.'] }
+          { x: 10, y: 11, act: 'mila', dance: true, phase: 3, look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, shades: true, top: '#0c0c12', legs: '#121116' } },
+          { x: 31, y: 19, act: 'awareness', dir: 'left', look: { skin: '#c98d6a', hair: '#7ec8ff', top: '#5ec8ff', legs: '#26242e', long: true } },
+          { x: 8, y: 14, dir: 'left', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (leaning on the railing) Look down. That is the Säule. Tiny people, big pillar.'] },
+          { x: 5, y: 19, dir: 'down', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: Sitting down for five minutes. Then back in.'] }
         ]
       },
       pb: {
@@ -157,6 +161,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       }
     },
     examine: {
+      ';': ['A railing. Below you, the Säule: the bar, the pillar, tiny people dancing. The bass comes up through the floor.'],
       S: ['A Funktion-One speaker stack. Your trousers are vibrating.'],
       N: ['A huge wall installation by Piotr Nathan.', 'Hundreds of little panels. Nobody knows where to start looking.'],
       A: ['A huge Wolfgang Tillmans print from his Freischwimmer series.', 'Soft lines of light floating on black.'],
