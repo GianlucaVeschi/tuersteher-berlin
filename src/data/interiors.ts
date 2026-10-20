@@ -190,7 +190,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 22, y: 13, act: 'sascha', dir: 'up', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#0c0c12', legs: '#0c0c12', harness: true } },
           { x: 29, y: 3, dir: 'left', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#16151c', legs: '#16151c', beard: '#c0c0c0' }, lines: ['Regular: Look at the windows. Violet like a church. When the blinds go up, the whole room screams.', "Regular: It only happens when the night's been good. Keep going."] },
           { x: 6, y: 4, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2b2b38', legs: '#16151c' }, lines: ['Raver: (at the mirror) Five more minutes. Then back to the floor.'] },
-          { x: 4, y: 8, dir: 'right', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: Bathrooms up there, darkrooms down there. Choose wisely.'] },
+          { x: 10, y: 7, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: Bathrooms up there, darkrooms down there. Choose wisely.'] },
           { x: 3, y: 12, dir: 'up', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12', harness: true }, lines: ['(A shape in the dark. You leave them to it.)'] }
         ]
       },
