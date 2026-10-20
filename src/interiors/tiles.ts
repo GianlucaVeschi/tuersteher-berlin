@@ -1,7 +1,46 @@
 import type { Scene } from '../types';
 import { RT } from '../core/runtime';
 import { INK, circle, pick, rnd } from '../util';
-import { T, WALLISH } from '../world/tiles';
+import { ICHAR, SOLID, T, WALLISH } from '../world/tiles';
+import { INTERIORS } from '../data/interiors';
+/** Clubs trying out the new doorway looks (doorway digits 1–9); the rest keep the bead curtain.
+ *  'strips': a strip curtain with light behind it. 'haze': grey fog in the opening, someone walking past.
+ *  'fog': coloured fog slowly changing colour, wisps drifting out onto the floor.
+ *  'neon': a rounded neon tube around the opening, in the colour of the room it leads to.
+ *  'leds': a frame of little LEDs with a few bright ones chasing round it.
+ *  'floor': a light strip on the threshold and two low lights at the sides, glowing on the floor.
+ *  'runway': a light strip on the threshold and two rows of lights on the floor that light up one after
+ *  another, leading you in. */
+export type DoorStyle = 'strips' | 'haze' | 'fog' | 'neon' | 'leds' | 'floor' | 'runway';
+export const DOOR_STYLE: Record<string, DoorStyle> = { katerblau: 'strips', rso: 'fog', sisyphos: 'neon', heidegluehen: 'leds', cdv: 'floor', kitkat: 'runway' };
+/** Single rooms with their own doorway look, overriding the club's: every doorway into the room and every
+ *  doorway in it. Berghain's smoking area is full of smoke, so its doorways are fog. */
+const ROOM_STYLE: Record<string, DoorStyle> = { 'berghain:smoke': 'fog' };
+/** The look of the doorway tile `t` on scene `sceneId` ('club:floor'), or undefined for the club's old door. */
+export function doorStyleAt(sceneId: string, t: number): DoorStyle | undefined {
+  const [club, floor] = sceneId.split(':');
+  const to = INTERIORS[club]?.floors[floor]?.doors?.[ICHAR[t]]?.to;
+  return (to && ROOM_STYLE[club + ':' + to]) || ROOM_STYLE[sceneId] || DOOR_STYLE[club];
+}
+
+/** Which way a doorway opens: towards the floor next to it. 'down' means the room is below it (a doorway
+ *  in a wall in front of you), 'up' a doorway in the wall behind you, 'left'/'right' one in a side wall. */
+export type DoorSide = 'down' | 'up' | 'left' | 'right';
+export function doorSide(map: number[][], x: number, y: number): DoorSide {
+  const open = (a: number, b: number) => {
+    const t = map[b]?.[a];
+    return t !== undefined && !SOLID.has(t) && !WALLISH.has(t) && !(t >= 81 && t <= 89);
+  };
+  return open(x, y + 1) ? 'down' : open(x, y - 1) ? 'up' : open(x - 1, y) ? 'left' : open(x + 1, y) ? 'right' : 'down';
+}
+/** Doorways are designed opening downwards (the far end at the top, your side at the bottom); this turns a
+ *  rectangle of that design to the doorway's real side. Returns [x, y, w, h]. */
+export function doorRect(side: DoorSide, X: number, Y: number, cx: number, cy: number, w: number, h: number): [number, number, number, number] {
+  if (side === 'up') return [X + cx, Y + 16 - cy - h, w, h];
+  if (side === 'left') return [X + 16 - cy - h, Y + cx, h, w]; // the room is on the left, the far end on the right
+  if (side === 'right') return [X + cy, Y + cx, h, w];
+  return [X + cx, Y + cy, w, h];
+}
 /** Draws a club floor's tiles once into its own canvas. */
 export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
   const cv = document.createElement('canvas');
@@ -18,7 +57,11 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
   RT.seed = 777 + sc.id.length;
   for (let y = 0; y < sc.h; y++) for (let x = 0; x < sc.w; x++) {
     const t = sc.map[y][x], X = x * T, Y = y * T;
-    const frontFace = !WALLISH.has(at(x, y + 1));
+    // a wall shows its front face when there's floor below it; a doorway in a side wall counts as wall here,
+    // so the wall above it doesn't turn into a front face
+    const below = at(x, y + 1);
+    const sideDoorBelow = below >= 81 && below <= 89 && !!doorStyleAt(sc.id, below) && ['left', 'right'].includes(doorSide(sc.map, x, y + 1));
+    const frontFace = !WALLISH.has(below) && !sideDoorBelow;
     switch (t) {
       case 40: if (frontFace) face(X, Y); else { P(X, Y, 16, 16, '#141318'); if (!WALLISH.has(at(x, y - 1)) && y > 0) P(X, Y, 16, 1, '#26252c'); } break;
       case 41: floorBase(X, Y); break;
@@ -328,6 +371,25 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         break;
       case 101: P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y + 8, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2'); P(X + 8, Y, 1, 16, '#7fc8d2'); break;
       case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: {
+        if (doorStyleAt(sc.id, t)) {
+          // the opening of a doorway; what's in it (curtain, fog, neon) is drawn each frame in interiors/fx.ts.
+          // Around it the wall carries on: copy the wall tile next to it along the wall, if it's drawn already.
+          const st = doorStyleAt(sc.id, t), side = doorSide(sc.map, x, y);
+          const [wx, wy] = side === 'down' || side === 'up' ? [x - 1, y] : [x, y - 1];
+          if (wx >= 0 && wy >= 0 && (WALLISH.has(at(wx, wy)) || SOLID.has(at(wx, wy)))) g.drawImage(cv, wx * T, wy * T, T, T, X, Y, T, T);
+          else P(X, Y, 16, 16, INK);
+          const R = (cx: number, cy: number, w: number, h: number, c: string) => { const [a, b, ww, hh] = doorRect(side, X, Y, cx, cy, w, h); P(a, b, ww, hh, c); };
+          R(2, 0, 12, 16, INK); const dark = st === 'neon' || st === 'leds' || st === 'floor' || st === 'runway';
+          R(3, 1, 10, 15, st === 'floor' || st === 'runway' ? '#16151c' : dark ? '#100f16' : '#24232c');
+          if (!dark) R(2, 0, 12, 1, st === 'strips' ? '#3a3946' : '#8a8896');
+          if (st === 'floor' || st === 'runway') {
+            // the light strip on the threshold lights the opening from below: brighter towards your side, and the
+            // edges of the opening catch it, so the doorway shows up even in a black wall
+            ['#1e1d27', '#25232f', '#2d2b39', '#363346'].forEach((c, i) => R(3, 1 + i * 3, 10, i < 3 ? 3 : 5, c));
+            R(2, 0, 1, 16, '#5a5870'); R(13, 0, 1, 16, '#5a5870'); R(2, 0, 12, 1, '#4a4860');
+          }
+          break;
+        }
         if (sc.id.startsWith('berghain')) {
           // Berghain: a heavy steel door in the concrete, open a crack, red light behind it
           P(X, Y, 16, 16, '#5c5a56'); P(X + 1, Y + 1, 14, 15, INK); P(X + 2, Y + 2, 12, 14, '#3a3c42');

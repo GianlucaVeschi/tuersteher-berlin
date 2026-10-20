@@ -244,7 +244,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#..................#',
       '#bbb..........bbb..#',
       '#..................#',
-      '#################11#'
+      '#################1##'
         ],
         spawn: { fromMain: [17, 10, 'up'], fromPano: [18, 5, 'left'] },
         doors: { 1: { to: 'mf', at: 'fromSmoke' }, 2: { to: 'pb', at: 'fromSmoke' } },
@@ -474,25 +474,25 @@ export const INTERIORS: Record<string, InteriorDef> = {
       sa: {
         label: 'Sauna · behind the Dampfer', short: 'SAUNA',
         map: [
-      'HHHHHHHHHHHHHH',
-      'HhhhhhhhhhhhhH',
+      'HHHHHHH6HHHHHH',
       'HuuuuuuuuuuuuH',
-      'HhhhhuuuuhhhhH',
       'HuuuuuuuuuuuuH',
       'HuuuuuOOuuuuuH',
       'HuuuuuuuuuuuuH',
+      'HhhhhuuuuhhhhH',
       'HuuuuuuuuuuuuH',
-      'HHHHHH6HHHHHHH'
+      'HhhhhhhhhhhhhH',
+      'HHHHHHHHHHHHHH'
         ],
-        spawn: { fromDf: [6, 7, 'up'] },
+        spawn: { fromDf: [7, 1, 'down'] },
         doors: { 6: { to: 'df', at: 'fromSa' } },
         dancers: 0,
         steam: true,
-        bottles: [[11, 7, 'beer']],
+        bottles: [[2, 1, 'beer']],
         people: [
-          { x: 8, y: 6, act: 'sauna', dir: 'up', look: { skin: '#f0c7a0', hair: '#c0c0c0', bald: true, beard: '#c0c0c0', top: '#f0c7a0', legs: '#f3eee3' } },
-          { x: 2, y: 2, act: 'story', story: 'kai', look: { skin: '#c98d6a', hair: '#2a2420', long: true, beard: '#2a2420', top: '#c98d6a', legs: '#ff8c42', paint: '#f2c14e' } },
-          { x: 11, y: 4, dir: 'left', look: { skin: '#f3c9a8', hair: '#ff5e7a', long: true, top: '#f3eee3', legs: '#f3eee3' }, lines: ['(Someone in a towel is humming a mantra. Badly. Beautifully.)'] }
+          { x: 5, y: 2, act: 'sauna', dir: 'down', look: { skin: '#f0c7a0', hair: '#c0c0c0', bald: true, beard: '#c0c0c0', top: '#f0c7a0', legs: '#f3eee3' } },
+          { x: 11, y: 6, act: 'story', story: 'kai', look: { skin: '#c98d6a', hair: '#2a2420', long: true, beard: '#2a2420', top: '#c98d6a', legs: '#ff8c42', paint: '#f2c14e' } },
+          { x: 2, y: 4, dir: 'right', look: { skin: '#f3c9a8', hair: '#ff5e7a', long: true, top: '#f3eee3', legs: '#f3eee3' }, lines: ['(Someone in a towel is humming a mantra. Badly. Beautifully.)'] }
         ]
       }
     },
@@ -1191,11 +1191,12 @@ export const INTERIORS: Record<string, InteriorDef> = {
           '#.P...............P......#',
           '#........................#',
           '#bbb.................vvv.#',
-          '#........................#',
-          '#........................#',
+          '#....................vvv.#',
+          '#....................vvv.#',
           '###########xx#############'
         ],
-        spawn: { street: [11, 12, 'up'], fromDown: [22, 11, 'down'] },
+        // the stairs down run all the way to the south wall; coming back up you step off them to the left
+        spawn: { street: [11, 12, 'up'], fromDown: [21, 10, 'left'] },
         down: { to: 'tunnel', at: 'fromUp' },
         exit: true,
         dancers: 14,

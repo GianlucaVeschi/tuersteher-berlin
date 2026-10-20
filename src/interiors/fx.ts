@@ -7,14 +7,14 @@ import { lookOf } from '../render/looks';
 import { person } from '../render/sprites';
 import { player, state } from '../core/state';
 import { followerPx } from './follower';
-import { DARK, T, WALLISH } from '../world/tiles';
+import { DARK, ICHAR, T, WALLISH } from '../world/tiles';
 import { ctx } from '../render/canvas';
 import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
 import { RT } from '../core/runtime';
 import { SCENES } from '../world/scenes';
-import { drawArrow } from '../render/arrow';
-import { wayArrows } from './arrows';
+import { doorRect, doorSide, doorStyleAt } from './tiles';
+import { CLUBS } from '../data/clubs';
 /** Everything on a club floor that moves: lights, people, steam, darkness. */
 export function drawInteriorFx(now: number, camX: number, camY: number, ppx: number, ppy: number) {
   const sc = SCENES[RT.scene] as ClubScene;
@@ -46,8 +46,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     if (t !== 59) return;
     if ((Math.floor(now / 180) + x * 3) % 4 === 0) { ctx.fillStyle = ['#ff4d6d', '#6fb7ff', '#f2c45a'][(x + y) % 3]; ctx.fillRect(x * T - camX + 3 + (x * 5) % 9, y * T - camY + 4, 2, 2); }
   }));
-  // yellow arrows in front of the stairs, doorways and exit: where you can go from here
-  wayArrows(sc, fl).forEach(a => drawArrow(a.x * T - camX, a.y * T - camY, a.dir, now));
+  drawDoorways(sc, now, camX, camY);
   // entities, follower and player, sorted by row
   const list: { e: Entity | null | 'follower'; y: number }[] = RT.ents.map(e => ({ e, y: e.y }));
   list.push({ e: null, y: ppy / T });
@@ -277,6 +276,118 @@ function windowSpan(sc: ClubScene, tile = 50): [number, number] {
   sc.map.forEach(row => row.forEach((t, x) => { if (t === tile) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); } }));
   return x0 <= x1 ? [x0, x1] : [0, 0];
 }
+
+/** LED colours per club for the 'leds' doorways. */
+const LEDS: Record<string, string[]> = { heidegluehen: ['#ffd23f', '#ff8c42', '#ff5e3a', '#fff2c8'] };
+/** Strip colours per club; clubs not listed get dark see-through strips. */
+const STRIPS: Record<string, string[]> = { katerblau: ['#ff5e7a', '#5ec8ff', '#ffd23f', '#b6f36b', '#c28cff'] };
+
+/** The new doorways (see DOOR_STYLE and ROOM_STYLE in interiors/tiles.ts), animated each frame.
+ *  'strips': light from the next room behind a strip curtain, five strips swaying a little, a glint
+ *  running down them, and a bit of light on the floor in front.
+ *  'haze': grey haze in the opening, thicker at the top, and now and then a silhouette walks past inside. */
+function drawDoorways(sc: ClubScene, now: number, camX: number, camY: number) {
+  const cols = STRIPS[sc.club];
+  const glow = reduceMotion ? 0.27 : 0.25 + 0.08 * Math.sin(now / 800);
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t < 81 || t > 89) return;
+    const style = doorStyleAt(sc.id, t);
+    if (!style) return;
+    const X = x * T - camX, Y = y * T - camY;
+    if (X < -16 || Y < -16 || X > RT.VW || Y > RT.VH) return;
+    // everything below is designed for a doorway opening downwards; R turns it to the real side
+    const side = doorSide(sc.map, x, y);
+    const R = (cx: number, cy: number, w: number, h: number) => { const [a, b, ww, hh] = doorRect(side, X, Y, cx, cy, w, h); ctx.fillRect(a, b, ww, hh); };
+    if (style === 'neon') {
+      // a rounded neon tube around the opening, in the colour of the room behind it; it flickers off now and then
+      const on = reduceMotion || Math.floor((now + x * 900) / 120) % 41 !== 0;
+      ctx.fillStyle = on ? neonColour(sc, t) : '#3a3946';
+      R(5, 1, 6, 1); R(4, 2, 1, 1); R(11, 2, 1, 1); R(3, 3, 1, 13); R(12, 3, 1, 13);
+      if (on) {
+        ctx.globalAlpha = 0.25; R(2, 3, 1, 13); R(13, 3, 1, 13); R(4, 0, 8, 1);
+        if (side === 'down' || side === 'up') { ctx.globalAlpha = 0.16; R(3, 16, 1, 4); R(12, 16, 1, 4); } // reflection on the floor
+        ctx.globalAlpha = 1;
+      }
+      return;
+    }
+    if (style === 'runway') {
+      // a light strip on the threshold, and two rows of three lights on the floor in front that light up one
+      // after another towards the doorway, like runway lights
+      ctx.fillStyle = 'rgba(235,235,255,.85)'; R(2, 15, 12, 1);
+      const step = reduceMotion ? -1 : Math.floor(now / 250) % 3;
+      for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = step === 2 - i ? '#ffffff' : '#5a5c70';
+        R(4, 18 + i * 4, 1, 1); R(11, 18 + i * 4, 1, 1);
+      }
+      return;
+    }
+    if (style === 'floor') {
+      // a light strip on the threshold and two low lights at the sides, breathing slowly, with a soft glow on the floor
+      const a = reduceMotion ? 0.9 : 0.75 + 0.25 * Math.sin(now / 500);
+      ctx.fillStyle = `rgba(235,235,255,${a.toFixed(3)})`;
+      R(2, 15, 12, 1); R(2, 11, 1, 3); R(13, 11, 1, 3);
+      ctx.fillStyle = `rgba(220,220,245,${(0.12 * a).toFixed(3)})`; R(1, 16, 14, 5);
+      return;
+    }
+    if (style === 'leds') {
+      // little LEDs all round the frame, dim, with a few bright ones chasing round (fire colours at Heideglühen)
+      const leds = LEDS[sc.club] ?? ['#ffffff'];
+      const path: [number, number][] = [];
+      for (let i = 15; i >= 1; i -= 2) path.push([2, i]);
+      for (let i = 3; i <= 12; i += 2) path.push([i, 1]);
+      for (let i = 1; i <= 15; i += 2) path.push([13, i]);
+      ctx.fillStyle = '#6a4a38'; path.forEach(([a, b]) => R(a, b, 1, 1));
+      const head = reduceMotion ? 0 : Math.floor(now / 90 + x * 5) % path.length;
+      for (let k = 0; k < 4; k++) {
+        const [a, b] = path[(head - k * 5 + path.length * 4) % path.length];
+        ctx.fillStyle = leds[k % leds.length]; R(a, b, 1, 1);
+        ctx.globalAlpha = 0.3; R(a - 1, b, 3, 1); R(a, b - 1, 1, 3); ctx.globalAlpha = 1; // a little glow round each lit one
+      }
+      return;
+    }
+    if (style === 'fog') {
+      // coloured fog, brighter at the far end, slowly drifting through every colour; wisps float out onto the floor
+      const hue = Math.round(reduceMotion ? 260 : (now / 40) % 360);
+      for (let r = 0; r < 15; r++) { ctx.fillStyle = `hsl(${hue},45%,${Math.round(22 + 18 * (1 - r / 15))}%)`; R(3, 1 + r, 10, 1); }
+      if (!reduceMotion) for (let i = 0; i < 5; i++) {
+        const fx = (now / 50 + i * 19) % 18;
+        ctx.fillStyle = `hsla(${hue},40%,70%,${(0.18 - fx / 120).toFixed(3)})`;
+        R(2 + ((i * 5) % 10), Math.round(15 + fx / 2), 4, 1);
+      }
+      return;
+    }
+    if (style === 'haze') {
+      for (let r = 0; r < 15; r++) { ctx.fillStyle = `rgba(150,150,175,${(0.55 - 0.4 * r / 15).toFixed(3)})`; R(3, 1 + r, 10, 1); }
+      // every few seconds someone crosses the doorway (each doorway on its own timing)
+      const cyc = reduceMotion ? 999 : (now / 30 + x * 37 + y * 11) % 160;
+      const sx = Math.round(1 + cyc / 4);
+      if (cyc < 60 && sx > 2 && sx < 12) {
+        ctx.fillStyle = '#0a0a0e';
+        R(sx, 5, 3, 3); R(sx - 1, 8, 5, 6); R(sx, 14, 1, 2); R(sx + 2, 14, 1, 2);
+      }
+      return;
+    }
+    // strips: light behind the curtain, five strips swaying a little with a glint running down, light on the floor
+    ctx.fillStyle = `rgba(210,215,235,${glow})`; R(4, 3, 8, 12);
+    for (let i = 0; i < 5; i++) {
+      const sx = 3 + i * 2 + (reduceMotion ? 0 : Math.round(Math.sin(now / 700 + i * 1.3) * 0.6));
+      ctx.globalAlpha = cols ? 0.6 : 0.55; ctx.fillStyle = cols ? cols[i % cols.length] : '#0f0e14'; R(sx, 1, 1, 15);
+      ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(240,244,255,.6)';
+      R(sx, 1 + (reduceMotion ? i * 3 : (Math.floor(now / 90) + i * 5) % 15), 1, 2);
+    }
+    ctx.fillStyle = `rgba(210,215,235,${glow * 0.5})`; R(3, 16, 10, 3);
+  }));
+}
+
+/** The neon colour of a doorway: the main light of the room it leads to (its first `spots` colour, made
+ *  solid), or the club's colour if that room has none. */
+function neonColour(sc: ClubScene, t: number): string {
+  const club = INTERIORS[sc.club], to = club?.floors[sc.floor]?.doors?.[ICHAR[t]]?.to;
+  const spot = to ? club.floors[to]?.spots?.[0] : undefined;
+  const m = spot?.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  return m ? `rgb(${m[1]},${m[2]},${m[3]})` : CLUBS.find(c => c.id === sc.club)?.glow ?? '#e8eaff';
+}
+
 /** Coloured light falling through a row of windows in the top wall (row 1) onto the floor below. */
 function windowShafts(sc: ClubScene, tile: number, rgb: string, now: number, camX: number, camY: number, lights: boolean) {
   const [x0, x1] = windowSpan(sc, tile);
