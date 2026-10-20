@@ -184,6 +184,22 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       ctx.fillStyle = gr; ctx.fillRect(fx0 - r, fy0 - r, r * 2, r * 2);
     }
   }
+  // light beams: cones from the rig along the top, sweeping over the dancefloor
+  if (fl.beams) {
+    const cols = ['255,60,90', '80,140,255', '255,200,80', '160,80,255', '60,220,200'];
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 5; i++) {
+      const ox = (sc.dance.x0 + (sc.dance.x1 - sc.dance.x0) * (i + 0.5) / 5) * T - camX, oy = (sc.dance.y0 - 1) * T - camY;
+      const a = lights ? Math.sin(now / (1400 + i * 230) + i * 1.7) * 0.7 : (i - 2) * 0.25, len = (sc.dance.y1 - sc.dance.y0 + 2) * T;
+      const tx = ox + Math.sin(a) * len, ty = oy + Math.cos(a) * len, wd = 22;
+      const gr = ctx.createLinearGradient(ox, oy, tx, ty);
+      const c = cols[(i + (lights ? Math.floor(now / 2400) : 0)) % cols.length];
+      gr.addColorStop(0, `rgba(${c},.32)`); gr.addColorStop(1, `rgba(${c},0)`);
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(ox - 2, oy); ctx.lineTo(ox + 2, oy);
+      ctx.lineTo(tx + Math.cos(a) * wd, ty - Math.sin(a) * wd); ctx.lineTo(tx - Math.cos(a) * wd, ty + Math.sin(a) * wd); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
   if (fl.strobe && lights && now % 2600 < 60) { ctx.fillStyle = 'rgba(255,255,255,.24)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
   // open air: warm afternoon light
   if (fl.daylight) { ctx.fillStyle = 'rgba(255,214,140,.10)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }

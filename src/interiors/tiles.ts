@@ -121,16 +121,33 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         if (at(x, y + 1) !== 123) { P(X, Y + 13, 16, 3, INK); P(X, Y + 14, 16, 1, '#8a8e98'); }
         break;
       }
-      case 124: { // stairs climbing to the right: treads run top to bottom, lighter the higher you get
-        for (let i = 0; i < 4; i++) { P(X + i * 4, Y, 4, 16, ['#5d5d68', '#6d6d78', '#7d7d88', '#8d8d98'][i]); P(X + i * 4, Y, 1, 16, '#c9b25a'); }
-        if (at(x, y - 1) !== 124) { P(X, Y, 16, 2, '#a7a7b3'); P(X, Y + 2, 16, 1, INK); }
-        if (at(x, y + 1) !== 124) { P(X, Y + 14, 16, 2, '#a7a7b3'); P(X, Y + 13, 16, 1, INK); }
+      case 124: case 127: { // a staircase rising to the right: every step a block, lighter the higher it is,
+        // with a lit nosing on top and a dark riser on the left wherever the next step down begins
+        const up = t === 124;
+        let h = 0; while (at(x, y + h + 1) === t) h++;   // how many steps sit below this one
+        const base = ['#4a4a54', '#5a5a64', '#6a6a74', '#7a7a84', '#8a8a94', '#9a9aa4'];
+        P(X, Y, 16, 16, base[Math.min(base.length - 1, Math.max(0, 5 - h))]);
+        if (at(x, y - 1) !== t) { P(X, Y, 16, 3, up ? '#c9b25a' : '#a7a7b3'); P(X, Y + 3, 16, 1, INK); }
+        if (at(x - 1, y) !== t) { P(X, Y, 3, 16, '#2a2a30'); P(X + 3, Y, 1, 16, INK); }
+        P(X, Y + 8, 16, 1, 'rgba(0,0,0,.2)');
         break;
       }
-      case 125: // the exit turnstile: steel bars, an arrow pointing out
-        floorBase(X, Y); P(X + 1, Y + 6, 14, 2, '#8a8e98'); P(X + 7, Y + 2, 2, 12, '#6a6e78');
-        P(X + 6, Y + 10, 4, 1, '#3fbf6f'); P(X + 7, Y + 11, 2, 1, '#3fbf6f'); P(X + 7, Y + 8, 2, 2, '#3fbf6f');
+      case 125: // the mezzanine railing: steel posts and a top rail, the floor below shows through
+        P(X, Y, 16, 16, '#3a3a43'); for (let a = 1; a < 16; a += 3) for (let b = 1; b < 16; b += 3) P(X + a, Y + b, 1, 1, '#2c2c34');
+        P(X, Y + 3, 16, 2, INK); P(X, Y + 3, 16, 1, '#b9b5c6');
+        for (let i = 1; i < 16; i += 5) P(X + i, Y + 4, 2, 10, '#6a6e78');
+        P(X, Y + 13, 16, 1, '#6a6e78');
         break;
+      case 128: { // a column like on a Greek temple: wide base, fluted shaft, a carved capital, two tiles tall
+        floorBase(X, Y);
+        P(X - 1, Y + 11, 18, 5, INK); P(X, Y + 12, 16, 3, '#9a968c'); P(X, Y + 12, 16, 1, '#b8b4a8');   // base
+        P(X + 1, Y - 22, 14, 34, INK); P(X + 2, Y - 21, 12, 33, '#b8b4a8');                               // shaft
+        for (let f = 3; f < 14; f += 3) { P(X + f, Y - 21, 1, 33, '#8a867c'); P(X + f + 1, Y - 21, 1, 33, '#cfcbc0'); } // flutes
+        P(X - 2, Y - 27, 20, 6, INK); P(X - 1, Y - 26, 18, 4, '#cfcbc0'); P(X - 1, Y - 23, 18, 1, '#8a867c');   // capital
+        circle(g, X - 1, Y - 24, 2, '#8a867c'); circle(g, X + 17, Y - 24, 2, '#8a867c');                       // volutes
+        P(X - 2, Y - 29, 20, 2, '#9a968c');
+        break;
+      }
       case 126: // a Garderobe rack: a rail full of jackets, hoodies and bags
         P(X, Y, 16, 16, '#1c1b22'); P(X, Y + 2, 16, 1, '#8a8e98');
         for (let i = 0; i < 5; i++) { const c = pick(['#0c0c12', '#2a2a33', '#3a2a20', '#5a5a66', '#1f2f4d', '#4a1a1a']); P(X + 1 + i * 3, Y + 3, 3, 10 + (i % 2) * 2, c); P(X + 2 + i * 3, Y + 3, 1, 1, '#c9c5d4'); }

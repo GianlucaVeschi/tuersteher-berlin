@@ -289,6 +289,8 @@ export interface FloorDef {
   fog?: boolean;
   /** a short white strobe flash every few seconds */
   strobe?: boolean;
+  /** coloured light beams sweeping across the floor from the rig above (Berghain main floor) */
+  beams?: boolean;
   daylight?: boolean;
   uv?: boolean;
   red?: boolean;

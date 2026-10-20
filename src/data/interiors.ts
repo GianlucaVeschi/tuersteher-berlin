@@ -25,20 +25,20 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // The ground floor, Säule (after its big concrete pillar), laid out from the owner's sketch:
         // in through the vertical corridor, left into the bag check, round the squared C to the Kasse
         // at the top, into the changing space and the Garderobe, then the Säule with the bar along the
-        // top, the DJ on the left, seats along the bottom and the stairs up to the right. Going out you
-        // skip the C: the corridor opens at the top through an exit-only turnstile.
-        // Extra legend: ]  stairs climbing to the right   )  exit turnstile (down only)   $  coat rack
+        // top, the DJ on the left, seats along the bottom and the staircase up in the top right. Going
+        // out you skip the C: the corridor is open at the top.
+        // Extra legend: ]  staircase up (rising to the right)   $  coat rack
         label: 'Säule', short: 'SÄULE',
         map: [
       '##################################',
-      '#kkkk#....#............###########',
-      '#kkkk#.....============...]]]]]]]#',
-      '#kkkk#.S..................]]]]]]]#',
-      '#kkkk#.D..,,,,,,,,,,,,,,,,.......#',
-      '#kkkk#.D..,,,,,,,,,,,,,,,,.......#',
-      '#kkkk#.D..,,,,,,,,P,,,,,,,.......#',
-      '#kkkk#.S..,,,,,,,,,,,,,,,,.......#',
-      '#kkkkk....,,,,,,,,,,,,,,,,.......#',
+      '#kkkk#....#............########]]#',
+      '#kkkk#.....============......]]]]#',
+      '#kkkk#.S...................]]]]]]#',
+      '#kkkk#.D..,,,,,,,,,,,,,..]]]]]]]]#',
+      '#kkkk#.D..,,,,,,,,,,,,,,,........#',
+      '#kkkk#.D..,,,,,,,,P,,,,,,........#',
+      '#kkkk#.S..,,,,,,,,,,,,,,,........#',
+      '#kkkkk....,,,,,,,,,,,,,,,........#',
       '######...bbbbb...bbbbb...........#',
       '##############..########..########',
       '#................................#',
@@ -46,7 +46,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#................................#',
       '#.bbbb..bbb......................#',
       '#.............#.#................#',
-      '#####L#########c#.#))#...........#',
+      '#####L#########c#.#..#...........#',
       '############......#..##CCCCCCCCC##',
       '############..#####..##.........##',
       '############..#####..##$$$$$$$$$##',
@@ -56,7 +56,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '###################..#############',
       '###################xx#############'
         ],
-        spawn: { street: [19, 23, 'up'], fromUp: [25, 3, 'left'] },
+        spawn: { street: [19, 23, 'up'], fromUp: [24, 4, 'left'] },
         up: { to: 'mf', at: 'fromDown' },
         exit: true,
         dancers: 10,
@@ -65,7 +65,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 12, y: 19, dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#16151c', legs: '#16151c' }, lines: ['Raver: Round the corner, up, round again. Then the Kasse. Then freedom.'] },
           { x: 16, y: 20, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: They checked my bag twice. I brought only gum.'] },
           { x: 15, y: 15, dir: 'down', act: 'cashier', look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#16151c', legs: '#16151c', glasses: '#9fc7e6' } },
-          { x: 21, y: 15, dir: 'left', look: { skin: '#c98d6a', bald: true, top: '#111016', legs: '#111016', big: true }, lines: ['Security: Out this way only. In is round the Kasse.', 'Security: Come back in? Show the stamp on your hand at the door.'] },
+          { x: 21, y: 15, dir: 'left', look: { skin: '#c98d6a', bald: true, top: '#111016', legs: '#111016', big: true }, lines: ['Security: The way out is down the corridor.', 'Security: Coming back in? Show the stamp on your hand at the door.'] },
           // the Garderobe: two staff, racks full of jackets, a queue handing over their clothes
           { x: 27, y: 18, dir: 'up', act: 'coat', look: { skin: '#e2b08c', hair: '#2a2420', top: '#16151c', legs: '#16151c', long: true } },
           { x: 24, y: 18, dir: 'up', look: { skin: '#c98d6a', hair: '#111', top: '#16151c', legs: '#16151c' }, lines: ['Garderobe: Next! Jacket, bag, all of it. Number 412.'] },
@@ -91,18 +91,19 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       mf: {
-        // The main floor, laid out from the owner's sketch: the bathroom, the stairs to Panorama Bar
-        // and the darkrooms along the top, the empty space overlooking the Säule behind a railing on
+        // The main floor, laid out from the owner's sketch: the bathroom, the steps up to the mezzanine
+        // (railing over the dancefloor, the lighting desk, then the stairs to Panorama Bar) and the
+        // darkrooms along the top, the empty space overlooking the Säule behind a railing on
         // the left, the dancefloor with its columns, the DJ on the right, the bar along the bottom, and
         // in the bottom left the stairs down to the Säule and a few steps up to the ice cream.
         label: 'Berghain · main floor', short: 'MAIN',
         map: [
       '####################################',
-      '#########tt|t|t|ttt#.^^^^####kkkkkk#',
-      '#########tt|t|t|ttt#.^^^^####kkkkkk#',
-      '#########tttttttttt#.^^^^...#kkkkkk#',
-      '#########tttttttttt#........kkkkkkk#',
-      '#############t######........########',
+      '#########tt|t|t|ttt######^^^#kkkkkk#',
+      '#########tt|t|t|ttt#####___D#kkkkkk#',
+      '#########tttttttttt#####___D#kkkkkk#',
+      '#########tttttttttt###}}____#kkkkkk#',
+      '#############t######.}}}))))###k####',
       '#;;;;;;;...........................#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.S..#',
@@ -112,7 +113,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,.D..#',
       '#;;;;;;;.S,,,,,,,,,,,,,,,,,,,,,.S..#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
-      '#;;;;;;;.,,,,,P,,,,,P,,,,,P,,,,....#',
+      '#;;;;;;;.,,,,,{,,,,,{,,,,,{,,,,....#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
       '#;;;;;;;.,,,,,,,,,,,,,,,,,,,,,,....#',
       '#........,,,,,,,,,,,,,,,,,,,,,,....#',
@@ -122,10 +123,11 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#vvvv..#......##..................##',
       '####################################'
         ],
-        spawn: { fromDown: [3, 19, 'up'], fromUp: [22, 4, 'down'] },
+        spawn: { fromDown: [3, 19, 'up'], fromUp: [25, 2, 'down'] },
         down: { to: 'eg', at: 'fromUp' },
         up: { to: 'pb', at: 'fromDown' },
         dancers: 26,
+        beams: true,
         people: [
           { x: 33, y: 10, act: 'dj', dir: 'left', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', shades: true } },
           { x: 10, y: 22, act: 'ice', dir: 'up', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#f3eee3', legs: '#16151c', long: true } },
@@ -136,6 +138,9 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 13, y: 5, act: 'toiletGuy', dir: 'down', movedWhen: 'toilet', movedTo: [14, 3], look: { skin: '#e2b08c', hair: '#111', top: '#16151c', legs: '#16151c', shades: true } },
           // Mila: dances by the left speakers, has what the toilet guy wants
           { x: 10, y: 11, act: 'mila', dance: true, phase: 3, look: { skin: '#f0c7a0', hair: '#ff5fa2', long: true, shades: true, top: '#0c0c12', legs: '#121116' } },
+          // the mezzanine: the lighting guy at his desk, people leaning on the railing
+          { x: 26, y: 3, dir: 'right', act: 'lights', name: 'Lights', look: { skin: '#e2b08c', hair: '#111', top: '#0c0c12', legs: '#0c0c12', glasses: '#9fc7e6' } },
+          { x: 25, y: 4, dir: 'down', look: { skin: '#f0c7a0', hair: '#b04a2a', long: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (leaning on the railing) From up here it looks like one animal breathing.'] },
           { x: 31, y: 19, act: 'awareness', dir: 'left', look: { skin: '#c98d6a', hair: '#7ec8ff', top: '#5ec8ff', legs: '#26242e', long: true } },
           { x: 8, y: 14, dir: 'left', look: { skin: '#e2b08c', bald: true, top: '#0c0c12', legs: '#0c0c12' }, lines: ['Raver: (leaning on the railing) Look down. That is the Säule. Tiny people, big pillar.'] },
           { x: 5, y: 19, dir: 'down', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#0c0c12', legs: '#0c0c12', long: true }, lines: ['Raver: Sitting down for five minutes. Then back in.'] }
@@ -177,7 +182,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
     },
     examine: {
       $: ['Rails of jackets, hoodies and tote bags, hundreds of them. Somewhere in there: yours.'],
-      ')': ['A steel turnstile. Out only.'],
+      ')': ['A railing. Below: the main floor, lights sweeping over a thousand heads.'],
+      '{': ['A huge column, fluted like on a Greek temple. Somebody is hugging it, eyes closed.'],
       ';': ['A railing. Below you, the Säule: the bar, the pillar, tiny people dancing. The bass comes up through the floor.'],
       S: ['A Funktion-One speaker stack. Your trousers are vibrating.'],
       N: ['A huge wall installation by Piotr Nathan.', 'Hundreds of little panels. Nobody knows where to start looking.'],

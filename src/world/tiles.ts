@@ -29,16 +29,16 @@ export const ICH: Record<string, number> = { '#': 40, '.': 41, ',': 42, '^': 43,
   '<': 118, '>': 119, '?': 120, ':': 121, '+': 122,
   // the black-light minigolf
   '@': 114,
-  // Berghain: the drop down to the Säule behind a railing; stairs climbing left to right; the exit-only
-  // turnstile out of the Säule; coat racks full of jackets in the Garderobe
-  ';': 123, ']': 124, ')': 125, '$': 126,
+  // Berghain: the drop down to the Säule behind a railing; a staircase up (rising to the right); the
+  // mezzanine railing; coat racks in the Garderobe; steps up to the mezzanine; the temple-like columns
+  ';': 123, ']': 124, ')': 125, '$': 126, '}': 127, '{': 128,
   '1': 81, '2': 82, '3': 83, '4': 84, '5': 85, '6': 86, '7': 87, '8': 88, '9': 89 };
 export const ICHAR: Record<number, string> = Object.fromEntries(Object.entries(ICH).map(([k, v]) => [v, k]));
-[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 122, 123, 126].forEach(c => SOLID.add(c));
+[40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 64, 67, 68, 69, 71, 72, 73, 74, 76, 78, 79, 90, 92, 93, 94, 95, 96, 97, 98, 100, 102, 103, 104, 106, 107, 108, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 122, 123, 125, 126, 128].forEach(c => SOLID.add(c));
 export const COUNTERS = new Set([53, 54, 55, 56, 59, 122]);
 export const WALLISH = new Set([40, 50, 51, 52, 60, 62, 68, 69, 74, 78, 79, 90, 107, 115, 116, 118, 120]);
 export const DANCES = new Set([42, 63, 75, 77, 91, 109]); // concrete, sand, red tunnel floor, wooden floor, pole stage, salon checkers
 export const isDoorTile = (t: number) => t >= 81 && t <= 89;
 export const STAIRS_UP = 43, STAIRS_DOWN = 44, EXIT = 45, DARK = 46, DANCE = 42;
-/** stairs up that run sideways (climb them to the right), and a turnstile you can only walk through downwards */
-export const STAIRS_UP_SIDE = 124, ONE_WAY_DOWN = 125;
+/** a staircase up drawn as rising steps (climb it to the right) */
+export const STAIRS_UP_SIDE = 124;

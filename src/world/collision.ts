@@ -1,7 +1,7 @@
 import { PLACES } from '../data/places';
 import { RT } from '../core/runtime';
-import { player, state } from '../core/state';
-import { D, ONE_WAY_DOWN, SOLID } from './tiles';
+import { state } from '../core/state';
+import { D, SOLID } from './tiles';
 import { get } from './grid';
 import { SHOPS } from '../data/outfits';
 import { CLUBS } from '../data/clubs';
@@ -15,8 +15,6 @@ export function blocked(x: number, y: number): boolean {
   const t = get(x, y);
   if (t === D) { if (shopAtDoor(x, y) || placeAtDoor(x, y)) return false; const c = clubAtDoor(x, y); return !(c && state.stamps[c.id]); }
   if (SOLID.has(t)) return true;
-  // the Säule's exit turnstile: out (walking down) only; in, you go round the bag check and the Kasse
-  if (t === ONE_WAY_DOWN && player.dir !== 'down') return true;
   return RT.ents.some(e => !e.pickup && covers(e, x, y));
 }
 // most people fill one tile; groups on a bed are `w` tiles wide

@@ -257,6 +257,18 @@ export const ACTS: Record<string, Act> = {
       await say(pick(['Raver: K? Not me, sorry.', 'Raver: Pink hair? Saw her by the speakers on the left.', "Raver: Mila? She's always dancing near the left speakers."]));
     } else if (e.lines) await say(e.lines[0]);
   },
+  // the lighting guy on the main floor's mezzanine
+  async lights() {
+    await say('Lights: (headphones on, hands on forty faders) You want to see something?');
+    const a = await ask('', ['Hit the strobes', 'Everything deep red', 'Kill all the lights', 'Just watching, thanks']);
+    if (a === 3) { await say('Lights: Everybody just watches. Nobody notices me. That is the job.'); return; }
+    await say([
+      '(He slams three faders up. The whole floor flickers into slow motion. A thousand people scream at once.)',
+      '(The hall turns blood red. The beams sweep slower. Someone below you raises both arms like in church.)',
+      '(Total darkness for four bars. Only the kick drum. Then everything comes back at once and the floor explodes.)'
+    ][a]);
+    await say('Lights: (grinning) Fifteen years. Still the best feeling.');
+  },
   async awareness() {
     await say("Awareness: We're the awareness team. If anything feels wrong, come find us.");
     await say('Awareness: Drink water, take breaks, look out for each other.');
