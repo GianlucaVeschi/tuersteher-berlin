@@ -1,4 +1,4 @@
-import type { ClubScene, Entity } from '../types';
+import type { ClubScene, Entity, Look } from '../types';
 import { get } from '../world/grid';
 import { drawPile } from '../quests/kitkat';
 import { drawBottle } from '../quests/sisyphos';
@@ -7,7 +7,7 @@ import { lookOf } from '../render/looks';
 import { person } from '../render/sprites';
 import { player, state } from '../core/state';
 import { followerPx } from './follower';
-import { DARK, ICHAR, T, WALLISH } from '../world/tiles';
+import { DARK, ICH, ICHAR, T, WALLISH } from '../world/tiles';
 import { ctx } from '../render/canvas';
 import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
@@ -47,6 +47,9 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     if ((Math.floor(now / 180) + x * 3) % 4 === 0) { ctx.fillStyle = ['#ff4d6d', '#6fb7ff', '#f2c45a'][(x + y) % 3]; ctx.fillRect(x * T - camX + 3 + (x * 5) % 9, y * T - camY + 4, 2, 2); }
   }));
   drawDoorways(sc, now, camX, camY);
+  drawRotatingSeats(sc, now, camX, camY);
+  drawJacuzzi(sc, now, camX, camY);
+  drawCrowdBelow(sc, now, camX, camY);
   // entities, follower and player, sorted by row
   const list: { e: Entity | null | 'follower'; y: number }[] = RT.ents.map(e => ({ e, y: e.y }));
   list.push({ e: null, y: ppy / T });
@@ -54,6 +57,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
   list.sort((a, b) => a.y - b.y);
   list.forEach(({ e }) => {
     if (!e) {
+      if (RT.spin) return; // you're on a rotating seat: drawn there (drawRotatingSeats)
       if (RT.lying) {
         // flat on your back: the standing sprite turned on its side
         ctx.save(); ctx.translate(ppx - camX + 8, ppy - camY + 9); ctx.rotate(-Math.PI / 2);
@@ -402,3 +406,104 @@ function windowShafts(sc: ClubScene, tile: number, rgb: string, now: number, cam
   }
   ctx.restore();
 }
+
+/** The people already sitting on Heideglühen's rotating seats (one look per seat, the same every night). */
+const SPINNERS: Look[] = [
+  { skin: '#f3c9a8', hair: '#c9a24a', top: '#d9733a', legs: '#2b3f6b', long: true },
+  { skin: '#8d5a3b', hair: '#111111', top: '#2bb3a3', legs: '#26242e', beard: '#111111' },
+  { skin: '#e2b08c', hair: '#b04a2a', top: '#f2c14e', legs: '#3a3a4a' },
+  { skin: '#6b4430', hair: '#5a3a22', top: '#c94a3a', legs: '#2b3f6b', long: true }
+];
+/** Rotating seats (2×2 blocks of 'ß'): a round wooden disc turning slowly with four people sitting on it,
+ *  one of them smoking. If you sat down on one (RT.spin), you take the first seat and go round too. */
+function drawRotatingSeats(sc: ClubScene, now: number, camX: number, camY: number) {
+  const SEAT = ICH['ß'];
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== SEAT || row[x - 1] === SEAT || sc.map[y - 1]?.[x] === SEAT) return;
+    const cx = x * T + 16 - camX, cy = y * T + 16 - camY;
+    if (cx < -32 || cy < -32 || cx > RT.VW + 32 || cy > RT.VH + 32) return;
+    const a0 = reduceMotion ? 0.4 : now / 2600 + x;
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#9a6a3e'; ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#7a5432'; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.fill();
+    // a few planks turning with the disc, so you can see it go round
+    ctx.fillStyle = '#5a3e26';
+    for (let k = 0; k < 4; k++) { const a = a0 + k * Math.PI / 2; ctx.fillRect(Math.round(cx + Math.cos(a) * 11) - 1, Math.round(cy + Math.sin(a) * 11) - 1, 2, 2); }
+    ctx.fillStyle = '#c9a24a'; ctx.fillRect(cx - 1, cy - 1, 2, 2);
+    const mine = RT.spin && RT.spin.x === x && RT.spin.y === y;
+    const seats = [0, 1, 2, 3].map(k => {
+      const a = a0 + k * Math.PI / 2 + Math.PI / 4;
+      return { k, px: cx + Math.cos(a) * 8, py: cy + Math.sin(a) * 8, a };
+    }).sort((p, q) => p.py - q.py);
+    seats.forEach(({ k, px, py, a }) => {
+      const look = mine && k === 0 ? lookOf(state.outfit) : SPINNERS[(k + x) % SPINNERS.length];
+      const dir = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) > 0 ? 'left' : 'right') : (Math.sin(a) > 0 ? 'up' : 'down');
+      person(ctx, Math.round(px - 8), Math.round(py - 13), dir, 0, look);
+      if (k === 2 && !reduceMotion) { // a little smoke rising from the one with the cigarette
+        const s = (now / 60) % 12;
+        ctx.fillStyle = `rgba(220,220,230,${(0.5 - s / 24).toFixed(3)})`; ctx.fillRect(Math.round(px + 3), Math.round(py - 14 - s), 2, 2);
+      }
+    });
+  }));
+}
+
+/** From the gallery you look down into the open middle: heads bobbing on the dancefloor below. */
+function drawCrowdBelow(sc: ClubScene, now: number, camX: number, camY: number) {
+  if (sc.id !== 'heidegluehen:galerie') return;
+  const VOID = ICH['¶'], HAIR = ['#2a2420', '#c9a24a', '#b04a2a', '#111111', '#9a9a9a', '#5a3a22'];
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== VOID) return;
+    const X = x * T - camX, Y = y * T - camY;
+    if (X < -16 || Y < -16 || X > RT.VW || Y > RT.VH) return;
+    for (let i = 0; i < 2; i++) {
+      const bob = reduceMotion ? 0 : Math.round(Math.sin(now / 230 + x * 1.7 + y * 2.3 + i * 3));
+      const hx = X + 4 + i * 6 + ((x * 3 + i * 5) % 3), hy = Y + 4 + ((y * 5 + i * 7) % 6) + bob;
+      ctx.fillStyle = '#e2b08c'; ctx.fillRect(hx, hy + 1, 3, 3);
+      ctx.fillStyle = HAIR[(x + y * 3 + i) % HAIR.length]; ctx.fillRect(hx, hy, 3, 2);
+    }
+  }));
+  // the DJ's lights sweeping across the floor below
+  if (!reduceMotion) {
+    const k = (now / 1800) % 1, bx = (3 + k * 10) * T - camX;
+    ctx.fillStyle = 'rgba(255,180,90,.10)'; ctx.fillRect(Math.round(bx), 3 * T - camY, T * 2, 8 * T);
+  }
+}
+
+/** The jacuzzi (a 2×2 block of 'é'): a round wooden tub, warm bubbling water lit from below, steam rising,
+ *  and two people soaking in it up to their shoulders. */
+function drawJacuzzi(sc: ClubScene, now: number, camX: number, camY: number) {
+  const TUB = ICH['é'];
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== TUB || row[x - 1] === TUB || sc.map[y - 1]?.[x] === TUB) return;
+    const cx = x * T + 16 - camX, cy = y * T + 16 - camY;
+    if (cx < -32 || cy < -32 || cx > RT.VW + 32 || cy > RT.VH + 32) return;
+    // the tub: dark rim, wooden staves, water
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#8a5a34'; ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#5a3e26'; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; ctx.fillRect(Math.round(cx + Math.cos(a) * 13) - 1, Math.round(cy + Math.sin(a) * 13) - 1, 2, 2); }
+    ctx.fillStyle = '#2fb6c9'; ctx.beginPath(); ctx.arc(cx, cy, 11, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#6ad8e3'; ctx.beginPath(); ctx.arc(cx - 2, cy - 2, 7, 0, Math.PI * 2); ctx.fill();
+    // two people soaking: just heads and shoulders above the water
+    ([[-5, 2, '#f3c9a8', '#d9b25c'], [5, -3, '#6b4430', '#111111']] as const).forEach(([dx, dy, skin, hair], i) => {
+      const bob = reduceMotion ? 0 : Math.round(Math.sin(now / 700 + i * 2));
+      const hx = cx + dx - 3, hy = cy + dy - 4 + bob;
+      ctx.fillStyle = skin; ctx.fillRect(hx - 1, hy + 5, 8, 2); ctx.fillRect(hx, hy, 6, 5);
+      ctx.fillStyle = hair; ctx.fillRect(hx, hy, 6, 2);
+      ctx.fillStyle = INK; ctx.fillRect(hx + 1, hy + 3, 1, 1); ctx.fillRect(hx + 4, hy + 3, 1, 1);
+    });
+    if (reduceMotion) return;
+    // bubbles popping up all over the water
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    for (let k = 0; k < 7; k++) {
+      const a = k * 2.4 + now / 900, rr = 3 + ((k * 37 + Math.floor(now / 160)) % 7);
+      if ((Math.floor(now / 120) + k) % 3) ctx.fillRect(Math.round(cx + Math.cos(a) * rr), Math.round(cy + Math.sin(a) * rr), 1, 1);
+    }
+    // steam drifting up
+    for (let k = 0; k < 4; k++) {
+      const s = (now / 45 + k * 9) % 22;
+      ctx.fillStyle = `rgba(230,235,240,${(0.28 - s / 80).toFixed(3)})`;
+      ctx.fillRect(Math.round(cx - 8 + k * 5 + Math.sin(now / 500 + k) * 2), Math.round(cy - 10 - s), 3, 2);
+    }
+  }));
+}
+
