@@ -156,6 +156,34 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (const ry of [3, 11]) { P(X + 5, Y + ry, 6, 2, INK); P(X + 6, Y + ry, 4, 1, '#9aa0aa'); }
         P(X + 4, Y + 14, 8, 2, INK);
         break;
+      case 164: { // Sisyphos's circus tent seen from above: green canvas, red stars, a red scalloped edge
+        P(X, Y, 16, 16, (x + y) % 2 ? '#5aa878' : '#4f9a6a');
+        P(X + 7, Y, 2, 16, 'rgba(255,255,255,.12)');
+        if ((x + y) % 2 === 0) {
+          // a big red star, outlined, like the ones painted on the real tent
+          const star = ['....X....', '...XXX...', 'XXXXXXXXX', '.XXXXXXX.', '..XXXXX..', '..XX.XX..', '.XX...XX.'];
+          star.forEach((row, ry) => [...row].forEach((ch, rx) => { if (ch === 'X') P(X + 3 + rx, Y + 4 + ry, 1, 1, '#b8202c'); }));
+          P(X + 7, Y + 6, 1, 2, '#e8505a');
+        }
+        if (at(x, y - 1) !== 164) { P(X, Y, 16, 2, '#2f6a45'); P(X, Y, 16, 1, INK); }
+        if (at(x - 1, y) !== 164) P(X, Y, 1, 16, INK);
+        if (at(x + 1, y) !== 164) P(X + 15, Y, 1, 16, INK);
+        if (at(x, y + 1) !== 164) { P(X, Y + 12, 16, 4, INK); for (let i = 0; i < 16; i += 4) { P(X + i, Y + 12, 4, 2, '#c8303a'); P(X + i + 1, Y + 14, 2, 1, '#c8303a'); } }
+        break;
+      }
+      case 165: // a baller box: a little wooden DJ hut on the sand, a speaker and coloured lights
+        P(X, Y, 16, 16, '#c9a86a');
+        P(X + 1, Y + 2, 14, 13, INK); P(X + 2, Y + 3, 12, 11, '#8a5a32'); P(X + 2, Y + 3, 12, 3, '#6a4426');
+        circle(g, X + 8, Y + 10, 3, INK); circle(g, X + 8, Y + 10, 2, '#3a3a3a');
+        for (let i = 3; i < 14; i += 3) P(X + i, Y + 4, 1, 1, pick(['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b']));
+        break;
+      case 166: // a grey roof seen from above (the sauna house, the café): slabs and a ridge
+        P(X, Y, 16, 16, '#5c6068'); for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, '#4c5058');
+        if (at(x, y - 1) !== 166) P(X, Y, 16, 1, INK);
+        if (at(x - 1, y) !== 166) P(X, Y, 1, 16, INK);
+        if (at(x + 1, y) !== 166) P(X + 15, Y, 1, 16, INK);
+        if (rnd() < 0.15) P(X + 4 + Math.floor(rnd() * 8), Y + 4 + Math.floor(rnd() * 8), 2, 2, '#7a7e86');
+        break;
       case 135: // heavy chains hanging from the ceiling down to the floor
         floorBase(X, Y);
         for (const cx of [4, 10]) for (let ly = -12; ly < 14; ly += 4) { P(X + cx - 1, Y + ly, 3, 4, INK); P(X + cx, Y + ly + 1, 1, 2, ly % 8 ? '#8a8e98' : '#5a5e68'); }

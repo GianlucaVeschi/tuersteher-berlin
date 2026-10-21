@@ -37,7 +37,7 @@ Leave through the exit on the ground floor.
 An old dog-biscuit factory in Rummelsburg. On the street it's the real entrance: the rusty gate with two big birds beak to beak, the arched SISYPHOS banner and the red-and-white circus fence. Behind it you walk through doorways between rooms:
 
 - **The queue:** a red hallway with two queues behind a crowd barrier. The long one is all costumes (a clown, a lizard, Santa, Spider-Man, a banana, an astronaut, a unicorn, Batman, Pikachu and more); the other one is empty, and it's yours. The door person at the top waves you through without a single question.
-- **Strand:** the open-air garden. Sand dancefloor, a pool with sand around it, art totems, fairy lights, a bar.
+- **Strand:** the open-air garden, laid out like it looks from above: the sauna house (No. 15) on the left with a door straight into the sauna, the Pfand bar, a beach with baller boxes (little wooden DJ huts, each with its own sound), the green circus tent with red stars and everyone dancing in front of it, a small lake with a bonfire next to it, and right by the way in, the café and merch kiosk (coffee, cake, the tote bag with the man and the rock).
 - **Wintergarten:** a glass house full of plants. House music that never stops.
 - **Hammahalle:** the brick factory hall. Techno.
 - **Dampfer:** wooden, ship-like, with portholes. Deep house.
@@ -49,7 +49,7 @@ The crowd is a colourful festival and circus bunch with flower crowns, glitter a
 | Quest | Where |
 | --- | --- |
 | Pfand hunter (main quest) | Empty bottles lie around every room. Carry up to 4, return them at any bar for the deposit (beer 8 ct, Club-Mate 15 ct, cans 25 ct). Return 8 to finish |
-| Jump in the pool | Press A facing the pool in the garden |
+| Jump in the lake | Press A facing the pool in the garden |
 | Survive the Aufguss | Talk to the Saunameister |
 | Listen to 3 hippie stories | Momo (pool), Luna (Wintergarten), Kai (sauna), Sunny (Tunnel) |
 | Learn to juggle | Zora the circus kid in the garden. Wait for the beat |
