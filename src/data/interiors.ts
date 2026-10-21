@@ -438,7 +438,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'GweeeeeeeeeeeeeeeeeeewwG',
       'GweeeeeeeeeeeeeeeeeeewwG',
       'GweeeeeeeeeeeeeeeeeeewwG',
-      'Gweeeeeeeeeeeeeeeeeeeww3',
+      'GweeeeeeeeeeeeeeeeeeewwG',
       'GweeeeeeeeeeeeeeeeeeewwG',
       'GwwwwwwwwwwwwwwwwwwwwwwG',
       'GTww====wwwwwwwwwbbbwwTG',
@@ -446,8 +446,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'GTwwwwwwwwwwwwwwwwwwwwTG',
       'BBBBBBBBBBBBBBBBBBBBBBBB'
         ],
-        spawn: { fromStrand: [5, 1, 'down'], fromHh: [22, 6, 'left'] },
-        doors: { 1: { to: 'strand', at: 'fromWg' }, 3: { to: 'hh', at: 'fromWg' } },
+        spawn: { fromStrand: [5, 1, 'down'] },
+        doors: { 1: { to: 'strand', at: 'fromWg' } },
         dancers: 12,
         spots: ['rgba(255,200,120,.14)', 'rgba(140,255,170,.10)', 'rgba(255,140,200,.10)'],
         fairy: [[1, 2, 22, 2], [1, 8, 22, 8]],
@@ -470,7 +470,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'B.....,,,,,,,,,,,,,,,,,,.....4',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
       'B.....,,,P,,,,,,,,,,P,,,.....B',
-      '3.....,,,,,,,,,,,,,,,,,,.....B',
+      'B.....,,,,,,,,,,,,,,,,,,.....B',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
@@ -481,8 +481,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'B..bbb.................bbb...B',
       'BBBBBBBBBBBBBBB5BBBBBBBBBBBBBB'
         ],
-        spawn: { fromWg: [1, 8, 'right'], fromDf: [28, 5, 'left'], fromTn: [15, 16, 'up'] },
-        doors: { 3: { to: 'wg', at: 'fromHh' }, 4: { to: 'df', at: 'fromHh' }, 5: { to: 'tn', at: 'fromHh' } },
+        spawn: { fromDf: [28, 5, 'left'], fromTn: [15, 16, 'up'] },
+        doors: { 4: { to: 'df', at: 'fromHh' }, 5: { to: 'tn', at: 'fromHh' } },
         dancers: 22,
         spots: ['rgba(255,60,60,.16)', 'rgba(255,255,255,.10)', 'rgba(255,120,40,.13)'],
         bottles: [[3, 10, 'beer'], [26, 15, 'can'], [12, 2, 'mate']],
@@ -520,7 +520,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 4, y: 2, look: { skin: '#f0c7a0', hair: '#c0c0c0', beard: '#c0c0c0', top: '#2b3f6b', legs: '#f3eee3', hat: '#f3eee3' }, lines: ['(The DJ wears a captain\'s hat. Full steam ahead.)'] },
           { x: 5, y: 11, act: 'pfandBar', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#f3eee3', legs: '#2b3f6b', stripes: '#2b4c7a' } },
           { x: 23, y: 7, dir: 'left', look: { skin: '#c98d6a', hair: '#b6f36b', top: '#ff8c42', legs: '#7a3fd1', sparkle: '#fff6a8', paint: '#b6f36b' }, lines: ['Raver: The sauna is through the little door at the back. Go sweat it out.'] },
-          { x: 23, y: 10, dir: 'left', act: 'ronny', name: 'Ronny', look: { skin: '#e2b08c', hair: '#c9a24a', top: '#7a3fd1', legs: '#2b3f6b', stripes: '#b6f36b', sparkle: '#fff6a8' } }
+          { x: 24, y: 1, dir: 'down', act: 'ronny', name: 'Ronny', look: { skin: '#e2b08c', hair: '#c9a24a', top: '#7a3fd1', legs: '#2b3f6b', stripes: '#b6f36b', sparkle: '#fff6a8' } }
         ]
       },
       tn: {
@@ -667,7 +667,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       { id: 'stories', title: 'Listen to 3 hippie stories', hint: 'Momo, Luna, Kai and Sunny each have one.' },
       { id: 'juggle', title: 'Learn to juggle', hint: 'Zora the circus kid, in the garden.' },
       { id: 'hopper', title: 'Dance in 4 different rooms', hint: 'Strand, Wintergarten, Hammahalle, Dampfer, Tunnel.' },
-      { id: 'mdma', title: 'Ringbahn rush', hint: 'Ronny on the Dampfer, by the benches, might have something.' }
+      { id: 'mdma', title: 'Ringbahn rush', hint: 'Ronny, in the top right corner of the Dampfer, might have something.' }
     ]
   },
   /* KitKatClub: Köpenicker Straße 76, in the building it shares with Sage Club.

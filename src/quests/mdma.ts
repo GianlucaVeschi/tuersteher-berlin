@@ -11,11 +11,11 @@ import type { Entity } from '../types';
 /* ---- Sisyphos: MDMA from Ronny on the Dampfer, after you find his bucket hat; taking it starts the runner ---- */
 export const MD_HINTS: Record<number, string> = {
   1: "Ronny lost his bucket hat somewhere by the lake on the Strand. Ask around there.",
-  2: 'You have the hat. Back to Ronny on the Dampfer, by the benches.',
+  2: 'You have the hat. Back to Ronny, top right corner of the Dampfer.',
   3: 'Ronny gave you half a pill. Talk to him when you are ready to take it.'
 };
 
-/** Ronny, on the Dampfer by the benches. Knows a guy. Is the guy. */
+/** Ronny, in the top right corner of the Dampfer. Knows a guy. Is the guy. */
 export async function ronny(_e: Entity | null, clubId: string) {
   if (questDone(clubId, 'mdma')) {
     // replay the runner
