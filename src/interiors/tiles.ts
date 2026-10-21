@@ -301,7 +301,7 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 172: { // Sisyphos's old factory (Hammahalle up top, Dampfer and Tunnel below), from a night photo:
         // brick in purple light, rows of arched windows glowing green, a corrugated-metal ground floor with
         // round portholes (the Dampfer) and red lacquer with lanterns (the Tunnel). Drawn once from the
-        // bottom-right tile of its block; the side doors are left alone. Lasers sweep over it in fx.ts.
+        // bottom-right tile of its block; the doors (on the beach side) are left alone. Lasers sweep over it in fx.ts.
         P(X, Y, 16, 16, '#3f7a3a');
         if (at(x + 1, y) === t || at(x, y + 1) === t) break;
         let x0 = x, y0 = y;
@@ -345,7 +345,7 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(bx, lowY, split - bx, bh - (lowY - by), '#3a4a6a');
         for (let xx = bx + 2; xx < split; xx += 3) P(xx, lowY, 1, bh - (lowY - by), '#2c3a56');
         for (let k = 0; k < 3; k++) {
-          const px = bx + 18 + k * 30, py = lowY + 14;
+          const px = bx + [14, 62, 80][k], py = lowY + 14;   // clear of the door
           circle(g, px, py, 7, INK); circle(g, px, py, 6, '#8a9098'); circle(g, px, py, 4, '#7ec8ff'); P(px - 2, py - 3, 2, 2, '#d8f0ff');
         }
         P(split - 26, lowY + 22, 18, 14, INK); P(split - 25, lowY + 23, 16, 12, '#ffe6f6'); P(split - 25, lowY + 23, 16, 3, '#ffffff');   // a glowing hatch
@@ -357,9 +357,9 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(split - 1, lowY, 2, bh - (lowY - by), INK);
         P(bx, by + bh - 2, bw, 2, INK);
         g.restore();
-        // round lamps beside the two side doors
-        for (let yy = y0; yy <= y; yy++) for (const xx of [x0, x]) if (isDoorTile(at(xx, yy))) {
-          const lx = xx === x0 ? xx * T + T + 2 : xx * T - 6, ly = yy * T - 4;
+        // a round lamp on the wall beside each door
+        for (let yy = y0; yy <= y; yy++) for (let xx = x0; xx <= x; xx++) if (isDoorTile(at(xx, yy))) {
+          const lx = xx * T - 6, ly = yy * T + 2;
           P(lx, ly, 5, 5, INK); P(lx + 1, ly + 1, 3, 3, '#ffd27a');
         }
         break;

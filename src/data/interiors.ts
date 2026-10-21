@@ -368,8 +368,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       strand: {
         // The garden, laid out from the owner's sketch (and the aerial view): along the top the circus tent
         // (green, red stars) with two DJs playing right under it (facing right, to the dancefloor), the wooden dancefloor, the L-shaped bar, and
-        // on the right one big building: the Hammahalle at the top, the Dampfer (in on its left side) and the
-        // Tunnel (out on its right side). In the middle the lake with its beach and trees, the big bonfire,
+        // on the right one big building: the Hammahalle at the top, the Dampfer (its door on the beach, left) and the
+        // Tunnel (its door on the beach, right). In the middle the lake with its beach and trees, the big bonfire,
         // and the open sand full of people and baller boxes. Along the bottom the sauna (No. 15), the café
         // (a little house, door 3), the way in from the queue, the pizza place with its sign, the
         // Wintergarten and the toilets.
@@ -384,10 +384,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'FTŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
       'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
       'FgŧŧŧŧŧŧŧŧSeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
-      'FTwwwwwwwwDeeeeeeeegg=wwwwBg5ƃƃƃƃƃƃƃƃƃƃƃƃggF',
-      'FgwwwwwwwwDeeeeeeeegg======gƃƃƃƃƃƃƃƃƃƃƃƃ6ggF',
+      'FTwwwwwwwwDeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'FgwwwwwwwwDeeeeeeeegg======gƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
       'FgeeeeeeeeSeeeeeeeegggggggggƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
-      'FggggggggggggaaaaaaaaaaaaaaaƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'Fggggggggggggaaaaaaaaaaaaaaaƃƃ5ƃƃƃƃƃƃƃ6ƃƃggF',
       'FTaaaaaaaaaaTaaaaaaaaaƀaaaaaaaaaaaaaaaaagggF',
       'Fgaaa~~~~aaagaabaabaaaaaaaaaaaaaaaaaaaaagggF',
       'Fgaa~~~~~~aagabaƒƒaaaaaaaaaaaaƀaaaaaaaaagggF',
@@ -403,7 +403,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘŘŘŘŘgGGGGGGGGgBBBBF',
       'FFFFFFFFFFFFFFFFFFFF77FFFFFFFFFFFFFFFFFFFFFF'
         ],
-        spawn: { fromEingang: [20, 24, 'up'], fromWg: [33, 19, 'up'], fromSauna: [4, 19, 'up'], fromCafe: [12, 19, 'up'], fromDf: [27, 8, 'left'], fromTn: [41, 9, 'right'], fromWc: [40, 19, 'up'] },
+        spawn: { fromEingang: [20, 24, 'up'], fromWg: [33, 19, 'up'], fromSauna: [4, 19, 'up'], fromCafe: [12, 19, 'up'], fromDf: [30, 12, 'down'], fromTn: [38, 12, 'down'], fromWc: [40, 19, 'up'] },
         doors: {
           1: { to: 'wg', at: 'fromStrand' }, 3: { to: 'cafe', at: 'fromStrand' }, 5: { to: 'df', at: 'fromStrand' }, 6: { to: 'tn', at: 'fromStrand' },
           7: { to: 'eingang', at: 'fromStrand' }, 8: { to: 'sa', at: 'fromStrand' }, 9: { to: 'wc', at: 'fromStrand' }
@@ -505,14 +505,14 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '4weeeeeeeeeeeeeeeeeeeewww7',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
-      '5weeeeeeeeeeeeeeeeeeeewwwB',
+      'BweeeeeeeeeeeeeeeeeeeewwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
       'Bww=====wwwwwwwwwwwwwbbwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
-      'BBBBBBBBBBBBBBBBBBBBBBBBBB'
+      'BBB5BBBBBBBBBBBBBBBBBBBBBB'
         ],
-        spawn: { fromHh: [1, 5, 'right'], fromStrand: [1, 8, 'right'], fromTn: [24, 5, 'left'] },
+        spawn: { fromHh: [1, 5, 'right'], fromStrand: [3, 12, 'up'], fromTn: [24, 5, 'left'] },
         doors: { 4: { to: 'hh', at: 'fromDf' }, 5: { to: 'strand', at: 'fromDf' }, 7: { to: 'tn', at: 'fromDf' } },
         dancers: 14,
         spots: ['rgba(80,220,200,.13)', 'rgba(255,190,90,.12)', 'rgba(120,140,255,.12)'],
@@ -530,13 +530,13 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK',
       'KllllllllllllllllllllllllllllllllK',
       'KlllllllllllllllllllllllllllllDDSK',
-      '5lllllllllllllllllllllllllllllDDl6',
+      '5lllllllllllllllllllllllllllllDDlK',
       'KlllllllllllllllllllllllllllllDDSK',
       '7llllllllllllllllllllllllllllllllK',
       'KlllbbblllllllllllllllllllllllbbbK',
-      'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK'
+      'KKKKKKKKKKKKKKKKKKKKKKKKKK6KKKKKKK'
         ],
-        spawn: { fromHh: [1, 3, 'right'], fromStrand: [32, 3, 'left'], fromDf: [1, 5, 'right'] },
+        spawn: { fromHh: [1, 3, 'right'], fromStrand: [26, 6, 'up'], fromDf: [1, 5, 'right'] },
         doors: { 5: { to: 'hh', at: 'fromTn' }, 6: { to: 'strand', at: 'fromTn' }, 7: { to: 'df', at: 'fromTn' } },
         dancers: 14,
         spots: ['rgba(255,60,40,.18)', 'rgba(255,200,60,.12)'],
