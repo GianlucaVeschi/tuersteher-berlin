@@ -60,7 +60,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 - Each scene's static tiles are drawn **once** into its own canvas (`RT.mc`): the street by `prerender()` in `render/cityTiles.ts`, club floors by `drawInteriorTiles()` in `interiors/tiles.ts`. Each frame copies the visible part, then draws animated things and people on top (`render/draw.ts` for the street, `interiors/fx.ts` for club floors).
 - People are drawn by `person()` in `render/sprites.ts` from a `Look` (colours plus flags like `long`, `glasses`, `harness`). The player's look is `lookOf(state.outfit)` (`render/looks.ts`): character body + outfit.
 - Zoom: `draw()` scales the whole world pass with `setTransform` and temporarily sets `RT.VW/VH` to the visible world size, so everything inside draws in world pixels. Map labels and the YOU marker are drawn afterwards in screen space.
-- The Fernsehturm is drawn into `towerC`; the footprint goes into the static map, the tall part is drawn after the sprites so you walk behind it.
+- The Fernsehturm is drawn into `towerC`; the footprint goes into the static map, the tall part is drawn after the sprites so you walk behind it. The lift attendant at its foot (`tower-lift` in data/npcs.ts, `STREET_ACTS.fernsehturm`) takes you up to `playTower()` (`minigames/tower.ts`, canvas `#tower`): a 360° night view from the Panoramastage. The ground is the street map's prerendered canvas (`SCENES.city.canvas`, darkened once into a texture with lit windows and street lamps) projected as a perspective floor from `EYE` tiles above the tower; outside the map `outerCity()` makes up blocks to the horizon; a skyline strip goes all the way round with landmarks at roughly their real bearings (`MARKS`); club names float over the clubs. Turn with left/right or drag, look with up/down, A rides down. No timer, no quest; `state.visited.fernsehturm` remembers you've been, `tower_visited` is tracked.
 - Map art uses the seeded `rnd()`/`pick()` from `util.ts` so it looks identical on every load. Use `Math.random()` only for gameplay randomness (question order, coat ticket numbers).
 - There are no image assets; everything is drawn with `fillRect`.
 
@@ -132,7 +132,7 @@ The street (`'city'`) and every club floor (`'berghain:mf'`, `'sisyphos:strand'`
 ### Monitoring (`src/core/monitoring.ts`)
 
 - Datadog RUM (org Cuadog, US1): sessions, errors, Session Replay and game events. Only production builds report; the live site is `env:prod`, `npm run preview` is `env:local`. Sample rates and privacy can also be changed in Datadog's remote configuration without a deploy.
-- Game events go through `track('snake_case', { … })`, never `datadogRum` directly. Current events: `character_selected`, `outfit_changed`, `door_rejected`, `door_accepted`, `club_entered`, `quest_completed`, `npc_talked`, `game_finished`, `runner_finished` (`won`), `golf_finished` (`holes`, `aces`, `replay`).
+- Game events go through `track('snake_case', { … })`, never `datadogRum` directly. Current events: `character_selected`, `outfit_changed`, `door_rejected`, `door_accepted`, `club_entered`, `quest_completed`, `npc_talked`, `game_finished`, `runner_finished` (`won`), `golf_finished` (`holes`, `aces`, `replay`), `tower_visited` (`again`).
 - Session Replay records the DOM, so the canvas (the map) shows black; dialogs, menus and the stamp card are visible.
 
 ### Saving (`src/core/save.ts`)

@@ -9,10 +9,12 @@
 //   djgame.ts  Heideglühen, the DJ (quests/heide.ts)     DJ set: rhythm game for the crowd
 //   lsd.ts     Club der Visionäre, Flo (quests/cdv.ts)   LSD dive: swim the canal in 3D
 //   golf.ts    the minigolf in Görli, the desk (places/goerli.ts)   Neon Golf: one minute, as many holes as you can
+//   tower.ts   the Fernsehturm, the lift attendant (world/street.ts)   not a game: the 360° view from the top
 //   markers.ts which people get the red "!" (ACT_QUEST)
 export { playKHole } from './khole';
 export { playRunner } from './runner';
 export { playDjSet } from './djgame';
 export { playLsd } from './lsd';
 export { playGolf } from './golf';
+export { playTower } from './tower';
 export { hasQuest } from './markers';
