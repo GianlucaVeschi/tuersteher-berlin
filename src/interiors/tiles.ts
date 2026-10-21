@@ -334,13 +334,20 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         }
         break;
       }
-      case 145: { // a long couch against the wall: one piece over the whole run of couch tiles, armrests at
-        // the two ends, the backrest on the wall side, red cushions facing the room
+      case 145: case 147: case 148: case 149: case 150: { // a long couch: one piece over the whole run of couch
+        // tiles, armrests at the two ends, the backrest on one side. 'ç' (145) puts its back against the wall
+        // next to it (red, Heideglühen); 147–150 stand free with their back up/down/left/right (old sofas in
+        // all sorts of colours, CDV)
         P(X, Y, 16, 16, '#6b4a2e');
-        const C = 145, wallAt = (dx: number, dy: number) => WALLISH.has(at(x + dx, y + dy));
-        const side = wallAt(0, -1) ? 'up' : wallAt(0, 1) ? 'down' : wallAt(-1, 0) ? 'left' : 'right';
+        const C = t, wallAt = (dx: number, dy: number) => WALLISH.has(at(x + dx, y + dy));
+        const side = t === 147 ? 'up' : t === 148 ? 'down' : t === 149 ? 'left' : t === 150 ? 'right'
+          : wallAt(0, -1) ? 'up' : wallAt(0, 1) ? 'down' : wallAt(-1, 0) ? 'left' : 'right';
         const along = side === 'up' || side === 'down';
         const prev = along ? at(x - 1, y) === C : at(x, y - 1) === C, next = along ? at(x + 1, y) === C : at(x, y + 1) === C;
+        // one colour per couch: from where it starts
+        let sx0 = x, sy0 = y; while (along ? at(sx0 - 1, y) === C : at(x, sy0 - 1) === C) { if (along) sx0--; else sy0--; }
+        const [seat, back, arm, hi] = t === 145 ? ['#a3242c', '#6e1820', '#7a1a22', '#c94a3a']
+          : [['#3d7a4a', '#24502e', '#2e5f39', '#5aa36a'], ['#c9a227', '#8a6a12', '#a3841a', '#e8c95a'], ['#3d5f94', '#26406a', '#2e4c7a', '#5a86c4'], ['#a3242c', '#6e1820', '#7a1a22', '#c94a3a'], ['#7a3fd1', '#4e2690', '#5e2ea8', '#a06ef0']][(sx0 * 7 + sy0 * 3) % 5];
         // in the couch's own frame: u runs along it, v from the wall (0) into the room (16)
         const R = (u: number, v: number, w: number, h: number, c: string) => {
           if (side === 'up') P(X + u, Y + v, w, h, c); else if (side === 'down') P(X + u, Y + 16 - v - h, w, h, c);
@@ -348,12 +355,27 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         };
         const u0 = prev ? 0 : 1, u1 = next ? 16 : 15;
         R(u0, 1, u1 - u0, 14, INK);                                  // outline
-        R(u0 + (prev ? 0 : 1), 2, u1 - u0 - (prev ? 0 : 1) - (next ? 0 : 1), 12, '#a3242c'); // seat
-        R(u0 + (prev ? 0 : 1), 2, u1 - u0 - (prev ? 0 : 1) - (next ? 0 : 1), 4, '#6e1820');  // backrest
-        if (!prev) R(2, 2, 3, 12, '#7a1a22');                       // armrests
-        if (!next) R(11, 2, 3, 12, '#7a1a22');
-        if (prev && x % 2 === 0) R(0, 6, 1, 8, '#7a1a22');           // a seam between cushions
-        R(prev ? 2 : 6, 7, 3, 1, '#c94a3a');
+        R(u0 + (prev ? 0 : 1), 2, u1 - u0 - (prev ? 0 : 1) - (next ? 0 : 1), 12, seat);
+        R(u0 + (prev ? 0 : 1), 2, u1 - u0 - (prev ? 0 : 1) - (next ? 0 : 1), 4, back);   // backrest
+        if (!prev) R(2, 2, 3, 12, arm);                                                    // armrests
+        if (!next) R(11, 2, 3, 12, arm);
+        if (prev && (along ? x : y) % 2 === 0) R(0, 6, 1, 8, arm);                         // a seam between cushions
+        R(prev ? 2 : 6, 7, 3, 1, hi);
+        break;
+      }
+      // ---- Club der Visionäre: the tiny dance room ----
+      case 151: { // its walls: wooden planks, each painted a different bright colour
+        P(X, Y, 16, 16, INK);
+        const cols = ['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b', '#c28cff', '#ff8c42'];
+        for (let i = 0; i < 4; i++) P(X + i * 4, Y + 1, 3, 14, cols[(x * 2 + y + i) % cols.length]);
+        P(X, Y, 16, 1, '#f3eee3');
+        break;
+      }
+      case 152: { // its floor: worn wooden boards painted in patches of colour, under all the feet
+        const cols = ['#c94a6a', '#d9a227', '#3d8fbf', '#6fa83a', '#8a5ac9', '#d9733a'];
+        P(X, Y, 16, 16, cols[(x * 3 + y * 5) % cols.length]);
+        for (let r = 3; r < 16; r += 4) P(X, Y + r, 16, 1, 'rgba(0,0,0,.25)');
+        P(X + ((y % 2) ? 5 : 11), Y, 1, 16, 'rgba(0,0,0,.25)');
         break;
       }
       case 144: // under the jacuzzi: a wooden deck (the tub, the water and the steam are drawn in fx.ts)

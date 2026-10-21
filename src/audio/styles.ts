@@ -229,15 +229,6 @@ export const STYLES: Record<string, Style> = {
     arp: { steps: '.....x.......x..', level: 0.06, octave: 2 }
   },
 
-  // CDV's Sonnenraum: a jazz trio (the founder comes from jazz): swung ride, walking bass, piano comping
-  cdv_sonnen: {
-    bpm: 132, swing: 0.28, root: 41, space: 0.35, level: 0.9,
-    chords: [[2, 5, 9, 12], [7, 11, 14, 17], [0, 4, 7, 11], [9, 12, 16, 19]], barsPerChord: 1,
-    hat: 'x...x.xxx...x.xx', rim: '....o.......o...',
-    bass: { steps: [0, null, null, null, 4, null, null, null, 7, null, null, null, 9, null, null, null], wave: 'triangle', cutoff: 700, level: 0.3 },
-    piano: { steps: '......x.......x.', level: 0.14, octave: 1 }
-  },
-
   // the MDMA runner: euphoric trance, rolling bass and a sparkling arp
   runner: {
     bpm: 140, root: 38, space: 0.35,
@@ -283,7 +274,7 @@ const FLOOR_STYLE: Record<string, string> = {
   'kitkat:main': 'kitkat', 'kitkat:pool': 'kitkat_pool', 'kitkat:dungeon': 'kitkat_dungeon',
   'rso:opan': 'rso_opan', 'rso:robus': 'rso_robus', 'rso:summe': 'rso_summe',
   'heidegluehen:haus': 'heide', 'heidegluehen:galerie': 'heide',
-  'cdv:deck': 'cdv', 'cdv:sonnen': 'cdv_sonnen',
+  'cdv:deck': 'cdv', 'cdv:raum': 'cdv',
   'tresor:globus': 'globus', 'tresor:vault': 'tresor',
   'katerblau:garden': 'katerblau', 'katerblau:hopper': 'rso_robus', 'katerblau:arch': 'sisy_tn',
   'salon:main': 'salon'

@@ -32,7 +32,6 @@ export const cdvDays = () => DAYS.filter(d => state.danced['cdv:' + d]).length;
 
 /** Dancing at CDV: on the deck every dance moves the weekend on a day, until it's Monday morning. */
 export async function cdvDance(fl: string) {
-  if (fl === 'sonnen') { await say('(You try to dance to jazz. The drummer nods: close enough.)'); return; }
   const n = cdvDays();
   if (n >= DAYS.length) { await say('(Clicks, a rolling bassline, small changes over a long time. Minimal is patience.)'); return; }
   state.danced['cdv:' + DAYS[n]] = true; save(); renderCard();
@@ -71,7 +70,7 @@ export async function ines(_e: Entity | null, clubId: string) {
   }
   if (questDone(clubId, 'ines')) { await say('Ines: Mayday party, every year. Make sure you come.'); return; }
   await say("Ines: I've been coming here since the beginning. Around 2001. An old boathouse on the Flutgraben, a few friends, a sound system.");
-  await say('Ines: Gregor, who started it, comes from jazz. That is why there is jazz in the Sonnenraum.');
+  await say('Ines: Gregor, who started it, comes from jazz. You can still hear it: long pieces, small changes.');
   await say('Ines: Villalobos, Zip, Sonja Moonear, Sammy Dee... they all played on this little deck. Fifty people dancing and it feels full.');
   await say('Ines: In summer it opens in the afternoon and nobody knows when it closes. In winter we all go over to the Hoppetosse.');
   await completeQuest(clubId, 'ines');
@@ -93,20 +92,6 @@ export async function willow(_e: Entity | null, clubId: string) {
   await say('(You sit down under the weeping willow. Its branches hang almost into the water.)');
   await say('(Light comes through the leaves in little pieces. The bass sounds far away from here.)');
   await completeQuest(clubId, 'willow');
-}
-
-/** The jazz trio in the Sonnenraum needs someone on the hi-hat. */
-export async function jazz(_e: Entity | null, clubId: string) {
-  if (questDone(clubId, 'jazz')) { await say('Bassist: Come back any time. We play until the last guest goes home.'); return; }
-  await say('Bassist: Our drummer needs a break. Can you keep the hi-hat going?');
-  const a = await ask('Where does the hi-hat go in swing?', ['On 2 and 4', 'On 1 and 3', 'On every beat, as loud as possible', 'Wherever it wants']);
-  if (a !== 0) {
-    await say(a === 1 ? "Bassist: On 1 and 3? That's a marching band, friend. Try again." : 'Bassist: Hmm. Listen a little longer, then try again.');
-    return;
-  }
-  await say('(You click the hi-hat on 2 and 4. The trio smiles. For eight bars you are a jazz musician.)');
-  await say('Bassist: Long pieces, small changes. Jazz and minimal are closer than people think.');
-  await completeQuest(clubId, 'jazz');
 }
 
 /** Stamp card hints that change with progress. */
@@ -138,7 +123,7 @@ export async function flo(e: Entity | null, clubId: string) {
   await trip(clubId, false);
 }
 
-const FLOOR = new Set([ICH['w'], ICH['e']]), WATER = ICH['q'];
+const FLOOR = new Set([ICH['w'], ICH['Õ']]), WATER = ICH['q'];
 const STEPS = Object.entries(DIRS) as [Dir, [number, number]][];
 const nextToWater = (x: number, y: number) => STEPS.some(([, [dx, dy]]) => get(x + dx, y + dy) === WATER);
 const walkable = (x: number, y: number) => FLOOR.has(get(x, y)) && !blocked(x, y);
@@ -185,11 +170,11 @@ function tripFilter(on: boolean) {
   requestAnimationFrame(spin);
 }
 
-/** The middle of the dancefloor, or the nearest free spot to it. */
+/** The middle of the deck, or the nearest free spot to it. */
 function floorMiddle(): [number, number] {
   for (let r = 0; r < 6; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
-    const x = 16 + dx, y = 7 + dy;
-    if (get(x, y) === ICH['e'] && !blocked(x, y)) return [x, y];
+    const x = 14 + dx, y = 8 + dy; // the middle of the deck, among the benches
+    if (get(x, y) === ICH['w'] && !blocked(x, y)) return [x, y];
   }
   return [player.x, player.y];
 }
@@ -217,7 +202,7 @@ async function trip(clubId: string, replay: boolean) {
   [player.x, player.y] = floorMiddle(); player.tx = player.x; player.ty = player.y; player.moving = false;
   RT.lying = true;
   await fade(false);
-  await say('(You open your eyes. You are lying flat on your back in the middle of the dancefloor.)');
+  await say('(You open your eyes. You are lying flat on your back in the middle of the deck.)');
   await say(`(Bone dry. You never left the deck. You caught ${colours} colours. Your hands are empty.)`);
   // security comes over from the entrance
   const sec: Entity = { kind: 'npc', name: 'Security', x: 14, y: 13, dir: 'up', look: { skin: '#c98d6a', hair: '#111111', top: '#111111', legs: '#1b1b22', bald: true, beard: '#111111' } };
@@ -231,7 +216,7 @@ async function trip(clubId: string, replay: boolean) {
   }
   sec.dir = 'up';
   await say('Security: Okay, mermaid. Up you get.');
-  await say('Security: Twenty minutes of breaststroke on the dancefloor. You kicked the DJ. Twice.');
+  await say('Security: Twenty minutes of breaststroke between the benches. You kicked over three ashtrays.');
   RT.lying = false; player.dir = 'down';
   await say('Security: Out. Fresh air, some water. Come back next weekend.');
   if (!replay) await completeQuest(clubId, 'lsd');
