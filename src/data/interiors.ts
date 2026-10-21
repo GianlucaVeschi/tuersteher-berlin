@@ -373,7 +373,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // and the open sand full of people and baller boxes. Along the bottom the sauna (No. 15), the café
         // (a little house, door 3), the way in from the queue, the pizza place with its sign, the
         // Wintergarten and the toilets.
-        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   ƃ  the old factory (no names outside)   e  wooden dancefloor
+        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   ƃ  the old factory (no names outside)   ǥ  the Wintergarten's greenhouse   ƭ  the toilet hut   e  wooden dancefloor
         label: 'Strand · the garden', short: 'STRAND',
         map: [
       'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
@@ -396,11 +396,11 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'FTaaa~~~~aaagaaaaaaaaaaaaaaaaaaaaaaaaaaagggF',
       'FgaaaaaaaaaaTaaaaaaaaaaaaƀaaaaaaaaaaaaaagggF',
       'FggTggggggTggaaaaaaaaaaaaaaaaaaaaaaaaaaagggF',
-      'Fʂʂʂ8ʂʂʂgĉĉĉ3ĉĉĉgggggggg=====gGGG1GGGGgB9BBF',
-      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggHwwwHgGGGGGGGGgBBBBF',
-      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘƥƥƥŘgGGGGGGGGgBBBBF',
-      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉgggggggTŘŘŘŘŘgGGGGGGGGgBBBBF',
-      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘŘŘŘŘgGGGGGGGGgBBBBF',
+      'Fʂʂʂ8ʂʂʂgĉĉĉ3ĉĉĉgggggggg=====gǥǥǥ1ǥǥǥǥgƭ9ƭƭF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggHwwwHgǥǥǥǥǥǥǥǥgƭƭƭƭF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘƥƥƥŘgǥǥǥǥǥǥǥǥgƭƭƭƭF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉgggggggTŘŘŘŘŘgǥǥǥǥǥǥǥǥgƭƭƭƭF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘŘŘŘŘgǥǥǥǥǥǥǥǥgƭƭƭƭF',
       'FFFFFFFFFFFFFFFFFFFF77FFFFFFFFFFFFFFFFFFFFFF'
         ],
         spawn: { fromEingang: [20, 24, 'up'], fromWg: [33, 19, 'up'], fromSauna: [4, 19, 'up'], fromCafe: [12, 19, 'up'], fromDf: [30, 12, 'down'], fromTn: [38, 12, 'down'], fromWc: [40, 19, 'up'] },
@@ -648,6 +648,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'ŝ': ['Shelves of Sisyphos things: shirts, tote bags with the man and his rock, hoodies, lighters.'],
       'Ř': ['A grey roof.'],
       'ƃ': ['The old dog-biscuit factory: brick, arched windows glowing green, purple light, lasers. Bass coming through the walls. Two doors, no signs.'],
+      'ǥ': ['The Wintergarten: a glass house full of plants. Through the roof you can see the house music dancing.'],
+      'ƭ': ['The toilet hut. Turquoise planks, a heart in the wall, a queue that never ends.'],
       'ʂ': ['The sauna cabin, No. 15. Steam out of the chimney, towels on the rack, a lantern by the door.'],
       'ĉ': ['The café: a little cottage with a striped awning and flower boxes. It smells of coffee and carrot cake.'],
       T: ['A big plant. Someone has hung a disco ball in it.'],

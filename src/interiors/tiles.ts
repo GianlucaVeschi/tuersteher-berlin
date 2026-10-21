@@ -348,6 +348,59 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         }
         break;
       }
+      case 173: case 174: { // the Wintergarten's greenhouse (173) and the toilet hut (174) in Sisyphos's garden, drawn
+        // once from the bottom-right tile of their block like the other little houses: a porch with the door
+        // along the garden side, the roof, and a front wall under the eaves
+        P(X, Y, 16, 16, '#3f7a3a');
+        if (at(x + 1, y) === t || at(x, y + 1) === t) break;
+        let x0 = x, y0 = y;
+        while (at(x0 - 1, y) === t) x0--;
+        while (at(x, y0 - 1) === t || isDoorTile(at(x, y0 - 1))) y0--;
+        const bx = x0 * T, by = y0 * T, bw = X + T - bx, bh = Y + T - by;
+        g.save();
+        g.beginPath(); g.rect(bx, by, bw, bh);
+        for (let dx = x0; dx <= x; dx++) if (isDoorTile(at(dx, y0))) g.rect(dx * T + T, y0 * T, -T, T);
+        g.clip('evenodd');
+        P(bx, by, bw, bh, '#3f7a3a');
+        const porch = 13, wall = 16, ry = by + porch, rh = bh - porch - wall, ridge = ry + Math.round(rh / 2), wy = ry + rh + 1;
+        if (t === 173) {
+          // a glass roof on a white frame: plants and warm light inside, string lights along the ridge
+          P(bx + 1, ry - 1, bw - 2, rh + 2, INK);
+          P(bx + 2, ry, bw - 4, ridge - ry, '#a8dcd4'); P(bx + 2, ridge, bw - 4, ry + rh - ridge, '#86c2ba');
+          for (let k = 0; k < 9; k++) circle(g, bx + 10 + ((k * 37) % (bw - 20)), ry + 5 + ((k * 23) % (rh - 8)), 4 + (k % 3), k % 2 ? '#3f8a4a' : '#5aa860');
+          for (let k = 0; k < 6; k++) P(bx + 14 + ((k * 41) % (bw - 28)), ry + 4 + ((k * 17) % (rh - 6)), 2, 2, '#ffe28a');
+          P(bx + 2, ry, bw - 4, rh, 'rgba(220,255,250,.18)');
+          for (let xx = bx + 2; xx < bx + bw - 2; xx += 10) P(xx, ry, 1, rh, '#f3f6f2');
+          P(bx + 2, ridge - 1, bw - 4, 2, '#f3f6f2'); P(bx + 2, ry + 3, bw - 4, 1, 'rgba(255,255,255,.5)');
+          for (let xx = bx + 6; xx < bx + bw - 6; xx += 5) P(xx, ridge + 2, 1, 1, ['#ffd23f', '#ff5e7a', '#5ec8ff', '#b6f36b'][(xx >> 2) % 4]);
+          // the glass front wall, plants behind it
+          P(bx + 2, wy, bw - 4, wall - 1, INK); P(bx + 3, wy, bw - 6, wall - 2, '#9fd0c8');
+          for (let xx = bx + 6; xx < bx + bw - 6; xx += 9) { circle(g, xx, wy + 9, 4, '#3f8a4a'); P(xx - 3, wy + 11, 6, 3, '#8a5a32'); }
+          for (let xx = bx + 3; xx < bx + bw - 3; xx += 10) P(xx, wy, 1, wall - 2, '#f3f6f2');
+          P(bx + 3, wy + 1, bw - 6, 1, '#f3f6f2');
+          // the porch: white boards, potted plants either side of the door
+          P(bx, by, bw, porch, INK); P(bx + 1, by + 1, bw - 2, porch - 2, '#e8e2d4');
+          for (let xx = bx + 4; xx < bx + bw; xx += 5) P(xx, by + 1, 1, porch - 2, '#cfc6b2');
+          for (const px of [bx + 6, bx + 18, bx + bw - 22, bx + bw - 10]) { P(px - 3, by + 6, 7, 5, '#b05a3a'); circle(g, px, by + 5, 4, '#4f9a4a'); }
+        } else {
+          // a corrugated metal roof
+          P(bx + 1, ry - 1, bw - 2, rh + 2, INK);
+          P(bx + 2, ry, bw - 4, rh, '#7a8a96');
+          for (let xx = bx + 3; xx < bx + bw - 2; xx += 3) P(xx, ry, 1, rh, '#5e6c78');
+          P(bx + 2, ridge - 1, bw - 4, 2, '#4a5660'); P(bx + 2, ry + 1, bw - 4, 1, '#a8b4bc');
+          // turquoise planks, a heart cut into the wall, the WC sign
+          P(bx + 2, wy, bw - 4, wall - 1, INK); P(bx + 3, wy, bw - 6, wall - 2, '#3fa8a0');
+          for (let xx = bx + 5; xx < bx + bw - 3; xx += 4) P(xx, wy, 1, wall - 2, '#2f8a84');
+          const hx = bx + bw / 2 - 3, hy = wy + 4;
+          P(hx, hy, 2, 2, '#ffd27a'); P(hx + 4, hy, 2, 2, '#ffd27a'); P(hx, hy + 1, 6, 2, '#ffd27a'); P(hx + 1, hy + 3, 4, 1, '#ffd27a'); P(hx + 2, hy + 4, 2, 1, '#ffd27a');
+          // the porch: the WC sign, a sink on a barrel, a stack of toilet rolls
+          P(bx, by, bw, porch, INK); P(bx + 1, by + 1, bw - 2, porch - 2, '#a87a4a');
+          P(bx + bw - 22, by + 2, 18, 9, INK); P(bx + bw - 21, by + 3, 16, 7, '#f3eee3'); pixelText(g, 'WC', bx + bw - 17, by + 4, '#14121c');
+          P(bx + 3, by + 4, 9, 7, INK); P(bx + 4, by + 5, 7, 5, '#8a5a32'); P(bx + 4, by + 4, 7, 2, '#c8ccd4');
+        }
+        g.restore();
+        break;
+      }
       case 135: // heavy chains hanging from the ceiling down to the floor
         floorBase(X, Y);
         for (const cx of [4, 10]) for (let ly = -12; ly < 14; ly += 4) { P(X + cx - 1, Y + ly, 3, 4, INK); P(X + cx, Y + ly + 1, 1, 2, ly % 8 ? '#8a8e98' : '#5a5e68'); }
