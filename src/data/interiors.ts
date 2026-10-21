@@ -468,7 +468,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'B............................B',
       'B..P.....,,,,,,,,,,,,.....P..B',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
-      'B.....,,,,,,,,,,,,,,,,,,.....4',
+      'B.....,,,,,,,,,,,,,,,,,,.....B',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
       'B.....,,,P,,,,,,,,,,P,,,.....B',
       'B.....,,,,,,,,,,,,,,,,,,.....B',
@@ -480,9 +480,9 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'B.wwwwwww....................B',
       'B............................B',
       'B..bbb.................bbb...B',
-      'BBBBBBBBBBBBBBB5BBBBBBBBBBBBBB'
+      'BBBBBB4BBBBBBBBBBBBBBBBBBBB5BB'
         ],
-        spawn: { fromDf: [28, 5, 'left'], fromTn: [15, 16, 'up'] },
+        spawn: { fromDf: [6, 16, 'up'], fromTn: [27, 16, 'up'] },
         doors: { 4: { to: 'df', at: 'fromHh' }, 5: { to: 'tn', at: 'fromHh' } },
         dancers: 22,
         spots: ['rgba(255,60,60,.16)', 'rgba(255,255,255,.10)', 'rgba(255,120,40,.13)'],
@@ -497,12 +497,12 @@ export const INTERIORS: Record<string, InteriorDef> = {
       df: {
         label: 'Dampfer · deep house', short: 'DAMPFER',
         map: [
-      'BBoBBBoBBBoBBBoBBBoBBBoBBB',
+      'BBoB4BoBBBoBBBoBBBoBBBoBBB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
       'BwwDDDDwwwwwwwwwwwwwwwwwwB',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
-      '4weeeeeeeeeeeeeeeeeeeewww7',
+      'Bweeeeeeeeeeeeeeeeeeeewww7',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
       'BweeeeeeeeeeeeeeeeeeeewwwB',
@@ -512,7 +512,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
       'BBB5BBBBBBBBBBBBBBBBBBBBBB'
         ],
-        spawn: { fromHh: [1, 5, 'right'], fromStrand: [3, 12, 'up'], fromTn: [24, 5, 'left'] },
+        spawn: { fromHh: [4, 1, 'down'], fromStrand: [3, 12, 'up'], fromTn: [24, 5, 'left'] },
         doors: { 4: { to: 'hh', at: 'fromDf' }, 5: { to: 'strand', at: 'fromDf' }, 7: { to: 'tn', at: 'fromDf' } },
         dancers: 14,
         spots: ['rgba(80,220,200,.13)', 'rgba(255,190,90,.12)', 'rgba(120,140,255,.12)'],
