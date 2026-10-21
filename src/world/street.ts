@@ -10,9 +10,22 @@ import { CITY_H } from './tiles';
 import { farm, gorli, gorliGrill, hoops, kick, kuhle, railway, skate } from '../places/goerli';
 import { ask, closeBox, say } from '../ui/dialog';
 import { taskiTalk } from './taski';
+import { playTower } from '../minigames';
 
 /** Custom behaviour for street NPCs, by the `act` name in data/npcs.ts. Club quests live in quests/acts.ts. */
 export const STREET_ACTS: Record<string, Act> = {
+  // the lift attendant at the foot of the Fernsehturm: up to the Panoramastage for the view (minigames/tower.ts)
+  async fernsehturm() {
+    await say('Lift: Panoramastage, 203 metres. Forty seconds up. Ears pop at the top.');
+    const a = await ask('Ride up?', state.visited.fernsehturm ? ['Again!', 'Not now'] : ['Yes', 'Not now']);
+    if (a !== 0) { await say("Lift: The tower's not going anywhere. Since 1969."); return; }
+    if (!state.visited.fernsehturm) await say('(The doors close. The numbers race up. Your stomach stays on the ground floor.)');
+    closeBox();
+    track('tower_visited', { again: !!state.visited.fernsehturm });
+    state.visited.fernsehturm = true; save();
+    await playTower();
+    await say('(Back down on Alexanderplatz. Somewhere out there, a bouncer is waiting for you.)');
+  },
   // Görlitzer Park (places/goerli.ts)
   gorli, railway, farm, hoops, kick, skate, gorliGrill, kuhle,
   // Jesus outside Heideglühen: went behind the decks once, Hausverbot ever since. Starts crying.

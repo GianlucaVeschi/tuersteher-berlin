@@ -91,6 +91,10 @@ RSO (Revier Südost) is run by the crew behind Griessmühle, a much-loved Neukö
 
 People inside clubs who start a mini game have a red **!** over their head (the toilet guy at Berghain, Ronny on the Sisyphos Dampfer); it disappears once you've done it. Talk to them again afterwards to replay the mini game.
 
+## The Fernsehturm
+
+At the foot of the TV tower on Alexanderplatz a lift attendant takes you up to the Panoramastage, 203 metres up. From inside the sphere you turn all the way round (left/right or drag, up/down to look down or up, A to ride back down) and see the whole map at night in 3D: lit windows, street lamps, the Spree, the clubs' names floating over them, and beyond the edge of the map the city running on to the horizon, with the Berliner Dom, the Brandenburger Tor, the Reichstag dome, the Siegessäule and the Funkturm on the skyline roughly where they really are. It's a view, not a game: no timer, no quest.
+
 ## The Landwehrkanal
 
 South of the Spree and the northern clubs the map reaches the Landwehrkanal, between Kreuzberg and Neukölln, with Görli right below it in the middle of the map and Tresor, KitKat, CDV and Heideglühen further south:

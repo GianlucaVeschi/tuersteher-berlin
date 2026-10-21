@@ -25,6 +25,8 @@ export const NPCS: NpcDef[] = [
   // outside Heideglühen, at the left corner of the building, as close as he's allowed (conversation in STREET_ACTS.jesus)
   { id: 'jesus', x: 63, y: 69, act: 'jesus', look: { skin: '#e2b08c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#e9e4d6', legs: '#7a6a4a' } },
   // in front of his Imbiss on the green west of Humana (conversation in STREET_ACTS.mustafa)
+  // the lift attendant at the foot of the Fernsehturm (conversation in STREET_ACTS.fernsehturm)
+  { id: 'tower-lift', x: 44, y: 20, dir: 'down', act: 'fernsehturm', look: { skin: '#f0c7a0', hair: '#c9a24a', long: true, top: '#c4162a', legs: '#26242e', hat: '#c4162a' } },
   { id: 'mustafa', x: 5, y: 6, act: 'mustafa', look: { skin: '#d9a27c', hair: '#1a1a1a', beard: '#1a1a1a', top: '#f3eee3', legs: '#2a2a35' } },
   // just off the S-Bahn, on the grass by the tracks
   { id: 'freerk', x: 33, y: 2, leave: 'right', look: { skin: '#f0c7a0', hair: '#d9b25c', top: '#f7931a', legs: '#3a3a4a', btc: '#ffffff' },
