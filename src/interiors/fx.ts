@@ -219,7 +219,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     while (sc.map[y0 - 1]?.[x] === 172 || isDoorTile(sc.map[y0 - 1]?.[x] ?? 0)) y0--;
     const bx = x0 * T - camX, by = y0 * T - camY, bw = (x + 1 - x0) * T, bh = (y + 1 - y0) * T;
     if (bx > RT.VW || by > RT.VH || bx + bw < 0 || by + bh < 0) return;
-    ctx.save(); ctx.beginPath(); ctx.rect(bx, by + 16, bw, bh - 60); ctx.clip();
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, by + 16, bw, bh - 18); ctx.clip();
     ctx.globalCompositeOperation = 'lighter';
     const ox = bx + bw + 30, oy = by - 20;
     for (let i = 0; i < 3; i++) {

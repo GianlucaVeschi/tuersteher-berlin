@@ -298,10 +298,10 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         }
         break;
       }
-      case 172: { // Sisyphos's old factory (Hammahalle up top, Dampfer and Tunnel below), from a night photo:
-        // brick in purple light, rows of arched windows glowing green, a corrugated-metal ground floor with
-        // round portholes (the Dampfer) and red lacquer with lanterns (the Tunnel). Drawn once from the
-        // bottom-right tile of its block; the doors (on the beach side) are left alone. Lasers sweep over it in fx.ts.
+      case 172: { // Sisyphos's old factory, from a night photo: one brick building in purple light with rows of
+        // arched windows glowing green, top to bottom. No names on the outside: what's inside you find by
+        // walking in. Drawn once from the bottom-right tile of its block; the doors (on the beach side) are
+        // left alone. Lasers sweep over it in fx.ts.
         P(X, Y, 16, 16, '#3f7a3a');
         if (at(x + 1, y) === t || at(x, y + 1) === t) break;
         let x0 = x, y0 = y;
@@ -317,45 +317,29 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (let xx = bx + 3; xx < bx + bw - 3; xx += 6) P(xx, by + 4, 3, 1, '#34323e');
         P(bx + 24, by + 2, 10, 9, '#3a3842'); P(bx + bw - 40, by + 3, 8, 7, '#3a3842'); P(bx + 1, by + 16, bw - 2, 2, '#14121c');
         // the brick facade, washed in purple from below
-        const fy = by + 18, lowY = by + bh - 44;
-        for (let yy = fy; yy < lowY; yy++) {
-          const k = (yy - fy) / (lowY - fy);
-          P(bx, yy, bw, 1, `rgb(${Math.round(70 + 60 * k)},${Math.round(44 + 18 * k)},${Math.round(84 + 70 * k)})`);
+        const fy = by + 18, fb = by + bh;
+        for (let yy = fy; yy < fb; yy++) {
+          const k = (yy - fy) / (fb - fy);
+          P(bx, yy, bw, 1, `rgb(${Math.round(70 + 70 * k)},${Math.round(44 + 20 * k)},${Math.round(84 + 80 * k)})`);
         }
-        for (let yy = fy + 3; yy < lowY; yy += 4) { P(bx, yy, bw, 1, 'rgba(0,0,0,.18)'); for (let xx = bx + ((yy >> 2) % 2) * 4; xx < bx + bw; xx += 8) P(xx, yy - 3, 1, 3, 'rgba(0,0,0,.14)'); }
-        P(bx, fy, 1, lowY - fy, INK); P(bx + bw - 1, fy, 1, lowY - fy, INK);
-        P(bx + Math.round(bw * 0.62), fy, 2, lowY - fy, 'rgba(255,220,255,.18)');   // the corner, catching the light
-        // three rows of arched windows: most glow green, a few are dark
-        for (const [ri, wy] of [[0, fy + 8], [1, fy + 36], [2, fy + 64]] as const) {
-          if (wy + 18 > lowY) continue;
+        for (let yy = fy + 3; yy < fb; yy += 4) { P(bx, yy, bw, 1, 'rgba(0,0,0,.18)'); for (let xx = bx + ((yy >> 2) % 2) * 4; xx < bx + bw; xx += 8) P(xx, yy - 3, 1, 3, 'rgba(0,0,0,.14)'); }
+        P(bx, fy, 1, fb - fy, INK); P(bx + bw - 1, fy, 1, fb - fy, INK);
+        P(bx + Math.round(bw * 0.62), fy, 2, fb - fy, 'rgba(255,220,255,.18)');   // the corner, catching the light
+        // a ledge between the ground floor and the floors above
+        P(bx, fb - 34, bw, 3, '#4a3442'); P(bx, fb - 34, bw, 1, '#8a6a7a');
+        // rows of arched windows, most glowing green, a few dark; the ground floor's are lower and wider
+        const rows: [number, number, number][] = [[0, fy + 8, 18], [1, fy + 36, 18], [2, fy + 64, 18], [3, fb - 28, 14]];
+        for (const [ri, wy, hh] of rows) {
           for (let wx = bx + 8; wx < bx + bw - 12; wx += 18) {
             const lit = ((wx >> 3) + ri * 3) % 5 !== 0;
-            P(wx - 1, wy, 12, 19, INK); P(wx, wy - 2, 10, 3, INK); P(wx + 2, wy - 3, 6, 2, INK);
-            const c = lit ? (ri === 1 ? '#5ef0c0' : '#3fd6a0') : '#1a1424';
-            P(wx, wy + 1, 10, 17, c); P(wx + 1, wy - 1, 8, 2, c);
-            if (lit) { P(wx + 1, wy + 2, 3, 6, 'rgba(255,255,255,.35)'); P(wx, wy + 8, 10, 1, INK); P(wx + 4, wy + 1, 1, 17, INK); }
-            P(wx - 2, wy + 18, 14, 2, '#6a4a5a');                                                 // the sill
+            P(wx - 1, wy, 12, hh + 1, INK); P(wx, wy - 2, 10, 3, INK); P(wx + 2, wy - 3, 6, 2, INK);
+            const c = lit ? (ri === 3 ? '#ffd0f0' : ri === 1 ? '#5ef0c0' : '#3fd6a0') : '#1a1424';
+            P(wx, wy + 1, 10, hh - 1, c); P(wx + 1, wy - 1, 8, 2, c);
+            if (lit) { P(wx + 1, wy + 2, 3, 5, 'rgba(255,255,255,.35)'); P(wx, wy + 8, 10, 1, INK); P(wx + 4, wy + 1, 1, hh - 1, INK); }
+            if (ri < 3) P(wx - 2, wy + hh, 14, 2, '#6a4a5a');                                            // the sill
           }
         }
-        // a sign for the Hammahalle, up on the brick
-        P(bx + bw / 2 - 26, fy + 2, 52, 9, INK); P(bx + bw / 2 - 25, fy + 3, 50, 7, '#14121c'); pixelText(g, 'HAMMAHALLE', bx + bw / 2 - 20, fy + 4, '#ff7ad9');
-        // the ground floor: the Dampfer on the left (corrugated metal, portholes), the Tunnel on the right
-        const split = bx + Math.round(bw * 0.58);
-        P(bx, lowY - 4, bw, 4, INK); P(bx, lowY - 3, bw, 2, '#2a2830');                          // the awning
-        P(bx, lowY, split - bx, bh - (lowY - by), '#3a4a6a');
-        for (let xx = bx + 2; xx < split; xx += 3) P(xx, lowY, 1, bh - (lowY - by), '#2c3a56');
-        for (let k = 0; k < 3; k++) {
-          const px = bx + [14, 62, 80][k], py = lowY + 14;   // clear of the door
-          circle(g, px, py, 7, INK); circle(g, px, py, 6, '#8a9098'); circle(g, px, py, 4, '#7ec8ff'); P(px - 2, py - 3, 2, 2, '#d8f0ff');
-        }
-        P(split - 26, lowY + 22, 18, 14, INK); P(split - 25, lowY + 23, 16, 12, '#ffe6f6'); P(split - 25, lowY + 23, 16, 3, '#ffffff');   // a glowing hatch
-        P(bx + 4, lowY + 4, 40, 7, INK); P(bx + 5, lowY + 5, 38, 5, '#14121c'); pixelText(g, 'DAMPFER', bx + 9, lowY + 5, '#7ec8ff');
-        P(split, lowY, bx + bw - split, bh - (lowY - by), '#8a1a24');
-        for (let xx = split + 4; xx < bx + bw - 2; xx += 10) for (let yy = lowY + 8; yy < by + bh - 4; yy += 10) P(xx, yy, 2, 2, '#d9a43a');
-        for (let xx = split + 10; xx < bx + bw - 6; xx += 16) { P(xx + 2, lowY, 1, 4, INK); P(xx, lowY + 4, 6, 7, INK); P(xx + 1, lowY + 5, 4, 5, '#ff4a3a'); P(xx + 2, lowY + 6, 2, 2, '#ffd27a'); }
-        P(split + 6, lowY + 16, 32, 7, INK); P(split + 7, lowY + 17, 30, 5, '#14121c'); pixelText(g, 'TUNNEL', split + 10, lowY + 17, '#ffd27a');
-        P(split - 1, lowY, 2, bh - (lowY - by), INK);
-        P(bx, by + bh - 2, bw, 2, INK);
+        P(bx, fb - 2, bw, 2, INK);
         g.restore();
         // a round lamp on the wall beside each door
         for (let yy = y0; yy <= y; yy++) for (let xx = x0; xx <= x; xx++) if (isDoorTile(at(xx, yy))) {

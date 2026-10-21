@@ -373,7 +373,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // and the open sand full of people and baller boxes. Along the bottom the sauna (No. 15), the café
         // (a little house, door 3), the way in from the queue, the pizza place with its sign, the
         // Wintergarten and the toilets.
-        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   ƃ  the factory (Hammahalle, Dampfer, Tunnel)   e  wooden dancefloor
+        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   ƃ  the old factory (no names outside)   e  wooden dancefloor
         label: 'Strand · the garden', short: 'STRAND',
         map: [
       'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
@@ -427,7 +427,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
           { x: 6, y: 19, dir: 'down', look: { skin: '#f0c7a0', hair: '#c0c0c0', bald: true, top: '#f3eee3', legs: '#f3eee3' }, lines: ['Raver: (in a towel) The sauna is right there. Number 15. Towel optional, water not.'] },
           { x: 39, y: 19, dir: 'right', look: { skin: '#c98d6a', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#c28cff' }, lines: ['Raver: Queue for the Klo. Shorter than the one at the door, at least.'] },
           { x: 41, y: 18, dir: 'down', look: { skin: '#f3c9a8', hair: '#5ec8ff', top: '#ffd23f', legs: '#26242e', sparkle: '#ff5e7a' }, lines: ['Raver: Glitter top-up in the mirror. Very important.'] },
-          { x: 22, y: 23, look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#ffd23f', legs: '#c28cff', sparkle: '#ff5e7a', paint: '#ff5e7a' }, lines: ['Raver: Welcome to Sisyphos! Time works differently here.', 'Raver: The big building is the Hammahalle, the Dampfer and the Tunnel. In on the left, out on the right. Just follow the bass.'] }
+          { x: 22, y: 23, look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#ffd23f', legs: '#c28cff', sparkle: '#ff5e7a', paint: '#ff5e7a' }, lines: ['Raver: Welcome to Sisyphos! Time works differently here.', 'Raver: The old factory? Two doors, no signs. Go in one, come out the other. Just follow the bass.'] }
         ]
       },
       wg: {
@@ -626,7 +626,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'ƥ': ['PIZZA. Stone oven, slices by the piece.'],
       'ŝ': ['Shelves of Sisyphos things: shirts, tote bags with the man and his rock, hoodies, lighters.'],
       'Ř': ['A grey roof.'],
-      'ƃ': ['The old dog-biscuit factory: brick, arched windows glowing green, purple light, lasers. The Hammahalle is upstairs, the Dampfer and the Tunnel below.'],
+      'ƃ': ['The old dog-biscuit factory: brick, arched windows glowing green, purple light, lasers. Bass coming through the walls. Two doors, no signs.'],
       'ʂ': ['The sauna cabin, No. 15. Steam out of the chimney, towels on the rack, a lantern by the door.'],
       'ĉ': ['The café: a little cottage with a striped awning and flower boxes. It smells of coffee and carrot cake.'],
       T: ['A big plant. Someone has hung a disco ball in it.'],
