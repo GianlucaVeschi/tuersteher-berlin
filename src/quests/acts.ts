@@ -1,6 +1,6 @@
 import { griess, rsoBar } from './rso';
 import { fire, hgDj, jacuzzi, karaoke, spin, woody } from './heide';
-import { cdvBar, flo, ines, jazz, planks, willow } from './cdv';
+import { cdvBar, flo, ines, planks, willow } from './cdv';
 import { poolHat, ronny } from './mdma';
 import { boxes, detroit, sticker } from './tresor';
 import { bar25, confetti, glitter, spree } from './katerblau';
@@ -28,7 +28,7 @@ export const ACTS: Record<string, Act> = {
   // RSO and Heideglühen (quests/rso.ts, quests/heide.ts)
   griess, rsoBar, hgDj, woody, karaoke, fire, spin, jacuzzi,
   // Club der Visionäre (quests/cdv.ts)
-  cdvBar, ines, planks, willow, jazz, flo,
+  cdvBar, ines, planks, willow, flo,
   // Sisyphos MDMA chain (quests/mdma.ts)
   ronny, poolHat,
   // Tresor (quests/tresor.ts)

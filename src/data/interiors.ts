@@ -1104,77 +1104,101 @@ export const INTERIORS: Record<string, InteriorDef> = {
     ]
   },
 
-  /* Club der Visionäre: a former boathouse on the Flutgraben. One small wooden dancefloor on the
-     water, partly roofed, under a big weeping willow; the Sonnenraum is the small indoor room.
-     Extra legend: y  weeping willow   z  newer deck boards (after the 2019 fire)   q  canal water */
+  /* Club der Visionäre: a former boathouse on the Flutgraben. The deck on the water under two weeping
+     willows, full of benches and old sofas where people sit and smoke; the DJ plays in a tiny, colourful,
+     always packed little room behind a doorway in the south fence, between the entrance and the edge
+     of the deck (redone from the owner's description, 2026).
+     Extra legend: y  weeping willow   z  newer deck boards (after the 2019 fire)   q  canal water
+                   ê ë î ï  old sofas with their back up / down / left / right   Ô  the dance room's painted walls
+                   Õ  its painted floor (dance here) */
   cdv: {
     name: 'Club der Visionäre',
     welcome: [
       'Door: Five euro. Cash.',
       '(A stamp shaped like a little willow leaf.)',
-      "Door: Deck's out back, the Sonnenraum is the little wooden house. See you Monday.",
+      "Door: Deck's out back. The DJ is in the little room on your right, if you fit in. See you Monday.",
       '(Side quests unlocked. Check your stamp card.)'
     ],
     floors: {
       deck: {
-        label: 'The deck · under the willow', short: 'DECK',
+        label: 'The deck · under the willows', short: 'DECK',
         map: [
           'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
           'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
-          'qqwwwwwwwwwwwwwwwwwwwwwwzzzwqq',
-          'qqwwyyyywwwwwwwwwwwwwwwwzzzwqq',
-          'qqwyyyyyywwwwSDDDSwwwwwwwzzwqq',
-          'qqwyyyyyywweeeeeeeeeeewwwwwwqq',
-          'qqwwyyyywwweeeeeeeeeeewwwwbwqq',
-          'qqwwwbbwwwweeeeeeeeeeewwwwbwqq',
-          'qqwwwwwwwwweeeeeeeeeeewwwwwwqq',
-          'qqwwwwwwwwweeeeeeeeeeewwwwwwqq',
-          'qqwwwwwwwwwwwwwwwwwwwHHHHHHHqq',
-          'qqF=====wwwwwwwwwwwwwHHHHHHHqq',
-          'FFF.....FwwwwwwwwwwwwHHH1HHHqq',
+          'qqwwwwwwwwwwwwwwwwwwwwwwwwzzqq',
+          'qqwwyyyywwêêêwwwêêêwwyyyywzzqq',
+          'qqwyyyyyywwwwwwîwwwîyyyyyyzzqq',
+          'qqwyyyyyywwwwwwîwwwîyyyyyywwqq',
+          'qqwwyyyywwëëëwwwwwwwwyyyywïwqq',
+          'qqwwwbbwwwwwwwwwwwwwwwwwwwïwqq',
+          'qqwwwwwwwïwwwwwbwbbwwwwwwwwwqq',
+          'qqwwwwwwwïwbbbwwwwwwwwwwwwwwqq',
+          'qqwwwwwwwwwwwwwwwwwwwwwwwwwwqq',
+          'qqF=====wwwwwwwwwwwwwwwwwwwwqq',
+          'FFF.....Fwwwwwwwwwwwwwwwwwwwqq',
           'FFFFFFFFFwwwwwwwwwwwwwwwwwwwqq',
           'FgggggggggggggwwgggggggggggggF',
-          'FFFFFFFFFFFFFFxxFFFFFFFFFFFFFF'
+          'FFFFFFFFFFFFFFxxFFFFF1FFFFFFFF'
         ],
-        spawn: { street: [14, 14, 'up'], fromSonnen: [24, 13, 'down'] },
-        doors: { '1': { to: 'sonnen', at: 'fromDeck' } },
+        spawn: { street: [14, 14, 'up'], fromRaum: [21, 14, 'up'] },
+        doors: { '1': { to: 'raum', at: 'fromDeck' } },
         exit: true,
-        dancers: 14,
-        roof: [11, 5, 21, 9],
-        fairy: [[2, 2, 23, 2], [9, 10, 20, 10]],
+        fairy: [[2, 2, 25, 2], [9, 7, 17, 7], [19, 9, 26, 9]],
         spots: ['rgba(255,200,120,.14)', 'rgba(170,230,160,.10)', 'rgba(255,170,120,.10)'],
         people: [
-          { x: 15, y: 3, name: 'DJ', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#2a2a2a', legs: '#26242e', hat: '#3a3a3a' }, lines: ['DJ: (without looking up) Lineup? They post it a week before. Sometimes later.', 'DJ: Half the time somebody just walks up and plays. I was only supposed to do two hours. That was Friday.'] },
           { x: 5, y: 12, dir: 'up', act: 'cdvBar', look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#4a5a3a', legs: '#26242e', long: true } },
           { x: 7, y: 7, dir: 'left', act: 'ines', name: 'Ines', look: { skin: '#e8b896', hair: '#c9c9c9', top: '#8a5a8a', legs: '#3a3a4a', long: true, glasses: '#c9a24a' } },
-          { x: 23, y: 3, dir: 'right', act: 'planks', name: 'Tom', look: { skin: '#c98d6a', hair: '#2a2420', top: '#d9733a', legs: '#2b3f6b', beard: '#2a2420' } },
+          { x: 26, y: 5, dir: 'up', act: 'planks', name: 'Tom', look: { skin: '#c98d6a', hair: '#2a2420', top: '#d9733a', legs: '#2b3f6b', beard: '#2a2420' } },
           { x: 25, y: 8, dir: 'right', look: { skin: '#f3c9a8', hair: '#d9b25c', top: '#e9e4d6', legs: '#5a7aa8' }, lines: ['Raver: See the old ship down the river? The Hoppetosse. Same crew as here.', 'Raver: Built in 1928 as an excursion steamer, bombed in 1944, raised again, cut in two and towed to Berlin in the nineties. In winter the party moves over there.'] },
-          { x: 19, y: 11, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#3a3a4a' }, lines: ['Raver: Nearest cash machine? Somewhere in Kreuzberg. Bring cash next time.'] },
-          { x: 4, y: 9, dir: 'right', act: 'flo', name: 'Flo', look: { skin: '#f3c9a8', hair: '#c9a24a', top: '#c28cff', legs: '#5a7aa8', long: true, beard: '#c9a24a', glasses: '#ff8c42' } }
+          { x: 16, y: 12, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#58b368', legs: '#3a3a4a' }, lines: ['Raver: Nearest cash machine? Somewhere in Kreuzberg. Bring cash next time.'] },
+          { x: 4, y: 9, dir: 'right', act: 'flo', name: 'Flo', look: { skin: '#f3c9a8', hair: '#c9a24a', legs: '#5a7aa8', top: '#c28cff', long: true, beard: '#c9a24a', glasses: '#ff8c42' } },
+          // the north part: benches and old sofas, people sitting, smoking, talking
+          { x: 10, y: 3, dir: 'down', look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#d9733a', legs: '#26242e', long: true, cig: true }, lines: ['Raver: (blowing smoke at the willow) Best sofa in Berlin. Do not tell anyone.'] },
+          { x: 12, y: 3, dir: 'down', look: { skin: '#6b4430', hair: '#111111', top: '#e9e4d6', legs: '#2b3f6b', beard: '#111111' }, lines: ['Raver: The dancefloor? Tiny. Always full. That is why we sit out here.'] },
+          { x: 11, y: 6, dir: 'up', look: { skin: '#e2b08c', hair: '#c9a24a', top: '#3d5f94', legs: '#3a3a4a', cig: true }, lines: ['Raver: One more cigarette, then I go back in. I said that an hour ago.'] },
+          { x: 15, y: 4, dir: 'right', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#58b368', legs: '#26242e', long: true }, lines: ['Raver: Sunday afternoon on the Flutgraben. Nothing else to do, nowhere else to be.'] },
+          { x: 9, y: 9, dir: 'left', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c28cff', legs: '#5a7aa8', cig: true }, lines: ['Raver: Lighter? Ah, you have one. Keep it, everyone here steals them anyway.'] },
+          { x: 12, y: 9, dir: 'up', look: { skin: '#8d5a3b', hair: '#5a3a22', top: '#f2c14e', legs: '#26242e', long: true, cig: true }, lines: ['(Sitting on the bench, rolling a cigarette very slowly and very precisely.)'] },
+          { x: 17, y: 3, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff8cc4', top: '#e9e4d6', legs: '#2b3f6b', long: true }, lines: ['Raver: Under the second willow is where the regulars sit. Do not tell them I told you.'] },
+          // dancing in front of the little room's door, still buzzing from Villalobos
+          { x: 19, y: 12, dance: true, phase: 0.3, look: { skin: '#f3c9a8', hair: '#c9a24a', top: '#e9e4d6', legs: '#5a7aa8', long: true }, lines: ['Raver: Villalobos played in there last night. Sick. Just sick.'] },
+          { x: 21, y: 12, dance: true, phase: 1.7, look: { skin: '#6b4430', hair: '#111111', top: '#ff8c42', legs: '#26242e' }, lines: ['Raver: Six hours of Villalobos. I still hear the bassline.'] },
+          { x: 23, y: 12, dance: true, phase: 2.9, look: { skin: '#e2b08c', hair: '#5a3a22', top: '#5ec8ff', legs: '#3a3a4a', beard: '#5a3a22' }, lines: ['Raver: Ricardo! Barefoot! At eight in the morning! Sick.'] },
+          { x: 20, y: 13, dance: true, phase: 4.1, look: { skin: '#f0c7a0', hair: '#ff5e7a', top: '#b6f36b', legs: '#2b3f6b', long: true }, lines: ['Raver: Did you see Villalobos? No? Oh no. It was sick.'] },
+          { x: 23, y: 14, dance: true, phase: 5.6, look: { skin: '#c98d6a', hair: '#9a9a9a', top: '#c28cff', legs: '#26242e' }, lines: ['Regular: Villalobos on that tiny floor. Best set of my life. Again.'] },
+          { x: 19, y: 5, dir: 'right', look: { skin: '#8d5a3b', hair: '#2a2420', top: '#d9733a', legs: '#26242e', beard: '#2a2420' }, lines: ['(Half asleep on the sofa, sunglasses on, nodding along to the music from the little room.)'] },
+          { x: 17, y: 8, dir: 'down', look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#4a5a3a', legs: '#26242e', beard: '#9a9a9a' }, lines: ['Regular: Twenty summers on these benches. The willows got bigger, the benches did not.'] },
         ]
       },
-      sonnen: {
-        label: 'Sonnenraum · the little wooden house', short: 'SONNEN',
+      raum: {
+        label: 'The little room · always packed', short: 'RAUM',
         map: [
-          'HHHHHHHHHHHHHHHH',
-          'HHHHHHHHHHHHHHHH',
-          'HwwwwwwwwwwwwwbH',
-          'HwwwwwwwwwwwwwbH',
-          'HwweeeeeeeewwwbH',
-          'HwweeeeeeeewwwwH',
-          'HwweeeeeeeewwwwH',
-          'HwwwwwwwwwwwwwwH',
-          'HwwwwwwwwwwwwwwH',
-          'HHHHHHH1HHHHHHHH'
+          'ÔÔÔÔÔÔÔ1ÔÔ',
+          'ÔwwwwwwwwÔ',
+          'ÔÕSDDDSÕÕÔ',
+          'ÔÕÕÕÕÕÕÕÕÔ',
+          'ÔÕÕÕÕÕÕÕÕÔ',
+          'ÔÕÕÕÕÕÕÕÕÔ',
+          'ÔÔÔÔÔÔÔÔÔÔ'
         ],
-        spawn: { fromDeck: [7, 8, 'up'] },
-        doors: { '1': { to: 'deck', at: 'fromSonnen' } },
-        dancers: 4,
-        daylight: true,
+        spawn: { fromDeck: [7, 1, 'down'] },
+        doors: { '1': { to: 'deck', at: 'fromRaum' } },
+        dancers: 0, // exactly the eleven people below, plus the DJ
+        fairy: [[1, 1, 8, 1], [1, 5, 8, 5]],
+        spots: ['rgba(255,94,160,.18)', 'rgba(94,200,255,.16)', 'rgba(255,210,63,.16)', 'rgba(182,243,107,.14)'],
         people: [
-          { x: 9, y: 2, act: 'jazz', name: 'Bassist', look: { skin: '#8d5a3b', hair: '#2a2420', top: '#3a3a4a', legs: '#26242e', beard: '#2a2420', hat: '#2a2420' } },
-          { x: 11, y: 2, look: { skin: '#f0c7a0', hair: '#5a3a22', top: '#c94a3a', legs: '#26242e', glasses: '#1a1a1a' }, lines: ['Saxophonist: In winter the whole party squeezes in here. Or goes over to the Hoppetosse.'] },
-          { x: 7, y: 2, look: { skin: '#e2b08c', hair: '#9a9a9a', top: '#2b3f6b', legs: '#26242e', beard: '#9a9a9a' }, lines: ['Drummer: Jazz at a minimal club? Long pieces, small changes. Same thing, really.'] }
+          { x: 4, y: 1, name: 'DJ', look: { skin: '#e2b08c', hair: '#3a2a20', top: '#2a2a2a', legs: '#26242e', hat: '#3a3a3a' }, lines: ['DJ: (without looking up) Lineup? They post it a week before. Sometimes later.', 'DJ: Half the time somebody just walks up and plays. I was only supposed to do two hours. That was Friday.'] },
+          { x: 1, y: 3, dance: true, phase: 0.8, look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#ffd23f', legs: '#26242e', long: true }, lines: ['Raver: This music! Click, click, boom. Perfect.'] },
+          { x: 8, y: 4, dance: true, phase: 2.2, look: { skin: '#8d5a3b', hair: '#111111', top: '#e9e4d6', legs: '#3a3a4a', beard: '#111111' }, lines: ['Regular: Proper OG place. Been like this since 2001.'] },
+          { x: 2, y: 5, dance: true, phase: 3.6, look: { skin: '#e2b08c', hair: '#c9a24a', top: '#ff5e7a', legs: '#2b3f6b' }, lines: ['Raver: Love it. But can someone open a window? We are packed like sardines.'] },
+          { x: 4, y: 3, dance: true, phase: 4.4, look: { skin: '#6b4430', hair: '#2a2420', top: '#5ec8ff', legs: '#26242e', long: true }, lines: ['Raver: Best sound system on the Flutgraben. Maybe in Berlin.'] },
+          { x: 6, y: 4, dance: true, phase: 5.1, look: { skin: '#f0c7a0', hair: '#9a9a9a', top: '#4a5a3a', legs: '#3a3a4a', beard: '#9a9a9a' }, lines: ['Regular: Twenty years and it still looks exactly the same. That is the point.'] },
+          { x: 3, y: 4, dance: true, phase: 6.3, look: { skin: '#c98d6a', hair: '#ff8cc4', top: '#2a2a2a', legs: '#5a7aa8' }, lines: ['Raver: Somebody is standing on my foot. Has been for an hour. No regrets.'] },
+          { x: 7, y: 5, dance: true, phase: 7.7, look: { skin: '#e2b08c', hair: '#5a3a22', top: '#c28cff', legs: '#26242e', long: true }, lines: ['Raver: Minimal, but make it feel huge. This DJ gets it.'] },
+          { x: 5, y: 5, dance: true, phase: 8.9, look: { skin: '#f3c9a8', hair: '#111111', top: '#d9733a', legs: '#2b3f6b' }, lines: ['Raver: Fifty people and it feels full. OG CDV.'] },
+          { x: 2, y: 3, dance: true, phase: 9.4, look: { skin: '#8d5a3b', hair: '#c9a24a', top: '#f3eee3', legs: '#26242e', long: true }, lines: ['Raver: That kick drum goes straight into your chest. Love it.'] },
+          { x: 5, y: 4, dance: true, phase: 10.2, look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#3d5f94', legs: '#3a3a4a', beard: '#b04a2a' }, lines: ['Regular: Real old-school Berlin. No VIP, no bottle service, just music.'] },
+          { x: 8, y: 5, dance: true, phase: 11.6, look: { skin: '#e2b08c', hair: '#111111', top: '#b6f36b', legs: '#5a7aa8' }, lines: ['Raver: I came in for one song. Now I cannot find the door.'] }
         ]
       }
     },
@@ -1182,7 +1206,9 @@ export const INTERIORS: Record<string, InteriorDef> = {
     examine: {
       q: ['The Flutgraben, a flood channel off the Spree. Down the river, the Hoppetosse is moored: CDV\'s sister, a steamer from 1928.'],
       '=': ['A small wooden bar. A handwritten sign: CASH ONLY.'],
-      H: ['The wooden wall of the Sonnenraum.'],
+      'Ô': ['The walls of the tiny dance room, every plank painted a different colour.'],
+      'ê': ['An old sofa. Somebody has been sitting on it since Saturday.'], 'ë': ['An old sofa, cigarette burns on both armrests.'],
+      'î': ['An old sofa facing the water.'], 'ï': ['An old sofa facing the willow.'],
       F: ['A wooden fence. Behind it, the Arena and the Badeschiff.'],
       b: ['A bench worn smooth by twenty summers of sitting.'],
       S: ['A speaker, turned down a bit. Minimal does not need to be loud.']
@@ -1199,11 +1225,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
     },
     quests: [
       { id: 'drink', title: 'Cash only', hint: 'Get a drink at the bar. Cards are not really a thing here.' },
-      { id: 'willow', title: 'Under the willow', hint: 'Sit under the big weeping willow. Press A facing it.' },
-      { id: 'monday', title: 'See you Monday', hint: 'Dance on the deck from Saturday through to Monday morning.' },
+      { id: 'willow', title: 'Under the willow', hint: 'Sit under one of the weeping willows. Press A facing it.' },
+      { id: 'monday', title: 'See you Monday', hint: 'Dance in the little room by the entrance from Saturday through to Monday morning.' },
       { id: 'planks', title: 'The new planks', hint: 'Some deck boards look newer than the rest. Ask Tom why.' },
       { id: 'ines', title: 'The early days', hint: 'Ines on the bench has been coming since the start.' },
-      { id: 'jazz', title: 'Jazz in the Sonnenraum', hint: 'Sit in with the trio in the little wooden house.' },
       { id: 'lsd', title: 'Deep trip', hint: 'Flo, by the water near the willow, has little squares of paper. Stay away from the canal.' }
     ]
   },
