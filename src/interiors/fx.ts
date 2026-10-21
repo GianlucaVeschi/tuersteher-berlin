@@ -193,6 +193,24 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       ctx.fillStyle = '#ffffff'; ctx.fillRect(X + 3, Y + 4, 8, 1);
     }
   }));
+  // the garden's little houses (Sisyphos): steam from the sauna chimney, wood smoke from the café's
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if ((t !== 170 && t !== 171) || row[x + 1] === t || sc.map[y + 1]?.[x] === t) return;
+    let x0 = x, y0 = y;
+    while (row[x0 - 1] === t) x0--;
+    while (sc.map[y0 - 1]?.[x] === t) y0--;
+    const bx = x0 * T, by = y0 * T, bw = (x + 1) * T - bx, bh = (y + 1) * T - by;
+    const ridge = by + 13 + Math.round((bh - 13 - 16) / 2);
+    const cx = bx + bw - 22 - camX, cy = ridge - 9 - camY;
+    if (cx < -30 || cy < -40 || cx > RT.VW + 30 || cy > RT.VH + 10) return;
+    for (let i = 0; i < 5; i++) {
+      const p = reduceMotion ? i / 5 : ((now / (t === 170 ? 1600 : 2200) + i / 5) % 1);
+      const a = (t === 170 ? 0.5 : 0.4) * (1 - p);
+      ctx.fillStyle = t === 170 ? `rgba(240,244,250,${a.toFixed(2)})` : `rgba(170,170,180,${a.toFixed(2)})`;
+      const r = 2 + Math.round(p * 3);
+      ctx.fillRect(Math.round(cx + Math.sin(p * 5 + i) * 4 - r / 2), Math.round(cy - p * 26), r, r);
+    }
+  }));
   // the big bonfire (2×2, Sisyphos): one tall fire over the middle of the block, sparks rising
   sc.map.forEach((row, y) => row.forEach((t, x) => {
     if (t !== 168 || row[x + 1] === 168 || sc.map[y + 1]?.[x] === 168) return;

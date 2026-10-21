@@ -373,7 +373,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // and the open sand full of people and baller boxes. Along the bottom the sauna (No. 15), the café
         // (a little house, door 3), the way in from the queue, the pizza place with its sign, the
         // Wintergarten and the toilets.
-        // Extra legend: Ř  grey roof   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   e  wooden dancefloor
+        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   e  wooden dancefloor
         label: 'Strand · the garden', short: 'STRAND',
         map: [
       'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
@@ -396,11 +396,11 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'FTaaa~~~~aaagaaaaaaaaaaaaaaaaaaaaaaaaaaagggF',
       'FgaaaaaaaaaaTaaaaaaaaaaaaƀaaaaaaaaaaaaaagggF',
       'FggTggggggTggaaaaaaaaaaaaaaaaaaaaaaaaaaagggF',
-      'FŘŘŘ8ŘŘŘgŘŘŘ3ŘŘŘgggggggg=====gGGG1GGGGgB9BBF',
-      'FŘŘŘŘŘŘŘgŘŘŘŘŘŘŘggggggggHwwwHgGGGGGGGGgBBBBF',
-      'FŘŘŘŘŘŘŘgŘŘŘŘŘŘŘggggggggŘƥƥƥŘgGGGGGGGGgBBBBF',
-      'FŘŘŘŘŘŘŘgŘŘŘŘŘŘŘgggggggTŘŘŘŘŘgGGGGGGGGgBBBBF',
-      'FŘŘŘŘŘŘŘgŘŘŘŘŘŘŘggggggggŘŘŘŘŘgGGGGGGGGgBBBBF',
+      'Fʂʂʂ8ʂʂʂgĉĉĉ3ĉĉĉgggggggg=====gGGG1GGGGgB9BBF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggHwwwHgGGGGGGGGgBBBBF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘƥƥƥŘgGGGGGGGGgBBBBF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉgggggggTŘŘŘŘŘgGGGGGGGGgBBBBF',
+      'FʂʂʂʂʂʂʂgĉĉĉĉĉĉĉggggggggŘŘŘŘŘgGGGGGGGGgBBBBF',
       'FFFFFFFFFFFFFFFFFFFF77FFFFFFFFFFFFFFFFFFFFFF'
         ],
         spawn: { fromEingang: [20, 24, 'up'], fromWg: [33, 19, 'up'], fromSauna: [4, 19, 'up'], fromCafe: [12, 19, 'up'], fromDf: [27, 8, 'left'], fromTn: [41, 9, 'right'], fromWc: [40, 19, 'up'] },
@@ -624,7 +624,9 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'ƒ': ['The bonfire. Someone has been feeding it pallets since Saturday.'],
       'ƥ': ['PIZZA. Stone oven, slices by the piece.'],
       'ŝ': ['Shelves of Sisyphos things: shirts, tote bags with the man and his rock, hoodies, lighters.'],
-      'Ř': ['A grey roof. Number 15 is the sauna; the little house next to it is the café.'],
+      'Ř': ['A grey roof.'],
+      'ʂ': ['The sauna cabin, No. 15. Steam out of the chimney, towels on the rack, a lantern by the door.'],
+      'ĉ': ['The café: a little cottage with a striped awning and flower boxes. It smells of coffee and carrot cake.'],
       T: ['A big plant. Someone has hung a disco ball in it.'],
       R: ['An art installation: a giant papier-mâché head with flowers growing out of its eyes.', 'Nobody knows who made it. Everyone has taken a selfie with it in their mind.'],
       G: ['Glass walls. Outside it might be morning. In here it is always the good part of the afternoon.'],

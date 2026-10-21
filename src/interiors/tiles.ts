@@ -2,7 +2,7 @@ import type { Scene } from '../types';
 import { RT } from '../core/runtime';
 import { INK, circle, pick, rnd } from '../util';
 import { pixelText } from '../render/pixelFont';
-import { ICHAR, SOLID, T, WALLISH } from '../world/tiles';
+import { ICHAR, SOLID, T, WALLISH, isDoorTile } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 /** Clubs trying out the new doorway looks (doorway digits 1–9); the rest keep the bead curtain.
  *  'strips': a strip curtain with light behind it. 'haze': grey fog in the opening, someone walking past.
@@ -227,6 +227,75 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X + 6, Y + 6, 1, 1, '#c4162a'); P(X + 8, Y + 8, 1, 1, '#c4162a');
         pixelText(g, 'PIZZA', X + 16, Y + 5, '#fff6d8');
         P(X + 3, Y + 14, 1, 2, INK); P(X + Wd - 4, Y + 14, 1, 2, INK);
+        break;
+      }
+      case 170: case 171: { // the garden's little houses (Sisyphos), drawn once from the bottom-right tile of
+        // their block, seen from above like the aerial view: a pitched roof, and along the top (the garden
+        // side) a porch with the door. The door tile itself is left alone (it's drawn as a doorway).
+        P(X, Y, 16, 16, '#3f7a3a');
+        if (at(x + 1, y) === t || at(x, y + 1) === t) break;
+        let x0 = x, y0 = y;
+        while (at(x0 - 1, y) === t) x0--;
+        while (at(x, y0 - 1) === t || isDoorTile(at(x, y0 - 1))) y0--;
+        const bx = x0 * T, by = y0 * T, bw = X + T - bx, bh = Y + T - by;
+        g.save();
+        g.beginPath(); g.rect(bx, by, bw, bh);
+        for (let dx = x0; dx <= x; dx++) if (isDoorTile(at(dx, y0))) g.rect(dx * T + T, y0 * T, -T, T);
+        g.clip('evenodd');
+        P(bx, by, bw, bh, '#3f7a3a');
+        const sauna = t === 170, porch = 13, wall = 16, ry = by + porch, rh = bh - porch - wall, ridge = ry + Math.round(rh / 2);
+        // the roof: shingles (sauna, dark wood) or clay tiles (café), lit from the top, a ridge in the middle
+        P(bx + 1, ry - 1, bw - 2, rh + 2, INK);
+        const top = sauna ? '#7a5636' : '#d0603e', bottom = sauna ? '#5a3d24' : '#a8442c', line = sauna ? '#4a3018' : '#8a3422';
+        P(bx + 2, ry, bw - 4, ridge - ry, top); P(bx + 2, ridge, bw - 4, ry + rh - ridge, bottom);
+        for (let yy = ry + 3; yy < ry + rh; yy += 4) for (let xx = bx + 2 + ((yy >> 2) % 2) * 3; xx < bx + bw - 2; xx += 6) P(xx, yy, 4, 1, line);
+        P(bx + 2, ridge - 1, bw - 4, 2, sauna ? '#3a2414' : '#6a2418'); P(bx + 2, ridge - 2, bw - 4, 1, sauna ? '#9a7652' : '#e88a64');
+        // the front wall under the eaves, with warm windows: wooden planks (sauna) or cream plaster (café)
+        const wy = ry + rh + 1;
+        P(bx + 2, wy, bw - 4, wall - 1, INK);
+        P(bx + 3, wy, bw - 6, wall - 2, sauna ? '#8a5a32' : '#efe2c4');
+        if (sauna) for (let yy = wy + 2; yy < wy + wall - 2; yy += 3) P(bx + 3, yy, bw - 6, 1, '#6e4626');
+        P(bx + 1, wy - 1, bw - 2, 2, INK); P(bx + 1, wy - 1, bw - 2, 1, sauna ? '#3a2414' : '#6a2418');   // the eaves' shadow
+        const nWin = sauna ? 3 : 2;
+        for (let k = 0; k < nWin; k++) {
+          const wx = Math.round(bx + (bw / (nWin + 1)) * (k + 1)) - 5;
+          P(wx - 1, wy + 3, 12, 9, INK); P(wx, wy + 4, 10, 7, '#ffd27a'); P(wx, wy + 4, 10, 2, '#fff2c0'); P(wx + 4, wy + 4, 1, 7, INK);
+          if (sauna) P(wx, wy + 7, 10, 1, INK);
+          else {
+            P(wx - 3, wy + 4, 2, 7, '#3f7a6a'); P(wx + 11, wy + 4, 2, 7, '#3f7a6a');                       // shutters
+            P(wx - 1, wy + 12, 12, 2, '#6b4a2e'); for (let i = 0; i < 4; i++) P(wx + i * 3, wy + 11, 2, 2, ['#ff5e7a', '#ffd23f', '#c28cff', '#ff8c42'][i]);
+          }
+        }
+        if (sauna) { P(bx + bw - 14, wy + 4, 8, 8, INK); P(bx + bw - 13, wy + 5, 6, 6, '#b07a4a'); P(bx + bw - 13, wy + 7, 6, 1, '#6e4626'); } // a stack of firewood
+        // the chimney (smoke or steam rises from it in fx.ts)
+        const cx = bx + bw - 26, cyy = ridge - 9;
+        P(cx - 1, cyy - 1, 10, 12, INK); P(cx, cyy, 8, 10, sauna ? '#8a8a92' : '#b05a3a'); P(cx, cyy, 8, 2, sauna ? '#a8a8b0' : '#d07a5a'); P(cx + 2, cyy + 2, 4, 3, '#2a2a2a');
+        // the porch along the garden side
+        P(bx, by, bw, porch, INK); P(bx + 1, by + 1, bw - 2, porch - 2, sauna ? '#a87a4a' : '#c9a06a');
+        for (let xx = bx + 4; xx < bx + bw; xx += 5) P(xx, by + 1, 1, porch - 2, sauna ? '#8a5a32' : '#a8804a');
+        if (sauna) {
+          // the house number, a towel rack with towels, a bucket, a lantern by the door
+          P(bx + 4, by + 3, 13, 8, INK); P(bx + 5, by + 4, 11, 6, '#f3eee3'); pixelText(g, '15', bx + 7, by + 4, '#14121c');
+          P(bx + bw - 30, by + 2, 1, 9, INK); P(bx + bw - 14, by + 2, 1, 9, INK); P(bx + bw - 30, by + 2, 17, 1, INK);
+          ['#5ec8ff', '#ff5e7a', '#ffd23f', '#f3eee3'].forEach((c, i) => P(bx + bw - 28 + i * 4, by + 3, 3, 6, c));
+          P(bx + bw - 10, by + 5, 6, 6, INK); P(bx + bw - 9, by + 6, 4, 4, '#b07a4a');
+        } else {
+          // a striped awning, flower boxes, fairy lights, the chalkboard
+          for (let xx = bx + 1; xx < bx + bw - 1; xx += 4) P(xx, by + 1, 4, 4, ((xx - bx) >> 2) % 2 ? '#f3eee3' : '#d6303a');
+          P(bx + 1, by + 5, bw - 2, 1, INK);
+          for (let xx = bx + 6; xx < bx + bw - 6; xx += 3) P(xx, by + 6, 1, 1, ['#ffd23f', '#ff5e7a', '#5ec8ff', '#b6f36b'][(xx >> 1) % 4]);
+          for (const fx0 of [bx + 3, bx + bw - 23]) { P(fx0, by + 8, 20, 4, '#6b4a2e'); for (let i = 0; i < 6; i++) P(fx0 + 1 + i * 3, by + 7, 2, 2, ['#ff5e7a', '#ffd23f', '#c28cff', '#ff8c42'][i % 4]); }
+        }
+        g.restore();
+        if (!sauna) {
+          // the chalkboard by the door, on the grass edge of the porch
+          const dxs = [...Array(x - x0 + 1).keys()].map(i => x0 + i).find(dx => isDoorTile(at(dx, y0)));
+          const sx = dxs !== undefined ? dxs * T + T + 2 : bx + 4;
+          P(sx, by + 2, 15, 10, INK); P(sx + 1, by + 3, 13, 8, '#2a3a2e'); pixelText(g, 'CAFE', sx + 1, by + 5, '#f3eee3');
+        } else {
+          const dxs = [...Array(x - x0 + 1).keys()].map(i => x0 + i).find(dx => isDoorTile(at(dx, y0)));
+          if (dxs !== undefined) { P(dxs * T + T + 1, by + 3, 3, 5, INK); P(dxs * T + T + 2, by + 4, 1, 3, '#ffd36b'); }
+        }
         break;
       }
       case 135: // heavy chains hanging from the ceiling down to the floor
