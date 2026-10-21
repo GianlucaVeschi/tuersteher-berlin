@@ -525,26 +525,47 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       tn: {
+        // The Tunnel: long and narrow, running north to south. The Hammahalle's door at the top, the DJ at the
+        // top end under the lanterns, the door from the Dampfer on the left, and the way out to the beach at
+        // the bottom.
         label: 'Tunnel · techno under the lanterns', short: 'TUNNEL',
         map: [
-      'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK',
-      'KllllllllllllllllllllllllllllllllK',
-      'KlllllllllllllllllllllllllllllDDSK',
-      '5lllllllllllllllllllllllllllllDDlK',
-      'KlllllllllllllllllllllllllllllDDSK',
-      '7llllllllllllllllllllllllllllllllK',
-      'KlllbbblllllllllllllllllllllllbbbK',
-      'KKKKKKKKKKKKKKKKKKKKKKKKKK6KKKKKKK'
+      'K5KKKKKKK',
+      'KlllllllK',
+      'KllSDDSlK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      '7lllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KlllllllK',
+      'KbbllllbK',
+      'KbbllllbK',
+      'KlllllllK',
+      'KKKK6KKKK'
         ],
-        spawn: { fromHh: [1, 3, 'right'], fromStrand: [26, 6, 'up'], fromDf: [1, 5, 'right'] },
+        spawn: { fromHh: [1, 1, 'down'], fromStrand: [4, 24, 'up'], fromDf: [1, 18, 'right'] },
         doors: { 5: { to: 'hh', at: 'fromTn' }, 6: { to: 'strand', at: 'fromTn' }, 7: { to: 'df', at: 'fromTn' } },
         dancers: 14,
         spots: ['rgba(255,60,40,.18)', 'rgba(255,200,60,.12)'],
-        lanterns: [[3, 1], [7, 1], [11, 1], [15, 1], [19, 1], [23, 1], [27, 1], [5, 5], [9, 5], [13, 5], [17, 5], [21, 5], [25, 5]],
-        bottles: [[17, 6, 'mate']],
+        lanterns: [[2, 4], [6, 4], [2, 7], [6, 7], [2, 10], [6, 10], [2, 13], [6, 13], [2, 16], [6, 16], [2, 19], [6, 19]],
+        bottles: [[5, 20, 'mate']],
         people: [
-          { x: 31, y: 3, look: { skin: '#c98d6a', hair: '#111', long: true, top: '#a3161a', legs: '#14121c', stripes: '#e0b040' }, lines: ['(The DJ nods at the lanterns swinging to the beat.)'] },
-          { x: 8, y: 5, act: 'story', story: 'sunny', look: { skin: '#e2b08c', hair: '#ffd23f', long: true, top: '#5ec8ff', legs: '#ff5e7a', sparkle: '#fff6a8', flowers: ['#ff5e7a', '#c28cff'] } }
+          { x: 4, y: 1, dir: 'down', look: { skin: '#c98d6a', hair: '#111', long: true, top: '#a3161a', legs: '#14121c', stripes: '#e0b040' }, lines: ['(The DJ nods at the lanterns swinging to the beat.)'] },
+          { x: 2, y: 12, act: 'story', story: 'sunny', look: { skin: '#e2b08c', hair: '#ffd23f', long: true, top: '#5ec8ff', legs: '#ff5e7a', sparkle: '#fff6a8', flowers: ['#ff5e7a', '#c28cff'] } }
         ]
       },
       cafe: {
