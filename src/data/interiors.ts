@@ -367,7 +367,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       },
       strand: {
         // The garden, laid out from the owner's sketch (and the aerial view): along the top the circus tent
-        // (green, red stars) with the DJ playing right under it, the wooden dancefloor, the L-shaped bar, and
+        // (green, red stars) with two DJs playing right under it (facing right, to the dancefloor), the wooden dancefloor, the L-shaped bar, and
         // on the right one big building: the Hammahalle at the top, the Dampfer (in on its left side) and the
         // Tunnel (out on its right side). In the middle the lake with its beach and trees, the big bonfire,
         // and the open sand full of people and baller boxes. Along the bottom the sauna (No. 15), the café
@@ -383,10 +383,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
       'FTŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
       'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
-      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBKKKKKKggF',
-      'FTgwwwwwwggeeeeeeeegg=wwwwBg5BBBBBBKKKKKKggF',
-      'FggSDDDSgggeeeeeeeegg======gBBBBBBBKKKKK6ggF',
-      'FgeeeeeeeeeeeeeeeeegggggggggBBBBBBBKKKKKKggF',
+      'FgŧŧŧŧŧŧŧŧSeeeeeeeegg=wwwwBgBBBBBBBKKKKKKggF',
+      'FTwwwwwwwwDeeeeeeeegg=wwwwBg5BBBBBBKKKKKKggF',
+      'FgwwwwwwwwDeeeeeeeegg======gBBBBBBBKKKKK6ggF',
+      'FgeeeeeeeeSeeeeeeeegggggggggBBBBBBBKKKKKKggF',
       'FggggggggggggaaaaaaaaaaaaaaaBoBoBoBKKKKKKggF',
       'FTaaaaaaaaaaTaaaaaaaaaƀaaaaaaaaaaaaaaaaagggF',
       'Fgaaa~~~~aaagaabaabaaaaaaaaaaaaaaaaaaaaagggF',
@@ -414,7 +414,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
         fairy: [[11, 1, 18, 1], [13, 11, 26, 11], [12, 19, 29, 19]],
         bottles: [[6, 19, 'beer'], [20, 12, 'mate'], [37, 17, 'can'], [22, 16, 'beer'], [31, 13, 'mate']],
         people: [
-          { x: 5, y: 8, dir: 'down', look: { skin: '#c98d6a', hair: '#c9a24a', long: true, top: '#ff8c42', legs: '#3a3a8a', flowers: ['#ff5e7a', '#ffd23f'] }, lines: ['(The DJ is barefoot, wearing a flower crown, and playing right under the circus tent.)'] },
+          { x: 9, y: 8, dir: 'right', look: { skin: '#c98d6a', hair: '#c9a24a', long: true, top: '#ff8c42', legs: '#3a3a8a', flowers: ['#ff5e7a', '#ffd23f'] }, lines: ['(The DJ is barefoot, wearing a flower crown, and playing right under the circus tent, facing the dancefloor.)'] },
+          { x: 9, y: 9, dir: 'right', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#14121c', legs: '#c28cff', sparkle: '#fff6a8' }, lines: ['DJ: (back to back with the other one, headphones on one ear) Twelve hours in. We stop when the sun tells us.'] },
           { x: 22, y: 6, act: 'pfandBar', dir: 'left', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#b6f36b', legs: '#2b3f6b', stripes: '#ff5e7a', hat: '#f2c14e' } },
           { x: 24, y: 8, act: 'pfandBar', dir: 'down', look: { skin: '#8d5a3b', hair: '#111', long: true, top: '#ffd23f', legs: '#26242e', sparkle: '#fff6a8' } },
           { x: 20, y: 13, act: 'juggler', name: 'Zora', look: { skin: '#f3c9a8', hair: '#e83f8f', top: '#ff5e7a', legs: '#f3eee3', stripes: '#f3eee3', paint: '#5ec8ff', hat: '#14121c' } },
