@@ -1,4 +1,8 @@
-import { ask, say } from '../ui/dialog';
+import { ask, closeBox, say } from '../ui/dialog';
+import { playGolf } from '../minigames';
+import { state } from '../core/state';
+import { save } from '../core/save';
+import { track } from '../core/monitoring';
 import type { Entity } from '../types';
 
 /* ---- Görlitzer Park ("Görli") in Kreuzberg ---- */
@@ -82,9 +86,25 @@ export async function kuhle(_e: Entity | null) {
   await say('(You lie back on the grass of the bowl. Someone plays guitar, a frisbee flies over, the sky turns pink.)');
 }
 
-/** The desk at the black-light minigolf. */
+/** The desk at the black-light minigolf: hands you a club for Neon Golf, a one-minute speed round. */
 export async function golfDesk(_e: Entity | null) {
-  await say('Desk: Eighteen holes in black light. Here is your club and a glowing ball. Pink is the luckiest.');
+  const best = state.golfBest;
+  if (best === null) {
+    await say('Desk: Eighteen holes in black light. Here is your club and a glowing ball. Pink is the luckiest.');
+    if (await ask('Desk: Want the speed round? One minute on the clock, as many holes as you can sink.', ['Give me the club', 'Not now']) === 1) return;
+  } else if (await ask(`Desk: Back for more? Your best is ${best} ${best === 1 ? 'hole' : 'holes'}.`, ['One more round', 'Not now']) === 1) {
+    await say('Desk: The ball will wait for you.');
+    return;
+  }
+  closeBox();
+  const r = await playGolf();
+  track('golf_finished', { holes: r.holes, aces: r.aces, replay: best !== null });
+  state.golfBest = Math.max(best ?? 0, r.holes); save();
+  if (best !== null && r.holes > best) await say(`Desk: ${r.holes}! New record. I am writing it on the wall. In UV pen.`);
+  else if (r.holes >= 8) await say('Desk: (takes off his glasses) Who taught you that? Nobody gets that many.');
+  else if (r.holes >= 4) await say('Desk: Not bad. Most first dates manage two.');
+  else if (r.aces) await say('Desk: A hole in one and then... that. Classic.');
+  else await say('Desk: Hey, your socks glow beautifully. That counts for something.');
 }
 
 /** Putting at one of the neon holes. */
