@@ -553,6 +553,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
      Z  leather sofa                         Q  bed                       X  St Andrew's cross
      J  love swing                           M  photo booth               n  cage
      U  the gynaecologist's chair            i  pool tiles
+     µ  inflatable mattress (2 long)        ò  spanking bench   ó  stocks   ô  bondage table   õ  doctor's bed
+     ù  suspension frame                    ú  whipping post    û  fire-breathing dragon on the wall
      People with `pile: true` are groups on a bed or in a dark corner; `w` is how many tiles they cover.
      `join` decides their answer when you ask to join: 'yes', 'no' or 'busy'.
   */
@@ -614,13 +616,13 @@ export const INTERIORS: Record<string, InteriorDef> = {
         map: [
       '##########################',
       '#TwwwwwwwwwwwwwwwwwwwwwwT#',
-      '#wiiiiiiiiiiiiiiiiiiiiiiw#',
+      '#wiiµµiiµµiiµµiiµµiiµµiiw#',
+      '#wii~~~~~~~~~~~~~~~~~iiiw#',
+      '2wi~~~~~~~~~~~~~~~~~~~iiw#',
       '#wi~~~~~~~~~~~~~~~~~~~iiw#',
       '#wi~~~~~~~~~~~~~~~~~~~iiw#',
-      '#wi~~~~~~~~~~~~~~~~~~~iiw#',
-      '#wi~~~~~~~~~~~~~~~~~~~iiw#',
-      '#wi~~~~~~~~~~~~~~~~~~~iiw#',
-      '#wiiiiiiiiiiiiiiiiiiiiiiw#',
+      '#wii~~~~~~~~~~~~~~~~~iiiw#',
+      '#wiiiiiiiiiiµµiiµµiiµµiiw#',
       '#wwwQQwwwQQwwwwwwwwwwwwww#',
       '#wwwwwwwwwwwwwwwwwwwwwwww#',
       '#ww=====wwwwwwwwwwwwZZZww#',
@@ -629,14 +631,43 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '1wwwwwwwwwwwwwwwwwwwwwwww#',
       '##########################'
         ],
-        spawn: { fromMain: [1, 14, 'right'] },
-        doors: { 1: { to: 'main', at: 'fromPool' } },
+        spawn: { fromMain: [1, 14, 'right'], fromSauna: [1, 4, 'right'] },
+        doors: { 1: { to: 'main', at: 'fromPool' }, 2: { to: 'sauna', at: 'fromPool' } },
         dancers: 0,
         spots: ['rgba(0,220,255,.10)', 'rgba(255,90,200,.10)'],
         people: [
           { x: 5, y: 12, act: 'bar', look: { skin: '#f3c9a8', hair: '#5ec8ff', long: true, top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99' } },
           { x: 9, y: 11, act: 'awareness', dir: 'up', look: { skin: '#c98d6a', hair: '#7ec8ff', top: '#ffd23f', legs: '#26242e', long: true } },
-          { x: 11, y: 3, look: { skin: '#f0c7a0', hair: '#5ec8ff', long: true, top: '#2bb3a3', legs: '#2bb3a3', shine: '#9ff0e6' }, lines: ['(A mermaid in a latex tail waves from the water.)', 'Mermaid: The water is warm. The people are warmer.'] },
+          { x: 11, y: 3, swim: true, look: { skin: '#f0c7a0', hair: '#5ec8ff', long: true, top: '#2bb3a3', legs: '#2bb3a3', shine: '#9ff0e6' }, lines: ['(A mermaid in a latex tail waves from the water.)', 'Mermaid: The water is warm. The people are warmer.'] },
+          // on the mattresses round the pool, lying in the UV light
+          { x: 4, y: 2, lie: true, look: { skin: '#f3c9a8', hair: '#111111', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', long: true }, lines: ['Sunbather: Sunscreen under UV light? Factor 50. You never know.'] },
+          { x: 9, y: 2, lie: true, look: { skin: '#f0c7a0', hair: '#b04a2a', top: '#f0c7a0', legs: '#0c0c12', harness: true, bald: true }, lines: ['(Lying on the mattress in nothing but a harness. Snoring gently.)'] },
+          { x: 12, y: 2, lie: true, look: { skin: '#e2b08c', hair: '#c0c0c0', top: '#c4162a', legs: '#c4162a', shine: '#ff7a8a', shades: true }, lines: ['Raver: I left my clothes at the Garderobe. Best decision of my weekend.'] },
+          { x: 17, y: 2, lie: true, look: { skin: '#d9a27c', hair: '#2a2420', top: '#d9a27c', legs: '#c4162a', long: true }, lines: ['Raver: Do not splash me. This latex took forty minutes to get into.'] },
+          { x: 20, y: 2, lie: true, look: { skin: '#c98d6a', hair: '#5ec8ff', top: '#2a0a1a', legs: '#0c0c12', harness: true }, lines: ['Raver: My mum thinks I am at a yoga retreat. Technically, I am stretching.'] },
+          { x: 13, y: 8, lie: true, look: { skin: '#8d5a3b', hair: '#b6f36b', top: '#8d5a3b', legs: '#8d5a3b' }, lines: ['(She opens one eye, looks at your outfit, closes it again.)'] },
+          { x: 16, y: 8, lie: true, look: { skin: '#6b4430', hair: '#c9a24a', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', long: true, shades: true }, lines: ['Raver: Mattress rules: you ask first. Always ask first.'] },
+          { x: 21, y: 8, lie: true, look: { skin: '#f3c9a8', hair: '#ff8cc4', top: '#f3c9a8', legs: '#0c0c12', harness: true }, lines: ['Raver: Monday? Never heard of her.'] },
+          // swimming (only heads and shoulders above the water)
+          { x: 7, y: 3, swim: true, look: { skin: '#6b4430', hair: '#5ec8ff', top: '#c4162a', legs: '#c4162a', shine: '#ff7a8a' }, lines: ['Swimmer: The water is warm. Do not ask why.'] },
+          { x: 15, y: 3, swim: true, look: { skin: '#f3c9a8', hair: '#b6f36b', top: '#f3c9a8', legs: '#c4162a', long: true }, lines: ['Swimmer: Floating in latex. Ten out of ten, would squeak again.'] },
+          { x: 8, y: 7, swim: true, look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#2a0a1a', legs: '#0c0c12', harness: true, shades: true }, lines: ['Swimmer: I came for one dip. That was Saturday.'] },
+          { x: 18, y: 7, swim: true, look: { skin: '#e2b08c', hair: '#ff8cc4', top: '#e2b08c', legs: '#e2b08c' }, lines: ['Swimmer: No phones, no photos, no swimming trunks. House rules.'] },
+          { x: 3, y: 5, swim: true, look: { skin: '#d9a27c', hair: '#111111', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', long: true }, lines: ['Swimmer: Marco! ...Marco? Nobody ever plays with me.'] },
+          { x: 20, y: 5, swim: true, look: { skin: '#c98d6a', hair: '#b04a2a', top: '#c98d6a', legs: '#0c0c12', harness: true }, lines: ['(Doing a very slow, very serious backstroke in a leather cap.)'] },
+          // standing round the pool
+          { x: 3, y: 1, dir: 'down', look: { skin: '#8d5a3b', hair: '#111111', top: '#2a0a1a', legs: '#0c0c12', harness: true }, lines: ['Raver: Dress code at the door: less. Always less.'] },
+          { x: 7, y: 1, dir: 'down', look: { skin: '#6b4430', hair: '#b04a2a', top: '#6b4430', legs: '#6b4430', bald: true }, lines: ['Raver: The bouncer said I was wearing too much. Proudest moment of my life.'] },
+          { x: 14, y: 1, dir: 'down', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', long: true, shades: true }, lines: ['Regular: First time? Eyes up, hands to yourself, unless invited.'] },
+          { x: 19, y: 1, dir: 'down', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#f0c7a0', legs: '#0c0c12', harness: true }, lines: ['Raver: I came in as a tourist. Now I am a lifestyle.'] },
+          { x: 22, y: 1, dir: 'left', look: { skin: '#e2b08c', hair: '#5ec8ff', top: '#c4162a', legs: '#c4162a', shine: '#ff7a8a' }, lines: ['(Two people in matching gimp masks are arguing about the best Späti in Kreuzberg.)'] },
+          { x: 24, y: 4, dir: 'left', look: { skin: '#d9a27c', hair: '#b6f36b', top: '#d9a27c', legs: '#c4162a', long: true }, lines: ['Raver: My ex is in the pool. My other ex is on a mattress. Love this place.'] },
+          { x: 24, y: 6, dir: 'left', look: { skin: '#c98d6a', hair: '#c9a24a', top: '#2a0a1a', legs: '#0c0c12', harness: true, bald: true, shades: true }, lines: ['Raver: Consent is sexy. So is that latex nurse.'] },
+          { x: 13, y: 10, dir: 'up', look: { skin: '#8d5a3b', hair: '#ff8cc4', top: '#8d5a3b', legs: '#8d5a3b' }, lines: ['Raver: Pool party or pool orgy? ...Both? Both.'] },
+          { x: 17, y: 10, dir: 'up', look: { skin: '#6b4430', hair: '#111111', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', long: true }, lines: ['Regular: KitKat since 1994. The pool is newer. The vibe is not.'] },
+          { x: 10, y: 12, dir: 'right', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#f3c9a8', legs: '#0c0c12', harness: true }, lines: ['Raver: I wore glitter. Now the whole pool wears glitter. Sorry.'] },
+          { x: 15, y: 12, dir: 'up', look: { skin: '#f0c7a0', hair: '#c0c0c0', top: '#c4162a', legs: '#c4162a', shine: '#ff7a8a', shades: true }, lines: ['Raver: Lost: one shoe, one dignity. Found: myself.'] },
+          { x: 18, y: 13, dir: 'up', look: { skin: '#e2b08c', hair: '#2a2420', top: '#e2b08c', legs: '#c4162a', long: true }, lines: ['(Someone in a rubber duck costume is guarding the deep end.)'] },
           { x: 21, y: 10, dir: 'down', look: { skin: '#d9a27c', hair: '#5a3a22', beard: '#5a3a22', top: '#d9a27c', legs: '#c4162a' }, lines: ['Sunbather: Tanning under UV light. Doctors hate me.'] },
           { pile: true, x: 4, y: 9, w: 2, join: 'busy', sheet: '#7a1a2a', looks: [
             { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#f3c9a8', legs: '#c4162a' },
@@ -646,6 +677,29 @@ export const INTERIORS: Record<string, InteriorDef> = {
             { skin: '#f0c7a0', hair: '#c28cff', long: true, top: '#f0c7a0', legs: '#c28cff' } ] }
         ]
       },
+      sauna: {
+        label: 'Sauna · next to the pool', short: 'SAUNA',
+        map: [
+      'HHHHHHHHHH',
+      'HhhhhhhhhH',
+      'HuuuuuuuuH',
+      'HuuuOOuuu2',
+      'HuuuuuuuuH',
+      'HhhhhhhhhH',
+      'HHHHHHHHHH'
+        ],
+        spawn: { fromPool: [8, 3, 'left'] },
+        doors: { 2: { to: 'pool', at: 'fromSauna' } },
+        dancers: 0,
+        steam: true,
+        fairy: [[1, 2, 8, 2], [1, 4, 8, 4]],
+        spots: ['rgba(255,60,180,.16)', 'rgba(60,200,255,.14)', 'rgba(255,210,60,.14)'],
+        people: [
+          { x: 2, y: 1, dir: 'down', look: { skin: '#e2b08c', hair: '#111111', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99' }, lines: ['Raver: Ninety degrees and still in latex. That is called commitment.'] },
+          { x: 6, y: 1, dir: 'down', look: { skin: '#f3c9a8', hair: '#c0c0c0', top: '#f3c9a8', legs: '#f3eee3', bald: true, beard: '#c0c0c0' }, lines: ['Regular: The coloured bulbs are for the mood. The sweat is free.'] },
+          { x: 4, y: 5, dir: 'up', look: { skin: '#8d5a3b', hair: '#ff8cc4', top: '#8d5a3b', legs: '#c4162a', long: true, harness: true }, lines: ['Raver: Pool, sauna, pool, sauna. I have not seen the dancefloor since Saturday.'] }
+        ]
+      },
       dungeon: {
         label: 'Dungeon · downstairs', short: 'DUNGEON',
         map: [
@@ -653,30 +707,65 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '#^^^......X.....X...#kkkkkkkk#',
       '#^^^................#kkkkkkkk#',
       '#...................#kkk#kkkk#',
-      '#...................#kkk#kkkk#',
+      '#............òò..ó..#kkk#kkkk#',
       '#...................kkkkkkkkk#',
       '#...................#kkkkkkkk#',
       '#..nnn....UU........##########',
       '#............................#',
-      '#............................#',
+      'û.......................ú....#',
       '#....MM..........ZZ..........#',
       '#............................#',
+      '#kkkkkk#..ùùù.............X..#',
+      '#kkkkkk.............ôô.......#',
+      '#kkkkkk#.......J.............#',
       '#kkkkkk#.....................#',
-      '#kkkkkk......................#',
-      '#kkkkkk#.....................#',
-      '#kkkkkk#.....................#',
-      '########.....................#',
+      '########...õõ................#',
       '##############################'
         ],
         spawn: { fromMain: [4, 2, 'right'] },
         up: { to: 'main', at: 'fromDungeon' },
         dancers: 0,
-        red: true,
+        blacklight: true,
+        fidget: true,
         people: [
           { x: 8, y: 9, act: 'marco', dir: 'left', look: { skin: '#d9a27c', hair: '#2a2420', beard: '#2a2420', top: '#d9a27c', legs: '#0c0c12', harness: true, shine: '#7a7a99' } },
           { x: 12, y: 3, dir: 'down', look: { skin: '#f3c9a8', hair: '#0c0c12', long: true, top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', shades: true }, lines: ['Mistress: Kneel. Or don\'t. I only work with volunteers.', 'Mistress: Watching is free. Touching needs a yes.'] },
           { x: 10, y: 1, dir: 'down', look: { skin: '#e2b08c', bald: true, top: '#e2b08c', legs: '#0c0c12', harness: true }, lines: ['(Strapped to a St Andrew\'s cross, grinning from ear to ear.)', 'Him: Don\'t touch. Ask my Mistress. She\'s the one in black. Well. Everyone is in black.'] },
           { x: 4, y: 7, dir: 'down', look: { skin: '#f0c7a0', hair: '#c9a24a', top: '#0c0c12', legs: '#0c0c12', ears: '#c9a24a' }, lines: ['(Someone sits in a cage, wagging an imaginary tail.)', 'Pup: Woof! Don\'t worry, I have the key.'] },
+          // the dungeon's equipment in use (all consensual, all asked first)
+          { x: 16, y: 1, dir: 'down', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#f0c7a0', legs: '#0c0c12', harness: true, blindfold: true }, lines: ['(Cuffed to the cross, blindfolded, humming along to the techno.)'] },
+          { x: 16, y: 2, dir: 'up', look: { skin: '#8d5a3b', hair: '#111111', long: true, top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', tool: 'flogger' }, lines: ['Domme: Ten more. Count them out loud. In German.'] },
+          { x: 13, y: 4, dir: 'down', lie: true, look: { skin: '#e2b08c', hair: '#c9a24a', top: '#e2b08c', legs: '#c4162a' }, lines: ['(Bent over the spanking bench. Red cheeks. Both kinds.)'] },
+          { x: 12, y: 4, dir: 'right', look: { skin: '#c98d6a', bald: true, beard: '#2a2420', top: '#0c0c12', legs: '#0c0c12', harness: true, tool: 'paddle' }, lines: ['Daddy: Paddle or hand? You picked paddle. Good choice.'] },
+          { x: 17, y: 3, dir: 'down', look: { skin: '#f3c9a8', hair: '#ff8cc4', top: '#f3c9a8', legs: '#0c0c12', collar: true }, lines: ['(Head and hands in the stocks. Looks completely at peace.)'] },
+          { x: 18, y: 4, dir: 'left', look: { skin: '#f0c7a0', hair: '#c0c0c0', top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', tool: 'crop' }, lines: ['Rider: The crop is for discipline. And for pointing at the bar.'] },
+          { x: 11, y: 12, dir: 'down', lie: true, look: { skin: '#d9a27c', hair: '#5ec8ff', long: true, top: '#d9a27c', legs: '#c4162a' }, lines: ['(Tied in red rope, hanging from the frame like a very beautiful parcel.)'] },
+          { x: 11, y: 13, dir: 'up', look: { skin: '#6b4430', hair: '#111111', top: '#16151c', legs: '#16151c', tool: 'rope' }, lines: ['Rigger: Shibari is meditation. For me. For them it is mostly knots.'] },
+          { x: 24, y: 10, dir: 'up', look: { skin: '#f3c9a8', hair: '#b04a2a', top: '#f3c9a8', legs: '#0c0c12', harness: true }, lines: ['(Hugging the whipping post. Smiling.)'] },
+          { x: 23, y: 10, dir: 'right', look: { skin: '#e2b08c', hair: '#111111', top: '#0c0c12', legs: '#0c0c12', tool: 'flogger' }, lines: ['Master: Safeword is Berghain. Nobody here ever wants to say it.'] },
+          { x: 20, y: 13, dir: 'down', lie: true, look: { skin: '#8d5a3b', hair: '#ff5fa2', long: true, top: '#8d5a3b', legs: '#0c0c12', blindfold: true }, lines: ['Raver: Hot wax. Hotter than the sauna upstairs.'] },
+          { x: 20, y: 12, dir: 'down', look: { skin: '#f0c7a0', hair: '#2a2420', top: '#7a0a2a', legs: '#0c0c12', shine: '#ff7a8a', tool: 'candle' }, lines: ['(Wax drips. Someone gasps. Someone else applauds.)'] },
+          { x: 14, y: 8, dir: 'right', look: { skin: '#c98d6a', hair: '#c9a24a', top: '#0c0c12', legs: '#0c0c12', harness: true, tool: 'leash' }, lines: ['Owner: Walkies! Then water. Then more walkies.'] },
+          { x: 15, y: 8, dir: 'left', look: { skin: '#f3c9a8', hair: '#111111', top: '#f3c9a8', legs: '#0c0c12', collar: true, ears: '#111111' }, lines: ['Pup: Woof. I mean: hello. I mean: woof.'] },
+          { x: 19, y: 9, dir: 'down', look: { skin: '#e2b08c', hair: '#c0c0c0', top: '#0c0c12', legs: '#0c0c12', blindfold: true, collar: true }, lines: ['(Blindfolded, led by the hand through the crowd. Trusting completely.)'] },
+          // the sling and the second cross
+          { x: 15, y: 14, dir: 'down', lie: true, look: { skin: '#c98d6a', hair: '#111111', top: '#c98d6a', legs: '#0c0c12', harness: true }, lines: ['(Swinging gently in the sling. Waving at you with one foot.)'] },
+          { x: 16, y: 14, dir: 'left', look: { skin: '#f3c9a8', hair: '#ff5fa2', long: true, top: '#0c0c12', legs: '#0c0c12', shine: '#7a7a99', tool: 'crop' }, lines: ['Domme: You want a turn? Get in the queue. And ask nicely.'] },
+          { x: 26, y: 12, dir: 'down', look: { skin: '#6b4430', hair: '#c0c0c0', top: '#6b4430', legs: '#c4162a', collar: true }, lines: ['(Cuffed to the second cross, grinning like it is Christmas.)'] },
+          { x: 26, y: 13, dir: 'up', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#0c0c12', legs: '#0c0c12', harness: true, tool: 'paddle' }, lines: ['Top: Green, yellow, red. You say the colour, I listen. That is the whole job.'] },
+          // under the black light: the love island, a couple, and someone who only watches
+          { pile: true, x: 18, y: 15, w: 3, join: 'yes', sheet: '#4a1a7a', looks: [
+            { skin: '#f3c9a8', hair: '#b6f36b', long: true, top: '#f3c9a8', legs: '#ff5fa2', paint: '#b6f36b' },
+            { skin: '#8d5a3b', bald: true, top: '#8d5a3b', legs: '#0c0c12', paint: '#5ec8ff' },
+            { skin: '#e2b08c', hair: '#ff5fa2', top: '#e2b08c', legs: '#0c0c12', harness: true } ] },
+          { pile: true, x: 23, y: 15, w: 2, join: 'busy', sheet: '#3a0a5a', looks: [
+            { skin: '#f0c7a0', hair: '#e8e8f0', long: true, top: '#f0c7a0', legs: '#0c0c12', paint: '#ff5fa2' },
+            { skin: '#c98d6a', hair: '#111111', top: '#c98d6a', legs: '#0c0c12' } ] },
+          { x: 22, y: 13, dir: 'down', look: { skin: '#e2b08c', hair: '#2a2420', top: '#0c0c12', legs: '#0c0c12', shades: true }, lines: ['(Watching from a stool. Just watching. That is allowed too.)', 'Watcher: The black light makes everyone look like a work of art. Mostly the teeth.'] },
+          // the doctor's corner
+          { x: 11, y: 16, dir: 'down', lie: true, look: { skin: '#f0c7a0', hair: '#b04a2a', long: true, top: '#f0c7a0', legs: '#f3eee3' }, lines: ['Patient: The doctor says I need more latex. Doctor’s orders.'] },
+          { x: 10, y: 16, dir: 'right', look: { skin: '#d9a27c', hair: '#2a2420', top: '#f3f3f3', legs: '#f3f3f3', glasses: '#9fc7e6', shine: '#c0c4cc' }, lines: ['Doctor: Say aaah. ...No, not like that. Well. Also like that.'] },
+          { x: 13, y: 15, dir: 'left', look: { skin: '#f3c9a8', hair: '#d9b25c', long: true, top: '#f3f3f3', legs: '#c4162a', shine: '#ff7a8a' }, lines: ['Nurse: Rubber gloves on. Consent forms signed. Next!'] },
           { pile: true, x: 21, y: 1, w: 3, join: 'yes', sheet: '#2a0a10', looks: [
             { skin: '#c98d6a', hair: '#111', top: '#c98d6a', legs: '#0c0c12', harness: true },
             { skin: '#f3c9a8', hair: '#ff5fa2', long: true, top: '#f3c9a8', legs: '#0c0c12' },
@@ -695,12 +784,20 @@ export const INTERIORS: Record<string, InteriorDef> = {
     examine: {
       V: ['Fluorescent paintings glowing under UV light. Faces, eyes, bodies, all melting into each other.'],
       Y: ['A chrome pole. Warm from use.'],
+      'µ': ['An inflatable mattress. Someone has written "ask first" on it in lipstick.'],
       Z: ['A leather sofa. It squeaks when you sit. Everyone pretends not to notice.'],
       Q: ['A bed with a fitted rubber sheet. Very practical.'],
       X: ['A St Andrew\'s cross. Leather cuffs, worn soft.'],
       J: ['The love swing. Chains, leather, and a small queue.'],
       n: ['A cage. The door is open. Probably.'],
       U: ['A gynaecologist\'s chair. Nobody here is a gynaecologist. Probably.'],
+      'ò': ['A spanking bench. The leather is worn shiny in two very specific places.'],
+      'ó': ['Stocks. Wooden, polished, with a little sign: ASK FIRST.'],
+      'ô': ['A bondage table with cuffs at every corner. Wax drips on the floor around it.'],
+      'õ': ['The doctor\'s bed. A paper roll, a lamp, and a box of very long gloves.'],
+      'ù': ['A suspension frame. Steel, chains, rings, and a lot of red rope.'],
+      'ú': ['A whipping post. Smooth wood, two iron rings.'],
+      'û': ['A little dragon on the wall. Every few seconds it breathes fire. Nobody flinches any more.'],
       '~': ['The pool.'],
       T: ['A palm tree, wearing a feather boa.'],
       k: ['Darkness. Breathing. A sigh somewhere to your left.']

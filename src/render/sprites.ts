@@ -79,6 +79,18 @@ export function person(g: CanvasRenderingContext2D, X: number, Y: number, dir: D
     if (L.tears) det.push([5, 6, 1, 2, '#9fd6ff']);
     if (L.tattoo) det.push([7, 5, 1, 1, '#3b3a5c'], [6, 3, 1, 1, '#3b3a5c']);
   }
+  // KitKat's dungeon: blindfolds, collars and whatever is in their hand (front and side views only)
+  if (d !== 'up') {
+    const side = d === 'left', o = side ? -6 : 0;
+    if (L.blindfold) det.push(side ? [3, 4, 5, 2, INK] : [4, 4, 8, 2, INK]);
+    if (L.collar) det.push(side ? [5, 7, 4, 1, INK] : [5, 7, 6, 1, INK], side ? [5, 8, 1, 1, '#e0b040'] : [7, 8, 2, 1, '#e0b040']);
+    if (L.tool === 'flogger') det.push([13 + o, 8, 1, 4, '#3a2616'], [12 + o, 12, 1, 3, INK], [13 + o, 12, 1, 4, INK], [14 + o, 12, 1, 3, INK]);
+    if (L.tool === 'paddle') det.push([13 + o, 9, 1, 3, '#5a3e26'], [12 + o, 4, 3, 5, INK], [13 + o, 5, 1, 3, '#c94a3a']);
+    if (L.tool === 'crop') det.push([14 + o, 2, 1, 10, INK], [13 + o, 2, 2, 1, '#c4162a']);
+    if (L.tool === 'rope') det.push([12 + o, 10, 3, 3, '#c4162a'], [13 + o, 11, 1, 1, '#7a1a22']);
+    if (L.tool === 'leash') det.push([13 + o, 11, 3, 1, '#c0c4cc']);
+    if (L.tool === 'candle') det.push([13 + o, 7, 2, 4, '#f3eee3'], [13 + o, 5, 2, 2, '#ffd23f'], [14 + o, 4, 1, 1, '#ff8c42']);
+  }
   if (L.box) {
     // a square delivery bag on the back, with a white W on it from behind
     if (d === 'up') det.push([2, 4, 12, 9, INK], [3, 5, 10, 7, L.box], [5, 7, 1, 3, '#ffffff'], [7, 8, 2, 1, '#ffffff'], [10, 7, 1, 3, '#ffffff'], [6, 9, 1, 1, '#ffffff'], [9, 9, 1, 1, '#ffffff']);

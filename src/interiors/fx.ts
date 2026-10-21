@@ -81,6 +81,38 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     if (e.kind === 'bottle') { if (e.bid && e.type && !state.pfand.taken[e.bid]) drawBottle(X, Y, e.type, now); return; }
     if (e.kind === 'pile') { drawPile(e, X, Y, now, lights); if (hasQuest(e, sc.club)) questMark(X, Y - 8, now); return; }
     if (!e.look) return;
+    if (e.swim) {
+      // swimming slow lengths back and forth: head and shoulders above the water, arms coming over in turns,
+      // a little wake behind. How far they go depends on how much water there is on either side.
+      const water = (dx: number) => { let n = 0; while (n < 2 && sc.map[e.y]?.[e.x + dx * (n + 1)] === 64) n++; return n; };
+      const reach = Math.min(water(-1), water(1)) * T + 6, t = now / 1000 + (e.phase ?? e.x * 0.9 + e.y);
+      const sx = reduceMotion ? 0 : Math.round(Math.sin(t * 0.5) * reach), going = Math.cos(t * 0.5) >= 0 ? 'right' : 'left';
+      const bob = reduceMotion ? 0 : Math.round(Math.sin(now / 600 + e.x * 1.3 + e.y));
+      const SX = X + sx;
+      ctx.save(); ctx.beginPath(); ctx.rect(SX - 2, Y - 8, 20, 14); ctx.clip();
+      person(ctx, SX, Y - 1 + bob, reduceMotion ? (e.dir ?? 'down') : going, 0, e.look);
+      ctx.restore();
+      if (!reduceMotion) {
+        const stroke = Math.floor(now / 350 + e.x) % 2; // one arm out of the water, then the other
+        ctx.fillStyle = e.look.skin; ctx.fillRect(SX + (stroke ? 1 : 12), Y + 1 + bob, 3, 2);
+        ctx.fillStyle = 'rgba(255,255,255,.5)';
+        const back = going === 'right' ? -1 : 1; // the wake trails behind
+        ctx.fillRect(SX + 8 + back * 10, Y + 6, 4, 1); ctx.fillRect(SX + 8 + back * 14, Y + 7, 3, 1);
+      }
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillRect(SX + 2, Y + 6, 11, 1);
+      return;
+    }
+    if (e.lie) {
+      // lying on their side, in the middle of the mattress (or whatever they lie on) under them
+      const under = sc.map[e.y]?.[e.x];
+      let m0 = e.x, m1 = e.x; while (sc.map[e.y]?.[m0 - 1] === under) m0--; while (sc.map[e.y]?.[m1 + 1] === under) m1++;
+      const mid = ((m0 + m1 + 1) / 2) * T - camX;
+      const breathe = fl.fidget && lights ? Math.round(Math.sin(now / 700 + e.x * 1.9) * 0.6) : 0; // a slow breath
+      ctx.save(); ctx.translate(Math.round(mid), Y + 7 + breathe); ctx.rotate(-Math.PI / 2);
+      person(ctx, -8, -8, 'down', 0, e.look);
+      ctx.restore();
+      return;
+    }
     if (e.dance && lights) {
       const phase = e.phase ?? 0;
       const beat = Math.floor(now / 230 + phase);
@@ -89,7 +121,14 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     } else {
       // legs move while someone walks to the next tile
       const off = Math.abs(e.ox || 0) + Math.abs(e.oy || 0);
-      person(ctx, X, Y - 3, e.dir ?? 'down', off ? (Math.floor(off / 8) % 2) + 1 : 0, e.look);
+      let step = off ? (Math.floor(off / 8) % 2) + 1 : 0, lift = 0;
+      if (fl.fidget && lights && !off) {
+        // standing about: shifting their weight now and then, and whoever holds a tool keeps using it
+        const ph = e.phase ?? e.x * 1.7 + e.y * 0.9;
+        lift = Math.sin(now / 900 + ph) > 0.6 ? 1 : 0;
+        if (e.look.tool) step = Math.floor(now / 320 + ph) % 3 === 0 ? 1 : 0;
+      }
+      person(ctx, X, Y - 3 - lift, e.dir ?? 'down', step, e.look);
     }
     if (e.look.cig) {
       // smoke curling up from the cigarette
@@ -102,6 +141,9 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     }
     if (hasQuest(e, sc.club)) questMark(X, Y - 3, now);
   });
+  if (sc.id === 'kitkat:pool') drawSwing(sc, now, camX, camY);
+  drawDragonFire(sc, now, camX, camY);
+  drawCageFronts(sc, camX, camY);
   // main floor: the light bar along the top wall and a short strobe now and then
   if (sc.floor === 'mf') {
     ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillRect(T - camX, T + 5 - camY, (sc.w - 2) * T, 2);
@@ -249,6 +291,7 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
     ctx.restore();
   }
   if (fl.red) { ctx.fillStyle = 'rgba(170,0,30,.18)'; ctx.fillRect(0, 0, RT.VW, RT.VH); }
+  if (fl.blacklight) blackLight(sc, now, camX, camY, ppx, ppy, lights);
   // darkroom: you only see right around you
   if (get(player.x, player.y) === DARK || (player.moving && get(player.tx, player.ty) === DARK)) {
     const cx = ppx - camX + 8, cy = ppy - camY + 6;
@@ -507,3 +550,132 @@ function drawJacuzzi(sc: ClubScene, now: number, camX: number, camY: number) {
   }));
 }
 
+/** The swing hanging from the roof over the middle of KitKat's pool: two ropes from the ceiling, a wooden seat,
+ *  someone sitting on it kicking their legs to swing higher, and the seat's shadow moving on the water below. */
+function drawSwing(sc: ClubScene, now: number, camX: number, camY: number) {
+  let x0 = sc.w, y0 = sc.h, x1 = -1, y1 = -1;
+  sc.map.forEach((row, y) => row.forEach((t, x) => { if (t === 64) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); } }));
+  if (x1 < 0) return;
+  const cx = ((x0 + x1 + 1) / 2) * T - camX, cy = ((y0 + y1 + 1) / 2) * T - camY;
+  const swing = reduceMotion ? 0 : Math.sin(now / 900);            // -1 … 1, a slow pendulum
+  const seatX = Math.round(cx + swing * 26), seatY = Math.round(cy - 4 - Math.abs(swing) * 5); // higher at the ends of the swing
+  const topY = cy - 70;                                              // the ropes go up into the dark roof
+  // the shadow on the water
+  ctx.fillStyle = 'rgba(0,0,30,.25)'; ctx.fillRect(seatX - 8, Math.round(cy + 10), 16, 3);
+  // ropes
+  ctx.strokeStyle = '#c9a24a'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx - 7, topY); ctx.lineTo(seatX - 7, seatY); ctx.moveTo(cx + 7, topY); ctx.lineTo(seatX + 7, seatY); ctx.stroke();
+  // the person sitting on it, legs swinging forward and back to keep it going
+  const kick = swing > 0 ? 1 : 2;
+  person(ctx, seatX - 8, seatY - 14, swing > 0 ? 'right' : 'left', reduceMotion ? 0 : kick, { skin: '#f0c7a0', hair: '#ff8cc4', top: '#c4162a', legs: '#c4162a', shine: '#ff7a8a', long: true });
+  // the seat, in front of their legs
+  ctx.fillStyle = INK; ctx.fillRect(seatX - 9, seatY - 1, 18, 4);
+  ctx.fillStyle = '#8a5a34'; ctx.fillRect(seatX - 8, seatY, 16, 2);
+}
+
+/** The little dragon on the dungeon wall breathes fire every few seconds: a cone of flame into the room and a
+ *  warm flash on the floor. With reduced motion it just glows. */
+function drawDragonFire(sc: ClubScene, now: number, camX: number, camY: number) {
+  const DRAGON = ICH['û'];
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== DRAGON) return;
+    const mx = (x + 1) * T - camX, my = y * T + 8 - camY;
+    if (mx < -64 || my < -32 || mx > RT.VW + 64 || my > RT.VH + 32) return;
+    const cyc = reduceMotion ? 99 : (now + x * 700) % 4200;
+    if (cyc > 1100) { ctx.fillStyle = 'rgba(255,140,40,.25)'; ctx.fillRect(mx - 3, my - 1, 3, 2); return; } // embers in its mouth
+    const k = cyc / 1100, len = 10 + Math.sin(k * Math.PI) * 44;
+    ctx.fillStyle = `rgba(255,120,40,${(0.18 * Math.sin(k * Math.PI)).toFixed(3)})`; ctx.fillRect(mx, my - 18, len + 10, 36); // the flash
+    for (let i = 0; i < 26; i++) {
+      const d = ((i * 37 + now / 6) % len), spread = 1 + d * 0.28, off = Math.sin(i * 12.7 + now / 90) * spread;
+      ctx.fillStyle = d < len * 0.35 ? '#fff2a8' : d < len * 0.7 ? '#ffb020' : '#e8401a';
+      const sz = d < len * 0.5 ? 2 : 3;
+      ctx.fillRect(Math.round(mx + d), Math.round(my + off), sz, sz);
+    }
+  }));
+}
+
+/** The front of every cage, drawn over the people in it: bright steel bars, the bottom rail, the door on the
+ *  right end hanging open a crack, and a padlock that isn't actually locked. */
+function drawCageFronts(sc: ClubScene, camX: number, camY: number) {
+  const CAGE = 98;
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== CAGE) return;
+    const X = x * T - camX, Y = y * T - camY;
+    if (X < -16 || Y < -24 || X > RT.VW || Y > RT.VH + 8) return;
+    const first = row[x - 1] !== CAGE, last = row[x + 1] !== CAGE;
+    for (let i = 2; i < 16; i += 4) { ctx.fillStyle = INK; ctx.fillRect(X + i + 1, Y - 8, 1, 22); ctx.fillStyle = '#c0c4cc'; ctx.fillRect(X + i, Y - 8, 1, 22); }
+    ctx.fillStyle = INK; ctx.fillRect(X, Y + 14, 16, 2); ctx.fillStyle = '#a7a7b3'; ctx.fillRect(X, Y + 13, 16, 1); // bottom rail
+    ctx.fillStyle = '#a7a7b3'; ctx.fillRect(X, Y - 9, 16, 1);                                                      // top rail
+    if (first) { ctx.fillStyle = '#c0c4cc'; ctx.fillRect(X, Y - 9, 2, 24); }
+    if (last) {
+      ctx.fillStyle = '#c0c4cc'; ctx.fillRect(X + 14, Y - 9, 2, 24);
+      // the padlock, hanging open
+      ctx.fillStyle = INK; ctx.fillRect(X + 10, Y + 1, 5, 5); ctx.fillStyle = '#e0b040'; ctx.fillRect(X + 11, Y + 2, 3, 3);
+      ctx.fillStyle = '#c0c4cc'; ctx.fillRect(X + 11, Y - 2, 1, 3); ctx.fillRect(X + 13, Y - 1, 1, 2);
+    }
+  }));
+}
+
+/** How a colour looks under black light: whites and light colours glow cyan-white, bright colours turn neon,
+ *  dark ones (black latex, leather) stay dark. */
+function fluoro(hex: string | undefined): string {
+  if (!hex || hex[0] !== '#' || hex.length < 7) return '#000000';
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  const lum = (0.3 * r + 0.59 * g + 0.11 * b) / 255, max = Math.max(r, g, b), min = Math.min(r, g, b);
+  if (lum > 0.72) return '#c8ffff';                            // white: the brightest glow
+  if (lum < 0.18) return '#000000';                            // black: nothing ('lighter' adds nothing)
+  if (max - min > 90) return max === r ? (b > g ? '#ff40e0' : '#ff7a30') : max === g ? '#60ff40' : '#40d0ff'; // colours go neon
+  return '#5a2a9a';                                            // skin and greys: a faint violet sheen
+}
+const fluoroLook = (L: Look): Look => ({
+  ...L, skin: '#3a1a6a', hair: fluoro(L.hair), top: fluoro(L.top), legs: fluoro(L.legs), stripes: L.stripes && fluoro(L.stripes),
+  shine: L.shine && '#e0c0ff', paint: L.paint && '#ffffff', sparkle: L.sparkle && '#ffffff'
+});
+
+/** Black light: the room deep violet, UV tubes glowing along the top wall, three UV spotlights sweeping slowly
+ *  through the room, and wherever a beam passes over someone their clothes light up fluorescent. With reduced motion the beams stand still. */
+function blackLight(sc: ClubScene, now: number, camX: number, camY: number, ppx: number, ppy: number, lights: boolean) {
+  ctx.fillStyle = 'rgba(40,0,110,.34)'; ctx.fillRect(0, 0, RT.VW, RT.VH);
+  const W = sc.w * T, H = sc.h * T, t = lights ? now / 1000 : 0;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  // UV tubes on the top wall
+  for (let x = 2; x + 3 < sc.w; x += 7) {
+    const X = x * T - camX, Y = T - 5 - camY;
+    const gr = ctx.createLinearGradient(0, Y, 0, Y + 4 * T);
+    gr.addColorStop(0, 'rgba(150,80,255,.26)'); gr.addColorStop(1, 'rgba(150,80,255,0)');
+    ctx.fillStyle = gr; ctx.fillRect(X - 6, Y, 3 * T + 12, 4 * T);
+    ctx.fillStyle = '#d0a0ff'; ctx.fillRect(X, Y, 3 * T, 2); ctx.fillStyle = 'rgba(190,120,255,.6)'; ctx.fillRect(X - 1, Y - 1, 3 * T + 2, 4);
+  }
+  // the moving spotlights, each on its own slow loop round the room
+  const R = 3.2 * T;
+  const beams = [[0.13, 0.21, 0], [0.17, 0.11, 2.1], [0.09, 0.16, 4.4]].map(([a, b, ph]) => ({
+    x: W / 2 + Math.sin(t * a * 2 * Math.PI / 2 + ph) * W * 0.38, y: H / 2 + Math.sin(t * b * 2 * Math.PI / 2 + ph * 1.7) * H * 0.34
+  }));
+  beams.forEach((bm, i) => {
+    const X = bm.x - camX, Y = bm.y - camY;
+    const gr = ctx.createRadialGradient(X, Y, 0, X, Y, R);
+    const c = i === 1 ? '120,60,255' : '170,70,255';
+    gr.addColorStop(0, `rgba(${c},.30)`); gr.addColorStop(0.6, `rgba(${c},.12)`); gr.addColorStop(1, `rgba(${c},0)`);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.ellipse(X, Y, R, R * 0.7, 0, 0, Math.PI * 2); ctx.fill();
+  });
+  // fluorescence: anyone a beam passes over lights up, brighter the closer they are to its middle
+  const glowAt = (cx: number, cy: number) => beams.reduce((m, bm) => Math.max(m, 1 - Math.hypot((cx - bm.x) / R, (cy - bm.y) / (R * 0.7))), 0);
+  const glow = (X: number, Y: number, k: number, draw: () => void) => {
+    if (k <= 0) return; ctx.globalAlpha = Math.min(0.85, k * 1.1); draw(); ctx.globalAlpha = 1;
+  };
+  RT.ents.forEach(e => {
+    if (!e.look || e.swim || e.kind !== 'npc') return;
+    const wx = e.x * T + 8 + (e.ox || 0), wy = e.y * T + 6 + (e.oy || 0), X = Math.round(wx - 8 - camX), Y = Math.round(wy - 6 - camY);
+    if (X < -16 || Y < -24 || X > RT.VW || Y > RT.VH + 8) return;
+    const k = glowAt(wx, wy), L = fluoroLook(e.look);
+    glow(X, Y, k, () => {
+      if (e.lie) {
+        const under = sc.map[e.y]?.[e.x]; let m0 = e.x, m1 = e.x;
+        while (sc.map[e.y]?.[m0 - 1] === under) m0--; while (sc.map[e.y]?.[m1 + 1] === under) m1++;
+        ctx.save(); ctx.translate(Math.round(((m0 + m1 + 1) / 2) * T - camX), Y + 7); ctx.rotate(-Math.PI / 2); person(ctx, -8, -8, 'down', 0, L); ctx.restore();
+      } else person(ctx, X, Y - 3, e.dir ?? 'down', 0, L);
+    });
+  });
+  glow(ppx - camX, ppy - camY, glowAt(ppx + 8, ppy + 6), () => person(ctx, ppx - camX, ppy - camY - 3, player.dir, 0, fluoroLook(lookOf(state.outfit))));
+  ctx.restore();
+}
