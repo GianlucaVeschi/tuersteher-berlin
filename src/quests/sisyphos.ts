@@ -5,7 +5,7 @@ import { MD_HINTS } from './mdma';
 import { kbDance, kbFloorsDanced } from './katerblau';
 import type { BottleType, Entity, QuestDef } from '../types';
 import { completeQuest } from './quests';
-import { say } from '../ui/dialog';
+import { ask, say } from '../ui/dialog';
 import { K_HINTS } from './kHints';
 import { INK } from '../util';
 import { ctx } from '../render/canvas';
@@ -84,4 +84,29 @@ function hgHint(base: string): string {
   if (state.hgStage === 1) return "Woody, the booker, is watching the booth from the dancefloor. Get him to leave it for a bit.";
   if (state.hgStage === 2) return "Woody is off by the fire. Back to the DJ, quick.";
   return base;
+}
+
+/** The café and merch kiosk on the right as you come in from the queue: coffee, cake, Sisyphos things. */
+export async function sisyCafe(_e: Entity | null, _clubId: string) {
+  await say('Café: Morning! Or evening. Coffee, cake, or something to remember us by?');
+  const a = await ask('What will it be?', ['A filter coffee', 'A slice of cake', 'A Sisyphos tote bag', 'A Sisyphos lighter', 'Just looking']);
+  await say([
+    'Café: Filter coffee, big mug, oat milk. (It tastes like a second wind.)',
+    'Café: Carrot cake, still warm. (You eat it standing up, in the sun, with your eyes closed.)',
+    'Café: The tote bag. The man with the rock on it. Every other bag in Berlin is jealous.',
+    'Café: A lighter with the logo. You will lose it before Monday. Everyone does.',
+    'Café: Look all you like. The shirts sell out every summer.'
+  ][a]);
+}
+
+/** The pizza place along the bottom of the garden: stone oven, slices by the piece, the line never ends. */
+export async function sisyPizza(_e: Entity | null, _clubId: string) {
+  await say('Pizza: Fresh out of the oven. What do you want?');
+  const a = await ask('A slice of…', ['Margherita', 'Salami', 'Vegan with everything', "Whatever's left"]);
+  await say([
+    'Pizza: Margherita. Classic. (Burns the roof of your mouth. Worth it.)',
+    'Pizza: Salami. (You eat it so fast you forget to taste it. You buy another one.)',
+    'Pizza: Vegan with everything. (It is the best thing you have eaten all weekend. Possibly all year.)',
+    "Pizza: Whatever's left is half a quattro formaggi and a lot of love. (Perfect.)"
+  ][a]);
 }

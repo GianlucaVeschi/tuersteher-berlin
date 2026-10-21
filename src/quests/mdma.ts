@@ -10,12 +10,12 @@ import type { Entity } from '../types';
 
 /* ---- Sisyphos: MDMA from Ronny on the Dampfer, after you find his bucket hat; taking it starts the runner ---- */
 export const MD_HINTS: Record<number, string> = {
-  1: "Ronny lost his bucket hat somewhere by the pool on the Strand. Ask around there.",
-  2: 'You have the hat. Back to Ronny on the Dampfer, by the benches.',
+  1: "Ronny lost his bucket hat somewhere by the lake on the Strand. Ask around there.",
+  2: 'You have the hat. Back to Ronny, top right corner of the Dampfer.',
   3: 'Ronny gave you half a pill. Talk to him when you are ready to take it.'
 };
 
-/** Ronny, on the Dampfer by the benches. Knows a guy. Is the guy. */
+/** Ronny, in the top right corner of the Dampfer. Knows a guy. Is the guy. */
 export async function ronny(_e: Entity | null, clubId: string) {
   if (questDone(clubId, 'mdma')) {
     // replay the runner
@@ -30,11 +30,11 @@ export async function ronny(_e: Entity | null, clubId: string) {
     const a = await ask('', ['You look like a man who has a little something', 'Sorry, wrong person']);
     if (a === 1) { await say('Ronny: All good.'); return; }
     await say('Ronny: Maybe. But I lost my bucket hat. Without the hat I am nobody.');
-    await say('Ronny: It flew off by the pool on the Strand. Bring it back and we talk.');
+    await say('Ronny: It flew off by the lake on the Strand. Bring it back and we talk.');
     state.mdStage = 1; save(); renderCard();
     return;
   }
-  if (state.mdStage === 1) { await say('Ronny: No hat, no deal. It was by the pool, on the Strand.'); return; }
+  if (state.mdStage === 1) { await say('Ronny: No hat, no deal. It was by the lake, on the Strand.'); return; }
   if (state.mdStage === 2) {
     await say('Ronny: MY HAT. You absolute angel.');
     await say('(He puts it on. He looks exactly the same.)');
@@ -66,10 +66,10 @@ async function takePill(clubId: string, replay: boolean) {
   }
 }
 
-/** The raver at the pool on the Strand fished Ronny's hat out of the water. */
+/** The raver at the lake on the Strand fished Ronny's hat out of the water. */
 export async function poolHat(e: Entity | null) {
   if (state.mdStage !== 1) { await say(e?.lines?.[0] ?? 'Raver: The water is FREEZING. Ten out of ten.'); return; }
-  await say('Raver: A bucket hat? This one? Fished it out of the pool an hour ago.');
+  await say('Raver: A bucket hat? This one? Fished it out of the lake an hour ago.');
   await say('Raver: Ronny\'s? Of course it is. Take it before it gets more cursed.');
   state.mdStage = 2; save(); renderCard();
   toast('GOT · A WET BUCKET HAT');

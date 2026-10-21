@@ -214,7 +214,7 @@ export const STYLES: Record<string, Style> = {
     kick: FOUR, clap: '....x.......x...', hat: SIXTEENTHS, ohat: OFF,
     bass: { steps: [0, 0, 12, 0, 3, 0, 15, 0, 0, 12, 0, 10, 0, 7, 0, 12], wave: 'sawtooth', cutoff: 260, level: 0.2, acid: true }
   },
-  sauna: { // behind the Dampfer: warm, slow, steamy
+  sauna: { // the sauna cabin in the garden: warm, slow, steamy
     bpm: 60, ambient: true, root: 45, level: 0.6, space: 0.7, cutoff: 1400,
     chords: [[0, 4, 7, 11, 14], [5, 9, 12, 16]],
     pad: { cutoff: 700, level: 0.05 }
@@ -265,7 +265,10 @@ const MUFFLED: Record<string, [string, number]> = {
   'kitkat:sauna': ['kitkat_pool', 500],     // KitKat's sauna: the pool lounge through the wooden door        // ROBUS, through the ceiling
   'heidegluehen:hof': ['heide', 1500],     // the yard: the dance house through its open door
   'heidegluehen:hinten': ['heide', 650],   // out the back: the dancefloor through the back door
-  'tresor:tunnel': ['tresor', 700]         // the tunnel: the vault getting louder ahead
+  'tresor:tunnel': ['tresor', 700],        // the tunnel: the vault getting louder ahead
+  'sisyphos:eingang': ['sisy_strand', 600], // the queue: the Strand behind the door
+  'sisyphos:wc': ['sisy_strand', 500],      // the toilets: the garden through the door
+  'sisyphos:cafe': ['sisy_strand', 450]     // the café: the garden through the window
 };
 
 /** Which style plays on each club floor. */

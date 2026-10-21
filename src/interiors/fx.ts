@@ -7,7 +7,7 @@ import { lookOf } from '../render/looks';
 import { person } from '../render/sprites';
 import { player, state } from '../core/state';
 import { followerPx } from './follower';
-import { DARK, ICH, ICHAR, T, WALLISH } from '../world/tiles';
+import { DARK, ICH, ICHAR, T, WALLISH, isDoorTile } from '../world/tiles';
 import { ctx } from '../render/canvas';
 import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
@@ -191,6 +191,62 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       const off = lights ? Math.floor(now / 250) % 8 : 0;
       ctx.fillStyle = '#fff2b0'; ctx.fillRect(X + 3, Y + 7, Math.max(1, off + 2), 1);
       ctx.fillStyle = '#ffffff'; ctx.fillRect(X + 3, Y + 4, 8, 1);
+    }
+  }));
+  // the garden's little houses (Sisyphos): steam from the sauna chimney, wood smoke from the café's
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if ((t !== 170 && t !== 171) || row[x + 1] === t || sc.map[y + 1]?.[x] === t) return;
+    let x0 = x, y0 = y;
+    while (row[x0 - 1] === t) x0--;
+    while (sc.map[y0 - 1]?.[x] === t) y0--;
+    const bx = x0 * T, by = y0 * T, bw = (x + 1) * T - bx, bh = (y + 1) * T - by;
+    const ridge = by + 13 + Math.round((bh - 13 - 16) / 2);
+    const cx = bx + bw - 22 - camX, cy = ridge - 9 - camY;
+    if (cx < -30 || cy < -40 || cx > RT.VW + 30 || cy > RT.VH + 10) return;
+    for (let i = 0; i < 5; i++) {
+      const p = reduceMotion ? i / 5 : ((now / (t === 170 ? 1600 : 2200) + i / 5) % 1);
+      const a = (t === 170 ? 0.5 : 0.4) * (1 - p);
+      ctx.fillStyle = t === 170 ? `rgba(240,244,250,${a.toFixed(2)})` : `rgba(170,170,180,${a.toFixed(2)})`;
+      const r = 2 + Math.round(p * 3);
+      ctx.fillRect(Math.round(cx + Math.sin(p * 5 + i) * 4 - r / 2), Math.round(cy - p * 26), r, r);
+    }
+  }));
+  // the old factory (Sisyphos): pink and violet lasers sweeping across the brick, like on a night out
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 172 || row[x + 1] === 172 || sc.map[y + 1]?.[x] === 172) return;
+    let x0 = x, y0 = y;
+    while (row[x0 - 1] === 172 || isDoorTile(row[x0 - 1])) x0--;
+    while (sc.map[y0 - 1]?.[x] === 172 || isDoorTile(sc.map[y0 - 1]?.[x] ?? 0)) y0--;
+    const bx = x0 * T - camX, by = y0 * T - camY, bw = (x + 1 - x0) * T, bh = (y + 1 - y0) * T;
+    if (bx > RT.VW || by > RT.VH || bx + bw < 0 || by + bh < 0) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, by + 16, bw, bh - 18); ctx.clip();
+    ctx.globalCompositeOperation = 'lighter';
+    const ox = bx + bw + 30, oy = by - 20;
+    for (let i = 0; i < 3; i++) {
+      const a = 2.35 + i * 0.22 + (lights ? Math.sin(now / 1700 + i * 2) * 0.18 : 0);
+      ctx.strokeStyle = i === 1 ? 'rgba(190,120,255,.55)' : 'rgba(255,90,210,.6)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + Math.cos(a) * 400, oy + Math.sin(a) * 400); ctx.stroke();
+    }
+    ctx.restore();
+  }));
+  // the big bonfire (2×2, Sisyphos): one tall fire over the middle of the block, sparks rising
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 168 || row[x + 1] === 168 || sc.map[y + 1]?.[x] === 168) return;
+    const X = x * T - camX, Y = y * T - camY;
+    if (X < -40 || Y < -40 || X > RT.VW + 40 || Y > RT.VH + 40) return;
+    const f = lights ? Math.sin(now / 80) : 0, f2 = lights ? Math.sin(now / 130 + 1) : 0;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const gr = ctx.createRadialGradient(X, Y, 4, X, Y, 54);
+    gr.addColorStop(0, 'rgba(255,140,40,.42)'); gr.addColorStop(1, 'rgba(255,140,40,0)');
+    ctx.fillStyle = gr; ctx.fillRect(X - 56, Y - 56, 112, 112);
+    ctx.restore();
+    ctx.fillStyle = '#ff4a12'; ctx.fillRect(X - 7, Y - 8 - f, 14, 10); ctx.fillRect(X - 4, Y - 13 - f2, 8, 6);
+    ctx.fillStyle = '#ff8a2a'; ctx.fillRect(X - 5, Y - 11 - Math.round(f * 1.5), 10, 10); ctx.fillRect(X - 2, Y - 17 - f, 4, 6);
+    ctx.fillStyle = '#ffd36b'; ctx.fillRect(X - 3, Y - 7, 6, 6); ctx.fillStyle = '#fff2b0'; ctx.fillRect(X - 1, Y - 5, 2, 3);
+    if (lights) for (let i = 0; i < 4; i++) {
+      const p = (now / 1100 + i / 4) % 1;
+      ctx.fillStyle = `rgba(255,${180 + i * 15},80,${(1 - p).toFixed(2)})`;
+      ctx.fillRect(Math.round(X - 6 + i * 4 + Math.sin(p * 9 + i) * 3), Math.round(Y - 14 - p * 26), 1, 1);
     }
   }));
   // a glass roof over part of the floor (Heideglühen's covered dancefloor)

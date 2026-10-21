@@ -34,26 +34,27 @@ Leave through the exit on the ground floor.
 
 ## Inside Sisyphos
 
-An old dog-biscuit factory in Rummelsburg. You arrive in the garden and walk through doorways (bead curtains) between rooms:
+An old dog-biscuit factory in Rummelsburg. On the street it's the real entrance: the rusty gate with two big birds beak to beak, the arched SISYPHOS banner and the red-and-white circus fence. Behind it you walk through doorways between rooms:
 
-- **Strand:** the open-air garden. Sand dancefloor, a pool with sand around it, art totems, fairy lights, a bar.
+- **The queue:** a red hallway with two queues behind a crowd barrier. The long one is all costumes (a clown, a lizard, Santa, Spider-Man, a banana, an astronaut, a unicorn, Batman, Pikachu and more); the other one is empty, and it's yours. The door person at the top waves you through without a single question.
+- **Strand:** the open-air garden, and every room opens onto it. Along the top: the green circus tent with red stars and two DJs right under it, playing to the dancefloor, the wooden dancefloor, the L-shaped bar (it takes your Pfand), and one big building that holds the Hammahalle, the Dampfer and the Tunnel: in through the Dampfer's door on the beach, through to the Tunnel, out again through the Tunnel's door. In the middle: a small lake with a beach and trees, a big bonfire with benches, and the open sand full of people and baller boxes (little wooden DJ huts). Along the bottom: the sauna (No. 15), the café (a cosy little house with coffee, cake and Sisyphos souvenirs), the way in from the queue, the pizza place, the Wintergarten and the toilets.
 - **Wintergarten:** a glass house full of plants. House music that never stops.
 - **Hammahalle:** the brick factory hall. Techno.
 - **Dampfer:** wooden, ship-like, with portholes. Deep house.
 - **Tunnel:** a long techno corridor with red lacquer walls and swinging paper lanterns.
-- **Sauna:** behind the Dampfer, with a Saunameister doing the Aufguss.
+- **Sauna:** the wooden cabin No. 15 in the garden, with a Saunameister doing the Aufguss.
 
 The crowd is a colourful festival and circus bunch with flower crowns, glitter and face paint. Talk to them for stories about yoga retreats, ayahuasca and van life.
 
 | Quest | Where |
 | --- | --- |
 | Pfand hunter (main quest) | Empty bottles lie around every room. Carry up to 4, return them at any bar for the deposit (beer 8 ct, Club-Mate 15 ct, cans 25 ct). Return 8 to finish |
-| Jump in the pool | Press A facing the pool in the garden |
+| Jump in the lake | Press A facing the little lake on the beach |
 | Survive the Aufguss | Talk to the Saunameister |
 | Listen to 3 hippie stories | Momo (pool), Luna (Wintergarten), Kai (sauna), Sunny (Tunnel) |
 | Learn to juggle | Zora the circus kid in the garden. Wait for the beat |
 | Dance in 4 different rooms | Press A on any dancefloor: sand, wood, concrete or the red Tunnel floor |
-| Ringbahn rush | Ronny on the Dampfer wants his bucket hat back (the raver at the pool found it). His pill turns the game into a 30-second 3D runner through an S-Bahn: swipe or the joystick to switch tracks, A or up to jump over bikes and Sterni crates, dodge the Kontrolleure and poles, grab water for an extra heart |
+| Ringbahn rush | Ronny, top right corner of the Dampfer, wants his bucket hat back (the raver at the lake found it). His pill turns the game into a 30-second 3D runner through an S-Bahn: swipe or the joystick to switch tracks, A or up to jump over bikes and Sterni crates, dodge the Kontrolleure and poles, grab water for an extra heart |
 
 ## Inside KitKat
 
