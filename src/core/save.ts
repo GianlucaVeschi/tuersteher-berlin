@@ -29,7 +29,7 @@ export function snapshot(): SaveData {
   const club = inClub() ? CLUBS.find(c => c.id === sceneClub()) || PLACES.find(p => p.id === sceneClub()) : null;
   const pos = club ? { x: club.dx, y: club.by, dir: 'down' as const } : { x: player.x, y: player.y, dir: player.dir };
   return { stamps: state.stamps, intro: state.intro, finale: state.finale, outfit: state.outfit, char: state.char,
-    zoom: { i: zoom.i, fit: zoom.fit }, quests: state.quests, visited: state.visited, sunrise: state.sunrise, coatNo: state.coatNo, kStage: state.kStage, mdStage: state.mdStage, pfand: state.pfand, heard: state.heard, danced: state.danced, kkStripped: state.kkStripped, gone: state.gone, hgTime: state.hgTime, hgStage: state.hgStage, cdvCash: state.cdvCash, hair: state.hair, name: state.name, playMs: state.playMs, finishPlayMs: state.finishPlayMs, onlineFinished: state.onlineFinished, x: pos.x, y: pos.y, dir: pos.dir, map: MAP_VERSION };
+    zoom: { i: zoom.i, fit: zoom.fit }, quests: state.quests, visited: state.visited, sunrise: state.sunrise, coatNo: state.coatNo, kStage: state.kStage, mdStage: state.mdStage, pfand: state.pfand, heard: state.heard, danced: state.danced, kkStripped: state.kkStripped, gone: state.gone, hgTime: state.hgTime, hgStage: state.hgStage, cdvCash: state.cdvCash, hair: state.hair, name: state.name, playMs: state.playMs, finishPlayMs: state.finishPlayMs, onlineFinished: state.onlineFinished, golfBest: state.golfBest, x: pos.x, y: pos.y, dir: pos.dir, map: MAP_VERSION };
 }
 export function applySave(s: SaveData | null) {
   if (!s) return;
@@ -42,7 +42,7 @@ export function applySave(s: SaveData | null) {
   state.quests = s.quests || {}; state.visited = s.visited || {}; state.sunrise = s.sunrise || {}; state.coatNo = s.coatNo || 0; state.kStage = s.kStage || 0; state.mdStage = s.mdStage || 0;
   state.pfand = Object.assign(newPfand(), s.pfand || {}); state.heard = s.heard || {}; state.danced = s.danced || {}; state.kkStripped = !!s.kkStripped; state.gone = s.gone || {};
   state.hgTime = s.hgTime || HG_START; state.hgStage = s.hgStage || 0; state.cdvCash = s.cdvCash || 0; state.hair = s.hair && HAIRSTYLES[s.hair] ? s.hair : null;
-  state.name = s.name || null; state.playMs = s.playMs || 0; state.finishPlayMs = s.finishPlayMs ?? null; state.onlineFinished = !!s.onlineFinished;
+  state.name = s.name || null; state.playMs = s.playMs || 0; state.finishPlayMs = s.finishPlayMs ?? null; state.onlineFinished = !!s.onlineFinished; state.golfBest = s.golfBest ?? null;
   // bottles in your hands are lost if you reload while carrying them outside a club
   if (!s.pfand) state.pfand.taken = {};
   RT.ents.forEach(e => { if (e.club && state.stamps[e.club.id]) e.x = e.club.dx + 1; });

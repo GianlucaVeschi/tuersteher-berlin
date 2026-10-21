@@ -392,6 +392,8 @@ export interface GameState {
   finishPlayMs: number | null;
   /** the finish has been recorded on the guest list */
   onlineFinished: boolean;
+  /** most holes sunk in one round of Neon Golf at the minigolf, or null if never played */
+  golfBest: number | null;
 }
 
 export interface Player {
