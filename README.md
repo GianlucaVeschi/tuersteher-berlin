@@ -49,7 +49,7 @@ The crowd is a colourful festival and circus bunch with flower crowns, glitter a
 | Quest | Where |
 | --- | --- |
 | Pfand hunter (main quest) | Empty bottles lie around every room. Carry up to 4, return them at any bar for the deposit (beer 8 ct, Club-Mate 15 ct, cans 25 ct). Return 8 to finish |
-| Jump in the lake | Press A facing the pool in the garden |
+| Jump in the lake | Press A facing the little lake on the beach |
 | Survive the Aufguss | Talk to the Saunameister |
 | Listen to 3 hippie stories | Momo (pool), Luna (Wintergarten), Kai (sauna), Sunny (Tunnel) |
 | Learn to juggle | Zora the circus kid in the garden. Wait for the beat |
