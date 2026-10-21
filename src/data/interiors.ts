@@ -314,6 +314,57 @@ export const INTERIORS: Record<string, InteriorDef> = {
       '(Side quests unlocked. Check your stamp card.)'
     ],
     floors: {
+      eingang: {
+        // The way in: a red rectangular hallway behind the gate with two queues side by side behind a
+        // crowd barrier. The long one (left) is everyone in costume, which at Sisyphos is everyone; the
+        // other one (right) is empty, and it's yours. At the top, on the left, the door person waves you
+        // through without a single question. The door at the top leads out into the Strand.
+        // Extra legend: Ŕ  red hallway wall   ŗ  red-lit floor   ļ  crowd barrier
+        label: 'Sisyphos · the queue', short: 'EINGANG',
+        map: [
+      'ŔŔ77ŔŔŔŔŔŔ',
+      'ŔŗŗŗŗŗŗŗŗŔ',
+      'ŔŗŗŗŗŗŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŗŗŗŗļŗŗŗŔ',
+      'ŔŔŔŔŔŔxxxŔ'
+        ],
+        spawn: { street: [7, 16, 'up'], fromStrand: [3, 1, 'down'] },
+        doors: { 7: { to: 'strand', at: 'fromEingang' } },
+        exit: true,
+        spots: ['rgba(255,60,70,.14)'],
+        people: [
+          { x: 1, y: 1, dir: 'right', name: 'Door', look: { skin: '#c98d6a', hair: '#111', top: '#14121c', legs: '#14121c', beard: '#111', big: true }, lines: ['Door: (looks at you for half a second, nods at the door) Go on.', 'Door: Viel Spaß. See you Monday.'] },
+          { x: 2, y: 3, dir: 'up', look: { skin: '#f3eee3', hair: '#ff5e7a', top: '#ffd23f', legs: '#5ec8ff', stripes: '#e8263c', paint: '#e8263c' }, lines: ['Clown: Third hour in the queue. My make-up is melting.'] },
+          { x: 3, y: 4, dir: 'left', look: { skin: '#5aa04a', bald: true, top: '#3f7a35', legs: '#3f7a35', paint: '#2f5a25' }, lines: ['Lizard: (flicks its tongue) They let a lizard in last week. My cousin. Not me.'] },
+          { x: 2, y: 5, dir: 'up', look: { skin: '#f0c7a0', hair: '#ffffff', beard: '#ffffff', hat: '#c4162a', top: '#c4162a', legs: '#c4162a', shirt: '#ffffff' }, lines: ['Santa: Ho ho ho. In here, everyone is on the naughty list.'] },
+          { x: 3, y: 6, dir: 'right', look: { skin: '#c4162a', bald: true, top: '#c4162a', legs: '#1f3fb0', glasses: '#ffffff', stripes: '#1f3fb0' }, lines: ['Spider-Man: I could just climb the wall. The bouncer said that is not how it works.'] },
+          { x: 2, y: 7, dir: 'up', look: { skin: '#f0c7a0', hair: '#5a3a22', hat: '#ffe14a', top: '#ffe14a', legs: '#ffe14a' }, lines: ['Banana: Hi. I am a banana. In real life I am a lawyer.'] },
+          { x: 3, y: 8, dir: 'up', look: { skin: '#f0c7a0', hair: '#c9a24a', hat: '#f3eee3', top: '#f3eee3', legs: '#f3eee3', glasses: '#9fd6ff' }, lines: ['Astronaut: Been in orbit since Friday. Ground control, where is the pool?'] },
+          { x: 2, y: 9, dir: 'right', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, ears: '#ffffff', top: '#f3c9e8', legs: '#c28cff', flowers: ['#ffd23f', '#5ec8ff'] }, lines: ['Unicorn: (staring at you) Wait. Why do YOU get the empty lane?'] },
+          { x: 3, y: 10, dir: 'up', look: { skin: '#f0c7a0', hair: '#111', ears: '#f3eee3', top: '#f3eee3', legs: '#f3eee3', stripes: '#111' }, lines: ['Cow: Moo. Sorry. I am staying in character until Monday.'] },
+          { x: 2, y: 11, dir: 'left', look: { skin: '#e2b08c', hair: '#3a2a20', beard: '#3a2a20', hat: '#111', top: '#f3eee3', legs: '#26242e', stripes: '#c4162a' }, lines: ['Pirate: Arr. The Dampfer is the only ship I trust.'] },
+          { x: 3, y: 12, dir: 'up', look: { skin: '#f3c9a8', hair: '#ff5e7a', long: true, top: '#ff8cc4', legs: '#2bb3a3', sparkle: '#fff6a8' }, lines: ['Mermaid: I swam here. Down the Spree. Do not ask.'] },
+          { x: 2, y: 13, dir: 'up', look: { skin: '#f0c7a0', hair: '#14121c', ears: '#14121c', top: '#14121c', legs: '#14121c', shades: true }, lines: ['Batman: Nobody recognises me. Perfect.'] },
+          { x: 3, y: 14, dir: 'left', look: { skin: '#f0c7a0', hair: '#7a3fd1', ears: '#7a3fd1', top: '#7a3fd1', legs: '#7a3fd1', blush: true }, lines: ['Teletubby: Again! Again! (He means the weekend.)'] },
+          { x: 2, y: 15, dir: 'up', look: { skin: '#f0c7a0', hair: '#ff8c42', ears: '#ff8c42', top: '#ff8c42', legs: '#ff8c42', stripes: '#111' }, lines: ['Tiger: Is it Saturday or Tuesday? Does not matter in there.'] },
+          { x: 3, y: 16, dir: 'up', look: { skin: '#f0c7a0', hair: '#ffe14a', ears: '#ffe14a', top: '#ffe14a', legs: '#ffe14a', blush: true }, lines: ['Pikachu: Pika... (yawns) ...chu. We have been here since sunset.'] },
+          { x: 1, y: 9, dir: 'right', look: { skin: '#e2b08c', hair: '#3a2a20', beard: '#3a2a20', hat: '#c4162a', top: '#c4162a', legs: '#1f3fb0' }, lines: ['Mario: Wrong castle, they said. The princess is in the Hammahalle.'] },
+          { x: 4, y: 13, dir: 'left', look: { skin: '#c98d6a', hair: '#c0c0c0', top: '#c8ccd4', legs: '#c8ccd4', shine: '#ffffff' }, lines: ['Raver: (wrapped in tinfoil) We all dressed up for this. They would have let us in anyway. Probably.'] },
+        ]
+      },
       strand: {
         label: 'Strand · garden and pool', short: 'STRAND',
         map: [
@@ -335,11 +386,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'FggTggggggggggggggggggggTggggF',
       'FggggggggggggggggggggggggggggF',
       'FggggggggggggggggggggggggggggF',
-      'FFFFFFFFFFFFFFxxFFFFFFFFFFFFFF'
+      'FFFFFFFFFFFFFF77FFFFFFFFFFFFFF'
         ],
-        spawn: { street: [14, 17, 'up'], fromWg: [18, 1, 'down'] },
-        doors: { 1: { to: 'wg', at: 'fromStrand' } },
-        exit: true,
+        spawn: { fromEingang: [14, 17, 'up'], fromWg: [18, 1, 'down'] },
+        doors: { 1: { to: 'wg', at: 'fromStrand' }, 7: { to: 'eingang', at: 'fromStrand' } },
         dancers: 16,
         spots: ['rgba(255,190,90,.12)', 'rgba(255,120,180,.10)', 'rgba(120,220,255,.10)'],
         daylight: true,

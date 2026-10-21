@@ -34,8 +34,9 @@ Leave through the exit on the ground floor.
 
 ## Inside Sisyphos
 
-An old dog-biscuit factory in Rummelsburg. You arrive in the garden and walk through doorways (bead curtains) between rooms:
+An old dog-biscuit factory in Rummelsburg. On the street it's the real entrance: the rusty gate with two big birds beak to beak, the arched SISYPHOS banner and the red-and-white circus fence. Behind it you walk through doorways between rooms:
 
+- **The queue:** a red hallway with two queues behind a crowd barrier. The long one is all costumes (a clown, a lizard, Santa, Spider-Man, a banana, an astronaut, a unicorn, Batman, Pikachu and more); the other one is empty, and it's yours. The door person at the top waves you through without a single question.
 - **Strand:** the open-air garden. Sand dancefloor, a pool with sand around it, art totems, fairy lights, a bar.
 - **Wintergarten:** a glass house full of plants. House music that never stops.
 - **Hammahalle:** the brick factory hall. Techno.

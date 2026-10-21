@@ -265,7 +265,8 @@ const MUFFLED: Record<string, [string, number]> = {
   'kitkat:sauna': ['kitkat_pool', 500],     // KitKat's sauna: the pool lounge through the wooden door        // ROBUS, through the ceiling
   'heidegluehen:hof': ['heide', 1500],     // the yard: the dance house through its open door
   'heidegluehen:hinten': ['heide', 650],   // out the back: the dancefloor through the back door
-  'tresor:tunnel': ['tresor', 700]         // the tunnel: the vault getting louder ahead
+  'tresor:tunnel': ['tresor', 700],        // the tunnel: the vault getting louder ahead
+  'sisyphos:eingang': ['sisy_strand', 600] // the queue: the Strand behind the door
 };
 
 /** Which style plays on each club floor. */

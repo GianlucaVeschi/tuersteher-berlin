@@ -134,6 +134,28 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X + 7, Y + 3, 1, 10, INK); P(X + 4, Y + 8, 8, 1, INK);
         break;
       }
+      case 161: // Sisyphos's entrance hallway: painted red walls, wooden boards, a string of bulbs
+        if (frontFace) {
+          P(X, Y, 16, 16, '#b3202c'); for (let i = 0; i < 16; i += 4) P(X + i, Y, 1, 13, '#8e1822');
+          P(X, Y + 1, 16, 1, '#d6303a'); P(X, Y + 13, 16, 3, '#4a0c12');
+          if (x % 2 === 0) { P(X + 7, Y + 3, 2, 2, '#ffe28a'); P(X + 6, Y + 2, 4, 1, 'rgba(255,226,138,.35)'); }
+        } else {
+          // seen from above: the red wall top, a lighter edge on the side facing the hallway
+          P(X, Y, 16, 16, '#8e1822');
+          if (at(x + 1, y) === 162 || at(x + 1, y) === 163) P(X + 13, Y, 3, 16, '#c42834');
+          if (at(x - 1, y) === 162 || at(x - 1, y) === 163) P(X, Y, 3, 16, '#c42834');
+          if (!WALLISH.has(at(x, y - 1)) && y > 0) P(X, Y, 16, 1, '#d6303a');
+        }
+        break;
+      case 162: // the hallway floor in red light
+        P(X, Y, 16, 16, '#6a1c24'); P(X, Y, 16, 1, '#5a161e'); for (let i = 0; i < 5; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 1, 1, pick(['#7a2430', '#58161e', '#86303a']));
+        break;
+      case 163: // a metal crowd barrier running down the hallway between the two queues
+        P(X, Y, 16, 16, '#6a1c24');
+        P(X + 6, Y, 4, 16, INK); P(X + 7, Y, 2, 16, '#9aa0aa'); P(X + 7, Y, 1, 16, '#c8ccd4');
+        for (const ry of [3, 11]) { P(X + 5, Y + ry, 6, 2, INK); P(X + 6, Y + ry, 4, 1, '#9aa0aa'); }
+        P(X + 4, Y + 14, 8, 2, INK);
+        break;
       case 135: // heavy chains hanging from the ceiling down to the floor
         floorBase(X, Y);
         for (const cx of [4, 10]) for (let ly = -12; ly < 14; ly += 4) { P(X + cx - 1, Y + ly, 3, 4, INK); P(X + cx, Y + ly + 1, 1, 2, ly % 8 ? '#8a8e98' : '#5a5e68'); }
