@@ -152,6 +152,9 @@ let wheelAt = 0;
 function blockPageZoom() {
   const stop = (ev: Event) => ev.preventDefault();
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, stop, { passive: false }));
+  // a second finger landing is the start of a pinch: stop it there, not only once it moves
+  // (buttons and the joystick listen to pointer events, which still fire)
+  document.addEventListener('touchstart', ev => { if (ev.touches.length > 1) ev.preventDefault(); }, { passive: false });
   document.addEventListener('touchmove', ev => { if (ev.touches.length > 1) ev.preventDefault(); }, { passive: false });
 }
 
