@@ -38,8 +38,8 @@ export async function hgDance() {
 }
 
 // where the player stands in the DJ booth in the wooden house during the set, and where they go after
-const BOOTH: [number, number] = [6, 1];
-const AFTER: [number, number] = [6, 3];
+const BOOTH: [number, number] = [10, 1];
+const AFTER: [number, number] = [10, 3];
 
 /** The resident DJ. Main quest: he'd let you play, but only if Woody isn't watching. */
 export async function hgDj(e: Entity | null, clubId: string) {
