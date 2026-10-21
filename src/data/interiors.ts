@@ -1078,7 +1078,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         map: [
           'HHHHHHHHHHHH2HHH',
           'HwwwwwwwwwwwwwwH',
-          'HwwSDDDSwwwwwwwH',
+          'HwwwwwwSDDDSwwwH',
           'HweeeeeeeeeeeewH',
           'HweeeeeeeeeeeewH',
           'HweeeeeeeeeeeewH',
@@ -1098,7 +1098,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
         fairy: [[1, 1, 14, 1]],
         spots: ['rgba(255,180,90,.16)', 'rgba(255,120,80,.12)', 'rgba(255,230,160,.12)'],
         people: [
-          { x: 5, y: 1, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
+          { x: 9, y: 1, act: 'hgDj', name: 'DJ', look: { skin: '#c98d6a', hair: '#2a2420', top: '#c94a3a', legs: '#2b3f6b', hat: '#2a2420', beard: '#2a2420' } },
           { x: 9, y: 6, act: 'woody', name: 'Woody', dir: 'left', movedWhen: 'woody', movedTo: [-50, -50], look: { skin: '#e2b08c', bald: true, beard: '#8a8a8a', top: '#3a4a3a', legs: '#26242e', big: true } }
         ]
       },
