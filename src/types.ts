@@ -36,6 +36,10 @@ export interface Look {
   btc?: string;
   /** a lit cigarette in the mouth (the smoke rises in interiors/fx.ts) */
   cig?: boolean;
+  /** KitKat's dungeon: a blindfold, a collar, something in the hand */
+  blindfold?: boolean;
+  collar?: boolean;
+  tool?: 'flogger' | 'paddle' | 'crop' | 'rope' | 'leash' | 'candle';
   /** hair as a mohawk: a strip down the middle, shaved sides */
   mohawk?: boolean;
 }
@@ -222,6 +226,10 @@ export interface Entity {
   movedTo?: [number, number];
   /** only there once this quest is done (Woody by the fire, after he leaves the dancefloor) */
   onlyAfter?: string;
+  /** in the water: only head and shoulders show, bobbing (KitKat's pool) */
+  swim?: boolean;
+  /** lying down (on a mattress): drawn on their side */
+  lie?: boolean;
   pile?: boolean;
   join?: 'yes' | 'no' | 'busy';
   looks?: Look[];
@@ -291,6 +299,10 @@ export interface FloorDef {
   fairy?: [number, number, number, number][];
   lanterns?: [number, number][];
   steam?: boolean;
+  /** people standing about move a little (shift their weight, use what is in their hand), people lying breathe */
+  /** black light (KitKat's dungeon): deep violet, UV tubes on the walls, fluorescent paint glowing everywhere */
+  blacklight?: boolean;
+  fidget?: boolean;
   /** thick drifting fog (the Tresor vault) */
   fog?: boolean;
   /** a short white strobe flash every few seconds */

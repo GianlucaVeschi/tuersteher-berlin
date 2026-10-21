@@ -12,7 +12,7 @@ import { INTERIORS } from '../data/interiors';
  *  'runway': a light strip on the threshold and two rows of lights on the floor that light up one after
  *  another, leading you in. */
 export type DoorStyle = 'strips' | 'haze' | 'fog' | 'neon' | 'leds' | 'floor' | 'runway';
-export const DOOR_STYLE: Record<string, DoorStyle> = { katerblau: 'strips', rso: 'fog', sisyphos: 'neon', heidegluehen: 'leds', cdv: 'floor', kitkat: 'runway' };
+export const DOOR_STYLE: Record<string, DoorStyle> = { katerblau: 'strips', rso: 'fog', sisyphos: 'neon', heidegluehen: 'leds', cdv: 'floor', kitkat: 'runway', anker: 'fog' };
 /** Single rooms with their own doorway look, overriding the club's: every doorway into the room and every
  *  doorway in it. Berghain's smoking area is full of smoke, so its doorways are fog. */
 const ROOM_STYLE: Record<string, DoorStyle> = { 'berghain:smoke': 'fog' };
@@ -200,7 +200,17 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
       case 96: floorBase(X, Y); P(X + 3, Y - 8, 1, 16, '#8a9098'); P(X + 12, Y - 8, 1, 16, '#8a9098'); P(X + 2, Y + 8, 12, 4, INK); P(X + 3, Y + 9, 10, 2, '#3a0a12'); break;
       case 97: P(X, Y, 16, 16, INK); P(X + 1, Y - 6, 14, 22, '#a3161a'); P(X + 1, Y - 6, 14, 4, '#e0b040'); for (let i = 0; i < 6; i++) P(X + 3 + i * 2, Y - 5, 1, 2, i % 2 ? '#fff200' : '#ff2bd6');
         P(X + 3, Y, 10, 15, '#6a0a18'); for (let i = 4; i < 13; i += 3) P(X + i, Y, 1, 15, '#4a0610'); break;
-      case 98: floorBase(X, Y); P(X, Y + 1, 16, 1, '#8a9098'); for (let i = 1; i < 16; i += 3) P(X + i, Y + 1, 1, 15, '#8a9098'); break;
+      case 98: { // a cage: the back half (the bars in front of whoever is inside are drawn over them in fx.ts)
+        const first = at(x - 1, y) !== 98, last = at(x + 1, y) !== 98;
+        floorBase(X, Y);
+        P(X, Y + 10, 16, 5, '#3a0a12'); P(X, Y + 10, 16, 1, '#5a1220');              // a red rubber mat on the cage floor
+        P(X, Y - 11, 16, 2, '#8a9098'); P(X, Y - 11, 16, 1, '#c0c4cc');                // the roof frame, standing above the floor
+        for (let i = 1; i < 16; i += 3) P(X + i, Y - 9, 1, 19, '#4a4f56');            // back bars, in the shadow
+        if (first) { P(X, Y - 11, 2, 26, '#8a9098'); }                                 // corner posts
+        if (last) { P(X + 14, Y - 11, 2, 26, '#8a9098'); }
+        if (first) { P(X + 3, Y + 11, 5, 2, INK); P(X + 4, Y + 11, 3, 1, '#c0c4cc'); } // a water bowl
+        break;
+      }
       case 100: floorBase(X, Y); P(X + 3, Y + 5, 10, 6, INK); P(X + 4, Y + 6, 8, 4, '#d9e6e0'); P(X + 1, Y + 2, 2, 5, '#8a9098'); P(X + 13, Y + 2, 2, 5, '#8a9098'); P(X + 7, Y + 11, 2, 5, '#8a9098'); break;
       // ---- Heideglühen ----
       case 102: // fire pit: a ring of stones with logs (the flames are animated in fx.ts)
@@ -361,6 +371,62 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         if (!next) R(11, 2, 3, 12, arm);
         if (prev && (along ? x : y) % 2 === 0) R(0, 6, 1, 8, arm);                         // a seam between cushions
         R(prev ? 2 : 6, 7, 3, 1, hi);
+        break;
+      }
+      // ---- KitKat's dungeon ----
+      case 154: { // a spanking bench: padded red leather on a black frame, two tiles long
+        floorBase(X, Y); const first = at(x - 1, y) !== 154;
+        P(X, Y + 4, 16, 6, INK); P(first ? X + 2 : X, Y + 5, first ? 14 : 16, 4, '#7a0a1c'); P(first ? X + 2 : X, Y + 5, first ? 14 : 16, 1, '#a3162a');
+        P(X + 3, Y + 10, 2, 5, INK); P(X + 11, Y + 10, 2, 5, INK); if (first) { P(X + 1, Y + 6, 2, 6, INK); P(X + 1, Y + 7, 1, 3, '#c0c4cc'); }
+        break;
+      }
+      case 155: // stocks: a wooden board with holes for the head and hands, on a post
+        floorBase(X, Y); P(X + 7, Y + 8, 2, 8, INK); P(X + 1, Y + 3, 14, 6, INK); P(X + 2, Y + 4, 12, 4, '#6b4a2e');
+        P(X + 7, Y + 4, 2, 3, INK); P(X + 3, Y + 5, 2, 2, INK); P(X + 11, Y + 5, 2, 2, INK); P(X + 2, Y + 4, 12, 1, '#8a6a48');
+        break;
+      case 156: { // a bondage table: black padding, cuffs at the corners
+        floorBase(X, Y); const first = at(x - 1, y) !== 156;
+        P(first ? X + 1 : X, Y + 2, first ? 15 : 15, 12, INK); P(first ? X + 2 : X, Y + 3, first ? 14 : 13, 10, '#1a1920'); P(first ? X + 2 : X, Y + 3, first ? 14 : 13, 1, '#3a3942');
+        P(first ? X + 2 : X + 11, Y + 4, 2, 2, '#c0c4cc'); P(first ? X + 2 : X + 11, Y + 10, 2, 2, '#c0c4cc');
+        break;
+      }
+      case 157: { // the doctor's bed: white padded table, a paper roll, a lamp on an arm
+        floorBase(X, Y); const first = at(x - 1, y) !== 157;
+        P(first ? X + 1 : X, Y + 3, 15, 10, INK); P(first ? X + 2 : X, Y + 4, first ? 14 : 13, 8, '#e8e4d8'); P(first ? X + 5 : X, Y + 4, first ? 11 : 13, 8, '#f8f6f0');
+        P(X + 3, Y + 13, 2, 3, '#8a9098'); P(X + 11, Y + 13, 2, 3, '#8a9098');
+        if (!first) { P(X + 13, Y - 6, 1, 10, '#8a9098'); P(X + 10, Y - 7, 5, 3, INK); P(X + 11, Y - 6, 3, 1, '#fff2a8'); } // the lamp
+        break;
+      }
+      case 158: { // a suspension frame: a steel bar overhead, chains and rings hanging down
+        floorBase(X, Y);
+        P(X, Y + 1, 16, 2, '#8a9098'); P(X, Y + 1, 16, 1, '#c0c4cc');
+        if (at(x - 1, y) !== 158) P(X + 1, Y + 1, 2, 15, '#8a9098'); if (at(x + 1, y) !== 158) P(X + 13, Y + 1, 2, 15, '#8a9098');
+        for (let r = 3; r < 10; r += 2) P(X + 7, Y + r, 1, 1, '#c0c4cc'); P(X + 6, Y + 10, 3, 2, '#c0c4cc');
+        break;
+      }
+      case 159: // a whipping post: a thick wooden post with iron rings
+        floorBase(X, Y); P(X + 5, Y, 6, 16, INK); P(X + 6, Y, 4, 16, '#5a3e26'); P(X + 7, Y, 1, 16, '#7a5432');
+        P(X + 4, Y + 4, 8, 2, '#8a9098'); P(X + 4, Y + 11, 8, 2, '#8a9098');
+        break;
+      case 160: // a little dragon hanging on the wall, facing into the room, jaws open (the fire is drawn in fx.ts)
+        P(X, Y, 16, 16, '#141318');
+        P(X + 1, Y + 3, 9, 10, INK); P(X + 2, Y + 4, 7, 8, '#2f7a3a');                        // the body against the wall
+        P(X + 8, Y + 5, 7, 6, INK); P(X + 9, Y + 6, 6, 2, '#3d9a4a'); P(X + 9, Y + 9, 6, 1, '#3d9a4a'); // head, open jaws
+        P(X + 10, Y + 8, 5, 1, '#7a0a1c');                                                     // inside the mouth
+        P(X + 10, Y + 5, 1, 1, '#ff2b2b'); P(X + 9, Y + 3, 2, 2, '#c9a24a'); P(X + 5, Y + 2, 2, 2, '#c9a24a'); // eye, horns
+        for (let i = 0; i < 3; i++) P(X + 3 + i * 2, Y + 12, 1, 2, '#c9a24a');                 // claws on the wall
+        break;
+      // ---- KitKat's pool ----
+      case 153: { // an inflatable mattress by the pool, two tiles long, puffy stripes, in a loud colour
+        P(X, Y, 16, 16, '#9fe0e8'); P(X, Y, 16, 1, '#7fc8d2'); P(X, Y, 1, 16, '#7fc8d2');
+        const first = at(x - 1, y) !== 153, last = at(x + 1, y) !== 153;
+        let x0 = x; while (at(x0 - 1, y) === 153) x0--;
+        const [c, dark, hi] = [['#ff5ea8', '#c23a7e', '#ffb3d6'], ['#3fd0e0', '#1f8fa0', '#b8f3f8'], ['#ffd23f', '#c99a10', '#fff0a8'], ['#9be15d', '#5fa52a', '#d8f7b8'], ['#b07aff', '#7a46c9', '#e0ccff']][(x0 * 3 + y) % 5];
+        const l = first ? 2 : 0, r = last ? 14 : 16;
+        P(X + l, Y + 3, r - l, 11, INK); P(X + l + (first ? 1 : 0), Y + 4, r - l - (first ? 1 : 0) - (last ? 1 : 0), 9, c);
+        for (let i = (first ? 5 : 1); i < (last ? 13 : 16); i += 4) P(X + i, Y + 4, 1, 9, dark);   // the puffy tubes
+        P(X + l + 1, Y + 5, r - l - 2, 1, hi);                                                        // shine on top
+        if (first) P(X + 3, Y + 6, 2, 5, hi);                                                         // the pillow end
         break;
       }
       // ---- Club der Visionäre: the tiny dance room ----
@@ -553,6 +619,30 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         P(X, Y, 8, 8, '#e8e4d8'); P(X + 8, Y, 8, 8, '#14121c'); P(X, Y + 8, 8, 8, '#14121c'); P(X + 8, Y + 8, 8, 8, '#e8e4d8');
         break;
       default: P(X, Y, 16, 16, '#000'); break;
+    }
+  }
+  // KitKat's pool: a long rectangle with big rounded ends, like the real one, drawn smooth over the box its
+  // water tiles sit in (the tiles themselves only cut the corners)
+  if (sc.id === 'kitkat:pool') {
+    let x0 = sc.w, y0 = sc.h, x1 = -1, y1 = -1;
+    sc.map.forEach((row, y) => row.forEach((t, x) => { if (t === 64) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); } }));
+    if (x1 >= 0) {
+      const bx = x0 * T, by = y0 * T, bw = (x1 - x0 + 1) * T, bh = (y1 - y0 + 1) * T, cx = bx + bw / 2, cy = by + bh / 2;
+      // the tiled deck round it
+      for (let y = by; y < by + bh; y += 8) for (let x = bx; x < bx + bw; x += 8) { P(x, y, 8, 8, '#9fe0e8'); P(x, y, 8, 1, '#7fc8d2'); P(x, y, 1, 8, '#7fc8d2'); }
+      // a rounded rectangle, inset by d on every side, corners rounded as much as the height allows
+      const pool = (d: number, c: string) => {
+        const x = bx + d, y = by + d, w = bw - 2 * d, h = bh - 2 * d, r = Math.min(h / 2, 2.4 * T - d);
+        g.fillStyle = c; g.beginPath();
+        g.moveTo(x + r, y); g.lineTo(x + w - r, y); g.arc(x + w - r, y + r, r, -Math.PI / 2, 0); g.lineTo(x + w, y + h - r);
+        g.arc(x + w - r, y + h - r, r, 0, Math.PI / 2); g.lineTo(x + r, y + h); g.arc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+        g.lineTo(x, y + r); g.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5); g.closePath(); g.fill();
+      };
+      pool(0, '#e8e4d8');     // white rim
+      pool(3, '#1d5f80');     // its shadow on the water
+      pool(4, '#2f86ad');     // the water
+      pool(16, '#3a96bd');    // lighter towards the middle (lit from below)
+      for (let i = 0; i < 24; i++) { const a = i * 2.39, r = 0.25 + (i % 5) * 0.14; P(Math.round(cx + Math.cos(a) * r * bw / 2 - 2), Math.round(cy + Math.sin(a) * r * bh / 2), 5, 1, '#5fb6db'); }
     }
   }
   return cv;
