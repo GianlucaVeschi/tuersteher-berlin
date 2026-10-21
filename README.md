@@ -42,7 +42,7 @@ An old dog-biscuit factory in Rummelsburg. On the street it's the real entrance:
 - **Hammahalle:** the brick factory hall. Techno.
 - **Dampfer:** wooden, ship-like, with portholes. Deep house.
 - **Tunnel:** a long techno corridor with red lacquer walls and swinging paper lanterns.
-- **Sauna:** behind the Dampfer, with a Saunameister doing the Aufguss.
+- **Sauna:** the wooden cabin No. 15 in the garden, with a Saunameister doing the Aufguss.
 
 The crowd is a colourful festival and circus bunch with flower crowns, glitter and face paint. Talk to them for stories about yoga retreats, ayahuasca and van life.
 

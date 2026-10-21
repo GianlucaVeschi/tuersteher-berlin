@@ -293,9 +293,9 @@ export const INTERIORS: Record<string, InteriorDef> = {
     ]
   },
 
-  /* Sisyphos: an old dog-biscuit factory in Rummelsburg. Outdoor "Strand" with sand and a pool,
+  /* Sisyphos: an old dog-biscuit factory in Rummelsburg. Outdoor "Strand" with sand and a lake,
      then the indoor rooms: Wintergarten (glass house, house music), Hammahalle (techno),
-     Dampfer (deep/tech house), Tunnel (techno, red lanterns) and a sauna behind the Dampfer.
+     Dampfer (deep/tech house), Tunnel (techno, red lanterns) and a sauna cabin (No. 15) in the garden.
 
      Extra legend for Sisyphos
      a  sand (dancefloor outside)   ~  pool water            w  wooden planks / deck
@@ -373,21 +373,21 @@ export const INTERIORS: Record<string, InteriorDef> = {
         // and the open sand full of people and baller boxes. Along the bottom the sauna (No. 15), the café
         // (a little house, door 3), the way in from the queue, the pizza place with its sign, the
         // Wintergarten and the toilets.
-        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   e  wooden dancefloor
+        // Extra legend: Ř  grey roof   ʂ  sauna cabin   ĉ  café cottage   ŧ  circus tent   ƀ  baller box   ƒ  big bonfire (2×2)   ƥ  PIZZA sign   ƃ  the factory (Hammahalle, Dampfer, Tunnel)   e  wooden dancefloor
         label: 'Strand · the garden', short: 'STRAND',
         map: [
       'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
       'FgggggggggTggggggggTggBBBBBTgggggggggggggggF',
-      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
-      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
-      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
-      'FTŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
-      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBBBBBggF',
-      'FgŧŧŧŧŧŧŧŧSeeeeeeeegg=wwwwBgBBBBBBBKKKKKKggF',
-      'FTwwwwwwwwDeeeeeeeegg=wwwwBg5BBBBBBKKKKKKggF',
-      'FgwwwwwwwwDeeeeeeeegg======gBBBBBBBKKKKK6ggF',
-      'FgeeeeeeeeSeeeeeeeegggggggggBBBBBBBKKKKKKggF',
-      'FggggggggggggaaaaaaaaaaaaaaaBoBoBoBKKKKKKggF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'FTŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'FgŧŧŧŧŧŧŧŧSeeeeeeeegg=wwwwBgƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'FTwwwwwwwwDeeeeeeeegg=wwwwBg5ƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'FgwwwwwwwwDeeeeeeeegg======gƃƃƃƃƃƃƃƃƃƃƃƃ6ggF',
+      'FgeeeeeeeeSeeeeeeeegggggggggƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
+      'FggggggggggggaaaaaaaaaaaaaaaƃƃƃƃƃƃƃƃƃƃƃƃƃggF',
       'FTaaaaaaaaaaTaaaaaaaaaƀaaaaaaaaaaaaaaaaagggF',
       'Fgaaa~~~~aaagaabaabaaaaaaaaaaaaaaaaaaaaagggF',
       'Fgaa~~~~~~aagabaƒƒaaaaaaaaaaaaƀaaaaaaaaagggF',
@@ -510,10 +510,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'Bww=====wwwwwwwwwwwwwbbwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
-      'BBBBBBBBBBBBBBBBBBBBBB6BBB'
+      'BBBBBBBBBBBBBBBBBBBBBBBBBB'
         ],
-        spawn: { fromHh: [1, 5, 'right'], fromSa: [22, 12, 'up'], fromStrand: [1, 8, 'right'], fromTn: [24, 5, 'left'] },
-        doors: { 4: { to: 'hh', at: 'fromDf' }, 5: { to: 'strand', at: 'fromDf' }, 6: { to: 'sa', at: 'fromDf' }, 7: { to: 'tn', at: 'fromDf' } },
+        spawn: { fromHh: [1, 5, 'right'], fromStrand: [1, 8, 'right'], fromTn: [24, 5, 'left'] },
+        doors: { 4: { to: 'hh', at: 'fromDf' }, 5: { to: 'strand', at: 'fromDf' }, 7: { to: 'tn', at: 'fromDf' } },
         dancers: 14,
         spots: ['rgba(80,220,200,.13)', 'rgba(255,190,90,.12)', 'rgba(120,140,255,.12)'],
         bottles: [[20, 11, 'beer'], [24, 4, 'can']],
@@ -596,7 +596,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       sa: {
         label: 'Sauna · No. 15', short: 'SAUNA',
         map: [
-      'HHH8HHH6HHHHHH',
+      'HHH8HHHHHHHHHH',
       'HuuuuuuuuuuuuH',
       'HuuuuuuuuuuuuH',
       'HuuuuuOOuuuuuH',
@@ -606,8 +606,8 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'HhhhhhhhhhhhhH',
       'HHHHHHHHHHHHHH'
         ],
-        spawn: { fromDf: [7, 1, 'down'], fromStrand: [3, 1, 'down'] },
-        doors: { 6: { to: 'df', at: 'fromSa' }, 8: { to: 'strand', at: 'fromSauna' } },
+        spawn: { fromStrand: [3, 1, 'down'] },
+        doors: { 8: { to: 'strand', at: 'fromSauna' } },
         dancers: 0,
         steam: true,
         bottles: [[2, 1, 'beer']],
@@ -626,6 +626,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'ƥ': ['PIZZA. Stone oven, slices by the piece.'],
       'ŝ': ['Shelves of Sisyphos things: shirts, tote bags with the man and his rock, hoodies, lighters.'],
       'Ř': ['A grey roof.'],
+      'ƃ': ['The old dog-biscuit factory: brick, arched windows glowing green, purple light, lasers. The Hammahalle is upstairs, the Dampfer and the Tunnel below.'],
       'ʂ': ['The sauna cabin, No. 15. Steam out of the chimney, towels on the rack, a lantern by the door.'],
       'ĉ': ['The café: a little cottage with a striped awning and flower boxes. It smells of coffee and carrot cake.'],
       T: ['A big plant. Someone has hung a disco ball in it.'],
@@ -666,7 +667,7 @@ export const INTERIORS: Record<string, InteriorDef> = {
     quests: [
       { id: 'pfand', title: 'Pfand hunter', hint: 'Collect empty bottles (you can carry 4) and return them at any bar.' },
       { id: 'swim', title: 'Jump in the lake', hint: 'The little lake on the beach, by the bonfire.' },
-      { id: 'sauna', title: 'Survive the Aufguss', hint: 'The sauna house (No. 15) on the left of the garden, or behind the Dampfer.' },
+      { id: 'sauna', title: 'Survive the Aufguss', hint: 'The sauna house (No. 15) on the left of the garden.' },
       { id: 'stories', title: 'Listen to 3 hippie stories', hint: 'Momo, Luna, Kai and Sunny each have one.' },
       { id: 'juggle', title: 'Learn to juggle', hint: 'Zora the circus kid, in the garden.' },
       { id: 'hopper', title: 'Dance in 4 different rooms', hint: 'Strand, Wintergarten, Hammahalle, Dampfer, Tunnel.' },

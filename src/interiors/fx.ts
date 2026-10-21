@@ -7,7 +7,7 @@ import { lookOf } from '../render/looks';
 import { person } from '../render/sprites';
 import { player, state } from '../core/state';
 import { followerPx } from './follower';
-import { DARK, ICH, ICHAR, T, WALLISH } from '../world/tiles';
+import { DARK, ICH, ICHAR, T, WALLISH, isDoorTile } from '../world/tiles';
 import { ctx } from '../render/canvas';
 import { INK, reduceMotion } from '../util';
 import { INTERIORS } from '../data/interiors';
@@ -210,6 +210,24 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       const r = 2 + Math.round(p * 3);
       ctx.fillRect(Math.round(cx + Math.sin(p * 5 + i) * 4 - r / 2), Math.round(cy - p * 26), r, r);
     }
+  }));
+  // the old factory (Sisyphos): pink and violet lasers sweeping across the brick, like on a night out
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 172 || row[x + 1] === 172 || sc.map[y + 1]?.[x] === 172) return;
+    let x0 = x, y0 = y;
+    while (row[x0 - 1] === 172 || isDoorTile(row[x0 - 1])) x0--;
+    while (sc.map[y0 - 1]?.[x] === 172 || isDoorTile(sc.map[y0 - 1]?.[x] ?? 0)) y0--;
+    const bx = x0 * T - camX, by = y0 * T - camY, bw = (x + 1 - x0) * T, bh = (y + 1 - y0) * T;
+    if (bx > RT.VW || by > RT.VH || bx + bw < 0 || by + bh < 0) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, by + 16, bw, bh - 60); ctx.clip();
+    ctx.globalCompositeOperation = 'lighter';
+    const ox = bx + bw + 30, oy = by - 20;
+    for (let i = 0; i < 3; i++) {
+      const a = 2.35 + i * 0.22 + (lights ? Math.sin(now / 1700 + i * 2) * 0.18 : 0);
+      ctx.strokeStyle = i === 1 ? 'rgba(190,120,255,.55)' : 'rgba(255,90,210,.6)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + Math.cos(a) * 400, oy + Math.sin(a) * 400); ctx.stroke();
+    }
+    ctx.restore();
   }));
   // the big bonfire (2×2, Sisyphos): one tall fire over the middle of the block, sparks rising
   sc.map.forEach((row, y) => row.forEach((t, x) => {

@@ -214,7 +214,7 @@ export const STYLES: Record<string, Style> = {
     kick: FOUR, clap: '....x.......x...', hat: SIXTEENTHS, ohat: OFF,
     bass: { steps: [0, 0, 12, 0, 3, 0, 15, 0, 0, 12, 0, 10, 0, 7, 0, 12], wave: 'sawtooth', cutoff: 260, level: 0.2, acid: true }
   },
-  sauna: { // behind the Dampfer: warm, slow, steamy
+  sauna: { // the sauna cabin in the garden: warm, slow, steamy
     bpm: 60, ambient: true, root: 45, level: 0.6, space: 0.7, cutoff: 1400,
     chords: [[0, 4, 7, 11, 14], [5, 9, 12, 16]],
     pad: { cutoff: 700, level: 0.05 }
