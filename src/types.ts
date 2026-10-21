@@ -187,6 +187,8 @@ export interface NpcDef {
   act?: string;
   /** after talking, walk off this way, fade out and stay gone */
   leave?: 'left' | 'right';
+  /** what they keep doing on the spot (Görli): ride a skateboard, dribble a ball, run after a ball, hop about, sway in the sun */
+  move?: 'skate' | 'dribble' | 'run' | 'hop' | 'sway';
 }
 
 export interface Entity {
@@ -224,6 +226,8 @@ export interface Entity {
   story?: string;
   movedWhen?: string;
   movedTo?: [number, number];
+  /** street people: what they keep doing on the spot (see NpcDef.move) */
+  move?: 'skate' | 'dribble' | 'run' | 'hop' | 'sway';
   /** only there once this quest is done (Woody by the fire, after he leaves the dancefloor) */
   onlyAfter?: string;
   /** in the water: only head and shoulders show, bobbing (KitKat's pool) */
@@ -243,7 +247,7 @@ export interface ShopSign { label: string; band: string; ink: string; door: bool
 
 export interface Building {
   x: number; y: number; w: number; h: number;
-  kind: 'altbau' | 'station' | 'tower' | 'obtower';
+  kind: 'altbau' | 'station' | 'tower' | 'obtower' | 'holzmarkt' | 'kino';
   v?: number;
   shop?: ShopSign;
 }

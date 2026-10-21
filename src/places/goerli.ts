@@ -62,10 +62,10 @@ export async function kick(_e: Entity | null) {
 
 /** The skate park. */
 export async function skate(_e: Entity | null) {
-  await say('Skater: Want to drop in? Board\'s yours.');
-  const a = await ask('', ['Drop in!', 'I will just watch']);
-  if (a === 1) { await say('(She drops in, carves the bowl and pops a kickflip out of it. Show-off.)'); return; }
-  await say(Math.random() < 0.5 ? '(You drop in, wobble, somehow make it up the other side. Everyone bangs their boards on the coping.)' : '(You drop in. Your board drops in. You stay on the rim. The bowl wins.)');
+  await say('Skater: Want to try the ramp? Board\'s yours.');
+  const a = await ask('', ['Give me the board', 'I will just watch']);
+  if (a === 1) { await say('(She rolls up the ramp, pops a kickflip off the top and lands it. Show-off.)'); return; }
+  await say(Math.random() < 0.5 ? '(You roll up the ramp, wobble at the top, and somehow roll back down. Everyone bangs their boards on the ground.)' : '(You roll up the ramp. The board keeps going. You do not. The ramp wins.)');
 }
 
 /** The grill zone. */
@@ -77,7 +77,8 @@ export async function gorliGrill(_e: Entity | null) {
 
 /** A picnic on the Kuhle. */
 export async function kuhle(_e: Entity | null) {
-  await say('Picnicker: Welcome to the Kuhle. The big dip in the middle of Görli. Grab a corner of the blanket.');
+  await say('Picnicker: Welcome to the Kuhle. Isn\'t the sun amazing?');
+  await say('Picnicker: Grab a corner of the blanket. Summer is short, winter is long.');
   await say('(You lie back on the grass of the bowl. Someone plays guitar, a frisbee flies over, the sky turns pink.)');
 }
 
