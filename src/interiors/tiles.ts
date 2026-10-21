@@ -1,6 +1,7 @@
 import type { Scene } from '../types';
 import { RT } from '../core/runtime';
 import { INK, circle, pick, rnd } from '../util';
+import { pixelText } from '../render/pixelFont';
 import { ICHAR, SOLID, T, WALLISH } from '../world/tiles';
 import { INTERIORS } from '../data/interiors';
 /** Clubs trying out the new doorway looks (doorway digits 1–9); the rest keep the bead curtain.
@@ -156,19 +157,35 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         for (const ry of [3, 11]) { P(X + 5, Y + ry, 6, 2, INK); P(X + 6, Y + ry, 4, 1, '#9aa0aa'); }
         P(X + 4, Y + 14, 8, 2, INK);
         break;
-      case 164: { // Sisyphos's circus tent seen from above: green canvas, red stars, a red scalloped edge
-        P(X, Y, 16, 16, (x + y) % 2 ? '#5aa878' : '#4f9a6a');
-        P(X + 7, Y, 2, 16, 'rgba(255,255,255,.12)');
-        if ((x + y) % 2 === 0) {
-          // a big red star, outlined, like the ones painted on the real tent
-          const star = ['....X....', '...XXX...', 'XXXXXXXXX', '.XXXXXXX.', '..XXXXX..', '..XX.XX..', '.XX...XX.'];
-          star.forEach((row, ry) => [...row].forEach((ch, rx) => { if (ch === 'X') P(X + 3 + rx, Y + 4 + ry, 1, 1, '#b8202c'); }));
-          P(X + 7, Y + 6, 1, 2, '#e8505a');
+      case 164: { // Sisyphos's circus tent from above, drawn once from the bottom-right tile of its block:
+        // a many-pointed green canvas round a centre pole, a big red star on top, small red stars on the
+        // panels, red pennants on the points
+        P(X, Y, 16, 16, '#3f7a3a');
+        if (at(x + 1, y) === 164 || at(x, y + 1) === 164) break;
+        let x0 = x, y0 = y;
+        while (at(x0 - 1, y) === 164) x0--;
+        while (at(x, y0 - 1) === 164) y0--;
+        const cx = (x0 * T + X + T) / 2, cy = (y0 * T + Y + T) / 2, rx = (X + T - x0 * T) / 2 - 1, ry = (Y + T - y0 * T) / 2 - 1;
+        const N = 10, pts: [number, number][] = [];
+        for (let k = 0; k < N * 2; k++) {
+          const a = -Math.PI / 2 + k * Math.PI / N, r = k % 2 ? 0.8 : 1;
+          pts.push([cx + Math.cos(a) * rx * r, cy + Math.sin(a) * ry * r]);
         }
-        if (at(x, y - 1) !== 164) { P(X, Y, 16, 2, '#2f6a45'); P(X, Y, 16, 1, INK); }
-        if (at(x - 1, y) !== 164) P(X, Y, 1, 16, INK);
-        if (at(x + 1, y) !== 164) P(X + 15, Y, 1, 16, INK);
-        if (at(x, y + 1) !== 164) { P(X, Y + 12, 16, 4, INK); for (let i = 0; i < 16; i += 4) { P(X + i, Y + 12, 4, 2, '#c8303a'); P(X + i + 1, Y + 14, 2, 1, '#c8303a'); } }
+        g.fillStyle = INK; g.beginPath(); pts.forEach(([px, py], k) => k ? g.lineTo(px, py) : g.moveTo(px, py)); g.closePath(); g.fill();
+        for (let k = 0; k < pts.length; k++) {
+          const [ax, ay] = pts[k], [bx, by] = pts[(k + 1) % pts.length];
+          g.fillStyle = k % 2 ? '#4a9468' : '#62b484';
+          g.beginPath(); g.moveTo(cx, cy); g.lineTo(ax + (cx - ax) * 0.06, ay + (cy - ay) * 0.06); g.lineTo(bx + (cx - bx) * 0.06, by + (cy - by) * 0.06); g.closePath(); g.fill();
+        }
+        const star = (sx: number, sy: number, r: number, c: string) => {
+          g.beginPath();
+          for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r; g.lineTo(sx + Math.cos(a) * rr, sy + Math.sin(a) * rr); }
+          g.closePath(); g.fillStyle = c; g.fill();
+        };
+        for (let k = 0; k < N * 2; k += 2) { const [px, py] = pts[k]; star(px, py, 3, '#c8303a'); }
+        for (let k = 1; k < N * 2; k += 4) { const [px, py] = pts[k]; star(cx + (px - cx) * 0.55, cy + (py - cy) * 0.55, 4, '#b8202c'); }
+        star(cx, cy, Math.min(rx, ry) * 0.42 + 1, INK); star(cx, cy, Math.min(rx, ry) * 0.42, '#c8303a');
+        circle(g, Math.round(cx), Math.round(cy), 2, '#f3eee3');
         break;
       }
       case 165: // a baller box: a little wooden DJ hut on the sand, a speaker and coloured lights
@@ -184,6 +201,34 @@ export function drawInteriorTiles(sc: Scene): HTMLCanvasElement {
         if (at(x + 1, y) !== 166) P(X + 15, Y, 1, 16, INK);
         if (rnd() < 0.15) P(X + 4 + Math.floor(rnd() * 8), Y + 4 + Math.floor(rnd() * 8), 2, 2, '#7a7e86');
         break;
+      case 167: // a souvenir shelf against the wall: folded shirts, tote bags, hoodies, a row of lighters
+        P(X, Y, 16, 16, '#5a3a22'); P(X + 1, Y, 14, 15, '#3a2414');
+        for (const sy of [1, 6, 11]) P(X + 1, Y + sy + 4, 14, 1, '#7a5432');
+        for (let i = 0; i < 3; i++) P(X + 2 + i * 4, Y + 2, 3, 3, pick(['#f3eee3', '#14121c', '#ff5e7a', '#5ec8ff', '#ffd23f']));
+        P(X + 2, Y + 7, 5, 4, '#e8dcc0'); P(X + 4, Y + 8, 1, 2, '#3a2a20'); P(X + 9, Y + 7, 5, 4, pick(['#c28cff', '#b6f36b', '#ff8c42']));
+        for (let i = 0; i < 6; i++) P(X + 2 + i * 2, Y + 12, 1, 3, pick(['#ff5e7a', '#ffd23f', '#5ec8ff', '#b6f36b']));
+        break;
+      case 168: { // the big bonfire on the beach, 2×2: drawn once from its bottom-right tile (flames in fx.ts)
+        P(X, Y, 16, 16, '#c9a86a');
+        if (at(x + 1, y) === 168 || at(x, y + 1) === 168) break;
+        const cx = X, cy = Y;
+        circle(g, cx, cy + 1, 13, INK); circle(g, cx, cy + 1, 12, '#6a6a72'); circle(g, cx, cy + 1, 9, '#2a1a12');
+        for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5; circle(g, Math.round(cx + Math.cos(a) * 11), Math.round(cy + 1 + Math.sin(a) * 11), 2, k % 2 ? '#8a8a92' : '#5a5a62'); }
+        P(cx - 8, cy, 16, 3, '#6b4a2e'); P(cx - 2, cy - 7, 3, 15, '#5a3d24'); P(cx - 7, cy - 5, 14, 2, '#7a5432');
+        break;
+      }
+      case 169: { // the PIZZA sign: a red board with a slice on it, three tiles wide, drawn from its left tile
+        if (at(x - 1, y) === 169) break;
+        let w = 1; while (at(x + w, y) === 169) w++;
+        const Wd = w * T;
+        P(X, Y + 1, Wd, 13, INK); P(X + 1, Y + 2, Wd - 2, 11, '#c4162a'); P(X + 1, Y + 2, Wd - 2, 1, '#e8404a');
+        // the slice
+        P(X + 4, Y + 4, 8, 2, '#c98d4a'); P(X + 5, Y + 6, 6, 2, '#f2c14e'); P(X + 6, Y + 8, 4, 2, '#f2c14e'); P(X + 7, Y + 10, 2, 1, '#f2c14e');
+        P(X + 6, Y + 6, 1, 1, '#c4162a'); P(X + 8, Y + 8, 1, 1, '#c4162a');
+        pixelText(g, 'PIZZA', X + 16, Y + 5, '#fff6d8');
+        P(X + 3, Y + 14, 1, 2, INK); P(X + Wd - 4, Y + 14, 1, 2, INK);
+        break;
+      }
       case 135: // heavy chains hanging from the ceiling down to the floor
         floorBase(X, Y);
         for (const cx of [4, 10]) for (let ly = -12; ly < 14; ly += 4) { P(X + cx - 1, Y + ly, 3, 4, INK); P(X + cx, Y + ly + 1, 1, 2, ly % 8 ? '#8a8e98' : '#5a5e68'); }

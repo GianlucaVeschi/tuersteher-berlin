@@ -193,6 +193,26 @@ export function drawInteriorFx(now: number, camX: number, camY: number, ppx: num
       ctx.fillStyle = '#ffffff'; ctx.fillRect(X + 3, Y + 4, 8, 1);
     }
   }));
+  // the big bonfire (2×2, Sisyphos): one tall fire over the middle of the block, sparks rising
+  sc.map.forEach((row, y) => row.forEach((t, x) => {
+    if (t !== 168 || row[x + 1] === 168 || sc.map[y + 1]?.[x] === 168) return;
+    const X = x * T - camX, Y = y * T - camY;
+    if (X < -40 || Y < -40 || X > RT.VW + 40 || Y > RT.VH + 40) return;
+    const f = lights ? Math.sin(now / 80) : 0, f2 = lights ? Math.sin(now / 130 + 1) : 0;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const gr = ctx.createRadialGradient(X, Y, 4, X, Y, 54);
+    gr.addColorStop(0, 'rgba(255,140,40,.42)'); gr.addColorStop(1, 'rgba(255,140,40,0)');
+    ctx.fillStyle = gr; ctx.fillRect(X - 56, Y - 56, 112, 112);
+    ctx.restore();
+    ctx.fillStyle = '#ff4a12'; ctx.fillRect(X - 7, Y - 8 - f, 14, 10); ctx.fillRect(X - 4, Y - 13 - f2, 8, 6);
+    ctx.fillStyle = '#ff8a2a'; ctx.fillRect(X - 5, Y - 11 - Math.round(f * 1.5), 10, 10); ctx.fillRect(X - 2, Y - 17 - f, 4, 6);
+    ctx.fillStyle = '#ffd36b'; ctx.fillRect(X - 3, Y - 7, 6, 6); ctx.fillStyle = '#fff2b0'; ctx.fillRect(X - 1, Y - 5, 2, 3);
+    if (lights) for (let i = 0; i < 4; i++) {
+      const p = (now / 1100 + i / 4) % 1;
+      ctx.fillStyle = `rgba(255,${180 + i * 15},80,${(1 - p).toFixed(2)})`;
+      ctx.fillRect(Math.round(X - 6 + i * 4 + Math.sin(p * 9 + i) * 3), Math.round(Y - 14 - p * 26), 1, 1);
+    }
+  }));
   // a glass roof over part of the floor (Heideglühen's covered dancefloor)
   if (fl.roof) {
     const [rx0, ry0, rx1, ry1] = fl.roof;
