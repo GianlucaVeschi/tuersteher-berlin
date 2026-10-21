@@ -130,13 +130,17 @@ export function drawTile(x: number, y: number) {
       if (get(x - 1, y) !== FB) { P(X, Y, 1, 16, '#f3eee3'); P(X + 1, Y + 5, 2, 6, '#e8e4d8'); }
       if (get(x + 1, y) !== FB) { P(X + 15, Y, 1, 16, '#f3eee3'); P(X + 13, Y + 5, 2, 6, '#e8e4d8'); }
       break;
-    case SK: { // skate park: smooth grey concrete; the rim of the bowl gets a coping edge
+    case SK: { // skate park: smooth grey concrete with a light edge; a quarter-pipe ramp along its east end
       P(X, Y, 16, 16, '#8a8696');
       for (let i = 0; i < 3; i++) P(X + Math.floor(rnd() * 15), Y + Math.floor(rnd() * 15), 2, 1, '#7a7686');
       if (get(x, y - 1) !== SK) P(X, Y, 16, 2, '#c9c5d4');
       if (get(x - 1, y) !== SK) P(X, Y, 2, 16, '#c9c5d4');
-      if (get(x + 1, y) !== SK) P(X + 14, Y, 2, 16, '#5a5668');
-      if (get(x, y + 1) !== SK) P(X, Y + 14, 16, 2, '#5a5668');
+      if (get(x + 1, y) !== SK) {
+        // the ramp: the concrete curves up towards the east, lighter as it rises, a steel coping on top
+        for (let i = 0; i < 12; i++) P(X + 4 + i, Y, 1, 16, `rgb(${138 + i * 7},${134 + i * 7},${150 + i * 6})`);
+        P(X + 4, Y, 1, 16, '#6a6678'); P(X + 14, Y, 2, 16, '#e8e8f0'); P(X + 15, Y, 1, 16, '#9aa0aa');
+        if (get(x, y + 1) !== SK) P(X + 4, Y + 14, 12, 2, '#5a5668');
+      } else if (get(x, y + 1) !== SK) P(X, Y + 14, 16, 2, '#5a5668');
       break;
     }
     case OT: // old rails of the Görlitzer Bahnhof, half grown over
@@ -439,10 +443,125 @@ export function prerender() {
     if (b.kind === 'altbau') drawAltbau(b);
     else if (b.kind === 'station') drawStation(b);
     else if (b.kind === 'tower') drawTower(b);
+    else if (b.kind === 'holzmarkt') drawHolzmarkt(b);
+    else if (b.kind === 'kino') drawKino(b);
   });
   CLUBS.forEach(drawClub);
   buildInteriors();
   buildings.forEach(b => { if (b.kind === 'obtower') drawObTower(b); });
   drawMoleculeMan();
   drawStationBoard();
+}
+
+/* Holzmarkt 25 (researched): the cooperative village the Bar25 crew built on the Spree. A patchwork of wooden huts
+   and kiosks from recycled wood, brightly painted houses, the restaurant on a wooden ship, all strung with lights;
+   Haus 2+, clad all over in red wood, marks the entrance. Here it stands on the strip west of Görli, every front
+   facing east to the road (seen sideways); the animated bits (lights, smoke, flags, people) are in render/draw.ts. */
+export function drawHolzmarkt(b: Building) {
+  const X = b.x * T, Y = b.y * T, W = b.w * T;
+  P(X, Y, W, b.h * T, '#3f7a3a');
+  // a hut seen from above with its front (door, window) on its east side; w, h in pixels
+  const hut = (x: number, y: number, w: number, h: number, wall: string, roof: string, door = true) => {
+    P(x, y, w, h, INK);
+    P(x + 1, y + 1, w - 8, h - 2, roof);                                        // roof from above
+    for (let i = y + 3; i < y + h - 2; i += 3) P(x + 1, i, w - 8, 1, 'rgba(0,0,0,.22)'); // corrugated / boards
+    P(x + 1, y + 1, 2, h - 2, 'rgba(255,255,255,.12)');
+    P(x + w - 7, y + 1, 6, h - 2, wall);                                        // the east wall, facing the road
+    P(x + w - 7, y + 1, 1, h - 2, 'rgba(0,0,0,.3)');
+    if (h > 18) P(x + w - 6, y + 3, 4, 4, '#ffd27a');                           // a lit window
+    if (door) { P(x + w - 6, y + h - 11, 4, 8, INK); P(x + w - 5, y + h - 10, 2, 7, '#5a3420'); }
+    P(x + w, y + 2, 2, h - 2, 'rgba(0,0,0,.25)');                               // shadow on the ground
+  };
+  // ---- Haus 2+: three storeys of vivid red wood at the north end ----
+  const hy = Y + 2, hh = 58;
+  P(X + 2, hy, W - 4, hh, INK); P(X + 3, hy + 1, W - 6, hh - 2, '#b8281f');
+  for (let i = X + 5; i < X + W - 4; i += 3) P(i, hy + 1, 1, hh - 2, '#8e1c16');  // the red boards
+  P(X + 3, hy + hh / 2 - 1, W - 6, 2, '#6e140f');                                // the roof ridge, north to south
+  P(X + W - 12, hy + 1, 9, hh - 2, '#d23a2e');                                   // its east front, lit by the street
+  for (let f = 0; f < 3; f++) { P(X + W - 10, hy + 5 + f * 16, 5, 7, INK); P(X + W - 9, hy + 6 + f * 16, 3, 5, '#ffcf6a'); } // a window per storey
+  P(X + W - 11, hy + hh - 14, 7, 12, INK); P(X + W - 10, hy + hh - 13, 5, 11, '#3a1a10');   // the big door
+  P(X + 2, hy + hh, W - 4, 3, 'rgba(0,0,0,.3)');
+  // ---- the patchwork of huts and kiosks ----
+  const py = Y + 66;
+  hut(X + 2, py, 58, 34, '#2bb3a3', '#5a4a3a');
+  hut(X + 62, py, 46, 26, '#f2c14e', '#6b4a2e');
+  hut(X + 2, py + 36, 44, 40, '#e06b8a', '#4a3a3a');
+  hut(X + 48, py + 28, 60, 22, '#58b368', '#7a5432');
+  hut(X + 48, py + 52, 60, 24, '#c28cff', '#5a4a3a', false);
+  P(X + 30, py + 6, 6, 6, INK); P(X + 31, py + 7, 4, 4, '#8a9098');             // a chimney (it smokes in draw.ts)
+  P(X + 14, py + 10, 10, 6, '#3d6fb6'); P(X + 15, py + 11, 8, 1, '#7fb0ff');     // a patched-on solar panel
+  // ---- the village square, open to the road, under strings of lights ----
+  const sy = Y + 146, sh = 62;
+  P(X + 2, sy, W - 4, sh, '#8a5a34'); for (let i = sy + 3; i < sy + sh; i += 4) P(X + 2, i, W - 4, 1, '#6b4a2e');
+  P(X + 2, sy, W - 4, 2, '#4a3020'); P(X + 2, sy + sh - 2, W - 4, 2, '#4a3020'); P(X + 2, sy, 2, sh, '#4a3020'); // a low fence, open to the east
+  circle(m, X + 26, sy + 30, 17, INK); circle(m, X + 26, sy + 30, 16, '#2f6b35'); circle(m, X + 22, sy + 25, 8, '#4f8f4a'); // the big tree
+  P(X + 25, sy + 40, 3, 6, '#5a3a22');
+  for (const [bx, by] of [[X + 52, sy + 12], [X + 52, sy + 44], [X + 80, sy + 28]] as const) { P(bx, by, 14, 5, INK); P(bx + 1, by + 1, 12, 3, '#a87a4a'); } // benches
+  // (the HOLZMARKT sign over the square is drawn on top of the lights, in render/draw.ts)
+  // ---- Katerschmaus: the restaurant on a wooden ship ----
+  const ky = Y + 214, kh = 62;
+  m.fillStyle = INK; m.beginPath(); m.moveTo(X + 8, ky); m.lineTo(X + W - 8, ky); m.lineTo(X + W - 4, ky + kh - 16); m.lineTo(X + W / 2, ky + kh); m.lineTo(X + 4, ky + kh - 16); m.closePath(); m.fill();
+  m.fillStyle = '#7a4a2a'; m.beginPath(); m.moveTo(X + 9, ky + 1); m.lineTo(X + W - 9, ky + 1); m.lineTo(X + W - 5, ky + kh - 16); m.lineTo(X + W / 2, ky + kh - 2); m.lineTo(X + 5, ky + kh - 16); m.closePath(); m.fill();
+  P(X + 14, ky + 6, W - 28, kh - 26, '#a87a4a'); for (let i = ky + 9; i < ky + kh - 20; i += 4) P(X + 14, i, W - 28, 1, '#8a6038'); // the deck
+  for (let i = 0; i < 4; i++) { const ty = ky + 10 + i * 9; P(X + 22, ty, 10, 6, INK); P(X + 23, ty + 1, 8, 4, '#f3eee3'); P(X + 46, ty, 10, 6, INK); P(X + 47, ty + 1, 8, 4, '#f3eee3'); } // tables
+  for (let i = 0; i < 4; i++) { circle(m, X + W - 10, ky + 8 + i * 11, 3, INK); circle(m, X + W - 10, ky + 8 + i * 11, 2, '#ffd27a'); } // portholes, east side
+  P(X + 72, ky + 4, 2, 40, '#3a2616');                                           // the mast (its flags flutter in draw.ts)
+  // ---- the lookout tower and a painted container at the south end ----
+  const ty = Y + 282;
+  P(X + 6, ty, 30, 34, INK); P(X + 7, ty + 1, 28, 32, '#6b4a2e'); P(X + 9, ty + 3, 24, 28, '#8a5a34'); P(X + 9, ty + 3, 24, 2, '#a87a4a');
+  P(X + 20, ty - 6, 2, 10, '#3a2616');                                           // the flagpole
+  P(X + 42, ty + 6, 64, 26, INK); P(X + 43, ty + 7, 62, 24, '#3d5f94');
+  for (let i = X + 45; i < X + 104; i += 4) P(i, ty + 7, 1, 24, '#2e4c7a');     // the container's ribs
+  const tags = ['#ff5e7a', '#ffd23f', '#b6f36b', '#f3eee3'];
+  for (let i = 0; i < 6; i++) P(X + 48 + i * 9, ty + 12 + (i % 3) * 4, 6, 2, tags[i % 4]); // graffiti
+}
+
+
+/* Freiluftkino Kreuzberg (researched: the open-air cinema in the Bethanien courtyard at Mariannenplatz, films in the
+   original language with subtitles; moved here, east of Görli, and dramatised). Seen from above: the big screen on
+   its scaffold at the north end with the marquee under it, rows of deckchairs facing it, the projection booth at the
+   back, a popcorn kiosk, bikes. The gate in the west fence faces the road. The film, the beam, the audience and the
+   usher are drawn each frame in render/draw.ts (drawKinoLife). */
+export function drawKino(b: Building) {
+  const X = b.x * T, Y = b.y * T, W = b.w * T, H = b.h * T;
+  P(X, Y, W, H, '#3f7a3a');
+  // the gravel courtyard inside a low brick wall, with the gate on the road side
+  P(X + 1, Y + 1, W - 2, H - 2, INK); P(X + 2, Y + 2, W - 4, H - 4, '#7a4a3a');
+  P(X + 4, Y + 4, W - 8, H - 8, '#34303a');
+  for (let i = 0; i < 260; i++) P(X + 4 + Math.floor(rnd() * (W - 9)), Y + 4 + Math.floor(rnd() * (H - 9)), 1, 1, rnd() < 0.5 ? '#3e3a46' : '#2c2832');
+  P(X, Y + 150, 5, 26, '#34303a'); P(X + 1, Y + 148, 3, 2, INK); P(X + 1, Y + 176, 3, 2, INK); // the gate
+  // the aisle along the west side, with little floor lights
+  P(X + 4, Y + 94, 14, 164, '#45404c');
+  for (let y = Y + 100; y < Y + 256; y += 16) P(X + 5, y, 1, 1, '#ffb84a');
+  // the screen on its scaffold, the speakers either side (the picture itself is drawn each frame)
+  P(X + 12, Y + 58, 3, 14, INK); P(X + 97, Y + 58, 3, 14, INK);
+  P(X + 5, Y + 3, 102, 60, INK); P(X + 6, Y + 4, 100, 58, '#0d0b12'); P(X + 8, Y + 6, 96, 54, '#1a1a22');
+  for (const sx of [X + 4, X + 98]) {
+    P(sx, Y + 56, 10, 15, INK); P(sx + 1, Y + 57, 8, 13, '#26242e');
+    circle(m, sx + 5, Y + 60, 2, '#4a4852'); circle(m, sx + 5, Y + 66, 3, '#4a4852'); P(sx + 5, Y + 66, 1, 1, INK);
+  }
+  // the marquee under the screen (its bulbs chase in draw.ts)
+  P(X + 4, Y + 72, W - 8, 20, INK); P(X + 5, Y + 73, W - 10, 18, '#7a1420'); P(X + 5, Y + 75, W - 10, 1, '#c99a20'); P(X + 5, Y + 88, W - 10, 1, '#c99a20');
+  m.save(); m.translate(X + 9, Y + 77); m.scale(2, 2); pixelText(m, 'FREILUFTKINO', 0, 0, '#ffe9a8'); m.restore();
+  // the projection booth at the back: a wooden hut, its window (the lens) looking north over the audience
+  P(X + 42, Y + 260, 32, 34, INK); P(X + 43, Y + 261, 30, 32, '#6b4a2e');
+  for (let i = X + 45; i < X + 72; i += 3) P(i, Y + 265, 1, 27, '#5a3c24');
+  P(X + 43, Y + 261, 30, 3, '#4a3020'); P(X + 52, Y + 260, 12, 6, INK); P(X + 53, Y + 261, 10, 4, '#3a3028');
+  pixelText(m, '35MM', X + 51, Y + 280, '#f2c14e');
+  // the popcorn kiosk, a red and white awning
+  P(X + 4, Y + 264, 32, 30, INK); P(X + 5, Y + 265, 30, 28, '#f3eee3');
+  for (let i = 0; i < 5; i++) P(X + 5 + i * 6, Y + 265, 3, 7, '#c4162a');
+  P(X + 5, Y + 272, 30, 1, INK); pixelText(m, 'POPCORN', X + 7, Y + 275, '#c4162a');
+  P(X + 8, Y + 283, 24, 8, INK); P(X + 9, Y + 284, 22, 6, '#ffd96a');
+  for (let i = 0; i < 8; i++) P(X + 10 + Math.floor(rnd() * 20), Y + 285 + Math.floor(rnd() * 4), 2, 1, '#fff8e0'); // popcorn in the machine
+  // a big chestnut tree in the corner
+  circle(m, X + 92, Y + 276, 15, INK); circle(m, X + 92, Y + 276, 14, '#2f6b35'); circle(m, X + 88, Y + 271, 7, '#4f8f4a');
+  // bikes, of course, at the back wall
+  P(X + 8, Y + 304, W - 16, 1, '#8a9098');
+  const BIKES = ['#c94a3a', '#3d6fb6', '#f3eee3', '#58b368', '#ffd23f', '#14121c'];
+  for (let i = 0; i < 6; i++) {
+    const bx = X + 10 + i * 16, c = BIKES[i];
+    circle(m, bx + 2, Y + 310, 3, INK); circle(m, bx + 11, Y + 310, 3, INK); circle(m, bx + 2, Y + 310, 1, '#34303a'); circle(m, bx + 11, Y + 310, 1, '#34303a');
+    P(bx + 2, Y + 307, 9, 1, c); P(bx + 5, Y + 305, 1, 3, c); P(bx + 10, Y + 304, 2, 1, INK);
+  }
 }

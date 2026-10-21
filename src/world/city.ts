@@ -33,6 +33,12 @@ export function building(x: number, y: number, w: number, h: number, kind: Build
 export const TOWER = { x: 41, y: 16, w: 6, h: 4, top: 9 };
 /** The Landwehrkanal: three rows of water across the map, just south of the Spree. */
 export const CANAL = { y: 34, h: 3 };
+/** Holzmarkt 25: the Bar25 crew's wooden village, on the green strip west of Görli, facing the road. Seen from
+ *  the outside only (for now). */
+export const HOLZMARKT = { x: 1, y: 38, w: 7, h: 20 };
+/** Freiluftkino Kreuzberg: the open-air cinema, on the green strip east of Görli (opposite Holzmarkt), its gate
+ *  facing west to the road. Seen from the outside only. */
+export const KINO = { x: 64, y: 39, w: 7, h: 20 };
 /** Görlitzer Park, in the middle of the map (north clubs above, south clubs below): fenced since 2025/26, but every gate stands open. */
 export const GORLI = { x0: 13, y0: 41, x1: 58, y1: 56 };
 // Molecule Man: stands in the Spree, east of the Oberbaumbrücke (drawn onto the water; the river stays solid)
@@ -118,6 +124,10 @@ export function buildCity() {
     building(p.x, p.y, p.w, p.h, 'altbau', { v: p.v, shop: { label: p.label, band: p.band, ink: p.ink, door: true, awning: p.awning } });
     set(p.dx, p.doorY, D);
   });
+  building(HOLZMARKT.x, HOLZMARKT.y, HOLZMARKT.w, HOLZMARKT.h, 'holzmarkt');
+  // the strip between Holzmarkt and the road is grass, also where an old pavement ran up to it
+  for (let y = HOLZMARKT.y; y < HOLZMARKT.y + HOLZMARKT.h; y++) { const x = HOLZMARKT.x + HOLZMARKT.w; if (get(x, y) === S) set(x, y, G); }
+  building(KINO.x, KINO.y, KINO.w, KINO.h, 'kino');
   // Mustafa's Gemüse Kebap: the famous Imbiss (the real one is on Mehringdamm), on the green west of Humana
   building(3, 3, 5, 3, 'altbau', { v: 2, shop: { label: "MUSTAFA'S", band: '#c4162a', ink: '#fff6a8', door: false } });
   // Oberbaumbrücke towers
@@ -164,6 +174,8 @@ function cityPeople(): Entity[] {
     ents.push({ kind: 'sign', x: c.dx + c.signSide, y: c.by, lines: c.sign });
   });
   ents.push(
+    { kind: 'sign', x: 8, y: 49, lines: ['HOLZMARKT 25', 'A wooden village on the Spree, built by the crew behind the legendary Bar25 and run as a cooperative: huts, kiosks, a restaurant, studios, a club, all out of wood.', '(The red wooden house at the end is Haus 2+. The gate is closed tonight. Maybe another night.)'] },
+    { kind: 'sign', x: 63, y: 49, lines: ['FREILUFTKINO KREUZBERG', 'The open-air cinema in the courtyard of the old Bethanien hospital at Mariannenplatz. Films in the original language with subtitles, under the sky.', '(Tonight: TÜRSTEHER, the movie. Sold out. Of course it is sold out.)'] },
     { kind: 'sign', x: 25, y: 17, lines: ['EAST SIDE GALLERY', 'About 1.3 km of the Berlin Wall, painted by artists from around the world in 1990.'] },
     { kind: 'sign', x: 47, y: 19, lines: ['FERNSEHTURM · Alexanderplatz', '368 m tall. You can see it from almost every street in Berlin.'] },
     { kind: 'sign', x: 41, y: 21, lines: ['OBERBAUMBRÜCKE', 'The red brick bridge between Friedrichshain and Kreuzberg.'] },
@@ -188,6 +200,6 @@ function cityPeople(): Entity[] {
   ([[16, 53, 'goat'], [18, 54, 'goat'], [21, 53, 'donkey'], [22, 51, 'donkey'], [20, 54, 'sheep'], [23, 54, 'rabbit'], [16, 54, 'rabbit']] as const)
     .forEach(([x, y, species], i) => ents.push({ kind: 'animal', species, x, y, dir: i % 2 ? 'left' : 'right', lines: [{ goat: 'Goat: Meh-eh-eh.', donkey: 'Donkey: I-aaah!', sheep: 'Sheep: Mäh.', rabbit: '(The rabbit wiggles its nose at you.)' }[species]] }));
   // people from data/npcs.ts; `home` lets Start over bring back the ones who left
-  NPCS.forEach(n => ents.push({ kind: 'npc', npcId: n.id, x: n.x, y: n.y, dir: n.dir || 'down', look: n.look, lines: n.lines, act: n.act, leave: n.leave, home: { x: n.x, y: n.y } }));
+  NPCS.forEach(n => ents.push({ kind: 'npc', npcId: n.id, x: n.x, y: n.y, dir: n.dir || 'down', look: n.look, lines: n.lines, act: n.act, leave: n.leave, move: n.move, home: { x: n.x, y: n.y } }));
   return ents;
 }
