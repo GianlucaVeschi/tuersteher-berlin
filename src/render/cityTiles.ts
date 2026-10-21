@@ -346,6 +346,94 @@ export function signText(text: string, X: number, Y: number, Wd: number, color: 
   P(sx - 3, Y + 3, tw + 6, 11, '#0b0a10');
   m.fillStyle = color; m.fillText(text, sx, Y + 5);
 }
+/** The Sisyphos entrance on Hauptstraße, from a photo: the rusty steel gate with two big birds facing each
+ *  other beak to beak over a sunburst of bars, the arched rusty SISYPHOS banner, dark brick pillars, and
+ *  the red-and-white circus fence with pointed crowns, white stars and disco balls; trees behind it, the
+ *  yellow-lid recycling bins on the left. The gate stands where the door is (bottom middle). */
+function drawSisyphosGate(X: number, Y: number, Wd: number, H: number) {
+  const RUST = '#a4562a', RUST_D = '#7a3a1a', RUST_L = '#c8763c';
+  // trees behind the fence
+  P(X, Y, Wd, H, '#24452a');
+  for (let i = 0; i < 14; i++) circle(m, X + 4 + i * 8 + Math.floor(rnd() * 4), Y + 6 + Math.floor(rnd() * 10), 5 + Math.floor(rnd() * 3), pick(['#2f5a35', '#3f7a45', '#356b3c']));
+  // the circus fence, left and right, each with a pointed crown in the middle
+  const fence = (x0: number, w: number) => {
+    const peak = x0 + w / 2;
+    for (let x = x0; x < x0 + w; x++) {
+      const d = Math.min(1, Math.abs(x + 0.5 - peak) / (w / 2));
+      const top = Math.round(8 + 16 * (1 - (1 - d) ** 2));
+      P(X + x, Y + top - 1, 1, 1, INK);
+      P(X + x, Y + top, 1, H - 6 - top, ((x - x0) >> 2) % 2 ? '#f0ebe0' : '#d6303a');
+    }
+    P(X + x0, Y + H - 6, w, 6, '#2e2c30');
+    // a white star, and a disco ball on a little post on top of the crown
+    const sx = X + Math.round(peak), sy = Y + 40;
+    ['...X...', '...X...', 'XXXXXXX', '.XXXXX.', '..XXX..', '.XX.XX.', 'X.....X'].forEach((row, ry) =>
+      [...row].forEach((ch, rx) => { if (ch === 'X') P(sx - 3 + rx, sy - 3 + ry, 1, 1, '#ffffff'); }));
+    P(sx, Y + 5, 1, 3, INK);
+    circle(m, sx, Y + 3, 3, INK); circle(m, sx, Y + 3, 2, '#c9ccd6'); P(sx - 1, Y + 2, 1, 1, '#ffffff');
+  };
+  fence(0, 28); fence(Wd - 28, 28);
+  // the recycling bins on the left: black, yellow lids
+  for (const bx of [1, 8, 15]) { P(X + bx, Y + H - 13, 7, 11, INK); P(X + bx + 1, Y + H - 12, 5, 9, '#26242a'); P(X + bx, Y + H - 14, 7, 2, '#f2c418'); P(X + bx + 2, Y + H - 9, 3, 2, '#f2c418'); P(X + bx + 1, Y + H - 2, 1, 1, '#8a8a8a'); P(X + bx + 5, Y + H - 2, 1, 1, '#8a8a8a'); }
+  // brick pillars either side of the gate
+  for (const px of [28, Wd - 34]) {
+    P(X + px, Y + 18, 6, H - 18, INK); P(X + px + 1, Y + 19, 4, H - 19, '#3a383c');
+    for (let r = 22; r < H; r += 3) P(X + px + 1, Y + r, 4, 1, '#2a282c');
+    P(X + px + 1, Y + 19, 4, 1, '#55525a');
+  }
+  // the gate: an arched steel frame, pale panels behind a sunburst of rusty bars
+  const gx0 = 34, gx1 = Wd - 34, cx = Wd / 2, base = H - 2;
+  const arch = (x: number) => Math.round(26 - 5 * (1 - ((x + 0.5 - cx) / (cx - gx0)) ** 2));
+  for (let x = gx0; x < gx1; x++) {
+    const top = arch(x);
+    P(X + x, Y + top, 1, base - top, '#c3cdd3');
+    P(X + x, Y + top - 1, 1, 2, RUST_D);
+    if ((x - gx0) % 4 === 1) P(X + x, Y + top - 4, 1, 3, RUST_D); // spikes along the top
+  }
+  P(X + gx0, Y + 21, 1, base - 21, RUST_D); P(X + gx1 - 1, Y + 21, 1, base - 21, RUST_D);
+  P(X + gx0, Y + base - 1, gx1 - gx0, 1, RUST_D);
+  // rays from behind the birds out to the whole frame: up the left side, over the arch, down the right
+  const ox = cx, oy = base - 16, rim: [number, number][] = [];
+  for (let y = base - 3; y > arch(gx0) + 2; y -= 5) rim.push([gx0 + 1, y]);
+  for (let x = gx0 + 3; x < gx1 - 3; x += 4) rim.push([x, arch(x) + 1]);
+  for (let y = arch(gx1 - 1) + 3; y < base - 2; y += 5) rim.push([gx1 - 2, y]);
+  for (const [tx, ty] of rim) {
+    const n = Math.ceil(Math.max(Math.abs(tx - ox), Math.abs(ty - oy)));
+    for (let k = 4; k <= n; k++) P(X + Math.round(ox + (tx - ox) * k / n), Y + Math.round(oy + (ty - oy) * k / n), 1, 1, RUST);
+  }
+  P(X + cx - 1, Y + arch(cx) , 2, base - arch(cx), RUST_D); // where the two wings meet
+  // the two birds, beak to beak (the left one drawn, the right one its mirror image)
+  const bird = (flip: boolean) => {
+    const px = (x: number, y: number, w: number, h: number, c: string) => P(X + (flip ? Wd - x - w : x), Y + y, w, h, c);
+    const by = base - 15;
+    // outline first, then the rusty body
+    px(37, by - 3, 4, 3, INK); px(38, by - 4, 2, 2, INK);                                  // tail
+    px(39, by - 4, 14, 10, INK); px(41, by - 5, 10, 12, INK);                             // body
+    px(49, by - 15, 5, 12, INK);                                                           // neck
+    px(49, by - 18, 7, 5, INK); px(55, by - 17, 2, 2, INK);                                // head, beak
+    px(38, by - 3, 2, 2, RUST); px(39, by - 3, 1, 1, RUST);
+    px(40, by - 3, 12, 8, RUST); px(42, by - 4, 8, 10, RUST);
+    px(50, by - 14, 3, 11, RUST);
+    px(50, by - 17, 5, 3, RUST); px(55, by - 16, 1, 1, RUST_D);
+    px(52, by - 16, 1, 1, '#f0ebe0');                                                      // eye
+    px(43, by - 1, 7, 1, RUST_D); px(42, by + 1, 8, 1, RUST_D); px(44, by - 2, 4, 1, RUST_L); // wing
+    px(50, by - 14, 1, 10, RUST_L);
+    px(43, by + 6, 1, 4, RUST_D); px(47, by + 6, 1, 4, RUST_D); px(42, by + 9, 3, 1, RUST_D); px(46, by + 9, 3, 1, RUST_D); // feet
+  };
+  bird(false); bird(true);
+  // the arched banner over it all: rusty steel, the name cut out of it
+  const bx0 = 22, bx1 = Wd - 22;
+  const band = (x: number) => Math.round(12 - 7 * (1 - ((x + 0.5 - cx) / (cx - bx0)) ** 2));
+  for (let x = bx0 - 5; x < bx1 + 5; x++) {
+    const tail = x < bx0 || x >= bx1;
+    const y = tail ? band(x < bx0 ? bx0 : bx1 - 1) + 3 : band(x);
+    P(X + x, Y + y - 1, 1, 11, INK);
+    P(X + x, Y + y, 1, 9, tail ? RUST_D : RUST);
+    if (!tail && x % 3 === 0) P(X + x, Y + y + 8, 1, 1, RUST_D);
+  }
+  const word = 'SISYPHOS', tw = word.length * 5;
+  [...word].forEach((ch, i) => { const lx = Math.round(cx - tw / 2 + i * 5); pixelText(m, ch, X + lx, Y + band(lx + 1) + 2, '#f3e6c8'); });
+}
 export function drawClub(c: Club) {
   const X = c.x * T, Y = c.y * T, Wd = c.w * T, H = c.h * T;
   const base = ({ berghain: '#6c6a66', tresor: '#4c3532', kitkat: '#4f1d3b', rso: '#7a3a2c', heidegluehen: '#4a3420', katerblau: '#6a4a2c', sisyphos: '#5c4630', cdv: '#5a432d' } as Record<string, string>)[c.style];
@@ -413,10 +501,9 @@ export function drawClub(c: Club) {
       signText('KATER BLAU', X, Y, Wd, '#7ec8ff');
       break;
     case 'sisyphos':
-      for (let r = 19; r < H - 1; r += 4) P(X + 1, Y + r, Wd - 2, 1, '#4b3826');
-      for (const ly of [20, 34]) for (let i = 3; i < Wd - 3; i += 5) P(X + i, Y + ly + ((i / 5 | 0) % 2), 2, 2, pick(['#ffd36b', '#ff7a5a', '#7ec8ff', '#b6f36b']));
-      signText('SISYPHOS', X, Y, Wd, '#ffd36b');
-      break;
+      // the gate is the door: nothing else to draw
+      drawSisyphosGate(X, Y, Wd, H);
+      return;
     case 'cdv':
       for (let i = 4; i < Wd; i += 4) P(X + i, Y + 16, 1, H - 17, '#4a3522');
       P(X + 10, Y + 26, 14, 10, INK); P(X + 11, Y + 27, 12, 8, '#f2c45a');
