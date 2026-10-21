@@ -98,3 +98,15 @@ export async function sisyCafe(_e: Entity | null, _clubId: string) {
     'Café: Look all you like. The shirts sell out every summer.'
   ][a]);
 }
+
+/** The pizza place along the bottom of the garden: stone oven, slices by the piece, the line never ends. */
+export async function sisyPizza(_e: Entity | null, _clubId: string) {
+  await say('Pizza: Fresh out of the oven. What do you want?');
+  const a = await ask('A slice of…', ['Margherita', 'Salami', 'Vegan with everything', "Whatever's left"]);
+  await say([
+    'Pizza: Margherita. Classic. (Burns the roof of your mouth. Worth it.)',
+    'Pizza: Salami. (You eat it so fast you forget to taste it. You buy another one.)',
+    'Pizza: Vegan with everything. (It is the best thing you have eaten all weekend. Possibly all year.)',
+    "Pizza: Whatever's left is half a quattro formaggi and a lot of love. (Perfect.)"
+  ][a]);
+}

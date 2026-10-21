@@ -14,7 +14,7 @@ import { sceneClub, sceneFloor } from '../world/scenes';
 import { INTERIORS } from '../data/interiors';
 import { playKHole } from '../minigames';
 import { RT } from '../core/runtime';
-import { CARRY_MAX, PFAND_GOAL, euro, sisyCafe } from './sisyphos';
+import { CARRY_MAX, PFAND_GOAL, euro, sisyCafe, sisyPizza } from './sisyphos';
 import { renderCard } from '../ui/card';
 import { save } from '../core/save';
 import { player, state } from '../core/state';
@@ -30,7 +30,7 @@ export const ACTS: Record<string, Act> = {
   // Club der Visionäre (quests/cdv.ts)
   cdvBar, ines, planks, willow, flo,
   // Sisyphos MDMA chain (quests/mdma.ts)
-  ronny, poolHat, sisyCafe,
+  ronny, poolHat, sisyCafe, sisyPizza,
   // Tresor (quests/tresor.ts)
   boxes, detroit, sticker,
   // Kater Blau (quests/katerblau.ts)

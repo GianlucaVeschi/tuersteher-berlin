@@ -266,7 +266,8 @@ const MUFFLED: Record<string, [string, number]> = {
   'heidegluehen:hof': ['heide', 1500],     // the yard: the dance house through its open door
   'heidegluehen:hinten': ['heide', 650],   // out the back: the dancefloor through the back door
   'tresor:tunnel': ['tresor', 700],        // the tunnel: the vault getting louder ahead
-  'sisyphos:eingang': ['sisy_strand', 600] // the queue: the Strand behind the door
+  'sisyphos:eingang': ['sisy_strand', 600], // the queue: the Strand behind the door
+  'sisyphos:wc': ['sisy_strand', 500]       // the toilets: the garden through the door
 };
 
 /** Which style plays on each club floor. */

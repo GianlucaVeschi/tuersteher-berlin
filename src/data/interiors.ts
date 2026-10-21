@@ -366,55 +366,67 @@ export const INTERIORS: Record<string, InteriorDef> = {
         ]
       },
       strand: {
-        // The garden, laid out from the aerial view: the sauna house (No. 15) on the left, the Pfand bar under
-        // it, the green circus tent with red stars top right with the DJ and the crowd on the sand in front, the
-        // beach with its baller boxes (little wooden DJ huts), the small lake with a bonfire next to it, and the
-        // café and merch kiosk on your right as you come in from the queue. Trees all round, the door into the
-        // factory (Wintergarten) at the top.
-        // Extra legend: Ř  grey roof   ŧ  circus tent   ƀ  baller box   f  bonfire
+        // The garden, laid out from the owner's sketch (and the aerial view): along the top the circus tent
+        // (green, red stars), the wooden dancefloor with the DJ, the L-shaped bar, and on the right the
+        // Hammahalle, the Dampfer under it with its gangway, and the Tunnel. In the middle the lake with its
+        // beach and trees, the bonfire, and the open sand full of people and baller boxes. Along the bottom
+        // the sauna (No. 15), the café, the way in from the queue, the pizza place, the Wintergarten and the
+        // toilets. Every building's door faces the garden.
+        // Extra legend: Ř  grey roof   ŧ  circus tent   ƀ  baller box   f  bonfire   e  wooden dancefloor
         label: 'Strand · the garden', short: 'STRAND',
         map: [
-      'FFFFFFFFFFFFF1FFFFFFFFFFFFFFFFFFFF',
-      'FggggggggggggggggggggggggggggggggF',
-      'FŘŘŘŘŘŘŘŘgTgggTggggggŧŧŧŧŧŧŧŧŧgTgF',
-      'FŘŘŘŘŘŘŘŘggggggggTgggŧŧŧŧŧŧŧŧŧgggF',
-      'FŘŘŘŘŘŘŘŘgggTggRgggggŧŧŧŧŧŧŧŧŧgggF',
-      'FŘŘŘŘŘŘŘŘggggggggggggŧŧŧŧŧŧŧŧŧggTF',
-      'FŘŘŘŘŘŘŘŘgTggggggggggŧŧŧŧŧŧŧŧŧgggF',
-      'FŘŘŘŘŘŘŘŘgggggggggggggwwwwwwwggggF',
-      'FŘŘŘŘŘŘŘŘgaaaaaaaaaaaaaSDDDSaaaaaF',
-      'FŘŘŘŘŘŘŘŘgaaaaaaaaaaaaaaaaaaaaaaaF',
-      'FHHHH8HHHgaaaaaaaƀaaaaaaaaaaaaaƀaF',
-      'FgggggggggaaaaaaaaaaaaaaaaaaaaaaaF',
-      'FgggggggggaaaaaaaaaaaaaaaaaaaaaaaF',
-      'Fg======ggaaa~~~aaaaaƀaaaaaaaaaaTF',
-      'FFwwwwwwFgaa~~~~~aaaaaaaaaaaaaaaaF',
-      'FFFFFFFFFgaaa~~~aaabaaaaaaaaaaaƀaF',
-      'FgggggggggaaaaaaaafaaŘŘŘŘŘŘaaaaaaF',
-      'FgggggggggaƀaaaaababaŘŘŘŘŘŘaaaaaaF',
-      'FgTgggggggaaaaaaaaaaaHwwwwHaaaaaaF',
-      'FggggTggggggggggggggg======ggggTgF',
-      'FggggggggggggggggggggggggggggTgggF',
-      'FFFFFFFFFFFFFFFF77FFFFFFFFFFFFFFFF'
+      'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
+      'FgggggggggTggggggggTggBBBBBTgggggggggggggggF',
+      'FgŧŧŧŧŧŧŧŧggSDDDSgggg=wwwwBggBBBBBBBBBBBBBBF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBggBBBBBBBBBBBBBBF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBggBB2BBBBBBBBBBBF',
+      'FTŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBggggggggggggggggF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBggKKKKF',
+      'Fgŧŧŧŧŧŧŧŧgeeeeeeeegg=wwwwBgBBBBBBBBBggKKKKF',
+      'FTgggggggggeeeeeeeegg=wwwwBgBoBoBoBoBggKKKKF',
+      'FgTaaaaaaaaaTgggggggg======ggŘŘŘŘŘŘŘgggKKKKF',
+      'Fggaaaa~aaaagaaaaaaaaaaaaaaaaHHH5HHHaaaKKKKF',
+      'Fggaa~~~~~aagaaaaaaaaaaaaaaaaaaaaaaaaaaK6KKF',
+      'FTga~~~~~~~agaaaaaaƀaaaaaaaaaaaaaaaaaaaagggF',
+      'Fgga~~~~~~~agaaaaaaaaaaaaaaaƀaaaaaaaaaaagggF',
+      'Fggaa~~~~~aagaaaabaaaaaaaaaaaaaaaaaaaaaagggF',
+      'FgTaaaa~aaaagaaafaaaaaaaaaaaaaaaaaaaƀaaaggTF',
+      'FggaaaaaaaaaTaababaaaaaaaaaaaaaaaaaaaaaagggF',
+      'FgggTgggggTggaaaaaaaaaaaaaaaaaaaaaaaaaaagggF',
+      'FggggggggggggaaaaaaaaaaaƀaaaaaaaaaaaaaaaggTF',
+      'FŘŘŘ8ŘŘŘgggggaaaaaaaaaaaaaaaaaaaaaaaaaaagggF',
+      'FŘŘŘŘŘŘŘgg======gggggggg=====gGGG1GGGGgB9BBF',
+      'FŘŘŘŘŘŘŘggHwwwwHggggggggHwwwHgGGGGGGGGgBBBBF',
+      'FŘŘŘŘŘŘŘggŘŘŘŘŘŘggTggggTŘŘŘŘŘgGGGGGGGGgBBBBF',
+      'FŘŘŘŘŘŘŘggŘŘŘŘŘŘggggggggŘŘŘŘŘgGGGGGGGGgBBBBF',
+      'FŘŘŘŘŘŘŘggŘŘŘŘŘŘggggggggŘŘŘŘŘgGGGGGGGGgBBBBF',
+      'FFFFFFFFFFFFFFFFFFFF77FFFFFFFFFFFFFFFFFFFFFF'
         ],
-        spawn: { fromEingang: [16, 20, 'up'], fromWg: [13, 1, 'down'], fromSauna: [5, 11, 'down'] },
-        doors: { 1: { to: 'wg', at: 'fromStrand' }, 7: { to: 'eingang', at: 'fromStrand' }, 8: { to: 'sa', at: 'fromStrand' } },
-        dancers: 22,
+        spawn: { fromEingang: [20, 24, 'up'], fromWg: [33, 19, 'up'], fromSauna: [4, 18, 'up'], fromHh: [31, 5, 'down'], fromDf: [32, 11, 'down'], fromTn: [40, 12, 'down'], fromWc: [40, 19, 'up'] },
+        doors: {
+          1: { to: 'wg', at: 'fromStrand' }, 2: { to: 'hh', at: 'fromStrand' }, 5: { to: 'df', at: 'fromStrand' }, 6: { to: 'tn', at: 'fromStrand' },
+          7: { to: 'eingang', at: 'fromStrand' }, 8: { to: 'sa', at: 'fromStrand' }, 9: { to: 'wc', at: 'fromStrand' }
+        },
+        dancers: 26,
         spots: ['rgba(255,190,90,.12)', 'rgba(255,120,180,.10)', 'rgba(120,220,255,.10)'],
         daylight: true,
-        fairy: [[1, 11, 9, 11], [10, 7, 21, 7], [11, 20, 30, 20]],
-        bottles: [[6, 11, 'beer'], [15, 9, 'mate'], [30, 17, 'can'], [10, 19, 'beer'], [27, 12, 'mate']],
+        fairy: [[2, 8, 10, 8], [13, 10, 20, 10], [27, 12, 38, 12], [9, 19, 29, 19]],
+        bottles: [[6, 18, 'beer'], [16, 11, 'mate'], [37, 17, 'can'], [22, 16, 'beer'], [30, 14, 'mate']],
         people: [
-          { x: 25, y: 7, dir: 'down', look: { skin: '#c98d6a', hair: '#c9a24a', long: true, top: '#ff8c42', legs: '#3a3a8a', flowers: ['#ff5e7a', '#ffd23f'] }, lines: ['(The DJ is barefoot, wearing a flower crown, and playing to the tent.)'] },
-          { x: 4, y: 14, act: 'pfandBar', dir: 'up', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#b6f36b', legs: '#2b3f6b', stripes: '#ff5e7a', hat: '#f2c14e' } },
-          { x: 12, y: 10, act: 'juggler', name: 'Zora', look: { skin: '#f3c9a8', hair: '#e83f8f', top: '#ff5e7a', legs: '#f3eee3', stripes: '#f3eee3', paint: '#5ec8ff', hat: '#14121c' } },
-          { x: 30, y: 12, act: 'story', story: 'momo', dir: 'left', look: { skin: '#d9a27c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#c28cff', legs: '#ff8c42', flowers: ['#b6f36b', '#ffd23f'] } },
-          { x: 17, y: 14, dir: 'left', act: 'poolHat', look: { skin: '#8d5a3b', hair: '#111', top: '#5ec8ff', legs: '#ffd23f', sparkle: '#fff6a8' }, lines: ['Raver: The water is FREEZING. Ten out of ten.'] },
-          { x: 23, y: 18, act: 'sisyCafe', name: 'Café', dir: 'down', look: { skin: '#f0c7a0', hair: '#5a3a22', long: true, top: '#f3eee3', legs: '#2b3f6b', glasses: '#9fc7e6' } },
-          { x: 18, y: 17, dir: 'up', look: { skin: '#e2b08c', hair: '#c0c0c0', long: true, beard: '#c0c0c0', top: '#7a5a3a', legs: '#3a3a4a' }, lines: ['Raver: (holding his hands to the bonfire) Somebody has been feeding it pallets since Saturday.', 'Raver: Best seat in the garden. You can hear three baller boxes at once.'] },
-          { x: 17, y: 16, dir: 'right', look: { skin: '#f3c9a8', hair: '#ffd23f', long: true, top: '#ff8cc4', legs: '#f3eee3', flowers: ['#ff5e7a', '#b6f36b'] }, lines: ['Raver: Lake, fire, sand. I am never going back to my flat.'] },
-          { x: 6, y: 11, dir: 'down', look: { skin: '#f0c7a0', hair: '#c0c0c0', bald: true, top: '#f3eee3', legs: '#f3eee3' }, lines: ['Raver: (in a towel) The sauna is in there. Number 15. Towel optional, water not.'] },
-          { x: 15, y: 19, look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#ffd23f', legs: '#c28cff', sparkle: '#ff5e7a', paint: '#ff5e7a' }, lines: ['Raver: Welcome to Sisyphos! Time works differently here.', "Raver: The bars take back empty bottles. Pfand! That's how I pay for my Mate."] }
+          { x: 14, y: 1, dir: 'down', look: { skin: '#c98d6a', hair: '#c9a24a', long: true, top: '#ff8c42', legs: '#3a3a8a', flowers: ['#ff5e7a', '#ffd23f'] }, lines: ['(The DJ is barefoot, wearing a flower crown, and playing to the whole garden.)'] },
+          { x: 22, y: 6, act: 'pfandBar', dir: 'left', look: { skin: '#e2b08c', hair: '#b04a2a', top: '#b6f36b', legs: '#2b3f6b', stripes: '#ff5e7a', hat: '#f2c14e' } },
+          { x: 24, y: 8, act: 'pfandBar', dir: 'down', look: { skin: '#8d5a3b', hair: '#111', long: true, top: '#ffd23f', legs: '#26242e', sparkle: '#fff6a8' } },
+          { x: 17, y: 10, act: 'juggler', name: 'Zora', look: { skin: '#f3c9a8', hair: '#e83f8f', top: '#ff5e7a', legs: '#f3eee3', stripes: '#f3eee3', paint: '#5ec8ff', hat: '#14121c' } },
+          { x: 35, y: 16, act: 'story', story: 'momo', dir: 'left', look: { skin: '#d9a27c', hair: '#5a3a22', long: true, beard: '#5a3a22', top: '#c28cff', legs: '#ff8c42', flowers: ['#b6f36b', '#ffd23f'] } },
+          { x: 12, y: 13, dir: 'left', act: 'poolHat', look: { skin: '#8d5a3b', hair: '#111', top: '#5ec8ff', legs: '#ffd23f', sparkle: '#fff6a8' }, lines: ['Raver: The water is FREEZING. Ten out of ten.'] },
+          { x: 12, y: 21, act: 'sisyCafe', name: 'Café', dir: 'up', look: { skin: '#f0c7a0', hair: '#5a3a22', long: true, top: '#f3eee3', legs: '#2b3f6b', glasses: '#9fc7e6' } },
+          { x: 26, y: 21, act: 'sisyPizza', name: 'Pizza', dir: 'up', look: { skin: '#e2b08c', hair: '#2a2420', top: '#f3eee3', legs: '#c4162a', hat: '#f3eee3', beard: '#2a2420' } },
+          { x: 16, y: 16, dir: 'up', look: { skin: '#e2b08c', hair: '#c0c0c0', long: true, beard: '#c0c0c0', top: '#7a5a3a', legs: '#3a3a4a' }, lines: ['Raver: (holding his hands to the bonfire) Somebody has been feeding it pallets since Saturday.', 'Raver: Best seat in the garden. You can hear three baller boxes at once.'] },
+          { x: 15, y: 15, dir: 'right', look: { skin: '#f3c9a8', hair: '#ffd23f', long: true, top: '#ff8cc4', legs: '#f3eee3', flowers: ['#ff5e7a', '#b6f36b'] }, lines: ['Raver: Lake, fire, sand. I am never going back to my flat.'] },
+          { x: 6, y: 18, dir: 'down', look: { skin: '#f0c7a0', hair: '#c0c0c0', bald: true, top: '#f3eee3', legs: '#f3eee3' }, lines: ['Raver: (in a towel) The sauna is right there. Number 15. Towel optional, water not.'] },
+          { x: 39, y: 19, dir: 'right', look: { skin: '#c98d6a', hair: '#ff5e7a', long: true, top: '#14121c', legs: '#c28cff' }, lines: ['Raver: Queue for the Klo. Shorter than the one at the door, at least.'] },
+          { x: 41, y: 18, dir: 'down', look: { skin: '#f3c9a8', hair: '#5ec8ff', top: '#ffd23f', legs: '#26242e', sparkle: '#ff5e7a' }, lines: ['Raver: Glitter top-up in the mirror. Very important.'] },
+          { x: 22, y: 23, look: { skin: '#f0c7a0', hair: '#7a3fd1', long: true, top: '#ffd23f', legs: '#c28cff', sparkle: '#ff5e7a', paint: '#ff5e7a' }, lines: ['Raver: Welcome to Sisyphos! Time works differently here.', 'Raver: Everything is out here: the Hammahalle, the Dampfer, the Tunnel, the Wintergarten. Just follow the bass.'] }
         ]
       },
       wg: {
@@ -467,10 +479,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'B.wwwwwww....................B',
       'B............................B',
       'B..bbb.................bbb...B',
-      'BBBBBBBBBBBBBBB5BBBBBBBBBBBBBB'
+      'BBBBBBBB2BBBBBB5BBBBBBBBBBBBBB'
         ],
-        spawn: { fromWg: [1, 8, 'right'], fromDf: [28, 5, 'left'], fromTn: [15, 16, 'up'] },
-        doors: { 3: { to: 'wg', at: 'fromHh' }, 4: { to: 'df', at: 'fromHh' }, 5: { to: 'tn', at: 'fromHh' } },
+        spawn: { fromWg: [1, 8, 'right'], fromDf: [28, 5, 'left'], fromTn: [15, 16, 'up'], fromStrand: [8, 16, 'up'] },
+        doors: { 2: { to: 'strand', at: 'fromHh' }, 3: { to: 'wg', at: 'fromHh' }, 4: { to: 'df', at: 'fromHh' }, 5: { to: 'tn', at: 'fromHh' } },
         dancers: 22,
         spots: ['rgba(255,60,60,.16)', 'rgba(255,255,255,.10)', 'rgba(255,120,40,.13)'],
         bottles: [[3, 10, 'beer'], [26, 15, 'can'], [12, 2, 'mate']],
@@ -497,10 +509,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'Bww=====wwwwwwwwwwwwwbbwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
       'BwwwwwwwwwwwwwwwwwwwwwwwwB',
-      'BBBBBBBBBBBBBBBBBBBBBB6BBB'
+      'BBBBBBBBBB5BBBBBBBBBBB6BBB'
         ],
-        spawn: { fromHh: [1, 5, 'right'], fromSa: [22, 12, 'up'] },
-        doors: { 4: { to: 'hh', at: 'fromDf' }, 6: { to: 'sa', at: 'fromDf' } },
+        spawn: { fromHh: [1, 5, 'right'], fromSa: [22, 12, 'up'], fromStrand: [10, 12, 'up'] },
+        doors: { 4: { to: 'hh', at: 'fromDf' }, 5: { to: 'strand', at: 'fromDf' }, 6: { to: 'sa', at: 'fromDf' } },
         dancers: 14,
         spots: ['rgba(80,220,200,.13)', 'rgba(255,190,90,.12)', 'rgba(120,140,255,.12)'],
         bottles: [[20, 11, 'beer'], [24, 4, 'can']],
@@ -521,10 +533,10 @@ export const INTERIORS: Record<string, InteriorDef> = {
       'KlllllllllllllllllllllllllllllDDSK',
       'KllllllllllllllllllllllllllllllllK',
       'KlllbbblllllllllllllllllllllllbbbK',
-      'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK'
+      'KKKKKKKKKKKKKKKK6KKKKKKKKKKKKKKKKK'
         ],
-        spawn: { fromHh: [1, 3, 'right'] },
-        doors: { 5: { to: 'hh', at: 'fromTn' } },
+        spawn: { fromHh: [1, 3, 'right'], fromStrand: [16, 6, 'up'] },
+        doors: { 5: { to: 'hh', at: 'fromTn' }, 6: { to: 'strand', at: 'fromTn' } },
         dancers: 14,
         spots: ['rgba(255,60,40,.18)', 'rgba(255,200,60,.12)'],
         lanterns: [[3, 1], [7, 1], [11, 1], [15, 1], [19, 1], [23, 1], [27, 1], [5, 5], [9, 5], [13, 5], [17, 5], [21, 5], [25, 5]],
@@ -532,6 +544,24 @@ export const INTERIORS: Record<string, InteriorDef> = {
         people: [
           { x: 31, y: 3, look: { skin: '#c98d6a', hair: '#111', long: true, top: '#a3161a', legs: '#14121c', stripes: '#e0b040' }, lines: ['(The DJ nods at the lanterns swinging to the beat.)'] },
           { x: 8, y: 5, act: 'story', story: 'sunny', look: { skin: '#e2b08c', hair: '#ffd23f', long: true, top: '#5ec8ff', legs: '#ff5e7a', sparkle: '#fff6a8', flowers: ['#ff5e7a', '#c28cff'] } }
+        ]
+      },
+      wc: {
+        // The toilets in the bottom right corner of the garden: a row of stalls, a long mirror, a queue.
+        label: 'Sisyphos · Klo', short: 'KLO',
+        map: [
+      'BBBBBBBBBB',
+      'Bt|t|t|ttB',
+      'BttttttttB',
+      'BttttttttB',
+      'BBBB9BBBBB'
+        ],
+        spawn: { fromStrand: [4, 3, 'up'] },
+        doors: { 9: { to: 'strand', at: 'fromWc' } },
+        dancers: 0,
+        people: [
+          { x: 2, y: 2, dir: 'up', look: { skin: '#f3c9a8', hair: '#ff8cc4', long: true, top: '#5ec8ff', legs: '#f3eee3', sparkle: '#fff6a8' }, lines: ['Raver: (at the mirror) More glitter. Always more glitter.'] },
+          { x: 7, y: 3, dir: 'left', look: { skin: '#8d5a3b', hair: '#111', top: '#ff8c42', legs: '#26242e' }, lines: ['Raver: Two people came out of that stall. Three went in. Nobody asks.'] }
         ]
       },
       sa: {
